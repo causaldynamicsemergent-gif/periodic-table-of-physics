@@ -1,0 +1,257 @@
+{
+  "_meta": {
+    "_file_role": "v14 entry-data fragment. Designed for union-merge with Map_v12_data.json + MAP_v14_entry_tenfold_way.json to produce a v14-complete data set with Phase 1 entries #1 and #2.",
+    "_entry": "sm-rep-content",
+    "_schema": "Map_v14_schema.json",
+    "_phase": 1,
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v14_2_findings.md",
+    "_notes": "produces-classification edges deliberately omitted; §10.7 of the schema spec is forced by this entry and is addressed in the findings companion."
+  },
+
+  "nodes": [
+    {
+      "id": "sm-rep-content",
+      "type": "formal-classification",
+      "label": "SM rep content",
+      "full_name": "Standard Model gauge-group representation content",
+      "subtype": "gauge-content",
+      "description": "The Standard Model's particle content, specified as the representations carried by the SM matter fields, gauge bosons, and Higgs doublet under the gauge group G_SM = SU(3)_c × SU(2)_L × U(1)_Y, prior to electroweak symmetry breaking. The classification is the structural specification of which gauge-rep multiplets nature populates with fundamental fields, and at what multiplicity (three generations for fermions; one each for gauge bosons and the Higgs). Closed empirically with the Higgs discovery (2012); before that, the (1, 2, +1/2) scalar cell carried a predicted-but-unobserved status for 48 years. The classification is famously rep-theoretically constrained — the requirement of gauge-anomaly cancellation forces the hypercharge assignments across the matter content to satisfy non-trivial relations, which is what made charm (Glashow-Iliopoulos-Maiani 1970) and the existence of a third generation top-quark predictions rather than fits.",
+      "domain_of_applicability": "The Standard Model gauge group SU(3)_c × SU(2)_L × U(1)_Y and the field content it constrains. Includes: quark and lepton multiplets across three generations; SU(3)_c, SU(2)_L, U(1)_Y gauge bosons; the Higgs scalar doublet. Excludes: right-handed neutrinos (not part of the strict SM; would be (1, 1, 0) singlets and are added in many SM extensions for neutrino mass); gravitational interactions; physics above the EW scale where new gauge structure may exist; the Yukawa coupling values themselves (the rep content fixes which Yukawa couplings exist; their numerical values are separately measured and constitute the flavor-puzzle frontier).",
+
+      "internal_structure": "Each multiplet's gauge representation under G_SM = SU(3)_c × SU(2)_L × U(1)_Y, in the convention where U(1)_Y is normalized so that electric charge Q = T_3 + Y: Q_L → (3, 2, +1/6); u_R → (3, 1, +2/3); d_R → (3-bar, 1, -1/3) [or equivalently the conjugate (3, 1, -1/3) depending on convention]; L_L → (1, 2, -1/2); e_R → (1, 1, -1); gluons → (8, 1, 0); W → (1, 3, 0); B → (1, 1, 0); H → (1, 2, +1/2). The anomaly-cancellation constraint Tr[Y³] = 0 + Tr[Y · T_a²] = 0 + gauge-gravitational consistency is satisfied non-trivially across the matter content per generation; this constraint is what made GIM's prediction of charm and Glashow-Iliopoulos-Maiani's structural argument possible.",
+
+      "classification_axes": [
+        {
+          "name": "particle-multiplet",
+          "kind": "discrete-enum",
+          "values": ["Q_L", "u_R", "d_R", "L_L", "e_R", "gluons", "W", "B", "H"],
+          "description": "The nine SM multiplets, in the canonical order: left-handed quark doublet; right-handed up-quark singlet; right-handed down-quark singlet; left-handed lepton doublet; right-handed charged-lepton singlet; SU(3)_c gauge bosons (eight gluons); SU(2)_L gauge bosons (three W's); U(1)_Y gauge boson (one B); Higgs scalar doublet. Each multiplet carries a specific G_SM representation; the reps are recorded in the node's internal_structure field rather than as a separate axis because the SM's structural claim is that nature populates exactly these reps and no others (i.e. the rep is metadata about each multiplet, not a free axis along which the classification varies).",
+          "citation": "Particle Data Group, Review of Particle Physics, latest revision (live document at pdg.lbl.gov); see also Weinberg 1996, The Quantum Theory of Fields Vol. II, §21.3"
+        },
+        {
+          "name": "generation",
+          "kind": "discrete-enum",
+          "values": ["1", "2", "3", "N/A"],
+          "description": "Generation index for fermion multiplets (1, 2, 3); 'N/A' for multiplets that do not replicate over generations (the gauge bosons and the Higgs doublet). The SM's structural claim that gauge bosons and the Higgs are gauge-group-determined and do not replicate, while fermions appear in three identical-rep copies with hugely different Yukawa couplings, is captured by the asymmetry of which (multiplet, generation) combinations are real versus structurally-excluded."
+        }
+      ],
+
+      "cells": [
+        { "cell_id": "cell-QL-g1", "axis_values": { "particle-multiplet": "Q_L", "generation": "1" }, "content": "(3, 2, +1/6); contains (u_L, d_L)", "realized_examples": ["up quark", "down quark"], "description": "First-generation left-handed quark doublet. Components are weak-isospin partners; mass eigenstates after EWSB differ from gauge eigenstates via the CKM matrix." },
+        { "cell_id": "cell-QL-g2", "axis_values": { "particle-multiplet": "Q_L", "generation": "2" }, "content": "(3, 2, +1/6); contains (c_L, s_L)", "realized_examples": ["charm quark", "strange quark"] },
+        { "cell_id": "cell-QL-g3", "axis_values": { "particle-multiplet": "Q_L", "generation": "3" }, "content": "(3, 2, +1/6); contains (t_L, b_L)", "realized_examples": ["top quark", "bottom quark"] },
+        { "cell_id": "cell-QL-gNA", "axis_values": { "particle-multiplet": "Q_L", "generation": "N/A" }, "content": "structurally-excluded", "description": "Fermion multiplets replicate over generations; the N/A generation does not apply." },
+
+        { "cell_id": "cell-uR-g1", "axis_values": { "particle-multiplet": "u_R", "generation": "1" }, "content": "(3, 1, +2/3); right-handed up-quark", "realized_examples": ["up quark (right-handed component)"] },
+        { "cell_id": "cell-uR-g2", "axis_values": { "particle-multiplet": "u_R", "generation": "2" }, "content": "(3, 1, +2/3); right-handed charm-quark", "realized_examples": ["charm quark (right-handed component)"], "predictions": [{ "prediction": "A fourth quark (charm) required by anomaly cancellation and FCNC suppression, with gauge rep (3, 1, +2/3) in the second generation.", "status": "confirmed", "prediction_citation": "Glashow, Iliopoulos, Maiani 1970, Phys. Rev. D 2, 1285 (GIM mechanism)", "confirmation_citation": "Aubert et al. 1974, Phys. Rev. Lett. 33, 1404 (J/ψ at Brookhaven); Augustin et al. 1974, Phys. Rev. Lett. 33, 1406 (J/ψ at SLAC); confirmed as charm via subsequent charmonium spectroscopy" }] },
+        { "cell_id": "cell-uR-g3", "axis_values": { "particle-multiplet": "u_R", "generation": "3" }, "content": "(3, 1, +2/3); right-handed top-quark", "realized_examples": ["top quark (right-handed component)"], "predictions": [{ "prediction": "A third-generation up-type quark required by anomaly cancellation after the bottom quark's discovery; gauge rep (3, 1, +2/3), with mass to be determined experimentally.", "status": "confirmed", "prediction_citation": "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652 (three-generation structure for CP violation)", "confirmation_citation": "Abe et al. (CDF) 1995, Phys. Rev. Lett. 74, 2626; Abachi et al. (D0) 1995, Phys. Rev. Lett. 74, 2632 (top-quark observation at Fermilab)" }] },
+        { "cell_id": "cell-uR-gNA", "axis_values": { "particle-multiplet": "u_R", "generation": "N/A" }, "content": "structurally-excluded", "description": "Fermion multiplet; N/A generation does not apply." },
+
+        { "cell_id": "cell-dR-g1", "axis_values": { "particle-multiplet": "d_R", "generation": "1" }, "content": "(3, 1, -1/3); right-handed down-quark", "realized_examples": ["down quark (right-handed component)"] },
+        { "cell_id": "cell-dR-g2", "axis_values": { "particle-multiplet": "d_R", "generation": "2" }, "content": "(3, 1, -1/3); right-handed strange-quark", "realized_examples": ["strange quark (right-handed component)"] },
+        { "cell_id": "cell-dR-g3", "axis_values": { "particle-multiplet": "d_R", "generation": "3" }, "content": "(3, 1, -1/3); right-handed bottom-quark", "realized_examples": ["bottom quark (right-handed component)"], "predictions": [{ "prediction": "A third-generation down-type quark required by CKM three-generation structure; gauge rep (3, 1, -1/3).", "status": "confirmed", "prediction_citation": "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652", "confirmation_citation": "Herb et al. 1977, Phys. Rev. Lett. 39, 252 (Upsilon discovery at Fermilab)" }] },
+        { "cell_id": "cell-dR-gNA", "axis_values": { "particle-multiplet": "d_R", "generation": "N/A" }, "content": "structurally-excluded", "description": "Fermion multiplet; N/A generation does not apply." },
+
+        { "cell_id": "cell-LL-g1", "axis_values": { "particle-multiplet": "L_L", "generation": "1" }, "content": "(1, 2, -1/2); contains (ν_e_L, e_L)", "realized_examples": ["electron neutrino", "electron"] },
+        { "cell_id": "cell-LL-g2", "axis_values": { "particle-multiplet": "L_L", "generation": "2" }, "content": "(1, 2, -1/2); contains (ν_μ_L, μ_L)", "realized_examples": ["muon neutrino", "muon"] },
+        { "cell_id": "cell-LL-g3", "axis_values": { "particle-multiplet": "L_L", "generation": "3" }, "content": "(1, 2, -1/2); contains (ν_τ_L, τ_L)", "realized_examples": ["tau neutrino", "tau"], "predictions": [{ "prediction": "A tau neutrino paired with the tau lepton, completing the third-generation lepton doublet at gauge rep (1, 2, -1/2).", "status": "confirmed", "prediction_citation": "Implied by Kobayashi-Maskawa 1973 plus the tau discovery (Perl et al. 1975, Phys. Rev. Lett. 35, 1489)", "confirmation_citation": "Kodama et al. (DONUT) 2001, Phys. Lett. B 504, 218 (direct tau-neutrino observation at Fermilab)" }] },
+        { "cell_id": "cell-LL-gNA", "axis_values": { "particle-multiplet": "L_L", "generation": "N/A" }, "content": "structurally-excluded", "description": "Fermion multiplet; N/A generation does not apply." },
+
+        { "cell_id": "cell-eR-g1", "axis_values": { "particle-multiplet": "e_R", "generation": "1" }, "content": "(1, 1, -1); right-handed electron", "realized_examples": ["electron (right-handed component)"] },
+        { "cell_id": "cell-eR-g2", "axis_values": { "particle-multiplet": "e_R", "generation": "2" }, "content": "(1, 1, -1); right-handed muon", "realized_examples": ["muon (right-handed component)"] },
+        { "cell_id": "cell-eR-g3", "axis_values": { "particle-multiplet": "e_R", "generation": "3" }, "content": "(1, 1, -1); right-handed tau", "realized_examples": ["tau (right-handed component)"] },
+        { "cell_id": "cell-eR-gNA", "axis_values": { "particle-multiplet": "e_R", "generation": "N/A" }, "content": "structurally-excluded", "description": "Fermion multiplet; N/A generation does not apply." },
+
+        { "cell_id": "cell-gluons-g1", "axis_values": { "particle-multiplet": "gluons", "generation": "1" }, "content": "structurally-excluded", "description": "Gauge bosons do not replicate over fermion generations; this is a positive structural claim of the SM. The gluon multiplicity is fixed by dim SU(3)_c = 8, not by generation count." },
+        { "cell_id": "cell-gluons-g2", "axis_values": { "particle-multiplet": "gluons", "generation": "2" }, "content": "structurally-excluded", "description": "See cell-gluons-g1." },
+        { "cell_id": "cell-gluons-g3", "axis_values": { "particle-multiplet": "gluons", "generation": "3" }, "content": "structurally-excluded", "description": "See cell-gluons-g1." },
+        { "cell_id": "cell-gluons-gNA", "axis_values": { "particle-multiplet": "gluons", "generation": "N/A" }, "content": "(8, 1, 0); eight gluons", "realized_examples": ["gluons (eight color-octet vector bosons mediating the strong interaction)"], "description": "SU(3)_c gauge bosons. Massless; carry color and anti-color charges and self-interact. Asymptotically free (Gross-Wilczek 1973, Politzer 1973)." },
+
+        { "cell_id": "cell-W-g1", "axis_values": { "particle-multiplet": "W", "generation": "1" }, "content": "structurally-excluded", "description": "Gauge bosons do not replicate over fermion generations." },
+        { "cell_id": "cell-W-g2", "axis_values": { "particle-multiplet": "W", "generation": "2" }, "content": "structurally-excluded", "description": "See cell-W-g1." },
+        { "cell_id": "cell-W-g3", "axis_values": { "particle-multiplet": "W", "generation": "3" }, "content": "structurally-excluded", "description": "See cell-W-g1." },
+        { "cell_id": "cell-W-gNA", "axis_values": { "particle-multiplet": "W", "generation": "N/A" }, "content": "(1, 3, 0); three W bosons (W¹, W², W³)", "realized_examples": ["W⁺ boson", "W⁻ boson", "Z boson (W³ and B mix to form Z and photon after EWSB)"], "description": "SU(2)_L gauge bosons. After EWSB, W¹ and W² combine to form the charged W± (mass 80.4 GeV); W³ mixes with B to form Z (91.2 GeV) and photon (massless).", "predictions": [{ "prediction": "Massive charged and neutral weak gauge bosons (W±, Z) with masses set by m_W = (g/2) v and m_Z = m_W / cos θ_W, with v ≈ 246 GeV the Higgs VEV. Required by the Glashow-Weinberg-Salam unified electroweak theory.", "status": "confirmed", "prediction_citation": "Glashow 1961, Nucl. Phys. 22, 579; Weinberg 1967, Phys. Rev. Lett. 19, 1264; Salam 1968, in Elementary Particle Theory, Almqvist", "confirmation_citation": "Arnison et al. (UA1) 1983, Phys. Lett. B 122, 103 (W±); Bagnaia et al. (UA2) 1983, Phys. Lett. B 129, 130 (W±); Arnison et al. (UA1) 1983, Phys. Lett. B 126, 398 (Z); Banner et al. (UA2) 1983, Phys. Lett. B 129, 130 (Z); CERN p-pbar collider" }] },
+
+        { "cell_id": "cell-B-g1", "axis_values": { "particle-multiplet": "B", "generation": "1" }, "content": "structurally-excluded", "description": "Gauge bosons do not replicate over fermion generations." },
+        { "cell_id": "cell-B-g2", "axis_values": { "particle-multiplet": "B", "generation": "2" }, "content": "structurally-excluded", "description": "Gauge bosons do not replicate over fermion generations." },
+        { "cell_id": "cell-B-g3", "axis_values": { "particle-multiplet": "B", "generation": "3" }, "content": "structurally-excluded", "description": "Gauge bosons do not replicate over fermion generations." },
+        { "cell_id": "cell-B-gNA", "axis_values": { "particle-multiplet": "B", "generation": "N/A" }, "content": "(1, 1, 0); B boson", "realized_examples": ["B (mixes with W³ via Weinberg angle to give photon and Z after EWSB)"], "description": "U(1)_Y gauge boson. Does not appear as a mass eigenstate after EWSB; the physical mass eigenstates are the photon and Z, which are linear combinations of B and W³." },
+
+        { "cell_id": "cell-H-g1", "axis_values": { "particle-multiplet": "H", "generation": "1" }, "content": "structurally-excluded", "description": "The Higgs scalar does not replicate over fermion generations." },
+        { "cell_id": "cell-H-g2", "axis_values": { "particle-multiplet": "H", "generation": "2" }, "content": "structurally-excluded", "description": "The Higgs scalar does not replicate over fermion generations." },
+        { "cell_id": "cell-H-g3", "axis_values": { "particle-multiplet": "H", "generation": "3" }, "content": "structurally-excluded", "description": "The Higgs scalar does not replicate over fermion generations." },
+        { "cell_id": "cell-H-gNA", "axis_values": { "particle-multiplet": "H", "generation": "N/A" }, "content": "(1, 2, +1/2); complex scalar doublet, 4 real degrees of freedom (3 absorbed into longitudinal W±/Z after EWSB; 1 remaining physical Higgs boson)", "realized_examples": ["Higgs boson (125 GeV)"], "description": "The Higgs scalar field. Vacuum expectation value v ≈ 246 GeV breaks SU(2)_L × U(1)_Y → U(1)_EM. Predicted in 1964 (Englert-Brout, Higgs); observed in 2012 at the LHC. The cell carried a 'predicted-but-unobserved' status for 48 years.", "predictions": [{ "prediction": "A scalar boson at (1, 2, +1/2) responsible for spontaneous breaking of electroweak symmetry, with one physical degree of freedom remaining after the Goldstone modes are absorbed.", "status": "confirmed", "prediction_citation": "Englert, Brout 1964, Phys. Rev. Lett. 13, 321; Higgs 1964, Phys. Rev. Lett. 13, 508; Guralnik, Hagen, Kibble 1964, Phys. Rev. Lett. 13, 585", "confirmation_citation": "ATLAS Collaboration 2012, Phys. Lett. B 716, 1; CMS Collaboration 2012, Phys. Lett. B 716, 30 (Higgs observation at the LHC, 125 GeV)" }] }
+      ],
+
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete as a specification of G_SM representations carried by the matter, gauge, and scalar fields of the strict Standard Model. Closure was empirically completed in 2012 with the Higgs discovery; the rep content has been the SM's stable structural specification since Glashow-Weinberg-Salam-GIM completed the gauge structure in the early 1970s. 'Within-domain' qualifier is load-bearing: closure does not extend to (i) whether G_SM is the correct organizing gauge structure at energies above the EW scale (GUT-scale extensions add new gauge content), (ii) why there are exactly three generations (number not predicted, only the consistency of any given number is), (iii) whether right-handed neutrinos exist (not included in the strict SM but added in see-saw and other extensions for neutrino mass), (iv) gravitational interactions."
+      },
+
+      "predictive_yield": [
+        {
+          "prediction": "Charm quark required by anomaly cancellation and FCNC suppression (GIM mechanism).",
+          "status": "confirmed",
+          "prediction_citation": "Glashow, Iliopoulos, Maiani 1970, Phys. Rev. D 2, 1285",
+          "confirmation_citation": "Aubert et al. 1974, Phys. Rev. Lett. 33, 1404; Augustin et al. 1974, Phys. Rev. Lett. 33, 1406",
+          "cell_ref": "cell-uR-g2"
+        },
+        {
+          "prediction": "Bottom quark and top quark required by Kobayashi-Maskawa's three-generation structure for CKM CP violation.",
+          "status": "confirmed",
+          "prediction_citation": "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652",
+          "confirmation_citation": "Herb et al. 1977, Phys. Rev. Lett. 39, 252 (bottom, via Upsilon); Abe et al. 1995, Phys. Rev. Lett. 74, 2626 (top)",
+          "cell_ref": "cell-uR-g3"
+        },
+        {
+          "prediction": "W± and Z gauge bosons with masses determined by the Higgs VEV.",
+          "status": "confirmed",
+          "prediction_citation": "Glashow 1961; Weinberg 1967; Salam 1968",
+          "confirmation_citation": "UA1 and UA2 Collaborations 1983 (CERN p-pbar collider)",
+          "cell_ref": "cell-W-gNA"
+        },
+        {
+          "prediction": "Tau neutrino completing the third-generation lepton doublet.",
+          "status": "confirmed",
+          "prediction_citation": "Implied by SM structure + tau discovery (Perl et al. 1975)",
+          "confirmation_citation": "Kodama et al. (DONUT) 2001, Phys. Lett. B 504, 218",
+          "cell_ref": "cell-LL-g3"
+        },
+        {
+          "prediction": "Higgs boson at (1, 2, +1/2), with one physical scalar mode remaining after EWSB.",
+          "status": "confirmed",
+          "prediction_citation": "Englert-Brout 1964; Higgs 1964; Guralnik-Hagen-Kibble 1964",
+          "confirmation_citation": "ATLAS Collaboration 2012, Phys. Lett. B 716, 1; CMS Collaboration 2012, Phys. Lett. B 716, 30",
+          "cell_ref": "cell-H-gNA",
+          "description": "The most cell-specific Higgs prediction had a 48-year wait from theoretical proposal to experimental confirmation. The mass was not predicted by the rep content alone (the Higgs self-coupling that fixes m_H is a free parameter of the SM); the mass-eigenvalue at 125 GeV was unknown until 2012."
+        },
+        {
+          "prediction": "Existence of antiparticles (the conjugate-rep components — d_L is paired with d_L-bar; the SM rep content implicitly specifies the antimatter sector).",
+          "status": "retro-explanatory-only",
+          "prediction_citation": "Dirac 1928, Proc. R. Soc. A 117, 610 (the Dirac equation predicts antimatter prior to the SM)",
+          "description": "Antimatter predates the SM. The SM rep content makes antimatter a structural feature (each chirality has a conjugate rep), but the prediction is Dirac's, not the SM's."
+        }
+      ],
+
+      "related_entries": [
+        "hierarchy-problem",
+        "flavor-puzzle",
+        "strong-cp-problem",
+        "matter-antimatter-asymmetry",
+        "dark-matter",
+        "qg-frontier"
+      ],
+
+      "citations": [
+        "Glashow 1961, Nucl. Phys. 22, 579 (SU(2)×U(1) electroweak unification)",
+        "Englert, Brout 1964, Phys. Rev. Lett. 13, 321; Higgs 1964, Phys. Rev. Lett. 13, 508; Guralnik, Hagen, Kibble 1964, Phys. Rev. Lett. 13, 585 (Higgs mechanism)",
+        "Weinberg 1967, Phys. Rev. Lett. 19, 1264 (electroweak model with Higgs)",
+        "Salam 1968, in Elementary Particle Theory (Almqvist) (independent electroweak unification)",
+        "Glashow, Iliopoulos, Maiani 1970, Phys. Rev. D 2, 1285 (GIM mechanism, charm prediction)",
+        "'t Hooft 1971, Nucl. Phys. B 33, 173 and Nucl. Phys. B 35, 167 (renormalizability of non-Abelian gauge theories)",
+        "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652 (CKM matrix, three-generation structure)",
+        "Gross, Wilczek 1973, Phys. Rev. Lett. 30, 1343; Politzer 1973, Phys. Rev. Lett. 30, 1346 (asymptotic freedom; QCD)",
+        "Particle Data Group, Review of Particle Physics, latest revision (live document at pdg.lbl.gov) — the standing literature anchor for cell content and experimental status",
+        "Weinberg 1996, The Quantum Theory of Fields, Vol. II, Cambridge (textbook reference for SM rep content)"
+      ]
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-sm-bears-on-hierarchy",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "hierarchy-problem",
+      "nature": "structural-only",
+      "cell_refs": ["cell-H-gNA"],
+      "description": "The Higgs cell (1, 2, +1/2) at gauge rep but with a scalar mass parameter that is quadratically sensitive to UV physics. The SM rep content is what makes the hierarchy problem visible — the Higgs is the only fundamental scalar in the SM, and the rep content provides no symmetry protecting its mass. The bears-on is structural-only: the rep content does not solve the hierarchy problem; it specifies the structural arena in which the problem appears.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Susskind 1979, Phys. Rev. D 20, 2619 (formulation of the hierarchy problem)",
+        "'t Hooft 1980, in Recent Developments in Gauge Theories, Plenum (naturalness criterion)"
+      ]
+    },
+    {
+      "id": "edge-sm-bears-on-flavor",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "flavor-puzzle",
+      "nature": "structural-only",
+      "cell_refs": ["cell-QL-g1", "cell-QL-g2", "cell-QL-g3", "cell-LL-g1", "cell-LL-g2", "cell-LL-g3"],
+      "description": "The fermion sector of the rep content has three generations with identical gauge representations but vastly different Yukawa couplings (mass ratios spanning six orders of magnitude in the charged-lepton sector, more in the quark sector). The rep content's structural assertion that the three generations have identical reps is what makes the flavor puzzle a puzzle — it removes any gauge-theoretic explanation for the mass hierarchy, leaving the Yukawa values unexplained. Nature: structural-only.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Particle Data Group, Review of Particle Physics (mass data)",
+        "Ramond 1999, Journeys Beyond the Standard Model, Westview (review of the flavor puzzle)"
+      ]
+    },
+    {
+      "id": "edge-sm-bears-on-strong-cp",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "strong-cp-problem",
+      "nature": "structural-only",
+      "cell_refs": ["cell-gluons-gNA"],
+      "description": "The gluon cell (8, 1, 0) at SU(3)_c gauge representation admits a θ-term θ G G̃ in the QCD Lagrangian, which is gauge-invariant, renormalization-stable, and CP-violating. The rep content does not constrain θ to be small; experimentally |θ| < 10⁻¹⁰ from EDM bounds, with no SM structural reason. Nature: structural-only.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "'t Hooft 1976, Phys. Rev. Lett. 37, 8 (the θ-term)",
+        "Peccei, Quinn 1977, Phys. Rev. Lett. 38, 1440 (axion as candidate resolution; outside the rep content)"
+      ]
+    },
+    {
+      "id": "edge-sm-bears-on-baryogenesis",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "matter-antimatter-asymmetry",
+      "nature": "partially-solves",
+      "cell_refs": ["cell-QL-g1", "cell-QL-g2", "cell-QL-g3", "cell-uR-g1", "cell-uR-g2", "cell-uR-g3", "cell-dR-g1", "cell-dR-g2", "cell-dR-g3"],
+      "description": "The CKM matrix arises from the misalignment of Q_L Yukawa couplings to u_R and d_R across generations; with three generations the CKM matrix admits one physical CP-violating phase (Kobayashi-Maskawa 1973). This provides one of Sakharov's three baryogenesis conditions (CP violation). However: the magnitude of CKM CP violation is insufficient by ~10 orders of magnitude to generate the observed baryon asymmetry under electroweak baryogenesis scenarios, and the SM's electroweak phase transition is a crossover rather than first-order at the Higgs mass observed (125 GeV). Nature: partially-solves — provides one Sakharov ingredient, but insufficient overall.",
+      "discharge_status": "partial",
+      "citations": [
+        "Sakharov 1967, JETP Lett. 5, 24 (three conditions for baryogenesis)",
+        "Kobayashi, Maskawa 1973 (CKM CP violation from three-generation rep content)",
+        "Kajantie, Laine, Rummukainen, Shaposhnikov 1996, Phys. Rev. Lett. 77, 2887 (EW crossover, not first-order at observed Higgs mass)"
+      ]
+    },
+    {
+      "id": "edge-sm-bears-on-dark-matter",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "dark-matter",
+      "nature": "constrains",
+      "description": "The SM rep content includes no electrically-neutral, color-neutral, weakly-interacting, stable, cosmologically-abundant particle that could account for dark matter. Neutrinos are too light to give cold dark matter and too weakly-bound by structure formation; no other SM cell qualifies. Nature: constrains — the rep content rules out all SM particles as dark-matter candidates, forcing the dark-matter sector to lie outside the SM rep content. This is one of the strongest empirical arguments for physics beyond the SM.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Planck Collaboration 2020, Astron. Astrophys. 641, A6 (Ω_DM constraint)",
+        "Bertone, Hooper, Silk 2005, Phys. Rep. 405, 279 (review of why SM cannot host DM)"
+      ]
+    },
+    {
+      "id": "edge-sm-bears-on-qg",
+      "type": "bears-on",
+      "from": "sm-rep-content",
+      "to": "qg-frontier",
+      "nature": "structural-only",
+      "description": "The SM rep content includes no graviton multiplet and the gauge group G_SM does not include a gravitational sector. The classification's domain of applicability explicitly excludes gravitational interactions. Nature: structural-only — the rep content does not bear on the QG frontier by providing content, only by explicitly delimiting its non-coverage. Included as a bears-on edge to record the delimiting relation, not a substantive constraint.",
+      "discharge_status": "structural-only",
+      "citations": []
+    },
+    {
+      "id": "edge-qft-uses-sm-rep-content",
+      "type": "uses-classification",
+      "from": "qft",
+      "to": "sm-rep-content",
+      "description": "QFT (specifically the gauge-theory sub-domain at energies up to the EW scale) uses the SM rep content as its primary specification of matter, force, and scalar content. The rep content is the structural input QFT's gauge-theory machinery operates on; QFT's apparatus (gauge invariance, renormalization, anomaly cancellation, Yukawa couplings, EWSB via the Higgs mechanism) is the apparatus whose application to this specific rep content produces the empirically-tested SM. The uses relation is internal-to-QFT rather than cross-architecture.",
+      "citations": [
+        "Weinberg 1996, The Quantum Theory of Fields, Vol. II",
+        "Peskin, Schroeder 1995, An Introduction to Quantum Field Theory"
+      ]
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}

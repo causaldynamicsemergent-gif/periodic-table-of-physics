@@ -1,0 +1,197 @@
+{
+  "_meta": {
+    "_file_role": "Phase 2 entry #1. The Freed-Hopkins cobordism classification of invertible topological phases. Adds one formal-classification node, bears-on and uses-classification edges, and one cross-classification edge to the ten-fold way (specializes subtype, first use).",
+    "_entry": "freed-hopkins-cobordism",
+    "_schema": "Map_v15_schema.json",
+    "_phase": 2,
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v15_2_findings.md",
+    "_notes": "Tests the `group` axis kind (untested in Phase 1) and the `specializes` cross-classification subtype (untested in v15.1 retrofit). Anticipated to surface §10.3 (multi-classification cells) via the SM × anomaly-cobordism relation, which is treated in the findings rather than as a schema feature in this entry."
+  },
+
+  "nodes": [
+    {
+      "id": "freed-hopkins-cobordism",
+      "type": "formal-classification",
+      "label": "Freed-Hopkins cobordism",
+      "full_name": "Freed-Hopkins cobordism classification of invertible topological field theories and symmetry-protected phases",
+      "subtype": "topological-phases",
+      "description": "The classification of invertible topological field theories (and the gapped symmetry-protected topological phases they describe) by cobordism. Freed and Hopkins (2016, 2019) proposed that invertible TQFTs in d spacetime dimensions with tangential structure G (specifying orientation, spin, pin, or twisted variants thereof) are classified by [MTG, Σ^{d+1} IZ] — homotopy classes of maps from the Thom spectrum of G to a shift of the Anderson dual of the sphere spectrum. For most cases of physical interest the classification reduces to the torsion subgroup of the (d+1)-dimensional G-bordism group, Ω^G_{d+1}, often combined with its free part. The classification subsumes earlier classifications as special cases: free fermion topological phases (Kitaev's ten-fold way) are recovered for the appropriate tangential structures (Spin, Pin+, Pin-, etc.); bosonic SPT phases match the group-cohomology classification (Chen-Gu-Wen 2011, 2013) in low dimensions; and several Fidkowski-Kitaev-type interaction-induced collapses are computed structurally rather than discovered case-by-case.",
+      "domain_of_applicability": "Invertible (\"deformation classes of\") topological field theories and the SPT phases they describe, for matter with internal symmetries acting via a tangential-structure group G on spacetime. Covers fermionic and bosonic SPTs with discrete internal symmetries and U(1)-valued symmetries; covers crystalline-symmetry-protected phases via twisted tangential structures (a technical refinement). Excludes: non-invertible topological phases (true topological order with anyonic excitations — classified separately by modular tensor categories); gapless topological phases; phases with anomalous boundary states that are not fully captured by the cobordism invariant. Also excludes the cosmological-scale generalization to quantum gravity (anomaly cobordism for gravitational-with-internal-symmetry combinations is studied but the full classification is incomplete).",
+
+      "internal_structure": "Each tangential structure G is a specific Lie group or topological group describing the geometric structure on spacetime: SO is orientation; Spin is the double cover of SO (required for fermions on orientable manifolds); Pin± are unoriented analogs of Spin (relevant when time-reversal symmetry is included); Spin^c is Spin × U(1) / Z_2 (relevant when charge conservation is included). The (d+1)-dimensional G-bordism group Ω^G_{d+1} contains the classification information for invertible phases in d spatial dimensions (or d+1 spacetime dimensions, depending on convention). Famous identities: Ω^{Pin-}_2 = Z_8 (Fidkowski-Kitaev's 1d BDI collapse); Ω^{Pin+}_4 = Z_16 (3+1d time-reversal-invariant fermionic SPT, refining the ten-fold way's class AII Z_2 entry to a Z_16 interacting classification). The classification's structure-group axis is canonically the `group` axis kind in the v14 schema (first use in Phase 2 entries).",
+
+      "classification_axes": [
+        {
+          "name": "tangential-structure",
+          "kind": "group",
+          "values": ["SO", "Spin", "Pin+", "Pin-", "Spin^c"],
+          "description": "The five most-studied tangential structures in the Freed-Hopkins classification. SO: orientation (bosonic, oriented). Spin: orientation + spin structure (fermionic, no further symmetry). Pin+ / Pin-: unoriented spin structures (fermionic with time-reversal symmetry; the two signs distinguish T² = -1 from T² = +1). Spin^c: Spin structure twisted by U(1) (fermionic with charge conservation). Additional tangential structures exist (Spin × Z_2^F for fermion-parity-twisted theories; Spin × G for various internal symmetry groups G); these are not enumerated here. Notation follows Freed-Hopkins 2016 §1 and the standard references.",
+          "canonical_notation": "G",
+          "citation": "Freed, Hopkins 2016, arXiv:1604.06527 (published 2019, Comm. Math. Phys. 374)"
+        },
+        {
+          "name": "spacetime-dimension",
+          "kind": "dimension",
+          "range": { "min": 0, "max": 4 },
+          "description": "Spacetime dimension d+1 in which the invertible field theory lives (equivalently: dimension d+1 of the closed manifold whose G-bordism class is the relevant classifying invariant). Conventions in the literature vary on whether the indexed dimension refers to the SPT's spatial dimension d or the field theory's spacetime dimension d+1; this entry uses spacetime dimension d, with cell content giving Ω^G_d for clarity. Cells populated for d ∈ {0, 1, 2, 3, 4}; higher dimensions extend the classification but are less physically relevant and are omitted for compactness."
+        }
+      ],
+
+      "cells": [
+        { "cell_id": "cell-fh-SO-d0", "axis_values": { "tangential-structure": "SO", "spacetime-dimension": 0 }, "content": "Ω^{SO}_0 = ℤ", "description": "Oriented points with sign; the integer counts oriented zero-manifolds." },
+        { "cell_id": "cell-fh-SO-d1", "axis_values": { "tangential-structure": "SO", "spacetime-dimension": 1 }, "content": "Ω^{SO}_1 = 0", "description": "No invertible bosonic SPT phases in 1d." },
+        { "cell_id": "cell-fh-SO-d2", "axis_values": { "tangential-structure": "SO", "spacetime-dimension": 2 }, "content": "Ω^{SO}_2 = 0", "description": "No invertible bosonic SPT phases in 2d (within the strict-bosonic non-anomalous regime)." },
+        { "cell_id": "cell-fh-SO-d3", "axis_values": { "tangential-structure": "SO", "spacetime-dimension": 3 }, "content": "Ω^{SO}_3 = 0", "description": "No invertible bosonic SPT phases in 3d (without further symmetry refinements)." },
+        { "cell_id": "cell-fh-SO-d4", "axis_values": { "tangential-structure": "SO", "spacetime-dimension": 4 }, "content": "Ω^{SO}_4 = ℤ", "description": "Classified by the signature of the oriented 4-manifold. The corresponding invertible TQFT is the gravitational theta-term (signature action)." },
+
+        { "cell_id": "cell-fh-Spin-d0", "axis_values": { "tangential-structure": "Spin", "spacetime-dimension": 0 }, "content": "Ω^{Spin}_0 = ℤ" },
+        { "cell_id": "cell-fh-Spin-d1", "axis_values": { "tangential-structure": "Spin", "spacetime-dimension": 1 }, "content": "Ω^{Spin}_1 = ℤ₂", "description": "The mod-2 invariant; corresponds to the choice of NS vs R sector in 1d fermionic systems." },
+        { "cell_id": "cell-fh-Spin-d2", "axis_values": { "tangential-structure": "Spin", "spacetime-dimension": 2 }, "content": "Ω^{Spin}_2 = ℤ₂", "description": "Classified by the Arf invariant; the famous 2d Arf-Brown invariant of a quadratic refinement of the intersection form." },
+        { "cell_id": "cell-fh-Spin-d3", "axis_values": { "tangential-structure": "Spin", "spacetime-dimension": 3 }, "content": "Ω^{Spin}_3 = 0" },
+        { "cell_id": "cell-fh-Spin-d4", "axis_values": { "tangential-structure": "Spin", "spacetime-dimension": 4 }, "content": "Ω^{Spin}_4 = ℤ", "description": "Classified by the signature (more precisely, by σ/16 — the Â-genus, an integer for Spin manifolds by Rokhlin's theorem)." },
+
+        { "cell_id": "cell-fh-Pinp-d0", "axis_values": { "tangential-structure": "Pin+", "spacetime-dimension": 0 }, "content": "Ω^{Pin+}_0 = ℤ₂" },
+        { "cell_id": "cell-fh-Pinp-d1", "axis_values": { "tangential-structure": "Pin+", "spacetime-dimension": 1 }, "content": "Ω^{Pin+}_1 = 0" },
+        { "cell_id": "cell-fh-Pinp-d2", "axis_values": { "tangential-structure": "Pin+", "spacetime-dimension": 2 }, "content": "Ω^{Pin+}_2 = ℤ₂" },
+        { "cell_id": "cell-fh-Pinp-d3", "axis_values": { "tangential-structure": "Pin+", "spacetime-dimension": 3 }, "content": "Ω^{Pin+}_3 = ℤ₂" },
+        { "cell_id": "cell-fh-Pinp-d4", "axis_values": { "tangential-structure": "Pin+", "spacetime-dimension": 4 }, "content": "Ω^{Pin+}_4 = ℤ₁₆", "description": "The famous Z_16 classification of 3+1d topological insulators with time-reversal symmetry T² = -1. Refines the ten-fold-way class AII entry (Z_2 at the free-fermion level) to Z_16 in the interacting case. The Z_16 captures multi-particle interaction effects that the free-fermion classification cannot.", "realized_examples": ["The general 3+1d topological insulator with T² = -1, when interactions are included. The free-fermion case is one of 16 distinct interacting phases."], "predictions": [{ "prediction": "Time-reversal-invariant 3+1d fermionic SPT phases form a Z_16 classification when interactions are included, refining the Z_2 free-fermion classification of the ten-fold way's class AII.", "status": "confirmed", "prediction_citation": "Wang, Senthil 2014, Phys. Rev. B 89, 195124; Freed, Hopkins 2016", "confirmation_citation": "Theoretical confirmation via multiple independent calculations; experimental confirmation is partial (the higher-Z_16 phases require specific interaction-induced phases not yet definitively isolated experimentally)." }] },
+
+        { "cell_id": "cell-fh-Pinm-d0", "axis_values": { "tangential-structure": "Pin-", "spacetime-dimension": 0 }, "content": "Ω^{Pin-}_0 = ℤ₂" },
+        { "cell_id": "cell-fh-Pinm-d1", "axis_values": { "tangential-structure": "Pin-", "spacetime-dimension": 1 }, "content": "Ω^{Pin-}_1 = ℤ₂" },
+        { "cell_id": "cell-fh-Pinm-d2", "axis_values": { "tangential-structure": "Pin-", "spacetime-dimension": 2 }, "content": "Ω^{Pin-}_2 = ℤ₈", "description": "The Fidkowski-Kitaev classification: the Z classification of free fermion class BDI in 1d (ten-fold-way's BDI-d1 cell content) collapses to Z_8 when interactions are included. This is the canonical example of the free-to-interacting reach termination that motivated the topological-phases-classification frontier (added in v14.1).", "realized_examples": ["1d class BDI topological superconductors with strong interactions — the 8 distinct phases collapse from the free-fermion Z classification."], "predictions": [{ "prediction": "The free-fermion Z classification of 1d class BDI topological superconductors collapses to Z_8 under interactions; equivalently, eight free-fermion BDI phases that are distinct without interactions become continuously deformable into one trivial phase when interactions are turned on.", "status": "confirmed", "prediction_citation": "Fidkowski, Kitaev 2010, Phys. Rev. B 81, 134509 (first explicit demonstration); Kitaev 2011 talk on classifications; Freed-Hopkins 2016 (cobordism interpretation)", "confirmation_citation": "Theoretical confirmation via multiple independent calculations (Turner-Pollmann-Berg 2011; etc.)." }] },
+        { "cell_id": "cell-fh-Pinm-d3", "axis_values": { "tangential-structure": "Pin-", "spacetime-dimension": 3 }, "content": "Ω^{Pin-}_3 = 0" },
+        { "cell_id": "cell-fh-Pinm-d4", "axis_values": { "tangential-structure": "Pin-", "spacetime-dimension": 4 }, "content": "Ω^{Pin-}_4 = 0" },
+
+        { "cell_id": "cell-fh-Spinc-d0", "axis_values": { "tangential-structure": "Spin^c", "spacetime-dimension": 0 }, "content": "Ω^{Spin^c}_0 = ℤ" },
+        { "cell_id": "cell-fh-Spinc-d1", "axis_values": { "tangential-structure": "Spin^c", "spacetime-dimension": 1 }, "content": "Ω^{Spin^c}_1 = 0" },
+        { "cell_id": "cell-fh-Spinc-d2", "axis_values": { "tangential-structure": "Spin^c", "spacetime-dimension": 2 }, "content": "Ω^{Spin^c}_2 = ℤ", "description": "Classified by the first Chern number; corresponds to the integer quantum Hall effect's TKNN invariant (Thouless-Kohmoto-Nightingale-den Nijs 1982).", "realized_examples": ["Integer quantum Hall effect (von Klitzing 1980; classified by Chern number)"] },
+        { "cell_id": "cell-fh-Spinc-d3", "axis_values": { "tangential-structure": "Spin^c", "spacetime-dimension": 3 }, "content": "Ω^{Spin^c}_3 = 0" },
+        { "cell_id": "cell-fh-Spinc-d4", "axis_values": { "tangential-structure": "Spin^c", "spacetime-dimension": 4 }, "content": "Ω^{Spin^c}_4 = ℤ²", "description": "Rank-2 free part; classified jointly by the signature and the c_1²/2 invariant (Chern character integrals)." }
+      ],
+
+      "closure_status": {
+        "level": "partial",
+        "description": "Partial. The cobordism-classification framework is established and proven; the explicit cobordism groups for the five tangential structures and small dimensions above are computed and standard. What remains partial: (i) higher dimensions and more exotic tangential structures (twisted Spin × G for various G) are not all explicitly computed; (ii) the framework's extension to non-invertible topological phases (true topological order) requires the modular-tensor-category machinery and remains an active research area; (iii) cosmological-scale generalizations (anomaly cobordism for gravity combined with arbitrary symmetry) are partially developed but incomplete. The 'partial' status reflects that the classification is closure-grade for the cases enumerated here but does not extend to the full landscape of SPT and TQFT phases."
+      },
+
+      "predictive_yield": [
+        {
+          "prediction": "The free-fermion Z classification of 1d BDI topological superconductors collapses to Z_8 under interactions.",
+          "status": "confirmed",
+          "prediction_citation": "Fidkowski, Kitaev 2010, Phys. Rev. B 81, 134509",
+          "confirmation_citation": "Multiple independent theoretical confirmations (Turner-Pollmann-Berg 2011; Tang-Wen 2012; subsequent literature).",
+          "cell_ref": "cell-fh-Pinm-d2"
+        },
+        {
+          "prediction": "Time-reversal-invariant 3+1d fermionic SPT phases with T² = -1 form a Z_16 classification when interactions are included, refining the Z_2 free-fermion classification of class AII.",
+          "status": "confirmed",
+          "prediction_citation": "Wang, Senthil 2014, Phys. Rev. B 89, 195124; Kapustin-Thorngren-Turzillo-Wang 2015, JHEP 12, 052; Freed-Hopkins 2016",
+          "confirmation_citation": "Theoretical: established via multiple frameworks. Experimental: partial — the higher-Z_16 phases require interaction-induced phases not yet isolated experimentally.",
+          "cell_ref": "cell-fh-Pinp-d4"
+        },
+        {
+          "prediction": "The integer quantum Hall effect's TKNN invariant (first Chern number) is the Ω^{Spin^c}_2 = Z cobordism invariant; this provides a structural derivation rather than a phenomenological one.",
+          "status": "retro-explanatory-only",
+          "prediction_citation": "Freed-Hopkins 2016 (structural derivation)",
+          "description": "The IQHE was observed in 1980 (von Klitzing); the TKNN invariant interpretation came in 1982. The cobordism-theoretic re-derivation in Freed-Hopkins is retro-explanatory — it provides a uniform framework but did not predict the IQHE.",
+          "cell_ref": "cell-fh-Spinc-d2"
+        },
+        {
+          "prediction": "The full classification of interacting fermionic SPT phases for arbitrary tangential structures in arbitrary dimensions reduces to computing cobordism groups Ω^G_{d+1}, a task that the algebraic-topology machinery (Adams spectral sequence, etc.) makes systematically computable.",
+          "status": "unconfirmed-not-yet-tested",
+          "prediction_citation": "Freed, Hopkins 2016",
+          "description": "Methodological prediction. Not unconfirmed in the sense of being challenged, but the prediction is about a research program's reach; many cases remain to be computed even where the framework is accepted as correct."
+        }
+      ],
+
+      "related_entries": ["tenfold-way", "topological-phases-classification"],
+
+      "citations": [
+        "Freed, Hopkins 2016 (arXiv:1604.06527; published Comm. Math. Phys. 374, 1021 (2019)) — the foundational paper",
+        "Fidkowski, Kitaev 2010, Phys. Rev. B 81, 134509 (the Z → Z_8 collapse for 1d class BDI, demarcating the free-to-interacting reach)",
+        "Kapustin, Thorngren, Turzillo, Wang 2015, JHEP 12, 052 (independent cobordism-based classification)",
+        "Wang, Senthil 2014, Phys. Rev. B 89, 195124 (the Z_16 classification of 3+1d Pin+ phases)",
+        "Anderson, Brown, Peterson 1969, Ann. Math. 90, 1 (Spin bordism groups)",
+        "Kirby, Taylor 1990, in 'A Survey of 4-Manifolds Through the Eyes of Surgery' (Pin± bordism groups)"
+      ]
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-fh-bears-on-topo-phases",
+      "type": "bears-on",
+      "from": "freed-hopkins-cobordism",
+      "to": "topological-phases-classification",
+      "nature": "partially-solves",
+      "description": "The Freed-Hopkins cobordism classification is the most comprehensive answer to the topological-phases-classification frontier currently available. It subsumes the ten-fold way's free-fermion content, captures interaction-induced collapses (the canonical Z → Z_8 for 1d BDI) and refinements (Z_2 → Z_16 for 3+1d Pin+), and provides the general framework for invertible-phase classification. Nature: partially-solves — the framework solves the invertible-phase sub-domain of the frontier but does not address non-invertible topological order (anyons, fractional phases), which remains the open part of the topological-phases frontier.",
+      "discharge_status": {
+        "subclaim_examples": {
+          "invertible-SPT-sub-domain": "substantial",
+          "non-invertible-topological-order": "open",
+          "free-fermion-sub-domain": "substantial (via reduction to K-theory / ten-fold way)"
+        }
+      },
+      "citations": [
+        "Freed, Hopkins 2016",
+        "Senthil 2015, Annu. Rev. Condens. Matter Phys. 6, 299 (review of SPT classification and its open territory)"
+      ]
+    },
+    {
+      "id": "edge-fh-bears-on-qg",
+      "type": "bears-on",
+      "from": "freed-hopkins-cobordism",
+      "to": "qg-frontier",
+      "nature": "structural-only",
+      "description": "Anomaly cobordism — the application of Freed-Hopkins-style cobordism classification to anomalies of quantum field theories — constrains which theories can be consistently coupled to gravity. The Witten anomaly (SU(2) global anomaly), the Bardeen-Zumino anomaly, and the cobordism interpretation of mixed gauge-gravitational anomalies all live in this framework. Nature: structural-only — the cobordism classification provides constraints on the QG landscape (anomaly-free combinations of gauge group + matter content) but does not solve the QG frontier itself. The relation to QG is via the anomaly side, not the gravitational dynamics side.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Witten 1982, Phys. Lett. B 117, 324 (the SU(2) global anomaly)",
+        "García-Etxebarria, Montero 2019, JHEP 08, 003 (anomaly cobordism in QG and the swampland program)",
+        "Hsieh 2018, arXiv:1808.02881 (cobordism classification of SM-like anomalies)"
+      ]
+    },
+    {
+      "id": "edge-qft-uses-fh",
+      "type": "uses-classification",
+      "from": "qft",
+      "to": "freed-hopkins-cobordism",
+      "cell_refs": ["cell-fh-Spin-d2", "cell-fh-Pinm-d2", "cell-fh-Pinp-d4", "cell-fh-Spinc-d2"],
+      "description": "QFT uses the Freed-Hopkins classification at multiple levels: (i) as the framework for classifying invertible TQFTs in any dimension and tangential structure; (ii) as the framework for computing anomalies of fermionic gauge theories (anomaly cobordism); (iii) as the structural setting in which the relation between SPT phases and topological field theories is made precise. cell_refs pins the cells whose physical realizations are most prominent in QFT applications: the Arf invariant (Spin-d2), Fidkowski-Kitaev (Pin--d2), Z_16 (Pin+-d4), and IQHE/TKNN (Spin^c-d2).",
+      "citations": [
+        "Freed, Hopkins 2016",
+        "Freed 2014, in 'Mathematical Foundations of Quantum Field Theory' (Stanford Lectures)"
+      ]
+    },
+    {
+      "id": "edge-statmech-uses-fh",
+      "type": "uses-classification",
+      "from": "stat-mech",
+      "to": "freed-hopkins-cobordism",
+      "cell_refs": ["cell-fh-Pinm-d2", "cell-fh-Pinp-d4", "cell-fh-Spinc-d2"],
+      "description": "Statistical mechanics (specifically, condensed-matter many-body physics) uses Freed-Hopkins to classify gapped SPT phases beyond the free-fermion regime. The framework is the standard tool for analyzing whether two ground states of a gapped Hamiltonian are continuously connected (in the same SPT phase) or topologically distinct. cell_refs pins the cells with the most-cited condensed-matter realizations.",
+      "citations": [
+        "Senthil 2015, Annu. Rev. Condens. Matter Phys. 6, 299"
+      ]
+    },
+
+    {
+      "id": "edge-xc-tenfold-specializes-fh",
+      "type": "cross-classification",
+      "from": "tenfold-way",
+      "to": "freed-hopkins-cobordism",
+      "subtype": "specializes",
+      "cell_refs": ["cell-A-d1", "cell-A-d2", "cell-A-d3", "cell-AIII-d1", "cell-AIII-d2", "cell-AIII-d3", "cell-AI-d1", "cell-AI-d2", "cell-AI-d3", "cell-BDI-d1", "cell-BDI-d2", "cell-BDI-d3", "cell-D-d1", "cell-D-d2", "cell-D-d3", "cell-DIII-d1", "cell-DIII-d2", "cell-DIII-d3", "cell-AII-d1", "cell-AII-d2", "cell-AII-d3", "cell-CII-d1", "cell-CII-d2", "cell-CII-d3", "cell-C-d1", "cell-C-d2", "cell-C-d3", "cell-CI-d1", "cell-CI-d2", "cell-CI-d3"],
+      "description": "The ten-fold way is the free-fermion specialization of the Freed-Hopkins cobordism classification. Each ten-fold-way symmetry class corresponds to a specific tangential structure plus internal symmetry combination in the Freed-Hopkins framework (e.g., class AII ↔ Pin+; class BDI ↔ Pin-; class A ↔ Spin^c; etc.), and the ten-fold-way's per-(class, dim) topological invariant (0, Z, Z_2, 2Z) is the FREE part or the Z_2-torsion part of the corresponding cobordism group Ω^G_{d+1}. The full cobordism group is in general LARGER (Z_8 vs Z for BDI in 1d; Z_16 vs Z_2 for AII in 4d) because the cobordism classification includes interaction-induced refinements that the free-fermion ten-fold way cannot see. cell_refs pins all 30 ten-fold-way cells (the entire ten-fold-way classification is what specializes). First use of the `specializes` cross-classification subtype in the project; the relation is canonically the example used in v14.1 findings §10.1 to motivate v15's typed cross-classification edges.",
+      "citations": [
+        "Kitaev 2009, AIP Conf. Proc. 1134, 22 (ten-fold way; K-theory framing)",
+        "Freed, Hopkins 2016 (cobordism framing; recovers ten-fold way as free-fermion specialization)",
+        "Fidkowski, Kitaev 2010 (canonical example of where ten-fold way and Freed-Hopkins differ: the Z → Z_8 collapse demarcates the specialization)"
+      ]
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}

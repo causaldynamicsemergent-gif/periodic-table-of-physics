@@ -1,0 +1,623 @@
+{
+  "_meta": {
+    "version": "v21",
+    "schema_version": "v16",
+    "entry_label": "compact-astrophysical-objects",
+    "entry_role": "Phase 2 entry #8 — third explicit phenomenon-FC; first FC in the astrophysics sector",
+    "authoring_notes": "Standalone authoring per the EOS-co-authoring decision recorded in MAP_v21_findings.md §2. EOS classification recorded as planned future structural-FC in related_entries."
+  },
+  "nodes": [
+    {
+      "id": "compact-astrophysical-objects",
+      "type": "formal-classification",
+      "label": "Compact astrophysical objects",
+      "full_name": "Classification of compact astrophysical objects — white dwarfs, neutron stars, black holes, and predicted exotic compact objects",
+      "subtype": "compact-astrophysical-objects",
+      "cross_cutting_concepts": [
+        "general-relativity",
+        "hydrostatic-equilibrium",
+        "gravitational-wave-astronomy",
+        "electromagnetic-observation",
+        "equation-of-state-modeling",
+        "black-hole-thermodynamics",
+        "holography",
+        "diffeomorphism-invariance",
+        "dense-matter",
+        "compact-object",
+        "neutron-star",
+        "black-hole",
+        "white-dwarf",
+        "gravitational-wave-source",
+        "no-hair-theorem"
+      ],
+      "description": "Compact astrophysical objects are gravitationally-bound configurations of matter (or vacuum, in the case of black holes) at densities where general-relativistic effects are non-negligible to dominant. They occupy the end-state of stellar evolution (and a few non-stellar formation channels). The classification organizes confirmed individuals, confirmed populations, candidate individuals, and predicted-but-unobserved object classes by object-class × mass-regime × observational-status. Each compact object is a solution (or near-solution) to Einstein's field equations: white dwarfs and neutron stars are equilibrium solutions of TOV-type hydrostatic equations with quantum-statistical matter pressure; black holes are vacuum (or near-vacuum) solutions of Einstein's equations characterized by event horizons. The classification is phenomenological: cells correspond to specific physical objects (e.g., Sgr A*, PSR J0740+6620) or families of objects (stellar-mass merging BHs as catalogued by LIGO-Virgo-KAGRA). Mendeleev-style empty cells include the long-suspected intermediate-mass black hole population (10^2–10^5 M_sun; only partially populated by GW190521 and a small handful of candidates as of 2026), predicted-but-unobserved quark stars / strange-quark-matter compact objects, primordial black holes in specific mass windows (asteroid-mass, sublunar-mass, stellar-mass — some windows excluded as DM candidates, others remain open), and exotic-compact-object models such as boson stars and gravastars proposed as BH-mimickers but never observationally identified.",
+      "domain_of_applicability": "Stellar and post-stellar gravitationally-compact configurations where M/R is large enough that general-relativistic corrections matter (typically GM/(Rc²) ≳ 10^-4 for WDs, ~0.2 for NSs, ≃ 0.5 at BH horizons). Includes: white dwarfs, neutron stars (canonical and massive), magnetars, stellar-mass black holes, intermediate-mass black holes, supermassive black holes at galactic centers and AGN, post-merger remnants of compact binary coalescences, and predicted-but-unobserved exotic compact objects (quark stars, primordial BHs in various mass windows, boson stars). Excludes: ordinary main-sequence stars (insufficient compactness), brown dwarfs, supernova progenitors prior to collapse, galaxy-scale dark-matter halos, cosmological-scale black-hole populations as a class (the cosmological-population statistics belong in a cosmology-FC, not here; individual SMBHs do).",
+      "organizing_principle": "Each compact astrophysical object is identified by its dominant physical mechanism of pressure support (electron-degeneracy → WD; nucleon-degeneracy + strong-force repulsion → NS; vacuum solution behind a horizon → BH; predicted alternatives → exotic-compact-object), together with its mass regime and its current observational status. Within a given (object-class, mass-regime) cell, individual objects are members of an empirically-defined population — e.g., the cell-compact-NS-massive cell contains PSR J0740+6620, PSR J0348+0432, and other ≳2 M_sun neutron stars constraining the dense-matter EOS at the upper end. The classification is constrained by GR (the Tolman-Oppenheimer-Volkoff equations for matter objects; the Kerr-Newman family for stationary axisymmetric vacuum solutions; the four laws of black-hole thermodynamics for horizons), by the matter EOS (which sets the maximum mass for WDs at the Chandrasekhar limit and for NSs at the TOV limit), and by formation-channel physics (which restricts what mass ranges are populated by what astrophysical processes). Two distinct organizing axes are in tension: a structural axis (the object IS a GR solution of a given type) and an observational axis (the object IS or IS NOT confirmed). The observational-status axis is essential because the population of unobserved-but-theoretically-predicted compact objects (PBHs, quark stars, exotic objects) is a major empty-cell zone driving experimental programs.",
+      "classification_axes": [
+        {
+          "name": "object-class",
+          "kind": "discrete-enum",
+          "values": [
+            "white-dwarf",
+            "neutron-star",
+            "magnetar",
+            "stellar-mass-black-hole",
+            "intermediate-mass-black-hole",
+            "supermassive-black-hole",
+            "primordial-black-hole",
+            "quark-star",
+            "exotic-compact-object"
+          ],
+          "description": "The structural class of the compact object. white-dwarf: electron-degeneracy-supported; final state of low/intermediate-mass stars (M_progenitor ≲ 8 M_sun). neutron-star: nucleon-degeneracy + strong-force-pressure supported; remnant of core-collapse supernovae. magnetar: subtype of NS with extreme magnetic fields B ~ 10^14-10^15 G (treated as a distinct class because its phenomenology — soft-gamma-repeater bursts, giant flares — is observationally distinct). stellar-mass-black-hole: M ~ 3-100 M_sun; formed in core-collapse of massive stars or by binary mergers. intermediate-mass-black-hole: M ~ 10^2-10^5 M_sun; sparsely populated cell, formation channels under debate. supermassive-black-hole: M ~ 10^6-10^10 M_sun; resides at galactic centers and powers AGN. primordial-black-hole: hypothesized BHs of cosmological origin from early-universe density fluctuations; mass not constrained to stellar values. quark-star: predicted strange-quark-matter compact object; never observationally confirmed. exotic-compact-object: catch-all for theoretical alternatives (boson stars, gravastars, fuzzballs, BH-mimickers) — predicted only."
+        },
+        {
+          "name": "mass-regime",
+          "kind": "discrete-enum",
+          "values": [
+            "subplanetary",
+            "sublunar",
+            "asteroid-mass",
+            "planetary",
+            "sub-solar",
+            "stellar",
+            "ultramassive-stellar",
+            "intermediate",
+            "supermassive",
+            "ultramassive-supermassive"
+          ],
+          "description": "Mass-scale regime. subplanetary: M ≲ 10^-15 M_sun (relevant only for PBHs from microscopic primordial collapse; mostly evaporated by now if formed). sublunar: 10^-15 - 10^-9 M_sun (asteroid-mass to lunar-mass PBH window — partial DM candidate). asteroid-mass: ~10^-12 M_sun region, narrow PBH-DM window. planetary: 10^-6 - 10^-3 M_sun (microlensing PBH searches). sub-solar: 0.1 - 1 M_sun (low-mass WDs; sub-solar PBH-LIGO searches). stellar: 1 - 30 M_sun (typical NSs, stellar-mass BHs, WDs). ultramassive-stellar: 30 - 150 M_sun (upper-mass-gap pair-instability region; partially populated by GW190521). intermediate: 100 - 10^5 M_sun (IMBH range; sparsely populated). supermassive: 10^6 - 10^9 M_sun (galactic-center SMBHs). ultramassive-supermassive: > 10^10 M_sun (the heaviest known SMBHs at AGN centers; few confirmed individuals)."
+        },
+        {
+          "name": "observational-status",
+          "kind": "discrete-enum",
+          "values": [
+            "confirmed-individual",
+            "confirmed-population",
+            "candidate-individual",
+            "candidate-population",
+            "predicted-only",
+            "excluded-as-DM-fraction"
+          ],
+          "description": "Empirical status of the object or population. confirmed-individual: a specific named object whose physical class is established (e.g., Sgr A*, PSR J0740+6620, Sirius B). confirmed-population: a statistical population is established but individual members are usually cataloged with parameters that have nontrivial uncertainty (e.g., LIGO-Virgo-KAGRA stellar-mass BH catalog). candidate-individual: a specific named object proposed to be of this class but identification disputed (e.g., specific IMBH candidates in dense stellar clusters). candidate-population: a population whose existence is suggested but not established (e.g., quark-star population; PBH population in some mass windows). predicted-only: theoretical prediction with no observational confirmation (e.g., boson-star, gravastar populations). excluded-as-DM-fraction: PBH mass windows excluded from being the dominant dark-matter component (~5σ exclusion or stronger)."
+        }
+      ],
+      "cells": [
+        {
+          "cell_id": "cell-compact-WD-canonical",
+          "axis_values": {
+            "object-class": "white-dwarf",
+            "mass-regime": "sub-solar",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Canonical white dwarfs: M ≈ 0.6 M_sun, R ≈ R_Earth (~6000 km), supported by electron degeneracy pressure. Cooling timescales ~ Gyr. Mass-radius relation is well-measured for individuals including Sirius B (M ≈ 1.02 M_sun, R ≈ 0.0084 R_sun) and 40 Eridani B.",
+          "realized_examples": [
+            "Sirius B — paradigmatic WD, M ≈ 1.02 M_sun, R ≈ 0.0084 R_sun (Bond et al. 2017 HST astrometric mass)",
+            "40 Eridani B — closest WD-triple system to Earth",
+            "Procyon B — high-mass WD in nearby binary",
+            "Van Maanen 2 — first isolated WD discovered (1917)"
+          ],
+          "description": "The reference cell for WD physics. The mass-radius relation R ∝ M^{-1/3} (Chandrasekhar's nonrelativistic limit) is observed in this cell. WD spectroscopic classification (DA, DB, DC, DZ, DQ) tracks atmospheric composition, not core physics; the core composition (C/O typical; lower-mass WDs have He cores; ultramassive WDs may have O/Ne/Mg cores) constrains progenitor mass.",
+          "citations": [
+            "Chandrasekhar 1931, Astrophys. J. 74, 81 (maximum mass calculation)",
+            "Bond, Schaefer, Gilliland et al. 2017, Astrophys. J. 840, 70 (Sirius B HST mass)",
+            "Tremblay et al. 2019, Nature 565, 202 (Gaia WD population)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-WD-Chandrasekhar-limit",
+          "axis_values": {
+            "object-class": "white-dwarf",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-population"
+          },
+          "content": "White dwarfs near the Chandrasekhar limit M_Ch ≈ 1.4 M_sun (for nonrotating, nonmagnetic, μ_e = 2 composition). Approach to M_Ch leads to instability (electron capture, pyconuclear reactions) and is the precursor to type-Ia supernovae or accretion-induced collapse to neutron stars.",
+          "realized_examples": [
+            "RX J0648.0-4418 — accreting massive WD",
+            "ZTF J153932.16+502738.8 — eclipsing ultramassive double WD inspiral",
+            "WD 1856+534 — high-mass WD with transiting giant planet"
+          ],
+          "description": "Mass approach to M_Ch is observable in pre-explosion Type-Ia progenitors. The Chandrasekhar limit is one of the most precisely-known structural facts of compact-object physics; it derives from the relativistic equation of state for a degenerate electron gas with no free parameters at the predicted-mass level.",
+          "citations": [
+            "Chandrasekhar 1931, Astrophys. J. 74, 81",
+            "Hillebrandt, Niemeyer 2000, Annu. Rev. Astron. Astrophys. 38, 191 (Type-Ia models)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-WD-ultramassive",
+          "axis_values": {
+            "object-class": "white-dwarf",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-population"
+          },
+          "content": "Ultramassive WDs with M ≳ 1.1 M_sun, formed in mergers of WD pairs or massive progenitors. Crystallizing interiors (Coulomb crystallization at low T) and possible neon-capture-driven collapse to NSs are predicted; the latter constitutes the accretion-induced-collapse formation channel for low-mass NSs.",
+          "realized_examples": [
+            "ZTF J1901+1458 — M ≈ 1.35 M_sun ultramassive WD with strong B field (Caiazzo et al. 2021)",
+            "WD J0551+4135 — ultramassive WD with composition suggesting merger origin (Hollands et al. 2020)"
+          ],
+          "description": "Population is sparsely sampled but growing rapidly with Gaia data releases. The merger origin is independently supported by the kinematic-age vs cooling-age mismatch in ultramassive WDs.",
+          "citations": [
+            "Caiazzo et al. 2021, Nature 595, 39 (ZTF J1901+1458)",
+            "Cheng, Cummings, Ménard 2019, Astrophys. J. 886, 100 (merger-origin ultramassive WDs)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-NS-canonical",
+          "axis_values": {
+            "object-class": "neutron-star",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Canonical neutron stars: M ≈ 1.4 M_sun (the median observed NS mass), R ≈ 11-13 km. Surface gravity GM/(Rc²) ≈ 0.2 — general-relativistic regime. Crust + core structure: outer crust (Coulomb lattice of nuclei in electron gas), inner crust (neutron-drip + neutron superfluid), outer core (npe + possibly μ matter), inner core (composition uncertain — hyperons, kaon condensate, quark matter all proposed).",
+          "realized_examples": [
+            "PSR J0030+0451 — NICER mass-radius measurement M = 1.34 (+0.15/-0.16) M_sun, R = 12.71 (+1.14/-1.19) km (Miller et al. 2019, Riley et al. 2019)",
+            "PSR B1913+16 (Hulse-Taylor) — first binary pulsar, M ≈ 1.44 M_sun",
+            "PSR J0737-3039A/B — double pulsar system",
+            "PSR J0437-4715 — NICER mass-radius (Choudhury et al. 2024)"
+          ],
+          "description": "The reference cell for NS physics. NICER X-ray pulse-profile modeling provides simultaneous mass-radius constraints on individual NSs; combined with gravitational-wave tidal-deformability constraints (GW170817 binary NS merger) and the maximum-mass constraint (PSR J0740+6620), the dense-matter EOS is constrained at the 2024-26 level to a narrow band consistent with hadronic-only EOS, hadron-quark crossover EOS, and certain stiff-mediated EOS — but disfavoring extremely stiff or extremely soft pure-hadron EOS.",
+          "citations": [
+            "Miller et al. 2019, Astrophys. J. Lett. 887, L24 (NICER J0030+0451 — group A)",
+            "Riley et al. 2019, Astrophys. J. Lett. 887, L21 (NICER J0030+0451 — group B)",
+            "Hulse, Taylor 1975, Astrophys. J. 195, L51 (binary pulsar discovery)",
+            "Choudhury et al. 2024, Astrophys. J. Lett. 971, L20 (NICER J0437-4715)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-NS-massive",
+          "axis_values": {
+            "object-class": "neutron-star",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Massive neutron stars with M ≳ 2 M_sun, constraining the TOV maximum mass from below. These observations rule out soft hadronic-only EOS and disfavor first-order quark-matter phase transitions at densities below ~3-4 n_0.",
+          "realized_examples": [
+            "PSR J0740+6620 — M = 2.08 ± 0.07 M_sun (Cromartie et al. 2020; Fonseca et al. 2021); NICER + radio mass-radius: M = 2.072 M_sun, R = 12.39 km (Miller et al. 2021)",
+            "PSR J0348+0432 — M = 2.01 ± 0.04 M_sun (Antoniadis et al. 2013)",
+            "PSR J1614-2230 — M ≈ 1.93 M_sun (Demorest et al. 2010; revised in Arzoumanian et al. 2018)",
+            "PSR J0952-0607 — claimed M ≈ 2.35 M_sun, the most-massive known NS as of 2024 (Romani et al. 2022; mass updated; observational systematics under continued review)"
+          ],
+          "description": "Massive NSs provide the strongest empirical lower bound on the maximum NS mass M_TOV. Combined with GW170817 upper bound on M_TOV (≲ 2.3-2.4 M_sun from no-prompt-collapse argument), the value M_TOV ≈ 2.0-2.3 M_sun is now empirically established within a narrow band — a major dense-matter physics constraint. This cell is the canonical test bed for EOS-class discrimination.",
+          "citations": [
+            "Cromartie et al. 2020, Nature Astron. 4, 72 (PSR J0740+6620)",
+            "Fonseca et al. 2021, Astrophys. J. Lett. 915, L12 (PSR J0740+6620 mass update)",
+            "Antoniadis et al. 2013, Science 340, 6131 (PSR J0348+0432)",
+            "Miller et al. 2021, Astrophys. J. Lett. 918, L28 (NICER + XMM J0740 mass-radius)",
+            "Romani et al. 2022, Astrophys. J. Lett. 934, L17 (PSR J0952-0607 mass claim)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-magnetar",
+          "axis_values": {
+            "object-class": "magnetar",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Magnetars: neutron stars with extreme magnetic fields B ~ 10^14-10^15 G (~10^4 × canonical NS). Phenomenology includes soft-gamma-repeater (SGR) bursts, anomalous X-ray pulsar (AXP) emission, giant flares (10^46 erg in seconds), and occasional Fast-Radio-Burst (FRB) associations.",
+          "realized_examples": [
+            "SGR 1806-20 — 2004 giant flare, brightest extrasolar event ever recorded",
+            "SGR J1935+2154 — magnetar associated with FRB 200428, the first galactic FRB",
+            "1E 1841-045 — paradigmatic AXP",
+            "PSR J1119-6127 — magnetar-pulsar transition object"
+          ],
+          "description": "Magnetar status is established for ~30 confirmed individuals as of 2024-26. The magnetar-FRB connection (SGR J1935+2154 → FRB 200428 in 2020) is the strongest empirical link between magnetars and extragalactic FRBs, although whether ALL FRBs are magnetar-sourced remains under investigation.",
+          "citations": [
+            "Duncan, Thompson 1992, Astrophys. J. 392, L9 (magnetar model)",
+            "Hurley et al. 2005, Nature 434, 1098 (SGR 1806-20 giant flare)",
+            "CHIME/FRB Collaboration 2020, Nature 587, 54 (FRB 200428 from SGR J1935+2154)",
+            "Bochenek et al. 2020, Nature 587, 59 (STARE2 detection of FRB 200428)",
+            "Kaspi, Beloborodov 2017, Annu. Rev. Astron. Astrophys. 55, 261 (magnetars review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-NS-merger-remnant",
+          "axis_values": {
+            "object-class": "neutron-star",
+            "mass-regime": "ultramassive-stellar",
+            "observational-status": "candidate-individual"
+          },
+          "content": "Hypermassive neutron-star remnants: short-lived (~ms-1s) products of binary NS coalescence with total mass exceeding M_TOV. Differential rotation supports against immediate collapse; viscous evolution drives collapse to BH on ms-s timescales.",
+          "realized_examples": [
+            "GW170817 post-merger — total mass ≈ 2.74 M_sun (above M_TOV); remnant identity (immediate BH, short-lived hypermassive NS, or transient supramassive NS) constrained by EM observations and kilonova ejecta mass; consensus disfavors prompt collapse, favors short-lived hypermassive NS → BH (Margalit, Metzger 2017; Bauswein et al. 2017)"
+          ],
+          "description": "No direct GW post-merger detection yet at design-sensitivity reach. Pre-O5 LIGO-Virgo-KAGRA noise floor doesn't yet reach the relevant kHz frequencies for the post-merger oscillation modes. Future post-merger GW detection would discriminate among EOS classes at the most extreme densities (~4-6 n_0).",
+          "citations": [
+            "Bauswein, Stergioulas, Janka 2017, Phys. Rev. D 96, 124044 (post-merger oscillations)",
+            "Margalit, Metzger 2017, Astrophys. J. Lett. 850, L19 (GW170817 remnant constraints)",
+            "Radice et al. 2018, Astrophys. J. Lett. 852, L29 (kilonova + post-merger constraints)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-stellar-BH-XRB",
+          "axis_values": {
+            "object-class": "stellar-mass-black-hole",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Stellar-mass black holes in X-ray binaries: M ~ 5-30 M_sun, identified by accretion-disk X-ray emission and dynamical mass measurements of the companion. The first BH identifications were in this cell (Cyg X-1).",
+          "realized_examples": [
+            "Cyg X-1 — M ≈ 21.2 M_sun (Miller-Jones et al. 2021), the first BH discovered",
+            "GRS 1915+105 — M ≈ 10.1 M_sun, microquasar with relativistic jets",
+            "V404 Cygni — M ≈ 9 M_sun, transient BH X-ray binary",
+            "LMC X-1 — M ≈ 10.9 M_sun, persistent BH HMXB",
+            "GX 339-4 — transient BH X-ray binary, M ≈ 5-7 M_sun"
+          ],
+          "description": "X-ray-binary BHs are the longest-confirmed BH population (Cyg X-1, 1971). Spin measurements via continuum-fitting and Fe-Kα reflection lines provide tests of Kerr metric and constraints on BH spin distribution. The X-ray-binary BH mass distribution is concentrated in 5-15 M_sun.",
+          "citations": [
+            "Bolton 1972, Nature Phys. Sci. 235, 271 (Cyg X-1 BH identification)",
+            "Webster, Murdin 1972, Nature 235, 37 (independent Cyg X-1)",
+            "Miller-Jones et al. 2021, Science 371, 1046 (Cyg X-1 revised mass and distance)",
+            "McClintock, Narayan, Steiner 2014, Space Sci. Rev. 183, 295 (BH spin review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-stellar-BH-GW",
+          "axis_values": {
+            "object-class": "stellar-mass-black-hole",
+            "mass-regime": "stellar",
+            "observational-status": "confirmed-population"
+          },
+          "content": "Stellar-mass black holes in merging compact binaries, catalogued by LIGO-Virgo-KAGRA gravitational-wave observations. As of the O4 run (2024-26), GWTC-4 contains ~150+ confident BBH mergers spanning component masses ~5-80 M_sun. Mass distribution shows distinctive features: a low-mass-gap edge near ~3-5 M_sun, a pile-up at ~10 M_sun, and a partially-suppressed pair-instability gap at ~50-100 M_sun.",
+          "realized_examples": [
+            "GW150914 — first GW detection, M_1 ≈ 36 M_sun, M_2 ≈ 29 M_sun, BBH merger at z ≈ 0.09",
+            "GW190521 — total mass ≈ 150 M_sun; final BH ≈ 142 M_sun straddles intermediate-mass BH regime",
+            "GW200115 — first confirmed NS-BH merger, with BH M ≈ 5.7 M_sun, NS M ≈ 1.5 M_sun",
+            "GW190412 — first confidently asymmetric-mass-ratio BBH merger (q ≈ 0.28)"
+          ],
+          "description": "The GW BH population is now the largest single sample of confirmed stellar-mass BHs. It overlaps the X-ray-binary BH mass distribution at the low-mass end but extends substantially higher (X-ray binaries top out near 30 M_sun; GW BHs extend to ~80 M_sun with GW190521's primary). The detected mass distribution provides one of the strongest constraints on stellar-evolution and binary-formation channels in current astrophysics.",
+          "citations": [
+            "LIGO/Virgo Collaboration 2016, Phys. Rev. Lett. 116, 061102 (GW150914)",
+            "LIGO/Virgo Collaboration 2020, Phys. Rev. Lett. 125, 101102 (GW190521)",
+            "LIGO/Virgo/KAGRA Collaboration 2021, Phys. Rev. X 13, 011048 (GWTC-3)",
+            "Abbott et al. 2024, Phys. Rev. X (in press) (GWTC-4 anticipated)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-stellar-BH-mass-gap",
+          "axis_values": {
+            "object-class": "stellar-mass-black-hole",
+            "mass-regime": "stellar",
+            "observational-status": "candidate-population"
+          },
+          "content": "The lower-mass-gap region: 3-5 M_sun. X-ray-binary observations of the 1990s-2010s found very few BHs below ~5 M_sun, suggesting a gap between the maximum NS mass (~2.3 M_sun) and the minimum BH mass (~5 M_sun). GW observations are beginning to populate this gap (GW200115 with BH M ≈ 5.7 M_sun, GW190425, GW230529 — see below).",
+          "realized_examples": [
+            "GW230529_181500 — compact-object merger with primary mass 2.5-4.5 M_sun (LVK Collaboration 2024); occupies the lower mass-gap region",
+            "GW200115 — NS-BH merger with BH at lower edge of gap"
+          ],
+          "description": "The mass-gap question is empirically open as of 2024-26. Whether the gap is genuine (reflecting a structural feature of stellar collapse, e.g., the rapid-versus-delayed supernova mechanism) or apparent (an X-ray selection effect) is being tested by ongoing GW observations. GW230529 (2023 detection, 2024 paper) is the strongest gap-populating event to date.",
+          "citations": [
+            "Bailyn et al. 1998, Astrophys. J. 499, 367 (mass-gap from XRBs)",
+            "Özel et al. 2010, Astrophys. J. 725, 1918 (X-ray-binary BH mass distribution)",
+            "LVK Collaboration 2024, Astrophys. J. Lett. 970, L34 (GW230529 mass-gap)",
+            "Farr et al. 2011, Astrophys. J. 741, 103 (mass-gap statistical analysis)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-IMBH-gap",
+          "axis_values": {
+            "object-class": "intermediate-mass-black-hole",
+            "mass-regime": "intermediate",
+            "observational-status": "candidate-population"
+          },
+          "content": "Intermediate-mass black holes, 10^2-10^5 M_sun. The largest empty zone in the BH mass distribution. Astrophysically expected as: (i) seeds of SMBHs (Volonteri-style seed scenarios); (ii) end-products of runaway collisions in dense stellar clusters; (iii) accreted descendants of Pop-III stellar BHs.",
+          "realized_examples": [
+            "GW190521 final BH at ≈ 142 M_sun — the strongest single IMBH candidate from GW astronomy",
+            "HLX-1 (in ESO 243-49) — hyperluminous X-ray source, M ≈ 10^4 M_sun candidate (debated)",
+            "NGC 6166 ULX-1 candidates — multiple IMBH-mass-range candidates",
+            "M82 X-1 — possible IMBH (debated)"
+          ],
+          "description": "The IMBH population is sparsely sampled relative to expectations. Each individual candidate is debated; statistical population evidence comes from GW observations (very few IMBH-mass mergers) and ULX surveys (a small subset of ULXs are IMBH candidates; most are super-Eddington stellar-mass BHs). Future LISA observations (2030s+) will be sensitive to IMBH inspirals at high redshift and may definitively populate this cell.",
+          "citations": [
+            "Greene, Strader, Ho 2020, Annu. Rev. Astron. Astrophys. 58, 257 (IMBH review)",
+            "Farrell et al. 2009, Nature 460, 73 (HLX-1)",
+            "Pasham, Strohmayer, Mushotzky 2014, Nature 513, 74 (M82 X-1 IMBH claim)",
+            "LIGO/Virgo Collaboration 2020, Phys. Rev. Lett. 125, 101102 (GW190521 as IMBH)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-SMBH-galactic-center",
+          "axis_values": {
+            "object-class": "supermassive-black-hole",
+            "mass-regime": "supermassive",
+            "observational-status": "confirmed-individual"
+          },
+          "content": "Supermassive black holes at galactic centers. Stellar-dynamical mass measurements (S-star orbits at the Galactic Center), maser-dynamics measurements (NGC 4258), and event-horizon-scale imaging (EHT for Sgr A* and M87*) provide the cleanest individual mass constraints. SMBHs at galactic centers correlate with host galaxy properties (M-σ relation).",
+          "realized_examples": [
+            "Sgr A* — M ≈ 4.297 ± 0.012 × 10^6 M_sun (GRAVITY Collaboration 2022); EHT imaging (EHT Collaboration 2022) confirms shadow size consistent with Kerr metric prediction",
+            "M87* — M ≈ 6.5 × 10^9 M_sun (EHT Collaboration 2019); first EHT image of a BH shadow",
+            "NGC 4258 — M ≈ 4 × 10^7 M_sun, gold-standard SMBH mass via H2O megamaser",
+            "Andromeda M31 nucleus — M ≈ 1.4 × 10^8 M_sun"
+          ],
+          "description": "The cell of strongest empirical no-hair-theorem tests. EHT Sgr A* and M87* shadow size and shape are consistent with the Kerr-metric prediction at the current angular-resolution precision (~ 10% on shadow diameter). Quasi-normal-mode ringdowns from BBH mergers (overlap with cell-compact-stellar-BH-GW for spectroscopic BH tests) provide complementary horizon-scale GR tests.",
+          "citations": [
+            "Ghez et al. 2008, Astrophys. J. 689, 1044 (Galactic Center BH stellar orbits)",
+            "GRAVITY Collaboration 2022, Astron. Astrophys. 657, L12 (Sgr A* mass)",
+            "EHT Collaboration 2019, Astrophys. J. Lett. 875, L1 (M87* shadow)",
+            "EHT Collaboration 2022, Astrophys. J. Lett. 930, L12 (Sgr A* shadow)",
+            "Kormendy, Ho 2013, Annu. Rev. Astron. Astrophys. 51, 511 (SMBH-host scaling review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-SMBH-AGN",
+          "axis_values": {
+            "object-class": "supermassive-black-hole",
+            "mass-regime": "supermassive",
+            "observational-status": "confirmed-population"
+          },
+          "content": "Supermassive black holes powering active galactic nuclei (AGN) and quasars: M ~ 10^7-10^10 M_sun. Mass measurements via reverberation mapping (variability time-lag of broad-line region), single-epoch virial estimators, or stellar/gas dynamics for nearby AGN. The most massive known SMBHs reach ~ 10^10 M_sun (ultramassive cell may host some).",
+          "realized_examples": [
+            "TON 618 — M ≈ 6.6 × 10^10 M_sun, one of the most-massive known SMBHs (mass via H-beta line FWHM, single-epoch)",
+            "3C 273 — first quasar identified (1963), M ≈ 9 × 10^8 M_sun",
+            "NGC 1275 — Perseus cluster central AGN, M ≈ 8 × 10^8 M_sun",
+            "Pop-III-descendant quasars at z > 6 (J0313-1806 at z ≈ 7.6, M ≈ 1.6 × 10^9 M_sun — challenging early-Universe seed scenarios)"
+          ],
+          "description": "The AGN-SMBH population is empirically vast — tens of thousands of confirmed-population members in modern surveys (SDSS, eROSITA). High-redshift quasars (z > 6) hosting 10^9+ M_sun SMBHs constrain seed-formation channels: stellar-mass seeds (Pop-III stars) require near-Eddington continuous accretion for ~1 Gyr, while direct-collapse seeds (10^4-10^6 M_sun) allow more relaxed growth.",
+          "citations": [
+            "Schmidt 1963, Nature 197, 1040 (3C 273 as quasar)",
+            "Shemmer et al. 2004, Astrophys. J. 614, 547 (TON 618 mass)",
+            "Wang et al. 2021, Astrophys. J. Lett. 907, L1 (J0313-1806 quasar at z ≈ 7.64)",
+            "Peterson 2014, Space Sci. Rev. 183, 253 (reverberation mapping review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-quark-star",
+          "axis_values": {
+            "object-class": "quark-star",
+            "mass-regime": "stellar",
+            "observational-status": "predicted-only"
+          },
+          "content": "Quark stars (strange quark stars): hypothetical compact objects composed of stable strange quark matter (SQM), predicted if Bodmer-Witten conjecture (SQM as true QCD ground state at zero pressure) holds. Mass-radius relation differs from NS: R increases with M for low-mass SQM stars, opposite to NS trend.",
+          "realized_examples": [],
+          "description": "Mendeleev empty cell. Some NS candidates have been proposed as quark-star candidates (e.g., 4U 1820-30, RX J1856.5-3754) based on small inferred radii, but interpretation as hadronic NS with stiff or soft EOS remains viable. The presumption of SQM stability is in tension with the fact that ordinary nuclei DO NOT spontaneously decay to SQM (which would require the Bodmer-Witten conjecture to hold for finite-baryon-number quark matter, not just bulk). No confirmed quark-star identification as of 2026.",
+          "citations": [
+            "Witten 1984, Phys. Rev. D 30, 272 (Witten cosmic-separation; SQM)",
+            "Bodmer 1971, Phys. Rev. D 4, 1601 (collapsed nuclei conjecture)",
+            "Alcock, Farhi, Olinto 1986, Astrophys. J. 310, 261 (strange-star structure)",
+            "Weber 2005, Prog. Part. Nucl. Phys. 54, 193 (quark-star review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-PBH-asteroid-mass",
+          "axis_values": {
+            "object-class": "primordial-black-hole",
+            "mass-regime": "asteroid-mass",
+            "observational-status": "candidate-population"
+          },
+          "content": "Primordial black holes in the asteroid-mass window: M ~ 10^17-10^22 g (~ 10^-15 to 10^-11 M_sun). This window remains open for PBHs being a substantial DM fraction; constraints from femto/picolensing, Hawking-evaporation gamma rays, and neutron-star capture rates only partially close it.",
+          "realized_examples": [],
+          "description": "Open empty cell. The asteroid-mass PBH window is one of the few mass ranges where PBHs could constitute 100% of dark matter without contradiction by current observations. Subaru-HSC microlensing limits the lower edge (~ 10^21 g), while gamma-ray-burst femtolensing and dynamical-disruption constraints limit the upper edge. Future GECCO, AMEGO-X gamma-ray missions can test the Hawking-evaporation signature.",
+          "citations": [
+            "Carr, Kühnel, Sandstad 2016, Phys. Rev. D 94, 083504 (PBH constraints review)",
+            "Niikura et al. 2019, Nature Astron. 3, 524 (Subaru HSC PBH microlensing)",
+            "Green, Kavanagh 2021, J. Phys. G 48, 043001 (PBH DM review)",
+            "Carr, Kühnel 2020, Annu. Rev. Nucl. Part. Sci. 70, 355 (PBH review)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-PBH-LIGO-window",
+          "axis_values": {
+            "object-class": "primordial-black-hole",
+            "mass-regime": "stellar",
+            "observational-status": "excluded-as-DM-fraction"
+          },
+          "content": "Primordial black holes in the LIGO mass window: M ~ 1-100 M_sun. Once proposed as a substantial DM fraction (especially after GW150914), the window is now strongly excluded as ≳ 10% DM by combined microlensing (OGLE, EROS, MACHO), GW merger-rate statistics, CMB-accretion limits, and dwarf-galaxy survival constraints.",
+          "realized_examples": [],
+          "description": "Closed cell as a DM candidate: PBHs in 1-100 M_sun are ≲ 1% DM at the present empirical limit (Carr-Kühnel 2020; Green-Kavanagh 2021). They may still contribute as a small fraction of merging BBHs, but the LIGO-Virgo-KAGRA BBH population is now dominantly compatible with astrophysical (stellar-collapse + dynamical-cluster) origin, with PBH contribution ≲ 0.1%.",
+          "citations": [
+            "Bird et al. 2016, Phys. Rev. Lett. 116, 201301 (PBH-BBH proposal)",
+            "Brandt 2016, Astrophys. J. Lett. 824, L31 (Eridanus II constraint)",
+            "Carr, Kühnel 2020, Annu. Rev. Nucl. Part. Sci. 70, 355 (PBH review)",
+            "Hütsi, Raidal, Vaskonen, Veermäe 2021, JCAP 03, 068 (BBH-rate PBH limits)"
+          ]
+        },
+        {
+          "cell_id": "cell-compact-exotic-BCO",
+          "axis_values": {
+            "object-class": "exotic-compact-object",
+            "mass-regime": "stellar",
+            "observational-status": "predicted-only"
+          },
+          "content": "Exotic compact objects: boson stars, gravastars, fuzzballs, dark stars, anisotropic stars, wormholes — proposed BH-mimickers that match BH external metric beyond the horizon scale but differ at horizon scale (no horizon, soft surface, etc.). Each model predicts a distinct GW-ringdown 'echo' signature or distinct shadow morphology potentially detectable at next-generation precision.",
+          "realized_examples": [],
+          "description": "Empty cell as a confirmed population. Some boson-star and gravastar models are ruled out (the inverse-T compactness configurations exceed observed BH-shadow morphology). However, dark-matter-aware exotic-compact-object models with weak self-interaction remain viable as a low-fraction admixture in the merging-compact-object population. GW-echo searches in LIGO-Virgo data (Abedi-Dykaar-Afshordi 2017+) have produced no confirmed detections as of 2024-26.",
+          "citations": [
+            "Cardoso, Pani 2019, Living Rev. Relativ. 22, 4 (exotic compact objects review)",
+            "Liebling, Palenzuela 2017, Living Rev. Relativ. 20, 5 (boson stars)",
+            "Mazur, Mottola 2004, Proc. Natl. Acad. Sci. 101, 9545 (gravastars)",
+            "Abedi, Dykaar, Afshordi 2017, Phys. Rev. D 96, 082004 (GW echo searches)"
+          ]
+        }
+      ],
+      "closure_status": {
+        "level": "partial",
+        "description": "Partial. The structural classification (object-class × mass-regime × observational-status) is well-established for the major populations: WDs, NSs, magnetars, stellar-mass BHs (XRB and GW), and SMBHs at galactic centers and AGN. Open: (i) the IMBH population is sparsely sampled — confirmation of a continuous population in the 10^2-10^5 M_sun range awaits LISA observations and improved EHT/ULX surveys; (ii) the lower-mass-gap (3-5 M_sun) is being populated by GW observations but its structural meaning (genuine gap vs selection effect) remains open; (iii) quark-star identification has no confirmed individual; (iv) primordial-BH presence at any DM fraction is partially constrained — some mass windows (asteroid-mass) remain open as substantial DM fractions, others (LIGO-mass, supernova-mass) are excluded; (v) exotic-compact-object populations remain pure predictions with no confirmed individuals; (vi) the dense-matter EOS at NS-core densities (4-6 n_0) is partially constrained but classification of high-density-matter phases (hadron-quark crossover, hyperon-onset, kaon-condensate, color-superconductivity) is itself partial-closure pending data from post-merger GW signals and additional NICER targets."
+      },
+      "predictive_yield": [
+        {
+          "prediction": "Maximum neutron-star mass M_TOV ≳ 2.0 M_sun (lower bound from observation of massive pulsars)",
+          "status": "confirmed",
+          "description": "TOV-equation integration with any reasonable hadronic EOS predicts a maximum NS mass; the empirical lower bound from PSR J0740+6620 (2.08 M_sun, Cromartie et al. 2020; Fonseca et al. 2021) and PSR J0348+0432 (2.01 M_sun, Antoniadis et al. 2013) confirms M_TOV ≥ 2.0 M_sun, ruling out the softest hadronic EOS that fail to support such masses.",
+          "prediction_citation": "Oppenheimer, Volkoff 1939, Phys. Rev. 55, 374 (TOV equation)",
+          "confirmation_citation": "Cromartie et al. 2020, Nature Astron. 4, 72 (PSR J0740+6620 mass)",
+          "cell_ref": "cell-compact-NS-massive"
+        },
+        {
+          "prediction": "Black-hole no-hair theorem: stationary axisymmetric BHs are described by the Kerr-Newman family with parameters (M, J, Q) only",
+          "status": "confirmed",
+          "description": "Israel-Carter-Hawking-Robinson uniqueness theorems predict that astrophysical BHs (Q ≈ 0 in practice) are fully described by (M, J). EHT shadow imaging of Sgr A* and M87* is consistent with Kerr-metric predictions at current angular-resolution precision (~10% on shadow diameter). BBH-ringdown spectroscopy (Isi et al. 2019, GW150914 first-overtone analysis; updated in O3+O4 data) probes consistency at the percent level; results are consistent with Kerr. Status `confirmed` AT CURRENT PRECISION; future-precision tests (LISA, next-generation EHT) will probe nearby modifications at the per-mille level. Caveats not falsifying the prediction but limiting its scope: the theorem assumes vacuum (matter near horizon could in principle add hair); scalar-tensor and dark-environmental modifications cannot yet be excluded at next-precision levels.",
+          "prediction_citation": "Israel 1967, Phys. Rev. 164, 1776; Carter 1971, Phys. Rev. Lett. 26, 331 (uniqueness theorems)",
+          "confirmation_citation": "Isi, Giesler, Farr, Scheel, Teukolsky 2019, Phys. Rev. Lett. 123, 111102 (BBH-ringdown no-hair test); EHT Collaboration 2022, Astrophys. J. Lett. 930, L12 (Sgr A* shadow consistent with Kerr)",
+          "cell_ref": "cell-compact-SMBH-galactic-center"
+        },
+        {
+          "prediction": "Sgr A* shadow diameter ≈ 51 ± 2 μas (Kerr-metric prediction given M and D)",
+          "status": "confirmed",
+          "description": "Given the GRAVITY-Collaboration mass M ≈ 4.297 × 10^6 M_sun and distance D ≈ 8.277 kpc, the Kerr-metric shadow has predicted angular diameter ≈ 51 μas. EHT Collaboration 2022 measured shadow diameter 51.8 ± 2.3 μas, in excellent agreement.",
+          "prediction_citation": "Bardeen 1973 (Kerr shadow formulation); Falcke, Melia, Agol 2000, Astrophys. J. Lett. 528, L13",
+          "confirmation_citation": "EHT Collaboration 2022, Astrophys. J. Lett. 930, L12 (Sgr A* shadow)",
+          "cell_ref": "cell-compact-SMBH-galactic-center"
+        },
+        {
+          "prediction": "Binary neutron-star mergers produce kilonovae and r-process nucleosynthesis",
+          "status": "confirmed",
+          "description": "Lattimer-Schramm 1974 and Eichler-Livio-Piran-Schramm 1989 predicted that NS-NS mergers eject neutron-rich material that undergoes r-process nucleosynthesis and powers a kilonova transient. GW170817 + multi-messenger EM follow-up confirmed: kilonova spectrum (AT 2017gfo), r-process line identifications (strontium, Watson et al. 2019), and short-GRB association (GRB 170817A).",
+          "prediction_citation": "Lattimer, Schramm 1974, Astrophys. J. 192, L145; Eichler, Livio, Piran, Schramm 1989, Nature 340, 126",
+          "confirmation_citation": "Abbott et al. (LVC + EM) 2017, Astrophys. J. Lett. 848, L12 (GW170817 multi-messenger); Watson et al. 2019, Nature 574, 497 (strontium r-process)",
+          "cell_ref": "cell-compact-NS-merger-remnant"
+        },
+        {
+          "prediction": "Magnetars produce extragalactic Fast Radio Bursts",
+          "status": "confirmed",
+          "description": "Magnetar-flare models for FRBs (Popov-Postnov 2013; Lyubarsky 2014) predicted that magnetars can produce coherent radio bursts of the FRB type. SGR J1935+2154 produced FRB 200428, the first galactic FRB, with luminosity bridging the SGR-burst and extragalactic-FRB populations — confirming a magnetar source for at least a subpopulation of FRBs.",
+          "prediction_citation": "Popov, Postnov 2013, arXiv:1307.4924; Lyubarsky 2014, MNRAS 442, L9",
+          "confirmation_citation": "CHIME/FRB Collaboration 2020, Nature 587, 54 (FRB 200428); Bochenek et al. 2020, Nature 587, 59",
+          "cell_ref": "cell-compact-magnetar"
+        },
+        {
+          "prediction": "Hawking radiation from astrophysical black holes",
+          "status": "retro-explanatory-only",
+          "description": "Hawking 1974 predicted that BHs emit thermal radiation at T_H = ℏc³/(8πGMk_B). For stellar-mass BHs T_H ~ 10^-8 K — far below the CMB temperature, making the emission unobservable against the CMB background. For Sgr A* (M ≈ 4×10^6 M_sun) T_H ~ 10^-14 K. Astrophysical Hawking radiation is retro-explanatory: it features in the theoretical framework but no direct measurement is feasible with current or near-future technology. (Possible exception: PBH evaporation in the asteroid-mass window may produce gamma-ray emission detectable by GECCO/AMEGO-X — that would move PBH-related Hawking radiation toward confirmable, but no detection as of 2026.)",
+          "prediction_citation": "Hawking 1974, Nature 248, 30; 1975, Commun. Math. Phys. 43, 199"
+        },
+        {
+          "prediction": "Primordial black holes constitute 100% of dark matter in the LIGO mass window (1-100 M_sun)",
+          "status": "falsified",
+          "description": "Bird et al. 2016 proposed that the GW150914 BBH could be the first signal of a PBH-DM population in the LIGO mass range. Subsequent analyses combining microlensing (OGLE, EROS), GW merger-rate statistics, CMB-spectral-distortion constraints from accretion, and dwarf-galaxy dynamical-friction limits exclude PBHs as 100% DM in 1-100 M_sun at f_PBH ≲ 10^-3 at peak sensitivity. PBHs may still contribute as a small subdominant component of the BBH merger population.",
+          "prediction_citation": "Bird, Cholis, Muñoz, Ali-Haïmoud, Kamionkowski, Kovetz, Raccanelli, Riess 2016, Phys. Rev. Lett. 116, 201301",
+          "confirmation_citation": "Brandt 2016, Astrophys. J. Lett. 824, L31 (Eridanus II); Hütsi et al. 2021, JCAP 03, 068 (BBH-rate constraints); Carr, Kühnel 2020 review (combined)",
+          "cell_ref": "cell-compact-PBH-LIGO-window"
+        },
+        {
+          "prediction": "Intermediate-mass black hole population in 10^2-10^5 M_sun range",
+          "status": "unconfirmed-not-yet-tested",
+          "description": "Multiple formation channels predict IMBHs: Pop-III stellar collapse, runaway stellar collisions in dense clusters, direct-collapse seeds for SMBHs. As of 2024-26 the IMBH population is sparsely sampled: GW190521 final BH (~142 M_sun) is a confirmed individual at the lower end; ULX candidates (HLX-1, M82 X-1) remain disputed. Confirmation of a continuous IMBH population, with empirical mass function, awaits LISA observations (2030s+) of IMBH inspirals and improved EHT/ULX surveys.",
+          "prediction_citation": "Madau, Rees 2001, Astrophys. J. Lett. 551, L27 (Pop-III seeds); Portegies Zwart, McMillan 2002, Astrophys. J. 576, 899 (runaway-collision IMBH formation)",
+          "cell_ref": "cell-compact-IMBH-gap"
+        },
+        {
+          "prediction": "Quark-star / strange-quark-matter compact-object population at NS masses",
+          "status": "unconfirmed-not-yet-tested",
+          "description": "If Bodmer-Witten SQM-stability conjecture holds, strange quark stars (or hybrid hadron-quark stars with a strange quark matter core) should exist as a parallel or replacement compact-object population. No confirmed individual identification. Candidates have been proposed (4U 1820-30, RX J1856.5-3754) based on inferred small radii but remain consistent with stiff-hadronic-EOS interpretations. NICER + GW170817 data are starting to discriminate among hadron-only, hybrid, and quark-only EOS classes but do not yet require a quark-matter component.",
+          "prediction_citation": "Bodmer 1971, Phys. Rev. D 4, 1601; Witten 1984, Phys. Rev. D 30, 272; Alcock, Farhi, Olinto 1986, Astrophys. J. 310, 261",
+          "cell_ref": "cell-compact-quark-star"
+        },
+        {
+          "prediction": "Black-hole-merger ringdown frequencies match Kerr quasi-normal-mode spectrum",
+          "status": "confirmed",
+          "description": "Chandrasekhar-Detweiler 1975 derived the quasi-normal-mode spectrum of Kerr BHs. BBH-merger ringdowns observed by LIGO-Virgo (starting with GW150914) match the predicted (l, m, n) mode frequencies for a Kerr final BH of inferred (M_f, χ_f). Recent overtone-resolved analyses (Isi et al. 2019; Capano et al. 2023) extract the n=1 overtone in addition to the dominant n=0 mode, providing two-mode no-hair tests consistent with Kerr at the few-percent level.",
+          "prediction_citation": "Chandrasekhar, Detweiler 1975, Proc. R. Soc. Lond. A 344, 441 (Kerr QNM spectrum)",
+          "confirmation_citation": "LIGO/Virgo Collaboration 2016, Phys. Rev. Lett. 116, 221101 (GW150914 ringdown); Isi, Giesler, Farr, Scheel, Teukolsky 2019, Phys. Rev. Lett. 123, 111102 (overtone-resolved no-hair)",
+          "cell_ref": "cell-compact-stellar-BH-GW"
+        }
+      ],
+      "related_entries": [
+        "spacetime-symmetry-groups (every compact object is a GR solution; the cell-stsym-poincare and cell-stsym-diff cells underlie the entire FC)",
+        "hadronic-states (NS interior composition derives from hadronic matter at high density; the connection is partial — NS interiors involve dense uniform-matter QCD phases distinct from the bound-state spectroscopy that hadronic-states organizes)",
+        "sm-rep-content (matter content of compact objects — electrons in WDs, neutrons / hyperons / quarks in NSs — derives from SM particle content)",
+        "cft-bootstrap-exclusion-regions (BH thermodynamics + microstate counting derive from holographic CFT in the ads-cft program; aspired for general astrophysical BHs)",
+        "bh-info-paradox (existing open-frontier node; semantically related but linked via narrative since cross-classification edges connect FCs only)",
+        "PLANNED FUTURE STRUCTURAL-FC: dense-matter-equation-of-state classification (EOS-FC) — would organize hadronic-only, hybrid hadron-quark, quark-only, and exotic EOS classes; compact-astrophysical-objects would specialize EOS-FC's mass-radius-stability cells. Deferred from v21 authoring per the EOS co-authoring decision (MAP_v21_findings.md §2)",
+        "PLANNED FUTURE PHENOMENON-FC: gravitational-wave-event catalog (would organize GW150914-style merger events as cells; multi-edge with compact-astrophysical-objects since each GW event IS a compact-object merger)"
+      ],
+      "citations": [
+        "Shapiro, Teukolsky 1983, Black Holes, White Dwarfs, and Neutron Stars (canonical textbook)",
+        "Glendenning 2000, Compact Stars (NS structure)",
+        "Lattimer, Prakash 2016, Phys. Rep. 621, 127 (NS observational constraints on EOS)",
+        "Frank, King, Raine 2002, Accretion Power in Astrophysics (BH accretion)",
+        "Carr, Kühnel 2020, Annu. Rev. Nucl. Part. Sci. 70, 355 (PBH review)",
+        "Cardoso, Pani 2019, Living Rev. Relativ. 22, 4 (exotic compact objects)",
+        "Greene, Strader, Ho 2020, Annu. Rev. Astron. Astrophys. 58, 257 (IMBH review)",
+        "Kaspi, Beloborodov 2017, Annu. Rev. Astron. Astrophys. 55, 261 (magnetar review)",
+        "LIGO/Virgo/KAGRA Collaboration 2021, Phys. Rev. X 13, 011048 (GWTC-3)",
+        "EHT Collaboration 2019, 2022 (M87* and Sgr A* shadows)"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-xc-compact-astro-specializes-spacetime",
+      "type": "cross-classification",
+      "from": "compact-astrophysical-objects",
+      "to": "spacetime-symmetry-groups",
+      "subtype": "specializes",
+      "status": "established",
+      "cell_refs": [
+        "cell-compact-NS-canonical",
+        "cell-compact-NS-massive",
+        "cell-compact-stellar-BH-XRB",
+        "cell-compact-stellar-BH-GW",
+        "cell-compact-SMBH-galactic-center",
+        "cell-compact-SMBH-AGN"
+      ],
+      "description": "Every compact astrophysical object is a (near-)solution to Einstein's field equations and therefore specializes the cell-stsym-diff cell (general-coordinate / diffeomorphism invariance) of spacetime-symmetry-groups. Asymptotically-flat compact objects (which is the standard case for isolated WDs, NSs, stellar-mass BHs, and most galactic SMBHs to good approximation) additionally have asymptotic Poincaré invariance — specializing cell-stsym-poincare at the asymptotic-region level. Within the strong-field interior, the symmetry reduces: Schwarzschild BHs and non-rotating NSs have SO(3) × time-translation; Kerr BHs and rotating NSs have axisymmetry SO(2) × time-translation; merging binaries have no continuous spatial symmetry. cell_refs pin 6 representative compact-object cells whose Poincaré + diff-invariance specialization is canonical. THIS IS THE PRIMARY PHENOMENON-FC ↔ STRUCTURAL-FC EDGE FOR THE ASTROPHYSICS SECTOR. Status `established` — the GR description of compact objects is foundational physics, tested at the percent level by EHT shadow imaging, BBH-ringdown spectroscopy, and pulsar-timing tests. Literature strength: STRONG.",
+      "citations": [
+        "Schwarzschild 1916, Sitzungsber. Preuss. Akad. Wiss. (vacuum spherical solution)",
+        "Kerr 1963, Phys. Rev. Lett. 11, 237 (rotating BH solution)",
+        "Oppenheimer, Volkoff 1939, Phys. Rev. 55, 374 (TOV equation for NSs)",
+        "Will 2014, Living Rev. Relativ. 17, 4 (GR tests review)",
+        "EHT Collaboration 2019, 2022 (BH shadow tests of Kerr metric)"
+      ]
+    },
+    {
+      "id": "edge-xc-compact-astro-derives-hadrons-partial",
+      "type": "cross-classification",
+      "from": "compact-astrophysical-objects",
+      "to": "hadronic-states",
+      "subtype": "derives-from",
+      "status": "partial",
+      "cell_refs": [
+        "cell-compact-NS-canonical",
+        "cell-compact-NS-massive",
+        "cell-compact-NS-merger-remnant"
+      ],
+      "description": "Neutron-star interiors derive from hadronic-states physics extended to the dense-uniform-matter regime. Specifically: (i) the outer-crust nuclear-matter composition is direct hadronic spectroscopy at low density (nuclei populated from the chart-of-nuclides, a subset of cell-h-N and adjacent baryon cells); (ii) the inner-crust + outer-core composition (npe + μ matter) is determined by hadronic-state thresholds (when does hyperon population become favorable? — depends on the Λ, Σ, Ξ hyperon thresholds from cell-h-Lambdac-style spectra extrapolated to finite chemical potential, the 'hyperon puzzle'); (iii) inner-core composition possibly involves color-superconducting quark matter or a hadron-quark crossover region — connecting hadronic-states to (presumed-future) dense-quark-matter classification. Status `partial` because: NS-interior physics involves hadronic matter at conditions (high density, low T, finite μ_B and μ_Q) that are FAR outside the standard hadronic-states domain (T ≈ 0, μ ≈ 0, bound-state spectroscopy). The connection is real but mediated by EOS-modeling that extrapolates from spectroscopic input. cell_refs pin 3 NS-related cells whose hadronic-derivation is most operationally active. Literature strength: MEDIUM (connection well-developed for low-density crust; speculative for inner-core quark-matter component).",
+      "citations": [
+        "Lattimer, Prakash 2016, Phys. Rep. 621, 127 (NS observations and dense-matter physics)",
+        "Glendenning 2000, Compact Stars (hadronic NS interior)",
+        "Alford et al. 2005, Nature 445, E7 (color-superconducting quark matter in NS cores)",
+        "Baym, Hatsuda, Kojo, Powell, Song, Takatsuka 2018, Rep. Prog. Phys. 81, 056902 (quark-hadron crossover review)"
+      ]
+    },
+    {
+      "id": "edge-xc-compact-astro-derives-sm-partial",
+      "type": "cross-classification",
+      "from": "compact-astrophysical-objects",
+      "to": "sm-rep-content",
+      "subtype": "derives-from",
+      "status": "partial",
+      "cell_refs": [
+        "cell-compact-WD-canonical",
+        "cell-compact-WD-Chandrasekhar-limit",
+        "cell-compact-NS-canonical"
+      ],
+      "description": "Compact-object matter content derives from SM rep content via the matter species that populate compact objects: white dwarfs are supported by electron-degeneracy pressure (cell-eR-g1 and corresponding lepton cells of sm-rep-content) embedded in an ionic Coulomb lattice (light nuclei drawn from QCD-bound states of light quarks — cell-uR-g1, cell-dR-g1). Neutron stars are supported by nucleon degeneracy + nuclear-force repulsion; their composition involves neutrons (n = udd), protons (p = uud), electrons (β-equilibrium), and at higher density possibly muons, hyperons, kaons. The 'derives-from' is straightforward but partial in the sense that the dense-matter-physics machinery that maps SM rep content to compact-object pressure-support is itself a layer of physics not represented in sm-rep-content directly (the Chandrasekhar mass for WDs, the TOV maximum mass for NSs both DEPEND on SM matter content but require the EOS-modeling layer to be evaluated). cell_refs pin 3 WD/NS cells whose SM-content basis is most direct. The hadronic-states edge (separate) handles the bound-state-spectrum connection; this edge handles the underlying-SM-particle connection. Literature strength: STRONG for WDs (electron-degeneracy physics is canonical); MEDIUM for NSs (nuclear-force modeling is empirically less well-constrained at NS-interior densities).",
+      "citations": [
+        "Chandrasekhar 1931, Astrophys. J. 74, 81 (Chandrasekhar mass from electron rep content + GR)",
+        "Oppenheimer, Volkoff 1939, Phys. Rev. 55, 374 (TOV from nucleon rep content + GR)",
+        "Shapiro, Teukolsky 1983, Black Holes, White Dwarfs, and Neutron Stars chs. 2-3"
+      ]
+    },
+    {
+      "id": "edge-xc-compact-astro-derives-bootstrap-aspired",
+      "type": "cross-classification",
+      "from": "compact-astrophysical-objects",
+      "to": "cft-bootstrap-exclusion-regions",
+      "subtype": "derives-from",
+      "status": "aspired",
+      "targeted_by": [
+        "ads-cft-instance"
+      ],
+      "cell_refs": [
+        "cell-compact-SMBH-galactic-center",
+        "cell-compact-SMBH-AGN",
+        "cell-compact-stellar-BH-GW"
+      ],
+      "description": "The ads-cft-instance program aspires that black-hole thermodynamic and microstate-structure properties derive from bootstrap-allowed CFT data via the AdS/CFT holographic dictionary. Specifically: (i) Strominger-Vafa 1996 derived the Bekenstein-Hawking entropy of specific BPS BHs by counting BPS states in the dual CFT — a partial derivation establishing the program's empirical bite for a special class of BHs (extremal, supersymmetric, mostly AdS); (ii) general astrophysical (Kerr, non-extremal, asymptotically-flat) BHs are not yet derived from CFT in this sense — that's the aspired part; (iii) the Page-curve / island-formula program (Almheiri et al. 2019+) extends the bootstrap-CFT-derivation of BH thermodynamics to evaporating BHs in specific holographic setups, with partial bite for the information paradox. cell_refs pin 3 BH cells where the holographic-bootstrap derivation is most actively pursued (SMBHs because of their thermodynamic importance; merging stellar-mass BHs because of GW horizon-test relevance). Status `aspired` because the bridge from holographic-CFT data to astrophysical BH observations is still under construction. Literature strength: STRONG for the BPS-BH entropy-counting (foundational); WEAK for general astrophysical BH derivation (program is real and active but most claims remain at gestural-to-partial level for astrophysical applicability). This edge mirrors the FQH→bootstrap-aspired and hadrons→bootstrap-aspired edges in the existing data (same ads-cft program, different phenomenon-FC targets).",
+      "citations": [
+        "Strominger, Vafa 1996, Phys. Lett. B 379, 99 (BPS-BH entropy from CFT counting)",
+        "Maldacena 1998, Adv. Theor. Math. Phys. 2, 231 (AdS/CFT correspondence)",
+        "Witten 1998, Adv. Theor. Math. Phys. 2, 253 (AdS/CFT thermodynamics)",
+        "Almheiri, Engelhardt, Marolf, Maxfield 2019, JHEP 12, 063 (island formula); Penington 2020, JHEP 09, 002 (page curve)"
+      ]
+    }
+  ]
+}

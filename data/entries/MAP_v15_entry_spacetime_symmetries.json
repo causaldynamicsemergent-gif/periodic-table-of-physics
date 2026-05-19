@@ -1,0 +1,213 @@
+{
+  "_meta": {
+    "_file_role": "v15 retrofit fragment for spacetime-symmetry-groups. SUPERSEDES MAP_v14_entry_spacetime_symmetries.json. Changes: (1) cell_refs added to all 3 outgoing uses-classification edges (lightly-forced v14.4 finding); (2) 1 new cross-classification edge to ade-lie-algebras with subtype `derives-from` (the real-forms relation); (3) related_entries updated: ade-lie-algebras removed (now typed edge); ade-modular-invariants removed (incidental thematic only); sm-rep-content retained (genuine cross-reference, not naturally a cross-classification subtype).",
+    "_entry": "spacetime-symmetry-groups-retrofit",
+    "_schema": "Map_v15_schema.json",
+    "_phase": 1,
+    "_retrofit_pass": "v15.1",
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v15_1_findings.md",
+    "_supersedes": "MAP_v14_entry_spacetime_symmetries.json",
+    "_notes": "Convention for cell_refs on cross-classification edges (not specified in v15 spec §5.1): cell_refs pins source-side cells, paralleling bears-on. Documented in findings as open question for v15.2 spec clarification."
+  },
+
+  "nodes": [
+    {
+      "id": "spacetime-symmetry-groups",
+      "type": "formal-classification",
+      "label": "Spacetime symmetry groups",
+      "full_name": "Classification of spacetime symmetry groups used in physical theories",
+      "subtype": "spacetime-symmetries",
+      "description": "The classification of symmetry groups that act on spacetime in physical theories: the Galilean group of Newtonian spacetime, the Poincaré group of Minkowski spacetime, the conformal extension of Poincaré (or its 2D infinite-dimensional analog Virasoro), the (anti-)de Sitter groups of curved-spacetime cosmological backgrounds, and the diffeomorphism group of general relativity. Each is a Lie group (finite-dimensional in most cases; the 2D conformal case is the famous infinite-dimensional exception) whose representations classify particle content and field content in theories invariant under it. Wigner's 1939 classification of the unitary irreducible representations of the Poincaré group — by mass-squared (a Casimir) and spin/helicity — is the single most consequential application: it defines what a 'particle' is in relativistic quantum field theory.",
+      "domain_of_applicability": "Symmetry groups acting globally on a spacetime manifold (or locally, in the case of Diff), used as the symmetry group of a physical theory's action. Excludes: internal gauge groups (classified separately in the SM rep content entry); discrete spacetime symmetries (P, T, C); supersymmetry extensions.",
+      "internal_structure": "The major spacetime symmetry groups are organized by which of the following operations they include: spatial rotations (always present); spatial translations (always present); time translations (always present); spatial boosts (Galilean: instantaneous; Lorentz: relativistic); spatial dilations (conformal only); special conformal transformations (conformal only); cosmological-constant-induced curvature (dS/AdS only); arbitrary smooth diffeomorphisms (Diff only). Most of the simple components of these groups are real forms of complex simple Lie algebras of ADE type — see the outgoing cross-classification edge to ade-lie-algebras.",
+
+      "classification_axes": [
+        {
+          "name": "symmetry-type",
+          "kind": "discrete-enum",
+          "values": ["Galilean", "Poincaré", "conformal", "de Sitter", "anti-de Sitter", "general-coordinate"],
+          "description": "The six major spacetime symmetry families. Each label denotes a FAMILY of groups parameterized by spacetime dimension; cell content names the specific group and notes dimensional dependence.",
+          "citation": "Wigner 1939, Ann. Math. 40, 149; Bargmann 1954; Mack-Salam 1969"
+        }
+      ],
+
+      "cells": [
+        {
+          "cell_id": "cell-stsym-galilean",
+          "axis_values": { "symmetry-type": "Galilean" },
+          "content": "Gal(d) = SO(d-1) ⋉ (translations × boosts) ⋉ time-translation; non-relativistic; instantaneous boosts; central extensions (Bargmann) carry physical mass parameter",
+          "realized_examples": ["Newtonian mechanics", "non-relativistic quantum mechanics (with Bargmann central extension)", "non-relativistic field theories (cold atoms, condensed matter at low temperature)"],
+          "description": "Galilean group: symmetry group of Newtonian spacetime. The central extension (Bargmann 1954) is required for projective representations in QM."
+        },
+        {
+          "cell_id": "cell-stsym-poincare",
+          "axis_values": { "symmetry-type": "Poincaré" },
+          "content": "ISO(d-1, 1) = SO(d-1, 1) ⋉ ℝ^d; Lorentz group SO(d-1, 1) ≃ Spin(d-1, 1)/Z_2; unitary irreps classified by Wigner 1939",
+          "realized_examples": ["special relativity", "relativistic quantum mechanics", "the Standard Model (Poincaré-invariant at energies below the Planck scale)", "all of relativistic QFT in flat spacetime"],
+          "description": "Poincaré group: symmetry group of Minkowski spacetime. Wigner's 1939 classification of unitary irreps by (mass², spin/helicity) defines the notion of 'particle' in relativistic QFT."
+        },
+        {
+          "cell_id": "cell-stsym-conformal",
+          "axis_values": { "symmetry-type": "conformal" },
+          "content": "For d ≥ 3: SO(d, 2) ≃ Conf(d-1, 1); finite-dimensional. For d = 2: infinite-dimensional Virasoro × Virasoro with central charge c",
+          "realized_examples": ["conformal field theories at critical points", "AdS/CFT (the CFT side)", "2D worldsheet of string theory (Virasoro constraints)"],
+          "description": "Conformal group: extension of Poincaré by spatial dilations and special conformal transformations. The d = 2 case is qualitatively different — infinite-dimensional Virasoro algebra."
+        },
+        {
+          "cell_id": "cell-stsym-de-sitter",
+          "axis_values": { "symmetry-type": "de Sitter" },
+          "content": "SO(d, 1) acting on d-dimensional de Sitter spacetime (positive cosmological constant); finite-dimensional; no positive-energy unitary irreps",
+          "realized_examples": ["our observed accelerating universe (approximately dS in the far future under ΛCDM)", "dS-invariant inflation models", "the dS/CFT speculative correspondence"],
+          "description": "de Sitter group: isometry group of de Sitter spacetime. The absence of a globally-defined positive-energy generator has major consequences for the swampland conjectures and dS thermodynamics (Gibbons-Hawking)."
+        },
+        {
+          "cell_id": "cell-stsym-anti-de-sitter",
+          "axis_values": { "symmetry-type": "anti-de Sitter" },
+          "content": "SO(d-1, 2) acting on d-dimensional anti-de Sitter spacetime (negative cosmological constant); positive-energy unitary irreps exist; isomorphic to Conf(d-2, 1) (the AdS/CFT isomorphism at the group level)",
+          "realized_examples": ["AdS_5 × S^5 in Type IIB string theory", "AdS/CFT-based holographic models", "exact non-perturbative QFT-like theories with negative cc"],
+          "description": "Anti-de Sitter group. The group-level isomorphism SO(d-1,2) ≃ Conf(d-2,1) is the structural origin of AdS/CFT."
+        },
+        {
+          "cell_id": "cell-stsym-diff",
+          "axis_values": { "symmetry-type": "general-coordinate" },
+          "content": "Diff(M): the full diffeomorphism group of a smooth manifold M; infinite-dimensional; the gauge group of general relativity",
+          "realized_examples": ["general relativity (all observationally-confirmed gravitational physics)"],
+          "description": "General-coordinate (diffeomorphism) group. Infinite-dimensional; gauge of GR. Source of the 'problem of time' in canonical quantum gravity."
+        }
+      ],
+
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete as a classification of the major spacetime symmetry families. Each family's mathematical structure is fully worked out. Does not extend to: (i) which family holds at the Planck scale (QG frontier); (ii) supersymmetric extensions; (iii) whether spacetime symmetry is fundamental or emergent."
+      },
+
+      "predictive_yield": [
+        {
+          "prediction": "Existence and classification of particle types in relativistic QFT: each particle is a unitary irrep of Poincaré, labeled by (mass, spin) or (zero mass, helicity). Higher-spin massless particles (s > 2 in 4D) excluded in interacting theories.",
+          "status": "confirmed",
+          "prediction_citation": "Wigner 1939, Ann. Math. 40, 149",
+          "confirmation_citation": "Every observed elementary particle in the SM fits Wigner's classification.",
+          "cell_ref": "cell-stsym-poincare"
+        },
+        {
+          "prediction": "Galilean-invariant non-relativistic QM admits projective representations labeled by mass (Bargmann central extension); mass is a conserved superselection sector in NRQM.",
+          "status": "confirmed",
+          "prediction_citation": "Bargmann 1954, Ann. Math. 59, 1",
+          "confirmation_citation": "The mass superselection rule is a routine feature of NRQM.",
+          "cell_ref": "cell-stsym-galilean"
+        },
+        {
+          "prediction": "2D conformal field theories at criticality have infinite-dimensional Virasoro symmetry; c < 1 minimal models classified by (p, p') labels (ADE / minimal-model classification).",
+          "status": "confirmed",
+          "prediction_citation": "Belavin, Polyakov, Zamolodchikov 1984, Nucl. Phys. B 241, 333",
+          "confirmation_citation": "2D Ising criticality, tricritical Ising, three-state Potts — matched to minimal-model predictions to high precision",
+          "cell_ref": "cell-stsym-conformal"
+        }
+      ],
+
+      "related_entries": ["sm-rep-content"],
+
+      "citations": [
+        "Wigner 1939, Ann. Math. 40, 149",
+        "Bargmann 1954, Ann. Math. 59, 1",
+        "Mack, Salam 1969, Ann. Phys. 53, 174",
+        "Belavin, Polyakov, Zamolodchikov 1984, Nucl. Phys. B 241, 333",
+        "Weinberg 1995, The Quantum Theory of Fields Vol. I, Cambridge",
+        "Maldacena 1998, Adv. Theor. Math. Phys. 2, 231"
+      ]
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-stsym-bears-on-qg",
+      "type": "bears-on",
+      "from": "spacetime-symmetry-groups",
+      "to": "qg-frontier",
+      "nature": "structural-only",
+      "cell_refs": ["cell-stsym-poincare", "cell-stsym-diff"],
+      "description": "The QG frontier sits structurally between Poincaré (the symmetry of low-energy flat-spacetime physics) and Diff (the gauge group of GR). The QG frontier asks which spacetime symmetry holds at the Planck scale and how the two reconcile.",
+      "discharge_status": "structural-only",
+      "citations": []
+    },
+    {
+      "id": "edge-stsym-bears-on-cc",
+      "type": "bears-on",
+      "from": "spacetime-symmetry-groups",
+      "to": "cc-frontier",
+      "nature": "structural-only",
+      "cell_refs": ["cell-stsym-de-sitter", "cell-stsym-anti-de-sitter"],
+      "description": "The cosmological-constant frontier is structurally the question of which constant-curvature spacetime nature realizes: dS, AdS, or Minkowski. The symmetry-groups classification names the three but does not predict which.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Weinberg 1989, Rev. Mod. Phys. 61, 1"
+      ]
+    },
+    {
+      "id": "edge-stsym-bears-on-bhinfo",
+      "type": "bears-on",
+      "from": "spacetime-symmetry-groups",
+      "to": "bh-info-paradox",
+      "nature": "structural-only",
+      "cell_refs": ["cell-stsym-anti-de-sitter"],
+      "description": "AdS/CFT depends on the group-level isomorphism SO(d-1,2) ≃ Conf(d-2,1). The bears-on is structural-only: the classification names the isomorphism but does not solve the paradox.",
+      "discharge_status": "structural-only",
+      "citations": [
+        "Maldacena 1998"
+      ]
+    },
+
+    {
+      "id": "edge-qft-uses-stsym",
+      "type": "uses-classification",
+      "from": "qft",
+      "to": "spacetime-symmetry-groups",
+      "cell_refs": ["cell-stsym-poincare", "cell-stsym-conformal"],
+      "description": "QFT (relativistic) is built on the Poincaré-invariance axiom; unitary irreps of Poincaré (Wigner 1939) classify the asymptotic particle content. Conformal field theory (cell-stsym-conformal) is a sub-domain of QFT using the conformal symmetry-type. v15 retrofit: cell_refs now structurally pin the relevant cells.",
+      "citations": [
+        "Streater, Wightman 1964, PCT, Spin and Statistics, and All That, Benjamin",
+        "Haag 1992, Local Quantum Physics, Springer"
+      ]
+    },
+    {
+      "id": "edge-gr-uses-stsym",
+      "type": "uses-classification",
+      "from": "gr",
+      "to": "spacetime-symmetry-groups",
+      "cell_refs": ["cell-stsym-diff"],
+      "description": "GR uses the general-coordinate (Diff) symmetry as its gauge group; the Einstein-Hilbert action is diffeomorphism-invariant. v15 retrofit: cell_refs pins the Diff cell.",
+      "citations": [
+        "Wald 1984, General Relativity, University of Chicago Press"
+      ]
+    },
+    {
+      "id": "edge-statmech-uses-stsym",
+      "type": "uses-classification",
+      "from": "stat-mech",
+      "to": "spacetime-symmetry-groups",
+      "cell_refs": ["cell-stsym-galilean", "cell-stsym-conformal"],
+      "description": "Stat-mech uses Galilean invariance for non-relativistic systems and conformal invariance at critical points (BPZ 1984 and successors). v15 retrofit: cell_refs pin both cells.",
+      "citations": [
+        "Cardy 1996, Scaling and Renormalization in Statistical Physics, Cambridge"
+      ]
+    },
+
+    {
+      "id": "edge-xc-stsym-derives-from-ade-lie",
+      "type": "cross-classification",
+      "from": "spacetime-symmetry-groups",
+      "to": "ade-lie-algebras",
+      "subtype": "derives-from",
+      "cell_refs": ["cell-stsym-poincare", "cell-stsym-conformal", "cell-stsym-de-sitter", "cell-stsym-anti-de-sitter"],
+      "description": "The simple components of the finite-dimensional spacetime symmetry groups are real forms of complex simple Lie algebras of ADE type. Lorentz so(3,1) ≃ sl(2,ℂ)_ℝ is a real form of A_1 × A_1; conformal so(2,4) is a real form of A_3 = D_3 = sl(4)/so(6); de Sitter so(4,1) and anti-de Sitter so(3,2) are real forms of D-type complex algebras. The relation does NOT apply to the Galilean cell (different algebraic structure), the 2D-conformal sub-case (Virasoro is infinite-dimensional, not ADE), or the Diff cell (also infinite-dimensional). cell_refs pins the source-side cells where the relation applies; this convention (cell_refs as source-side pins on cross-classification edges) is documented in v15.1 findings as an open spec clarification for v15.2.",
+      "citations": [
+        "Helgason 2001, Differential Geometry, Lie Groups, and Symmetric Spaces (AMS) — real forms of complex Lie algebras",
+        "Hsiang 1975, Cohomology Theory of Topological Transformation Groups (Springer) — real-form structure for spacetime groups"
+      ]
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}

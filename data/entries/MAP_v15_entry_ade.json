@@ -1,0 +1,376 @@
+{
+  "_meta": {
+    "_file_role": "v15 retrofit fragment for the ADE cluster. SUPERSEDES MAP_v14_entry_ade.json. Changes from v14: (1) related_entries arrays cleared on all 5 ADE nodes (relations migrated to typed cross-classification edges); (2) ade-modular-invariants cells migrated from string-encoded `level` to typed axis_value_ranges; (3) 10 new cross-classification edges added with appropriate subtypes; (4) the qft → ade-lie-algebras uses-classification edge preserved from v14.",
+    "_entry": "ade-classifications-retrofit",
+    "_schema": "Map_v15_schema.json",
+    "_phase": 1,
+    "_retrofit_pass": "v15.1",
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v15_1_findings.md",
+    "_supersedes": "MAP_v14_entry_ade.json",
+    "_notes": "Resolves v14.3 §10.1 (forced by ADE). 10 cross-classification edges = 7 primary (bijection/derives-from/categorically-equivalent) + 3 composition (relations derivable from chains). Convention: symmetric subtypes (bijection, categorically-equivalent) use single edges in canonical direction per v15 spec §3.5."
+  },
+
+  "nodes": [
+    {
+      "id": "ade-lie-algebras",
+      "type": "formal-classification",
+      "label": "ADE Lie algebras",
+      "full_name": "Simply-laced finite-dimensional complex simple Lie algebras (Killing-Cartan ADE)",
+      "subtype": "lie-algebras",
+      "description": "The classification of simply-laced finite-dimensional complex simple Lie algebras: the two infinite series A_n = sl(n+1, ℂ) for n ≥ 1 and D_n = so(2n, ℂ) for n ≥ 4, plus the three exceptional algebras E_6, E_7, E_8. 'Simply-laced' means all roots have the same length, equivalently the Dynkin diagram has only single edges. The classification is the most famous and structurally productive instance of the ADE pattern in mathematics; the other ADE classifications in this project (finite SU(2) subgroups, Du Val singularities, SU(2)_k WZW modular invariants, representation-finite quivers) all correspond to the ADE Lie algebras through structured bijections, formalized in v15 as typed cross-classification edges.",
+      "domain_of_applicability": "Finite-dimensional complex simple Lie algebras with simply-laced root systems. Excludes: non-simply-laced simple Lie algebras (B_n, C_n, F_4, G_2); infinite-dimensional Lie algebras (affine and Kac-Moody); Lie superalgebras; Lie algebras over non-algebraically-closed fields; loop algebras.",
+      "internal_structure": "Each Cartan type has a Dynkin diagram: A_n is a path of n nodes; D_n is a path of n-2 nodes with two extra nodes attached at one end (a 'fork'); E_6, E_7, E_8 are 'forks' with one short, one medium, and one long branch of total node-counts 6, 7, 8 respectively.",
+      "classification_axes": [
+        {
+          "name": "cartan-type",
+          "kind": "discrete-enum",
+          "values": ["A-series", "D-series", "E_6", "E_7", "E_8"],
+          "description": "The five Cartan-type labels of the simply-laced finite-dimensional simple Lie algebras.",
+          "citation": "Humphreys 1972, §11"
+        }
+      ],
+      "cells": [
+        { "cell_id": "cell-lie-A", "axis_values": { "cartan-type": "A-series" }, "content": "A_n = sl(n+1, ℂ) for n ≥ 1; rank n; dim n(n+2)", "realized_examples": ["A_1 = sl(2,ℂ) ≃ su(2)_ℂ", "A_2 = sl(3,ℂ) — SU(3) flavor/color", "A_4 = sl(5,ℂ) — SU(5) GUT"] },
+        { "cell_id": "cell-lie-D", "axis_values": { "cartan-type": "D-series" }, "content": "D_n = so(2n, ℂ) for n ≥ 4; rank n; dim n(2n-1)", "realized_examples": ["D_4 = so(8) — triality, 8d spinors", "D_5 = so(10) — Fritzsch-Minkowski-Georgi GUT"] },
+        { "cell_id": "cell-lie-E6", "axis_values": { "cartan-type": "E_6" }, "content": "E_6; rank 6; dim 78; fundamental 27-dimensional rep", "realized_examples": ["E_6 GUT (Gürsey-Ramond-Sikivie 1976)"] },
+        { "cell_id": "cell-lie-E7", "axis_values": { "cartan-type": "E_7" }, "content": "E_7; rank 7; dim 133; fundamental 56-dimensional rep", "realized_examples": ["N=8 supergravity in 4d (Cremmer-Julia 1979) — E_{7(7)} hidden symmetry"] },
+        { "cell_id": "cell-lie-E8", "axis_values": { "cartan-type": "E_8" }, "content": "E_8; rank 8; dim 248; adjoint is smallest non-trivial rep; root lattice = E_8 lattice", "realized_examples": ["E_8 × E_8 heterotic string", "E_8 in Ising-in-field (Zamolodchikov 1989; Coldea et al. 2010)"] }
+      ],
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete. Established by Killing (1888-1890), refined by Cartan (1894)."
+      },
+      "predictive_yield": [
+        {
+          "prediction": "E_8 spectrum in Ising-in-field at criticality: eight stable particles with mass ratios determined by the E_8 root system.",
+          "status": "confirmed",
+          "prediction_citation": "Zamolodchikov 1989, Int. J. Mod. Phys. A 4, 4235",
+          "confirmation_citation": "Coldea et al. 2010, Science 327, 177",
+          "cell_ref": "cell-lie-E8"
+        }
+      ],
+      "related_entries": [],
+      "citations": [
+        "Killing 1888-1890, Math. Ann. 31, 33, 34, 36",
+        "Cartan 1894, thèse",
+        "Humphreys 1972, Introduction to Lie Algebras and Representation Theory (Springer GTM 9)",
+        "Bourbaki 1968, Groupes et algèbres de Lie, Chapitres 4-6"
+      ]
+    },
+
+    {
+      "id": "ade-su2-subgroups",
+      "type": "formal-classification",
+      "label": "ADE finite SU(2) subgroups",
+      "full_name": "Finite subgroups of SU(2) (Klein 1884)",
+      "subtype": "finite-groups",
+      "description": "The classification of finite subgroups of SU(2) up to conjugation. Two infinite series (cyclic Z_n and binary dihedral BD_{4n}) plus three sporadic cases (binary tetrahedral 2T, binary octahedral 2O, binary icosahedral 2I). The McKay correspondence (McKay 1980) gives a bijection between these finite SU(2) subgroups and the ADE Dynkin diagrams.",
+      "domain_of_applicability": "Finite subgroups of SU(2), equivalently finite subgroups of the unit quaternions S³. Excludes: continuous SU(2) subgroups; finite subgroups of higher SU(N); finite subgroups of SO(3) directly.",
+      "internal_structure": "Each finite SU(2) subgroup Γ acts on ℂ² by its defining representation. The McKay quiver of Γ is built by taking the irreducible representations of Γ as vertices and drawing edges according to the decomposition of (2-dim defining rep) ⊗ (irrep V_i) into irreps.",
+      "classification_axes": [
+        {
+          "name": "cartan-type",
+          "kind": "discrete-enum",
+          "values": ["A-series", "D-series", "E_6", "E_7", "E_8"],
+          "description": "ADE labels via the McKay correspondence.",
+          "citation": "McKay 1980, in Proc. Sympos. Pure Math. 37, 183"
+        }
+      ],
+      "cells": [
+        { "cell_id": "cell-su2-A", "axis_values": { "cartan-type": "A-series" }, "content": "Cyclic groups Z_{n+1} of order n+1; abelian" },
+        { "cell_id": "cell-su2-D", "axis_values": { "cartan-type": "D-series" }, "content": "Binary dihedral BD_{4(n-2)} of order 4(n-2) for n ≥ 4; non-abelian" },
+        { "cell_id": "cell-su2-E6", "axis_values": { "cartan-type": "E_6" }, "content": "Binary tetrahedral 2T of order 24" },
+        { "cell_id": "cell-su2-E7", "axis_values": { "cartan-type": "E_7" }, "content": "Binary octahedral 2O of order 48" },
+        { "cell_id": "cell-su2-E8", "axis_values": { "cartan-type": "E_8" }, "content": "Binary icosahedral 2I of order 120" }
+      ],
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete. Klein (1884) classified the finite rotation groups of the sphere; McKay (1980) recognized the ADE correspondence."
+      },
+      "related_entries": [],
+      "citations": [
+        "Klein 1884, Vorlesungen über das Ikosaeder und die Auflösung der Gleichungen vom fünften Grade",
+        "McKay 1980, in Proc. Sympos. Pure Math. 37, 183",
+        "Reid 1997, arXiv:alg-geom/9702016"
+      ]
+    },
+
+    {
+      "id": "ade-du-val",
+      "type": "formal-classification",
+      "label": "ADE Du Val singularities",
+      "full_name": "Du Val / Kleinian / rational double point surface singularities (ADE)",
+      "subtype": "surface-singularities",
+      "description": "The classification of isolated rational double points on complex algebraic surfaces, equivalently quotient singularities ℂ²/Γ where Γ ⊂ SU(2) is finite. The resolution attaches a configuration of (-2)-curves whose intersection graph is the corresponding ADE Dynkin diagram.",
+      "domain_of_applicability": "Isolated rational double points on complex algebraic or analytic surfaces. Excludes: higher-dimensional singularities; non-rational singularities; non-quotient singularities.",
+      "classification_axes": [
+        {
+          "name": "cartan-type",
+          "kind": "discrete-enum",
+          "values": ["A-series", "D-series", "E_6", "E_7", "E_8"],
+          "description": "ADE Cartan type."
+        }
+      ],
+      "cells": [
+        { "cell_id": "cell-duval-A", "axis_values": { "cartan-type": "A-series" }, "content": "A_n: xy + z^{n+1} = 0; ℂ²/Z_{n+1}" },
+        { "cell_id": "cell-duval-D", "axis_values": { "cartan-type": "D-series" }, "content": "D_n: x²y + y^{n-1} + z² = 0 for n ≥ 4; ℂ²/BD_{4(n-2)}" },
+        { "cell_id": "cell-duval-E6", "axis_values": { "cartan-type": "E_6" }, "content": "E_6: x⁴ + y³ + z² = 0; ℂ²/2T" },
+        { "cell_id": "cell-duval-E7", "axis_values": { "cartan-type": "E_7" }, "content": "E_7: x³y + y³ + z² = 0; ℂ²/2O" },
+        { "cell_id": "cell-duval-E8", "axis_values": { "cartan-type": "E_8" }, "content": "E_8: x⁵ + y³ + z² = 0; ℂ²/2I" }
+      ],
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete. Du Val (1934), Brieskorn (1966, 1968), Slodowy (1980)."
+      },
+      "related_entries": [],
+      "citations": [
+        "Du Val 1934, Proc. Cambridge Phil. Soc. 30, 453, 460, 483",
+        "Brieskorn 1966, Math. Ann. 166, 76 and 1968, Actes Congr. Internat. Math. Nice 2, 279",
+        "Slodowy 1980, Simple Singularities and Simple Algebraic Groups (Springer LNM 815)"
+      ]
+    },
+
+    {
+      "id": "ade-modular-invariants",
+      "type": "formal-classification",
+      "label": "ADE SU(2)_k modular invariants",
+      "full_name": "Cappelli-Itzykson-Zuber classification of modular invariants of the SU(2)_k WZW model",
+      "subtype": "modular-invariants",
+      "description": "The classification of modular-invariant partition functions for the SU(2) Wess-Zumino-Witten conformal field theory at level k. The A-series invariant exists at all levels; D-series at even levels; E-series at sporadic single levels (k = 10, 16, 28). v15 retrofit: level axis values now typed via axis_value_ranges (A, D) or single integers (E_6, E_7, E_8), replacing the v14 string-encoded workaround.",
+      "domain_of_applicability": "Modular-invariant partition functions for the SU(2)_k WZW model in 2D rational conformal field theory.",
+      "classification_axes": [
+        {
+          "name": "cartan-type",
+          "kind": "discrete-enum",
+          "values": ["A-series", "D-series", "E_6", "E_7", "E_8"],
+          "description": "ADE Cartan type of the modular invariant."
+        },
+        {
+          "name": "level",
+          "kind": "dimension",
+          "range": { "min": 1, "max": "infty" },
+          "description": "WZW level k (positive integer). v15: cells specify level coverage via axis_values (single point) or axis_value_ranges (ranges)."
+        }
+      ],
+      "cells": [
+        {
+          "cell_id": "cell-mod-A",
+          "axis_values": { "cartan-type": "A-series" },
+          "axis_value_ranges": {
+            "level": { "kind": "all", "min": 1, "description": "All positive integer levels k ≥ 1" }
+          },
+          "content": "Diagonal modular invariant Z_A = Σ_{λ=0}^{k} |χ_λ|²; labeled A_{k+1}",
+          "description": "The diagonal modular invariant is the universal partition function present at every level. v15 retrofit: level coverage now typed as axis_value_range with kind=all."
+        },
+        {
+          "cell_id": "cell-mod-D",
+          "axis_values": { "cartan-type": "D-series" },
+          "axis_value_ranges": {
+            "level": { "kind": "every-nth", "n": 2, "offset": 0, "min": 4, "description": "Even levels k ≥ 4" }
+          },
+          "content": "Z_2-orbifold modular invariant of the diagonal; labeled D_{k/2+1}",
+          "description": "The D-series invariants are Z_2 orbifolds of the A-series at even level. v15 retrofit: level coverage now typed as axis_value_range with kind=every-nth, n=2, offset=0, min=4."
+        },
+        {
+          "cell_id": "cell-mod-E6",
+          "axis_values": { "cartan-type": "E_6", "level": 10 },
+          "content": "Exceptional modular invariant tied to su(2) ⊂ sp(4); exists only at level k = 10",
+          "description": "Sporadic E_6 modular invariant. v15 retrofit: level is now an integer (10), not a string."
+        },
+        {
+          "cell_id": "cell-mod-E7",
+          "axis_values": { "cartan-type": "E_7", "level": 16 },
+          "content": "Exceptional modular invariant; exists only at level k = 16",
+          "description": "Sporadic E_7 modular invariant. v15 retrofit: level is now integer (16)."
+        },
+        {
+          "cell_id": "cell-mod-E8",
+          "axis_values": { "cartan-type": "E_8", "level": 28 },
+          "content": "Exceptional modular invariant tied to su(2) ⊂ E_8 at level 1; exists only at level k = 28",
+          "description": "Sporadic E_8 modular invariant. v15 retrofit: level is now integer (28). The level k=28 corresponds to the dual Coxeter number of E_8 minus 2."
+        }
+      ],
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete for SU(2)_k. CIZ 1987; Gannon 2000."
+      },
+      "related_entries": [],
+      "citations": [
+        "Cappelli, Itzykson, Zuber 1987, Nucl. Phys. B 280, 445 and Commun. Math. Phys. 113, 1",
+        "Gannon 2000, Rev. Math. Phys. 12, 739",
+        "Di Francesco, Mathieu, Sénéchal 1997, Conformal Field Theory, Springer, Ch. 17"
+      ]
+    },
+
+    {
+      "id": "ade-quivers",
+      "type": "formal-classification",
+      "label": "ADE quivers (Gabriel)",
+      "full_name": "Connected representation-finite quivers (Gabriel's theorem)",
+      "subtype": "quivers",
+      "description": "Gabriel's theorem (1972): a connected quiver has finitely many indecomposable finite-dim representations iff its underlying graph is an ADE Dynkin diagram. The indecomposable representations are in bijection with positive roots of the corresponding ADE root system.",
+      "domain_of_applicability": "Connected finite quivers and their finite-dimensional representations over an algebraically closed field. Excludes: infinite quivers; quivers with relations; non-connected quivers.",
+      "classification_axes": [
+        {
+          "name": "cartan-type",
+          "kind": "discrete-enum",
+          "values": ["A-series", "D-series", "E_6", "E_7", "E_8"],
+          "description": "ADE Cartan type; underlying graph of the quiver."
+        }
+      ],
+      "cells": [
+        { "cell_id": "cell-quiver-A", "axis_values": { "cartan-type": "A-series" }, "content": "A_n linear quiver, n vertices; n(n+1)/2 indecomposables (interval modules)" },
+        { "cell_id": "cell-quiver-D", "axis_values": { "cartan-type": "D-series" }, "content": "D_n quiver, n vertices for n ≥ 4; n(n-1) indecomposables" },
+        { "cell_id": "cell-quiver-E6", "axis_values": { "cartan-type": "E_6" }, "content": "E_6 quiver; 36 indecomposables" },
+        { "cell_id": "cell-quiver-E7", "axis_values": { "cartan-type": "E_7" }, "content": "E_7 quiver; 63 indecomposables" },
+        { "cell_id": "cell-quiver-E8", "axis_values": { "cartan-type": "E_8" }, "content": "E_8 quiver; 120 indecomposables (matching positive root count)" }
+      ],
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete. Gabriel 1972; Bernstein-Gelfand-Ponomarev 1973."
+      },
+      "related_entries": [],
+      "citations": [
+        "Gabriel 1972, Manuscripta Mathematica 6, 71",
+        "Bernstein, Gelfand, Ponomarev 1973, Russian Math. Surveys 28, 17",
+        "Assem, Simson, Skowroński 2006, Elements of the Representation Theory of Associative Algebras, Vol. 1 (Cambridge)"
+      ]
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-qft-uses-ade-lie-algebras",
+      "type": "uses-classification",
+      "from": "qft",
+      "to": "ade-lie-algebras",
+      "description": "QFT uses ADE Lie algebras extensively: as gauge groups (SU(N) = A_{N-1}; SO(2N) = D_N; E_6, E_7, E_8 GUT and string-theoretic gauge groups), as global symmetry algebras, and as the chiral algebra of 2D WZW conformal field theories.",
+      "citations": [
+        "Goddard, Olive 1985, Int. J. Mod. Phys. A 1, 303"
+      ]
+    },
+
+    {
+      "id": "edge-xc-mckay-subgroups-lie",
+      "type": "cross-classification",
+      "from": "ade-su2-subgroups",
+      "to": "ade-lie-algebras",
+      "subtype": "bijection",
+      "description": "McKay correspondence: each finite subgroup Γ ⊂ SU(2) has a McKay quiver built from tensor products of the defining 2-dim rep with all irreps of Γ; the McKay quiver is the affine ADE Dynkin diagram of the corresponding Lie algebra. The bijection runs symmetrically: given an ADE Lie algebra, the corresponding SU(2) subgroup is recovered as the binary polyhedral group of matching ADE type. Canonical direction (subgroups → Lie algebras) reflects McKay's original construction direction.",
+      "citations": [
+        "McKay 1980, in Proc. Sympos. Pure Math. 37, 183"
+      ]
+    },
+
+    {
+      "id": "edge-xc-resolution-lie-from-duval",
+      "type": "cross-classification",
+      "from": "ade-lie-algebras",
+      "to": "ade-du-val",
+      "subtype": "derives-from",
+      "description": "Brieskorn-Grothendieck: resolution of a Du Val singularity attaches a configuration of (-2)-curves on a non-singular replacement; the intersection graph of these curves is the ADE Dynkin diagram. The Lie algebra structure (Dynkin diagram, root system) is read off the singularity. Per v15 spec convention, 'A derives-from B' means A's structure is read off B; here the Lie algebra (A) is derived from the singularity (B).",
+      "citations": [
+        "Brieskorn 1966, Math. Ann. 166, 76",
+        "Brieskorn 1968, Actes Congr. Internat. Math. Nice 2, 279",
+        "Slodowy 1980, Simple Singularities and Simple Algebraic Groups (LNM 815)"
+      ]
+    },
+
+    {
+      "id": "edge-xc-quotient-duval-from-subgroups",
+      "type": "cross-classification",
+      "from": "ade-du-val",
+      "to": "ade-su2-subgroups",
+      "subtype": "derives-from",
+      "description": "Quotient construction: each Du Val singularity is realized as ℂ²/Γ where Γ ⊂ SU(2) is the corresponding ADE finite subgroup; the singularity is derived from the group action. Direction: 'ade-du-val derives-from ade-su2-subgroups' since the singularity's structure is read off the group.",
+      "citations": [
+        "Klein 1884",
+        "Slodowy 1980, LNM 815"
+      ]
+    },
+
+    {
+      "id": "edge-xc-gabriel-quivers-lie",
+      "type": "cross-classification",
+      "from": "ade-quivers",
+      "to": "ade-lie-algebras",
+      "subtype": "bijection",
+      "description": "Gabriel's theorem: connected representation-finite quivers are exactly the ADE quivers (those with ADE underlying graph). Moreover, indecomposable representations of an ADE quiver are in bijection with positive roots of the corresponding ADE root system. The bijection is symmetric: given a Lie algebra, the corresponding quiver is the underlying Dynkin diagram with any orientation; given a representation-finite quiver, its underlying graph is the Dynkin diagram.",
+      "citations": [
+        "Gabriel 1972, Manuscripta Mathematica 6, 71",
+        "Bernstein, Gelfand, Ponomarev 1973, Russian Math. Surveys 28, 17"
+      ]
+    },
+
+    {
+      "id": "edge-xc-ciz-modular-lie",
+      "type": "cross-classification",
+      "from": "ade-modular-invariants",
+      "to": "ade-lie-algebras",
+      "subtype": "bijection",
+      "description": "Cappelli-Itzykson-Zuber classification: each ADE Cartan type corresponds to a modular invariant of the SU(2)_k WZW model (with appropriate level matching). A-series at all levels; D-series at even levels; E_6/E_7/E_8 at sporadic levels 10, 16, 28. The bijection is between Cartan types and modular-invariant structural patterns; the level axis adds a parametric refinement.",
+      "citations": [
+        "Cappelli, Itzykson, Zuber 1987, Nucl. Phys. B 280, 445",
+        "Cappelli, Itzykson, Zuber 1987, Commun. Math. Phys. 113, 1"
+      ]
+    },
+
+    {
+      "id": "edge-xc-bkr-duval-quivers",
+      "type": "cross-classification",
+      "from": "ade-du-val",
+      "to": "ade-quivers",
+      "subtype": "categorically-equivalent",
+      "description": "Bridgeland-King-Reid: derived equivalence between coherent sheaves on the minimal resolution of a Du Val singularity and representations of the McKay quiver of the corresponding finite SU(2) subgroup. The equivalence is functorial and runs symmetrically; canonical direction reflects the original 2001 result's statement.",
+      "citations": [
+        "Bridgeland, King, Reid 2001, J. Amer. Math. Soc. 14, 535"
+      ]
+    },
+
+    {
+      "id": "edge-xc-mckay-quiver-subgroups-quivers",
+      "type": "cross-classification",
+      "from": "ade-su2-subgroups",
+      "to": "ade-quivers",
+      "subtype": "bijection",
+      "description": "McKay quiver: each finite SU(2) subgroup Γ has a canonical quiver (the McKay quiver) whose vertices are irreps of Γ and edges record the tensor decomposition of the defining 2-dim rep ⊗ V_i; the McKay quiver of a finite SU(2) subgroup is the affine ADE quiver. Distinct from the Gabriel-quiver case (ade-quivers) which uses finite ADE quivers; the McKay quiver is the affine version.",
+      "citations": [
+        "McKay 1980, in Proc. Sympos. Pure Math. 37, 183"
+      ]
+    },
+
+    {
+      "id": "edge-xc-comp-subgroups-modular",
+      "type": "cross-classification",
+      "from": "ade-su2-subgroups",
+      "to": "ade-modular-invariants",
+      "subtype": "composition",
+      "description": "Derivable from the chain (ade-su2-subgroups → ade-lie-algebras via McKay; ade-lie-algebras → ade-modular-invariants via CIZ). The composite relation is real but not primitive; for visual purposes it can be omitted in favor of the two primary edges that compose to it.",
+      "citations": []
+    },
+
+    {
+      "id": "edge-xc-comp-duval-modular",
+      "type": "cross-classification",
+      "from": "ade-du-val",
+      "to": "ade-modular-invariants",
+      "subtype": "composition",
+      "description": "Derivable from the chain (ade-du-val → ade-lie-algebras via resolution/Brieskorn; ade-lie-algebras → ade-modular-invariants via CIZ).",
+      "citations": []
+    },
+
+    {
+      "id": "edge-xc-comp-quivers-modular",
+      "type": "cross-classification",
+      "from": "ade-quivers",
+      "to": "ade-modular-invariants",
+      "subtype": "composition",
+      "description": "Derivable from the chain (ade-quivers → ade-lie-algebras via Gabriel; ade-lie-algebras → ade-modular-invariants via CIZ).",
+      "citations": []
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}

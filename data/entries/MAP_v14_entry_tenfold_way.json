@@ -1,0 +1,197 @@
+{
+  "_meta": {
+    "_file_role": "v14 entry-data fragment. Designed for union-merge into Map_v12_data.json (the v13 data file) to produce a v14-complete data set. nodes and edges arrays contain only the additions; families and glossary are unchanged from v13.",
+    "_entry": "tenfold-way",
+    "_schema": "Map_v14_schema.json",
+    "_phase": 1,
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v14_1_findings.md"
+  },
+
+  "nodes": [
+    {
+      "id": "topological-phases-classification",
+      "type": "open-frontier",
+      "label": "Topological phases",
+      "full_name": "Classification of topological phases of matter",
+      "stratum": 4,
+      "empirical_status": "open-frontier",
+      "structural_reason_category": "reach-termination",
+      "structural_reason_subtype": "free-to-interacting-classification-reach-termination",
+      "scope": "within-architecture (QFT, condensed matter sub-domain)",
+      "description": "Classification of topological phases of gapped quantum matter. The free-fermion case is largely solved by the ten-fold way (Altland-Zirnbauer / Schnyder-Ryu-Furusaki-Ludwig / Kitaev) and its crystalline-symmetry extensions, which give complete K-theory classifications across dimensions. The broader problem — interacting topological phases, fractional / symmetry-enriched / symmetry-protected topological order in strongly-correlated systems, and the classification of topological order with anyonic excitations — remains open. The structural reason is reach-termination: the K-theory machinery that closes the free-fermion case reaches its applicable limit at interactions, where the classification can collapse (e.g. ℤ → ℤ₈ for class BDI in 1d under interactions; Fidkowski-Kitaev 2010) or be enriched in ways the free-fermion apparatus cannot capture. New classification machinery (cobordism for invertible phases, fusion categories for topological order, generalized cohomology theories) is partially developed and partially overlapping but not yet closure-grade for the full interacting domain.",
+      "closure_condition": "Awaiting: (i) classification machinery for interacting fermionic SPT phases that subsumes Fidkowski-Kitaev-type collapses; (ii) a complete classification of (2+1)d topological order beyond the modular tensor category framework's current reach; (iii) classification of symmetry-enriched topological order across symmetry groups and dimensions; (iv) integration of crystalline-symmetry, magnetic-symmetry, and internal-symmetry classification programs into a single framework.",
+      "candidate_targeting": [
+        {
+          "program": "tensor-network",
+          "discharge_status": "partial",
+          "annotation": "Tensor-network / matrix-product-state methods provide classification machinery for (1+1)d SPT phases (Chen-Gu-Wen 2011 and subsequent work); 2d projected entangled pair state (PEPS) classification is partially developed. Discharge is partial — significant content classified but not closure-grade."
+        }
+      ],
+      "citations": [
+        "Senthil 2015, Annu. Rev. Condens. Matter Phys. 6, 299 (review of SPT phases)",
+        "Wen 2017, Rev. Mod. Phys. 89, 041004 (review of topological order)",
+        "Chiu, Teo, Schnyder, Ryu 2016, Rev. Mod. Phys. 88, 035005 (review of free-fermion classification)"
+      ],
+      "placement_rationale": "Within-architecture frontier hosted by QFT (specifically the condensed-matter / many-body QFT sub-domain). Stratum 4 placement reflects that the frontier is internal to QFT rather than cross-architecture. Added in v14 because no condensed-matter frontier existed in v13 and the ten-fold way needed a bears-on target."
+    },
+
+    {
+      "id": "tenfold-way",
+      "type": "formal-classification",
+      "label": "Ten-fold way",
+      "full_name": "Altland-Zirnbauer / Schnyder-Ryu-Furusaki-Ludwig / Kitaev classification of topological phases of free fermions",
+      "subtype": "topological-phases",
+      "description": "Classification of gapped free-fermion Hamiltonians by their discrete symmetries (time-reversal T, particle-hole C, chiral S = T·C) into ten symmetry classes (the Altland-Zirnbauer ten), each of which carries a topological invariant — trivial (0), ℤ, ℤ₂, or 2ℤ — at each spatial dimension d, with a period-eight (real classes) and period-two (complex classes) Bott pattern across dimensions. The structure was identified for random-matrix ensembles by Altland and Zirnbauer (1997), extended to topological phases in 3d by Schnyder-Ryu-Furusaki-Ludwig (2008), and completed across all dimensions with the Bott-clock structure made explicit by Kitaev (2009). The 'periodic table' framing is Kitaev's.",
+      "domain_of_applicability": "Gapped Hamiltonians of free (non-interacting) fermions in any spatial dimension d ≥ 0, with the three discrete symmetries T (anti-unitary, T² = ±1 or absent), C (anti-unitary particle-hole, C² = ±1 or absent), and S = T·C (unitary chiral, present iff both T and C present, or absent). Covers bulk topological invariants for crystalline systems in the absence of additional crystalline symmetries (with crystalline-symmetry extensions developed as a separate classification program). Excludes: interacting topological phases (where the classification can collapse or be enriched), fractional / symmetry-enriched topological order, topological order with anyonic excitations, gapless topological phases.",
+
+      "classification_axes": [
+        {
+          "name": "symmetry-class",
+          "kind": "discrete-enum",
+          "values": ["A", "AIII", "AI", "BDI", "D", "DIII", "AII", "CII", "C", "CI"],
+          "description": "The ten Altland-Zirnbauer symmetry classes, labeled by Cartan-class symbols. The class is determined by the triple (T², C², S-presence): A = (0,0,0); AIII = (0,0,1); AI = (+1,0,0); BDI = (+1,+1,1); D = (0,+1,0); DIII = (-1,+1,1); AII = (-1,0,0); CII = (-1,-1,1); C = (0,-1,0); CI = (+1,-1,1). Values listed in the canonical Bott-clock order used by Kitaev 2009 Table 1: complex classes (A, AIII) first, then the eight real classes in Bott-clock order starting from AI.",
+          "citation": "Kitaev 2009, AIP Conf. Proc. 1134, 22, Table 1"
+        },
+        {
+          "name": "spatial-dimension",
+          "kind": "dimension",
+          "range": { "min": 1, "max": 3 },
+          "description": "Spatial dimension of the gapped bulk. The classification extends to all d ≥ 0 with Bott-periodicity (period 8 for real classes, period 2 for complex classes); cells in this entry are populated for d ∈ {1, 2, 3} as the physically most-studied slice. Higher-dimensional content can be added without schema change."
+        }
+      ],
+
+      "cells": [
+        { "cell_id": "cell-A-d1", "axis_values": { "symmetry-class": "A", "spatial-dimension": 1 }, "content": "0 (trivial)", "description": "Class A in 1d: no nontrivial topological invariant." },
+        { "cell_id": "cell-A-d2", "axis_values": { "symmetry-class": "A", "spatial-dimension": 2 }, "content": "ℤ", "description": "Class A in 2d: Chern-number-classified phases. The integer quantum Hall effect is the canonical realization.", "realized_examples": ["integer quantum Hall effect (von Klitzing et al. 1980)", "anomalous quantum Hall effect in magnetically-doped (Bi,Sb)₂Te₃ thin films (Chang et al. 2013)"] },
+        { "cell_id": "cell-A-d3", "axis_values": { "symmetry-class": "A", "spatial-dimension": 3 }, "content": "0 (trivial)", "description": "Class A in 3d: trivial. The Bott pattern for complex classes alternates ℤ–0 with period 2." },
+
+        { "cell_id": "cell-AIII-d1", "axis_values": { "symmetry-class": "AIII", "spatial-dimension": 1 }, "content": "ℤ", "description": "Class AIII (chiral unitary) in 1d: ℤ-classified by a winding number.", "realized_examples": ["Su-Schrieffer-Heeger (SSH) model (Su-Schrieffer-Heeger 1979) — theoretical paradigm; physical realizations in cold-atom and photonic lattices"] },
+        { "cell_id": "cell-AIII-d2", "axis_values": { "symmetry-class": "AIII", "spatial-dimension": 2 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-AIII-d3", "axis_values": { "symmetry-class": "AIII", "spatial-dimension": 3 }, "content": "ℤ", "description": "Class AIII in 3d: ℤ-classified by a 3d winding number." },
+
+        { "cell_id": "cell-AI-d1", "axis_values": { "symmetry-class": "AI", "spatial-dimension": 1 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-AI-d2", "axis_values": { "symmetry-class": "AI", "spatial-dimension": 2 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-AI-d3", "axis_values": { "symmetry-class": "AI", "spatial-dimension": 3 }, "content": "0 (trivial)", "description": "Class AI (T² = +1, no particle-hole, no chiral) is trivial in d = 1, 2, 3. The first nontrivial entry occurs at d = 4 (ℤ)." },
+
+        { "cell_id": "cell-BDI-d1", "axis_values": { "symmetry-class": "BDI", "spatial-dimension": 1 }, "content": "ℤ", "description": "Class BDI (T² = +1, C² = +1, chiral) in 1d: ℤ-classified at the free-fermion level. The Kitaev chain (Kitaev 2001) is the canonical realization, with the winding number counting Majorana edge modes. Note: under interactions this classification collapses to ℤ₈ (Fidkowski-Kitaev 2010), a key example of the free-to-interacting reach-termination that motivates the open frontier.", "realized_examples": ["Kitaev p-wave wire (Kitaev 2001) — theoretical paradigm"] },
+        { "cell_id": "cell-BDI-d2", "axis_values": { "symmetry-class": "BDI", "spatial-dimension": 2 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-BDI-d3", "axis_values": { "symmetry-class": "BDI", "spatial-dimension": 3 }, "content": "0 (trivial)" },
+
+        { "cell_id": "cell-D-d1", "axis_values": { "symmetry-class": "D", "spatial-dimension": 1 }, "content": "ℤ₂", "description": "Class D (particle-hole, C² = +1, no time-reversal) in 1d: ℤ₂-classified, with the nontrivial sector hosting unpaired Majorana zero modes at boundaries. Predicted by Kitaev 2001 (as the spinless p-wave case of his model). Experimental claims of Majorana zero modes in semiconductor-superconductor heterostructures (Mourik et al. 2012 and follow-ups) have undergone significant revision, with notable retractions; the cell-level classification is theoretically uncontested but experimental confirmation has tension.", "realized_examples": ["semiconductor nanowire / superconductor heterostructures — disputed (see Mourik et al. 2012, Albrecht et al. 2016, Zhang et al. retraction 2021)", "vortex cores in topological-superconductor candidates (FeTe₀.₅₅Se₀.₄₅; Wang et al. 2018, also disputed)"] },
+        { "cell_id": "cell-D-d2", "axis_values": { "symmetry-class": "D", "spatial-dimension": 2 }, "content": "ℤ", "description": "Class D in 2d: ℤ-classified topological superconductors. Sr₂RuO₄ was a long-standing candidate; the chiral p-wave interpretation is now considered disfavored by polarized-neutron-scattering experiments (Pustogow et al. 2019).", "realized_examples": ["candidate p+ip topological superconductors (status revised)"] },
+        { "cell_id": "cell-D-d3", "axis_values": { "symmetry-class": "D", "spatial-dimension": 3 }, "content": "0 (trivial)" },
+
+        { "cell_id": "cell-DIII-d1", "axis_values": { "symmetry-class": "DIII", "spatial-dimension": 1 }, "content": "ℤ₂", "description": "Class DIII (T² = -1, C² = +1, chiral) in 1d: ℤ₂-classified time-reversal-invariant topological superconductor wires." },
+        { "cell_id": "cell-DIII-d2", "axis_values": { "symmetry-class": "DIII", "spatial-dimension": 2 }, "content": "ℤ₂" },
+        { "cell_id": "cell-DIII-d3", "axis_values": { "symmetry-class": "DIII", "spatial-dimension": 3 }, "content": "ℤ", "description": "Class DIII in 3d: ℤ-classified time-reversal-invariant topological superconductor. Superfluid ³He-B is the canonical realization.", "realized_examples": ["superfluid ³He-B (Volovik 2003; Qi-Hughes-Raghu-Zhang 2009)"] },
+
+        { "cell_id": "cell-AII-d1", "axis_values": { "symmetry-class": "AII", "spatial-dimension": 1 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-AII-d2", "axis_values": { "symmetry-class": "AII", "spatial-dimension": 2 }, "content": "ℤ₂", "description": "Class AII (T² = -1, no particle-hole, no chiral) in 2d: ℤ₂-classified 'quantum spin Hall' topological insulators. The Kane-Mele model (2005) and BHZ model (Bernevig-Hughes-Zhang 2006) predicted the phase; experimental confirmation came in HgTe/CdTe quantum wells (König et al. 2007).", "realized_examples": ["HgTe/CdTe quantum wells (König et al. 2007)", "InAs/GaSb double quantum wells (Knez et al. 2011)", "monolayer WTe₂ (Wu et al. 2018)"] },
+        { "cell_id": "cell-AII-d3", "axis_values": { "symmetry-class": "AII", "spatial-dimension": 3 }, "content": "ℤ₂", "description": "Class AII in 3d: ℤ₂-classified 3D topological insulators. Predicted independently by Fu-Kane-Mele (2007), Moore-Balents (2007), and Roy (2009); confirmed first in Bi₁₋ₓSbₓ (Hsieh et al. 2008) and Bi₂Se₃ / Bi₂Te₃ / Sb₂Te₃ (Xia et al. 2009, Chen et al. 2009).", "realized_examples": ["Bi₁₋ₓSbₓ (Hsieh et al. 2008)", "Bi₂Se₃, Bi₂Te₃, Sb₂Te₃ family (Xia et al. 2009; Chen et al. 2009)"] },
+
+        { "cell_id": "cell-CII-d1", "axis_values": { "symmetry-class": "CII", "spatial-dimension": 1 }, "content": "2ℤ", "description": "Class CII (T² = -1, C² = -1, chiral) in 1d: 2ℤ-classified — the topological invariant takes even integer values." },
+        { "cell_id": "cell-CII-d2", "axis_values": { "symmetry-class": "CII", "spatial-dimension": 2 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-CII-d3", "axis_values": { "symmetry-class": "CII", "spatial-dimension": 3 }, "content": "ℤ₂" },
+
+        { "cell_id": "cell-C-d1", "axis_values": { "symmetry-class": "C", "spatial-dimension": 1 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-C-d2", "axis_values": { "symmetry-class": "C", "spatial-dimension": 2 }, "content": "2ℤ", "description": "Class C (particle-hole C² = -1, no time-reversal) in 2d: 2ℤ-classified. Singlet topological superconductors with broken time-reversal." },
+        { "cell_id": "cell-C-d3", "axis_values": { "symmetry-class": "C", "spatial-dimension": 3 }, "content": "0 (trivial)" },
+
+        { "cell_id": "cell-CI-d1", "axis_values": { "symmetry-class": "CI", "spatial-dimension": 1 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-CI-d2", "axis_values": { "symmetry-class": "CI", "spatial-dimension": 2 }, "content": "0 (trivial)" },
+        { "cell_id": "cell-CI-d3", "axis_values": { "symmetry-class": "CI", "spatial-dimension": 3 }, "content": "2ℤ", "description": "Class CI (T² = +1, C² = -1, chiral) in 3d: 2ℤ-classified time-reversal-invariant singlet topological superconductor." }
+      ],
+
+      "closure_status": {
+        "level": "complete-within-domain",
+        "description": "Complete within the stated domain (gapped free-fermion Hamiltonians, three discrete symmetries, no further crystalline symmetries). Closure was established by Kitaev (2009) via the K-theory / Bott-periodicity argument, confirming and extending the d = 3 cases worked out by Schnyder-Ryu-Furusaki-Ludwig (2008). The 'within-domain' qualifier is load-bearing: closure does not extend to (a) interacting systems (where Fidkowski-Kitaev 2010 showed the BDI-d1 ℤ collapses to ℤ₈), (b) crystalline-symmetry-protected phases (a separate classification program), or (c) gapless topological phases."
+      },
+
+      "predictive_yield": [
+        {
+          "prediction": "2D quantum spin Hall insulator (class AII, d = 2, ℤ₂ classification) — a time-reversal-invariant insulator with helical edge states.",
+          "status": "confirmed",
+          "prediction_citation": "Kane-Mele 2005, Phys. Rev. Lett. 95, 226801; Bernevig-Hughes-Zhang 2006, Science 314, 1757 (HgTe-specific prediction)",
+          "confirmation_citation": "König et al. 2007, Science 318, 766",
+          "cell_ref": "cell-AII-d2"
+        },
+        {
+          "prediction": "3D topological insulator (class AII, d = 3, ℤ₂ classification) — a class of bulk-insulating materials with topologically-protected surface states.",
+          "status": "confirmed",
+          "prediction_citation": "Fu-Kane-Mele 2007, Phys. Rev. Lett. 98, 106803; Moore-Balents 2007, Phys. Rev. B 75, 121306; Roy 2009, Phys. Rev. B 79, 195322",
+          "confirmation_citation": "Hsieh et al. 2008, Nature 452, 970 (Bi₁₋ₓSbₓ); Xia et al. 2009, Nature Phys. 5, 398 (Bi₂Se₃)",
+          "cell_ref": "cell-AII-d3"
+        },
+        {
+          "prediction": "1D topological superconductor wire (class D, d = 1, ℤ₂ classification) hosting Majorana zero modes at its endpoints.",
+          "status": "unconfirmed-tension",
+          "prediction_citation": "Kitaev 2001, Phys.-Usp. 44, 131",
+          "confirmation_citation": "Mourik et al. 2012, Science 336, 1003 (initial claim); Zhang et al. retraction 2021, Nature 591, 354 (retraction of a high-profile follow-up); current status reviewed in Frolov 2021, Nature 592, 350 and Yu et al. 2021, Nature Physics 17, 482",
+          "cell_ref": "cell-D-d1",
+          "description": "The theoretical prediction is firm and the classification cell is uncontested. Experimental status has substantial tension: several high-profile claims of zero-bias-peak signatures consistent with Majorana zero modes have been challenged or retracted; the field has not yet converged on a confirmed material realization. Status 'unconfirmed-tension' rather than 'confirmed' or 'falsified' reflects this honestly."
+        },
+        {
+          "prediction": "3D time-reversal-invariant topological superconductor (class DIII, d = 3, ℤ classification).",
+          "status": "confirmed",
+          "prediction_citation": "Schnyder-Ryu-Furusaki-Ludwig 2008, Phys. Rev. B 78, 195125; Qi-Hughes-Raghu-Zhang 2009, Phys. Rev. Lett. 102, 187001",
+          "confirmation_citation": "Realized in superfluid ³He-B (longstanding; topological reading consolidated in Volovik 2003, 'The Universe in a Helium Droplet')",
+          "cell_ref": "cell-DIII-d3"
+        },
+        {
+          "prediction": "Integer quantum Hall effect (class A, d = 2, ℤ classification) — quantized Hall conductance at integer multiples of e²/h.",
+          "status": "retro-explanatory-only",
+          "prediction_citation": "Discovered 1980 (von Klitzing-Dorda-Pepper, Phys. Rev. Lett. 45, 494); topological interpretation via TKNN invariant (Thouless-Kohmoto-Nightingale-den Nijs 1982, Phys. Rev. Lett. 49, 405); class A / ten-fold-way framing applied retrospectively.",
+          "cell_ref": "cell-A-d2",
+          "description": "Recorded as retro-explanatory-only because the experimental phenomenon predates the ten-fold-way framework. The classification correctly hosts the IQHE; it did not predict it."
+        }
+      ],
+
+      "related_entries": [
+        "topological-phases-classification"
+      ],
+
+      "citations": [
+        "Altland, Zirnbauer 1997, Phys. Rev. B 55, 1142 (the ten symmetry classes)",
+        "Schnyder, Ryu, Furusaki, Ludwig 2008, Phys. Rev. B 78, 195125 (classification of topological insulators and superconductors in 3d)",
+        "Kitaev 2009, AIP Conf. Proc. 1134, 22 (periodic table for topological insulators and superconductors; Bott-periodic structure across all dimensions)",
+        "Ryu, Schnyder, Furusaki, Ludwig 2010, New J. Phys. 12, 065010 (tenfold way and dimensional hierarchy; review and extension)",
+        "Chiu, Teo, Schnyder, Ryu 2016, Rev. Mod. Phys. 88, 035005 (comprehensive review of free-fermion topological classification including crystalline extensions)"
+      ]
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-tenfold-bears-on-topological-phases",
+      "type": "bears-on",
+      "from": "tenfold-way",
+      "to": "topological-phases-classification",
+      "nature": "partially-solves",
+      "description": "The ten-fold way fully solves the free-fermion sub-domain of the topological-phases-classification frontier. The remaining open content of the frontier — interacting phases, fractional / symmetry-enriched topological order, classification beyond K-theory — lies outside the ten-fold way's domain of applicability. The bears-on is partially-solves rather than constrains because within the free-fermion sub-domain the classification is genuinely closure-grade.",
+      "discharge_status": {
+        "subclaim_examples": {
+          "free-fermion-sub-domain": "substantial",
+          "interacting-sub-domain": "open"
+        }
+      },
+      "citations": [
+        "Fidkowski-Kitaev 2010, Phys. Rev. B 81, 134509 (ℤ → ℤ₈ collapse for interacting BDI-d1, demarcating the ten-fold way's reach)",
+        "Senthil 2015, Annu. Rev. Condens. Matter Phys. 6, 299 (review of interacting SPT phases beyond ten-fold-way reach)"
+      ]
+    },
+    {
+      "id": "edge-qft-uses-tenfold-way",
+      "type": "uses-classification",
+      "from": "qft",
+      "to": "tenfold-way",
+      "description": "QFT (specifically the many-body / condensed-matter sub-domain) invokes the ten-fold way as the standard classification machinery for free-fermion topological phases. The classification is single-particle / quadratic-Hamiltonian level and uses QFT's BdG / single-particle formalism rather than QFT's interacting machinery; this is the same architectural reach-limit that the topological-phases-classification frontier records on the v13 side.",
+      "citations": [
+        "Chiu, Teo, Schnyder, Ryu 2016, Rev. Mod. Phys. 88, 035005"
+      ]
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}

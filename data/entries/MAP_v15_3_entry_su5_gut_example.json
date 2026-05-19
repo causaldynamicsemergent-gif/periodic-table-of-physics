@@ -1,0 +1,211 @@
+{
+  "_meta": {
+    "_file_role": "v15.3 worked example. Demonstrates the `conjectured` status on cross-classification edges via the canonical case: SM rep content as the low-energy specialization of SU(5) GUT rep content. Adds 2 new nodes (SU(5)-GUT formal-classification + SU(5)-GUT-program architecture) and 2 new edges (the conjectured specializes edge + a candidate_targeting from the program).",
+    "_entry": "su5-gut",
+    "_schema": "Map_v15_3_schema.json",
+    "_phase": "v15.3 worked example, not Phase 2 entry",
+    "_authoring_date": "2026-05",
+    "_findings_companion": "MAP_v15_3_findings.md",
+    "_notes": "Authoring choices: the SU(5) GUT classification is rendered with the minimum cell content needed to demonstrate the structural pattern (the 5̄ and 10 reps of SU(5) per generation, plus their content under SM-rep decomposition). Full SU(5) phenomenology is not authored; the entry's purpose is structural."
+  },
+
+  "nodes": [
+    {
+      "id": "su5-gut-rep-content",
+      "type": "formal-classification",
+      "label": "SU(5) GUT rep content",
+      "full_name": "Georgi-Glashow SU(5) grand unified theory matter content",
+      "subtype": "gauge-content",
+      "description": "The matter content classification under the Georgi-Glashow SU(5) GUT, which embeds the Standard Model gauge group SU(3)_c × SU(2)_L × U(1)_Y into SU(5) as a subgroup. Each Standard Model fermion generation is contained in two SU(5) representations: the 5̄ (conjugate fundamental, containing L_L and d_R^c) and the 10 (antisymmetric tensor, containing Q_L, u_R^c, and e_R^c). The gauge bosons of SU(5) decompose into the 12 SM gauge bosons (8 gluons + 3 W + 1 B) plus 12 additional 'leptoquark' X and Y bosons that mediate proton decay and unify quarks with leptons.\n\nThe classification's status is conjectural: the SU(5) rep content is a well-defined mathematical proposal, but its empirical confirmation requires proton decay at a rate consistent with SU(5)'s prediction (lifetime ~10^29 - 10^31 years, depending on the GUT-scale value), which is in tension with current experimental bounds from Super-Kamiokande (lifetime > 1.6 × 10^34 years for p → e+ π^0). Minimal SU(5) is ruled out; non-minimal variants (SUSY SU(5), missing-doublet SU(5), etc.) remain viable but conjectural.",
+      "domain_of_applicability": "Energies above the SU(5) unification scale (~10^15 - 10^16 GeV depending on the specific GUT model). Below this scale, the SU(5) symmetry is broken to the SM gauge group and the SU(5) rep content decomposes into SM multiplets via the conjectured embedding. Does not apply if SU(5) is not the correct unification group (alternative GUTs include SO(10), E_6, Pati-Salam, and supersymmetric variants of each).",
+
+      "internal_structure": "Standard SU(5) embedding (per generation): each SM generation sits in 5̄ ⊕ 10 of SU(5). Decomposition: 5̄ → (1, 2, -1/2)_SM ⊕ (3̄, 1, +1/3)_SM = L_L ⊕ d_R^c. 10 → (3, 2, +1/6)_SM ⊕ (3̄, 1, -2/3)_SM ⊕ (1, 1, +1)_SM = Q_L ⊕ u_R^c ⊕ e_R^c. The right-handed neutrino is not part of the SU(5) matter content (it would be a singlet under SU(5)); minimal SU(5) is therefore neutrino-mass-silent. Gauge boson decomposition: 24 (adjoint) → (8, 1, 0) ⊕ (1, 3, 0) ⊕ (1, 1, 0) ⊕ (3, 2, -5/6) ⊕ (3̄, 2, +5/6). The last two are the leptoquark X and Y bosons mediating proton decay.",
+
+      "classification_axes": [
+        {
+          "name": "su5-rep",
+          "kind": "discrete-enum",
+          "values": ["5̄", "10", "24 (adjoint)"],
+          "description": "The three SU(5) representations populated in the Georgi-Glashow GUT: the 5̄ (conjugate fundamental) and 10 (antisymmetric tensor) for matter, and the 24 (adjoint) for gauge bosons. Higher-rank reps (45, 75, etc.) appear in non-minimal SU(5) extensions for Higgs sectors and additional matter.",
+          "citation": "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438"
+        },
+        {
+          "name": "generation",
+          "kind": "discrete-enum",
+          "values": ["1", "2", "3", "N/A"],
+          "description": "Generation index for matter content (5̄, 10); 'N/A' for the gauge-boson adjoint rep (which does not replicate over generations)."
+        }
+      ],
+
+      "cells": [
+        {
+          "cell_id": "cell-su5-5bar-g1",
+          "axis_values": { "su5-rep": "5̄", "generation": "1" },
+          "content": "5̄ of first generation: contains L_L = (ν_e, e_L) and d_R^c (right-handed down-quark conjugate)",
+          "realized_examples": ["first-generation lepton doublet and right-handed down quark in SM"],
+          "description": "SU(5) embedding of the first-generation 5̄. Under SU(5) → SM breaking, decomposes into the SM (1, 2, -1/2) and (3̄, 1, +1/3) cells."
+        },
+        {
+          "cell_id": "cell-su5-5bar-g2",
+          "axis_values": { "su5-rep": "5̄", "generation": "2" },
+          "content": "5̄ of second generation: contains L_L = (ν_μ, μ_L) and s_R^c",
+          "realized_examples": ["second-generation lepton doublet and right-handed strange quark"]
+        },
+        {
+          "cell_id": "cell-su5-5bar-g3",
+          "axis_values": { "su5-rep": "5̄", "generation": "3" },
+          "content": "5̄ of third generation: contains L_L = (ν_τ, τ_L) and b_R^c",
+          "realized_examples": ["third-generation lepton doublet and right-handed bottom quark"]
+        },
+        {
+          "cell_id": "cell-su5-5bar-NA",
+          "axis_values": { "su5-rep": "5̄", "generation": "N/A" },
+          "content": "structurally-excluded",
+          "description": "Matter rep — replicates over generations; N/A does not apply."
+        },
+
+        {
+          "cell_id": "cell-su5-10-g1",
+          "axis_values": { "su5-rep": "10", "generation": "1" },
+          "content": "10 of first generation: contains Q_L = (u_L, d_L), u_R^c, and e_R^c (positron)",
+          "realized_examples": ["first-generation quark doublet, right-handed up-quark, right-handed charged lepton — all together in one SU(5) 10"],
+          "description": "SU(5) embedding of the first-generation 10. Unifies quarks with charged-lepton chirality partner. The Δ(B-L) violating leptoquark interactions arise from this unification."
+        },
+        {
+          "cell_id": "cell-su5-10-g2",
+          "axis_values": { "su5-rep": "10", "generation": "2" },
+          "content": "10 of second generation: contains Q_L = (c_L, s_L), c_R^c, and μ_R^c",
+          "realized_examples": ["second-generation quark doublet, right-handed charm-quark, right-handed muon"]
+        },
+        {
+          "cell_id": "cell-su5-10-g3",
+          "axis_values": { "su5-rep": "10", "generation": "3" },
+          "content": "10 of third generation: contains Q_L = (t_L, b_L), t_R^c, and τ_R^c",
+          "realized_examples": ["third-generation quark doublet, right-handed top-quark, right-handed tau"]
+        },
+        {
+          "cell_id": "cell-su5-10-NA",
+          "axis_values": { "su5-rep": "10", "generation": "N/A" },
+          "content": "structurally-excluded",
+          "description": "Matter rep — replicates over generations."
+        },
+
+        {
+          "cell_id": "cell-su5-24-g1",
+          "axis_values": { "su5-rep": "24 (adjoint)", "generation": "1" },
+          "content": "structurally-excluded",
+          "description": "Gauge boson rep — does not replicate over generations."
+        },
+        {
+          "cell_id": "cell-su5-24-g2",
+          "axis_values": { "su5-rep": "24 (adjoint)", "generation": "2" },
+          "content": "structurally-excluded",
+          "description": "Gauge boson rep — does not replicate over generations."
+        },
+        {
+          "cell_id": "cell-su5-24-g3",
+          "axis_values": { "su5-rep": "24 (adjoint)", "generation": "3" },
+          "content": "structurally-excluded",
+          "description": "Gauge boson rep — does not replicate over generations."
+        },
+        {
+          "cell_id": "cell-su5-24-NA",
+          "axis_values": { "su5-rep": "24 (adjoint)", "generation": "N/A" },
+          "content": "24 (adjoint of SU(5)): 12 SM gauge bosons (8 gluons + 3 W + 1 B) + 12 X/Y leptoquarks of charge ±4/3 and ±1/3 mediating proton decay",
+          "realized_examples": ["The 12 SM gauge bosons are observed; the 12 X/Y leptoquarks are predicted at mass ~M_GUT and are not directly observed (their indirect signature would be proton decay)."],
+          "description": "SU(5) gauge content. The 12 SM bosons + 12 X/Y leptoquarks unify into the adjoint 24. Proton decay (e.g., p → e^+ π^0) is mediated by tree-level X/Y exchange."
+        }
+      ],
+
+      "closure_status": {
+        "level": "conjectural",
+        "description": "Conjectural. The SU(5) rep content is well-defined mathematically (the 5̄ + 10 per generation embedding is unique up to the obvious freedoms), but its empirical confirmation depends on observing predictions specific to SU(5) — primarily proton decay. Minimal (non-supersymmetric) SU(5) is ruled out by current proton-decay non-observation; supersymmetric SU(5) and other variants remain viable but unconfirmed. The classification is therefore a structural proposal awaiting empirical settlement, not an established closure-within-domain."
+      },
+
+      "predictive_yield": [
+        {
+          "prediction": "Proton decay via tree-level X/Y leptoquark exchange, with lifetime τ_p ~ M_GUT^4 / (g^4 m_p^5) ≈ 10^29 to 10^31 years for minimal SU(5).",
+          "status": "falsified",
+          "prediction_citation": "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438; Buras, Ellis, Gaillard, Nanopoulos 1978, Nucl. Phys. B 135, 66",
+          "confirmation_citation": "Super-Kamiokande Collaboration 2017, Phys. Rev. D 95, 012004 (proton lifetime > 1.6 × 10^34 years for p → e+ π^0)",
+          "description": "Minimal non-supersymmetric SU(5)'s proton-decay prediction is ruled out by Super-Kamiokande's lower bound. Supersymmetric SU(5) raises the GUT scale to ~10^16 GeV and pushes the proton lifetime to ~10^34 - 10^36 years, currently at the edge of experimental sensitivity."
+        },
+        {
+          "prediction": "Gauge coupling unification: the three SM gauge couplings g_1, g_2, g_3 should converge at the GUT scale.",
+          "status": "unconfirmed-tension",
+          "prediction_citation": "Georgi, Quinn, Weinberg 1974, Phys. Rev. Lett. 33, 451",
+          "confirmation_citation": "Amaldi, de Boer, Fürstenau 1991, Phys. Lett. B 260, 447 (analysis with LEP data showing the couplings don't quite meet under SM running, but do under MSSM running)",
+          "description": "Non-SUSY SU(5)'s gauge-coupling unification prediction has tension (the three couplings don't quite meet under SM running). SUSY SU(5) restores unification at a high precision level."
+        },
+        {
+          "prediction": "Magnetic monopoles with mass ~M_GUT, predicted by 't Hooft-Polyakov mechanism applied to SU(5) → SM breaking.",
+          "status": "unconfirmed-not-yet-tested",
+          "prediction_citation": "'t Hooft 1974, Nucl. Phys. B 79, 276; Polyakov 1974, JETP Lett. 20, 194",
+          "description": "GUT monopoles at ~10^16 GeV are far too heavy for current accelerator searches; cosmological searches (MACRO experiment etc.) have set limits but not detected any."
+        },
+        {
+          "prediction": "sin²θ_W(M_Z) = 3/8 at the GUT scale, running down to ~0.21 at M_Z (renormalization-group corrections).",
+          "status": "unconfirmed-tension",
+          "prediction_citation": "Georgi, Quinn, Weinberg 1974",
+          "confirmation_citation": "Measured value sin²θ_W(M_Z) ≈ 0.231; SUSY SU(5) gives consistent prediction, non-SUSY SU(5) deviates by ~10%."
+        }
+      ],
+
+      "related_entries": ["sm-rep-content"],
+
+      "citations": [
+        "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438 (the original SU(5) GUT proposal)",
+        "Georgi, Quinn, Weinberg 1974, Phys. Rev. Lett. 33, 451 (gauge-coupling unification analysis)",
+        "Buras, Ellis, Gaillard, Nanopoulos 1978, Nucl. Phys. B 135, 66 (detailed proton decay analysis)",
+        "Dimopoulos, Raby, Wilczek 1981, Phys. Rev. D 24, 1681 (supersymmetric SU(5))",
+        "Super-Kamiokande Collaboration 2017, Phys. Rev. D 95, 012004 (current proton decay limits)"
+      ]
+    },
+
+    {
+      "id": "su5-gut-program",
+      "type": "architecture",
+      "label": "SU(5) GUT program",
+      "full_name": "SU(5) Grand Unified Theory program (Georgi-Glashow and successors)",
+      "stratum": "2b",
+      "empirical_status": "candidate-foundational",
+      "description": "The theoretical research program initiated by Georgi-Glashow (1974) proposing that the SM gauge group SU(3)_c × SU(2)_L × U(1)_Y is the low-energy remnant of an SU(5) grand unified gauge symmetry. The program has produced minimal (non-supersymmetric) SU(5), supersymmetric SU(5) (Dimopoulos-Raby-Wilczek 1981), various non-minimal variants (missing-doublet, flipped SU(5)), and serves as the canonical exemplar of grand unification. The program is the most-studied GUT and the structural template for SO(10), E_6, and other GUT programs.",
+      "scope": "BSM particle physics; gauge unification; proton decay; magnetic monopoles; baryogenesis from GUT-scale physics.",
+      "candidate_targeting": [
+        {
+          "program": "hierarchy-problem",
+          "discharge_status": "partial",
+          "annotation": "SU(5) GUT does not solve the EW-GUT hierarchy (this requires SUSY or other mechanism layered on top)."
+        }
+      ],
+      "citations": [
+        "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438",
+        "Langacker 1981, Phys. Rep. 72, 185 (review of grand unification at the time)",
+        "Mohapatra 2003, Unification and Supersymmetry, Springer (textbook review)"
+      ],
+      "placement_rationale": "Stratum 2b (candidate-foundational architecture). Sits alongside other unification / candidate-foundational programs (AdS/CFT, tensor networks, NCG, causal sets). Distinct from those in that SU(5) GUT targets a specific BSM extension rather than a general structural reformulation; included here to demonstrate the v15.3 mechanism for unification programs."
+    }
+  ],
+
+  "edges": [
+    {
+      "id": "edge-xc-sm-specializes-su5-gut",
+      "type": "cross-classification",
+      "from": "sm-rep-content",
+      "to": "su5-gut-rep-content",
+      "subtype": "specializes",
+      "status": "conjectured",
+      "targeted_by": ["su5-gut-program"],
+      "cell_refs": ["cell-QL-g1", "cell-QL-g2", "cell-QL-g3", "cell-uR-g1", "cell-uR-g2", "cell-uR-g3", "cell-dR-g1", "cell-dR-g2", "cell-dR-g3", "cell-LL-g1", "cell-LL-g2", "cell-LL-g3", "cell-eR-g1", "cell-eR-g2", "cell-eR-g3", "cell-gluons-gNA", "cell-W-gNA", "cell-B-gNA"],
+      "description": "If SU(5) is the correct GUT framework, the SM rep content specializes the SU(5) rep content: each SM multiplet (the cells of sm-rep-content) is contained in a specific SU(5) representation (the cells of su5-gut-rep-content) under the conjectured SU(5) → SM breaking. The 18 cell_refs pin the SM cells whose embedding into SU(5) reps is part of the conjectured connection (15 matter cells + 3 gauge boson cells; the Higgs cell-H-gNA is not pinned because the Higgs embedding in SU(5) requires non-minimal Higgs content (24 + 5 or similar) which is not part of minimal SU(5)'s structural content). Status: conjectured — the connection has specific shape (the 5̄ + 10 embedding) but is not empirically established (proton decay non-observation has falsified minimal non-SUSY SU(5); other variants remain viable but unconfirmed).",
+      "citations": [
+        "Georgi, Glashow 1974",
+        "Buras, Ellis, Gaillard, Nanopoulos 1978",
+        "Super-Kamiokande Collaboration 2017 (current proton decay limits constraining the connection)"
+      ]
+    }
+  ],
+
+  "families": [],
+  "glossary": { "entries": [] }
+}
