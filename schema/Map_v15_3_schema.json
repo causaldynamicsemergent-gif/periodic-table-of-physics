@@ -1,0 +1,787 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/map_v15_schema.json",
+  "title": "Physics Map v15 — Entry Data (Periodic Table of Physics layer, v15 extensions)",
+  "description": "v15 strictly extends v14. New: experimental-program node type, cross-classification edge family, axis_value_ranges on cells, cell_refs valid on more edge types. See MAP_v15_schema_spec.md for the load-bearing spec.",
+  "type": "object",
+  "required": ["nodes", "edges", "families", "glossary"],
+  "properties": {
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
+    "families": { "type": "array", "items": { "$ref": "#/$defs/family" } },
+    "canvas": {
+      "type": "object",
+      "properties": { "width": { "type": "number" }, "height": { "type": "number" } }
+    },
+    "y_bands": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "glossary": { "$ref": "#/$defs/glossary" },
+    "mode": { "type": "string" },
+    "schema_version": {
+      "type": "string",
+      "description": "v15 data may set this to \"15\" or \"15.0\"."
+    }
+  },
+
+  "$defs": {
+
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "architecture",
+        "regime-content",
+        "open-frontier",
+        "totality-approach",
+        "formal-classification",
+        "experimental-program"
+      ],
+      "description": "Six node kinds. The first five inherited from v14; experimental-program added in v15."
+    },
+
+    "stratum": {
+      "oneOf": [{ "type": "string" }, { "type": "number" }],
+      "description": "Vertical band placement. See v14 spec §2.2. experimental-program nodes' stratum placement is non-load-bearing in v15."
+    },
+
+    "empirical_status": { "type": "string" },
+
+    "structural_reason_category": {
+      "type": "string",
+      "enum": [
+        "organizing-structure-failure",
+        "apparatus-mechanism-failure",
+        "reach-termination",
+        "bridge-failure",
+        "cross-architecture-non-sharing",
+        "solvability-failure",
+        "interpretive-underdetermination"
+      ]
+    },
+
+    "language": {
+      "type": "string",
+      "enum": ["native", "information-theoretic", "geometric", "category-theoretic"]
+    },
+
+    "discharge_level": { "type": "string" },
+
+    "discharge_status": {
+      "oneOf": [
+        { "$ref": "#/$defs/discharge_level" },
+        {
+          "type": "object",
+          "properties": {
+            "local": { "$ref": "#/$defs/discharge_level" },
+            "global": { "$ref": "#/$defs/discharge_level" },
+            "universal": { "$ref": "#/$defs/discharge_level" },
+            "geometry": { "$ref": "#/$defs/discharge_level" },
+            "matter": { "$ref": "#/$defs/discharge_level" },
+            "overall": { "$ref": "#/$defs/discharge_level" },
+            "subclaim_examples": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/$defs/discharge_level" }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "candidate_targeting_entry": {
+      "type": "object",
+      "required": ["program", "discharge_status"],
+      "properties": {
+        "program": { "type": "string" },
+        "discharge_status": { "$ref": "#/$defs/discharge_status" },
+        "annotation": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "loose_end": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string" },
+        "structural_reason_category": { "$ref": "#/$defs/structural_reason_category" },
+        "scope": { "type": "string" },
+        "candidate_targeting": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/candidate_targeting_entry" }
+        },
+        "citations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "equation": {
+      "type": "object",
+      "required": ["latex", "description"],
+      "properties": {
+        "latex": { "type": "string" },
+        "description": { "type": "string" },
+        "loose_ends": { "type": "array", "items": { "$ref": "#/$defs/loose_end" } },
+        "citations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "language_block": {
+      "type": "object",
+      "properties": {
+        "language": { "type": "string" },
+        "discharge_status": { "$ref": "#/$defs/discharge_status" },
+        "equations": { "type": "array", "items": { "$ref": "#/$defs/equation" } },
+        "cluster_with": { "type": "array", "items": { "type": "string" } },
+        "citations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "equations_block": {
+      "type": "object",
+      "properties": {
+        "unification_count": { "type": "integer" },
+        "primary_language": { "$ref": "#/$defs/language" },
+        "native": { "$ref": "#/$defs/language_block" },
+        "unifications": { "type": "array", "items": { "$ref": "#/$defs/language_block" } }
+      }
+    },
+
+    "hosting_claim": {
+      "type": "object",
+      "required": ["target", "discharge_status"],
+      "properties": {
+        "target": { "type": "string" },
+        "discharge_status": { "$ref": "#/$defs/discharge_status" },
+        "scope_description": { "type": "string" },
+        "citations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "axis_kind": {
+      "type": "string",
+      "enum": ["discrete-enum", "dimension", "continuous", "group", "representation", "cobordism-class", "free-text"]
+    },
+
+    "axis_spec": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "$ref": "#/$defs/axis_kind" },
+        "values": { "type": "array", "items": { "type": "string" } },
+        "range": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["infty", "-infty"] }]
+            },
+            "max": {
+              "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["infty", "-infty"] }]
+            }
+          },
+          "additionalProperties": false
+        },
+        "parent_group": { "type": "string" },
+        "dimension_ref": { "type": "string" },
+        "symmetry_ref": { "type": "string" },
+        "description": { "type": "string" },
+        "canonical_notation": { "type": "string" },
+        "citation": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "enum": ["discrete-enum", "group", "representation", "free-text"] } }, "required": ["kind"] },
+          "then": { "required": ["values"] }
+        },
+        {
+          "if": { "properties": { "kind": { "enum": ["dimension", "continuous"] } }, "required": ["kind"] },
+          "then": { "required": ["range"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "representation" } }, "required": ["kind"] },
+          "then": { "required": ["parent_group"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "cobordism-class" } }, "required": ["kind"] },
+          "then": { "required": ["dimension_ref", "symmetry_ref"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "closure_level": {
+      "type": "string",
+      "enum": ["complete-within-domain", "partial", "conjectural", "contested"]
+    },
+
+    "closure_status_block": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": { "$ref": "#/$defs/closure_level" },
+        "description": { "type": "string" },
+        "contested_by": { "type": "array", "items": { "type": "string" }, "minItems": 2 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "level": { "const": "contested" } }, "required": ["level"] },
+          "then": { "required": ["contested_by"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "prediction_status": {
+      "type": "string",
+      "enum": ["confirmed", "unconfirmed-not-yet-tested", "unconfirmed-tension", "falsified", "retro-explanatory-only"]
+    },
+
+    "prediction": {
+      "type": "object",
+      "required": ["prediction", "status"],
+      "properties": {
+        "prediction": { "type": "string" },
+        "status": { "$ref": "#/$defs/prediction_status" },
+        "confirmation_citation": { "type": "string" },
+        "prediction_citation": { "type": "string" },
+        "cell_ref": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "enum": ["confirmed", "falsified", "unconfirmed-tension"] } }, "required": ["status"] },
+          "then": { "required": ["confirmation_citation"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "contested_nature": {
+      "type": "string",
+      "enum": ["definition-disputed", "domain-disputed", "existence-disputed", "interpretation-disputed"]
+    },
+
+    "contested_status": {
+      "type": "object",
+      "required": ["nature", "parties"],
+      "properties": {
+        "nature": { "$ref": "#/$defs/contested_nature" },
+        "parties": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "axis_value_range": {
+      "type": "object",
+      "description": "v15. A range or set of axis values covered by a single cell. See spec §4.",
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["all", "every-nth", "enumerated"]
+        },
+        "min": {
+          "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["infty", "-infty"] }]
+        },
+        "max": {
+          "oneOf": [{ "type": "number" }, { "type": "string", "enum": ["infty", "-infty"] }]
+        },
+        "n": { "type": "integer", "minimum": 2 },
+        "offset": { "type": "integer", "minimum": 0 },
+        "values": {
+          "type": "array",
+          "items": {
+            "oneOf": [{ "type": "string" }, { "type": "number" }, { "type": "integer" }]
+          }
+        },
+        "description": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "every-nth" } }, "required": ["kind"] },
+          "then": { "required": ["n", "offset"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "enumerated" } }, "required": ["kind"] },
+          "then": { "required": ["values"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "cell": {
+      "type": "object",
+      "description": "v15: cell may have axis_values, axis_value_ranges, or both (for multi-axis cells where some axes are single-point and others are ranges). Per-axis exclusivity is a validator-side rule (see spec §7 Rule 14).",
+      "required": ["content"],
+      "properties": {
+        "axis_values": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Single-point axis values. v14 form."
+        },
+        "axis_value_ranges": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/axis_value_range" },
+          "description": "v15. Range/set axis-value coverage. Keys are axis names from the node's classification_axes."
+        },
+        "content": { "type": "string" },
+        "cell_id": { "type": "string" },
+        "predictions": { "type": "array", "items": { "$ref": "#/$defs/prediction" } },
+        "realized_examples": { "type": "array", "items": { "type": "string" } },
+        "contested_status": { "$ref": "#/$defs/contested_status" },
+        "citations": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      },
+      "anyOf": [
+        { "required": ["axis_values"] },
+        { "required": ["axis_value_ranges"] }
+      ],
+      "additionalProperties": false
+    },
+
+    "experimental_program_subtype": {
+      "type": "string",
+      "enum": [
+        "data-curation-collaboration",
+        "experimental-collaboration",
+        "accelerator-program",
+        "survey-program"
+      ],
+      "description": "v15. Subtype enum for experimental-program nodes. See spec §2.2."
+    },
+
+    "operational_period": {
+      "type": "object",
+      "description": "v15. When the program operated. See spec §2.3.",
+      "properties": {
+        "start_year": { "type": "integer" },
+        "start_date": { "type": "string", "format": "date" },
+        "end_year": { "type": "integer" },
+        "end_date": { "type": "string", "format": "date" },
+        "ongoing": { "type": "boolean", "const": true }
+      },
+      "anyOf": [
+        { "required": ["start_year"] },
+        { "required": ["start_date"] }
+      ],
+      "additionalProperties": false
+    },
+
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "$ref": "#/$defs/node_type" },
+        "subtype": {
+          "description": "Free-form string for most node types; constrained to experimental_program_subtype enum when type = experimental-program. See spec §2.5 Rule 9 (validator-side).",
+          "anyOf": [
+            { "type": "string" },
+            { "$ref": "#/$defs/experimental_program_subtype" }
+          ]
+        },
+        "stratum": { "$ref": "#/$defs/stratum" },
+        "label": { "type": "string" },
+        "full_name": { "type": "string" },
+        "empirical_status": { "$ref": "#/$defs/empirical_status" },
+        "description": { "type": "string" },
+
+        "structural_reason_category": { "$ref": "#/$defs/structural_reason_category" },
+        "secondary_structural_reason_category": { "$ref": "#/$defs/structural_reason_category" },
+        "structural_reason_secondary": { "$ref": "#/$defs/structural_reason_category" },
+        "structural_reason_subtype": { "type": "string" },
+        "sr_categories": { "type": "array", "items": { "$ref": "#/$defs/structural_reason_category" } },
+
+        "scope": { "type": "string" },
+        "sustaining_target": { "type": "string" },
+        "closure_condition": { "type": "string" },
+        "internal_structure": { "type": "string" },
+
+        "hosted_regimes": { "type": "array", "items": { "type": "string" } },
+        "hosting_architectures": { "type": "array", "items": { "type": "string" } },
+        "hosting_claims": { "type": "array", "items": { "$ref": "#/$defs/hosting_claim" } },
+        "empirical_content": { "type": "string" },
+        "equations": { "$ref": "#/$defs/equations_block" },
+
+        "architecture_level_edges": {
+          "type": "array",
+          "items": { "type": "object", "properties": { "to": { "type": "string" }, "description": { "type": "string" } } }
+        },
+        "regime_content_loci": {
+          "type": "array",
+          "items": { "type": "object", "properties": { "to": { "type": "string" }, "description": { "type": "string" } } }
+        },
+
+        "candidate_targeting": { "type": "array", "items": { "$ref": "#/$defs/candidate_targeting_entry" } },
+        "citations": { "type": "array", "items": { "type": "string" } },
+        "related_entries": { "type": "array", "items": { "type": "string" } },
+        "placement_rationale": { "type": "string" },
+        "primary_language": { "$ref": "#/$defs/language" },
+        "languages_present": { "type": "array", "items": { "$ref": "#/$defs/language" } },
+        "cf_subtype": { "type": "string" },
+        "bridges": { "type": "array" },
+
+        "classification_axes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/axis_spec" }
+        },
+        "cells": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/cell" } },
+        "closure_status": { "$ref": "#/$defs/closure_status_block" },
+        "domain_of_applicability": { "type": "string" },
+        "predictive_yield": { "type": "array", "items": { "$ref": "#/$defs/prediction" } },
+
+        "operational_period": { "$ref": "#/$defs/operational_period" },
+        "host_institutions": { "type": "array", "items": { "type": "string" } },
+        "key_publications": { "type": "array", "items": { "type": "string" } },
+        "produced_classifications": { "type": "array", "items": { "type": "string" } },
+
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "_source_pass": { "type": "integer" }
+      },
+
+      "allOf": [
+        {
+          "_comment": "v14 §8 Rule 3 — required-on-formal-classification",
+          "if": { "properties": { "type": { "const": "formal-classification" } }, "required": ["type"] },
+          "then": {
+            "required": ["id", "type", "label", "classification_axes", "cells", "closure_status", "domain_of_applicability", "citations"]
+          }
+        },
+        {
+          "_comment": "v14 §8 Rule 1 — forbidden-on-formal-classification",
+          "if": { "properties": { "type": { "const": "formal-classification" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "structural_reason_category": false,
+              "secondary_structural_reason_category": false,
+              "structural_reason_secondary": false,
+              "structural_reason_subtype": false,
+              "sr_categories": false,
+              "closure_condition": false,
+              "candidate_targeting": false,
+              "hosting_claims": false,
+              "hosted_regimes": false,
+              "hosting_architectures": false,
+              "equations": false,
+              "operational_period": false,
+              "host_institutions": false,
+              "key_publications": false,
+              "produced_classifications": false
+            }
+          }
+        },
+        {
+          "_comment": "v14 §8 Rule 2 — forbidden-on-non-formal-classification (now relaxed to allow experimental-program-specific fields elsewhere)",
+          "if": {
+            "not": {
+              "anyOf": [
+                { "properties": { "type": { "const": "formal-classification" } }, "required": ["type"] }
+              ]
+            }
+          },
+          "then": {
+            "properties": {
+              "classification_axes": false,
+              "cells": false,
+              "closure_status": false,
+              "domain_of_applicability": false,
+              "predictive_yield": false
+            }
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 7 — experimental-program required fields",
+          "if": { "properties": { "type": { "const": "experimental-program" } }, "required": ["type"] },
+          "then": {
+            "required": ["id", "type", "label", "subtype", "description", "operational_period", "citations"]
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 8 — experimental-program forbidden fields",
+          "if": { "properties": { "type": { "const": "experimental-program" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "structural_reason_category": false,
+              "secondary_structural_reason_category": false,
+              "structural_reason_secondary": false,
+              "structural_reason_subtype": false,
+              "sr_categories": false,
+              "closure_condition": false,
+              "closure_status": false,
+              "classification_axes": false,
+              "cells": false,
+              "domain_of_applicability": false,
+              "predictive_yield": false,
+              "candidate_targeting": false,
+              "hosting_claims": false,
+              "hosted_regimes": false,
+              "hosting_architectures": false,
+              "equations": false,
+              "internal_structure": false
+            }
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 9 — experimental-program-only fields forbidden on other types",
+          "if": {
+            "not": {
+              "properties": { "type": { "const": "experimental-program" } },
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {
+              "operational_period": false,
+              "host_institutions": false,
+              "key_publications": false,
+              "produced_classifications": false
+            }
+          }
+        }
+      ],
+
+      "additionalProperties": true
+    },
+
+    "edge_type": {
+      "type": "string",
+      "enum": [
+        "candidate-hosting",
+        "candidate-targeting",
+        "emergence",
+        "cross-architecture-emergence",
+        "open-frontier-architecture-edge",
+        "open-frontier-content-edge",
+        "multi-architecture-interference-edge",
+        "bears-on",
+        "uses-classification",
+        "produces-classification",
+        "cross-classification"
+      ]
+    },
+
+    "bears_on_nature": {
+      "type": "string",
+      "enum": ["constrains", "partially-solves", "structural-only"]
+    },
+
+    "cross_classification_subtype": {
+      "type": "string",
+      "enum": ["bijection", "derives-from", "categorically-equivalent", "specializes", "composition"],
+      "description": "v15. Subtype for cross-classification edges. See spec §3.2."
+    },
+
+    "cross_classification_status": {
+      "type": "string",
+      "enum": ["established", "partial", "conjectured", "aspired", "contested", "impossible"],
+      "description": "v15.3. Status of a cross-classification edge. See MAP_v15_3_schema_spec_extension.md §2. Default `established` when absent."
+    },
+
+    "edge": {
+      "type": "object",
+      "required": ["id", "type", "from", "to"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "$ref": "#/$defs/edge_type" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "bidirectional": { "type": "boolean" },
+        "description": { "type": "string" },
+        "discharge_status": { "$ref": "#/$defs/discharge_status" },
+        "discharge_annotation": { "type": "string" },
+        "visual_style": { "type": "string" },
+        "citations": { "type": "array", "items": { "type": "string" } },
+        "nature": { "$ref": "#/$defs/bears_on_nature" },
+        "cell_refs": { "type": "array", "items": { "type": "string" } },
+        "subtype": { "$ref": "#/$defs/cross_classification_subtype" },
+        "status": {
+          "$ref": "#/$defs/cross_classification_status",
+          "description": "v15.3. Status of a cross-classification edge. Default `established` when absent."
+        },
+        "targeted_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "v15.3. Array of node ids (typically architecture nodes at stratum 2b) for programs working toward establishing this connection. Required when status='aspired'."
+        },
+        "parties": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "description": "v15.3. Citations to the parties in a contested connection. Required when status='contested' (≥ 2 entries)."
+        },
+        "no_go_citations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "v15.3. Citations to no-go theorems ruling out the connection. Required when status='impossible' (≥ 1 entry)."
+        },
+        "_source_pass": { "type": "integer" }
+      },
+      "allOf": [
+        {
+          "_comment": "nature is bears-on-only (unchanged from v14)",
+          "if": {
+            "not": {
+              "properties": { "type": { "const": "bears-on" } },
+              "required": ["type"]
+            }
+          },
+          "then": { "properties": { "nature": false } }
+        },
+        {
+          "_comment": "v15 §7 Rule 13 — cell_refs valid on bears-on, uses-classification, produces-classification, cross-classification",
+          "if": {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": ["bears-on", "uses-classification", "produces-classification", "cross-classification"]
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          "then": { "properties": { "cell_refs": false } }
+        },
+        {
+          "_comment": "v15 §7 Rule 11 — subtype required for cross-classification edges",
+          "if": {
+            "properties": { "type": { "const": "cross-classification" } },
+            "required": ["type"]
+          },
+          "then": { "required": ["subtype"] }
+        },
+        {
+          "_comment": "v15 — subtype field is cross-classification-only",
+          "if": {
+            "not": {
+              "properties": { "type": { "const": "cross-classification" } },
+              "required": ["type"]
+            }
+          },
+          "then": { "properties": { "subtype": false } }
+        },
+        {
+          "_comment": "v15.3 — status/targeted_by/parties/no_go_citations are cross-classification-only",
+          "if": {
+            "not": {
+              "properties": { "type": { "const": "cross-classification" } },
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {
+              "status": false,
+              "targeted_by": false,
+              "parties": false,
+              "no_go_citations": false
+            }
+          }
+        },
+        {
+          "_comment": "v15.3 §4 Rule 16 — aspired requires targeted_by ≥ 1",
+          "if": {
+            "properties": {
+              "type": { "const": "cross-classification" },
+              "status": { "const": "aspired" }
+            },
+            "required": ["type", "status"]
+          },
+          "then": {
+            "required": ["targeted_by"],
+            "properties": {
+              "targeted_by": { "minItems": 1 }
+            }
+          }
+        },
+        {
+          "_comment": "v15.3 §4 Rule 17 — contested requires parties ≥ 2",
+          "if": {
+            "properties": {
+              "type": { "const": "cross-classification" },
+              "status": { "const": "contested" }
+            },
+            "required": ["type", "status"]
+          },
+          "then": { "required": ["parties"] }
+        },
+        {
+          "_comment": "v15.3 §4 Rule 18 — impossible requires no_go_citations ≥ 1",
+          "if": {
+            "properties": {
+              "type": { "const": "cross-classification" },
+              "status": { "const": "impossible" }
+            },
+            "required": ["type", "status"]
+          },
+          "then": { "required": ["no_go_citations"] }
+        }
+      ],
+      "additionalProperties": true
+    },
+
+    "family": {
+      "type": "object",
+      "required": ["id", "label", "instances"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "instances": { "type": "array", "items": { "type": "string" } },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+
+    "glossary": {
+      "type": "object",
+      "required": ["entries"],
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "order": { "type": "integer" }
+            }
+          }
+        },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/glossary_entry" } }
+      }
+    },
+
+    "glossary_entry": {
+      "type": "object",
+      "required": ["term", "category", "definition"],
+      "properties": {
+        "term": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "definition": { "type": "string" },
+        "why_it_matters": { "type": "string" },
+        "example": { "type": "string" },
+        "related": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+
+  "_validator_side_rules": {
+    "_comment": "Rules requiring cross-record lookup, validator-implemented.",
+    "rule_4_bears_on_source_type": "For every edge with type='bears-on', the node referenced by edge.from MUST have type='formal-classification'.",
+    "rule_5_bears_on_target_type": "For every edge with type='bears-on', the node referenced by edge.to MUST have type ∈ {'open-frontier', 'totality-approach'}.",
+    "rule_6_classification_edge_targets": "For every edge with type ∈ {'uses-classification', 'produces-classification'}, the node referenced by edge.to MUST have type='formal-classification'.",
+    "rule_10_cross_classification_endpoints": "For every edge with type='cross-classification', both edge.from and edge.to MUST resolve to formal-classification nodes.",
+    "rule_12_produces_classification_source": "For every edge with type='produces-classification', the node referenced by edge.from MUST have type ∈ {'experimental-program', 'architecture', 'open-frontier'}.",
+    "rule_14_axis_value_exclusivity": "For every cell on a formal-classification node, each axis in classification_axes appears in EXACTLY ONE of cell.axis_values or cell.axis_value_ranges (not both, not neither).",
+    "rule_9_experimental_program_subtype": "When type='experimental-program', the subtype field MUST be one of the experimental_program_subtype enum values.",
+    "axis_ref_resolution": "Inherited from v14.",
+    "cell_axis_keys_match": "Inherited from v14, extended: axis names from cell.axis_values and cell.axis_value_ranges (taken together) MUST match the node's classification_axes."
+  }
+}
