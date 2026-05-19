@@ -1,0 +1,26 @@
+name: Validate dataset
+
+# Run this check on every push and every pull request, on any branch.
+# This means: whenever you (or anyone else) changes a file in this repo,
+# GitHub will automatically run validate.py and tell you if the data broke.
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install jsonschema
+        run: pip install jsonschema
+
+      - name: Run validation
+        run: python scripts/validate.py
