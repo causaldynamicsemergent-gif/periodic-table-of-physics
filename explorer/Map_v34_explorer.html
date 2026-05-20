@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodic Table of Physics — v34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --ink-soft: #3d3a32; --ink-mute: #6e6957; --ink-faint: #a09a85;
+  --paper: #fbf9f1; --paper-2: #f4f0e2; --paper-3: #ebe6cf; --paper-4: #e0d9bd;
+  --rule: #cfc8b4; --rule-soft: #e3ddc5;
+  --accent: #8b1a1a;
+  --struct: #1564A8; --hybrid: #B8860B; --phen: #2E7D5B;
+  --struct-tint: rgba(21,100,168,0.08);
+  --hybrid-tint: rgba(184,134,11,0.08);
+  --phen-tint:   rgba(46,125,91,0.08);
+  --st-confirmed: #2E7D5B;
+  --st-tension:   #B8860B;
+  --st-not-tested: #9c9783;
+  --st-falsified: #8b1a1a;
+  --st-retro:     #5a4a8a;
+  --shadow-soft: 0 1px 0 rgba(26,24,20,0.04), 0 4px 14px rgba(26,24,20,0.06);
+  --shadow-hard: 0 1px 0 rgba(26,24,20,0.06), 0 8px 24px rgba(26,24,20,0.10);
+  --shadow-tile: 0 1px 2px rgba(26,24,20,0.05);
+  --shadow-tile-hover: 0 4px 14px rgba(26,24,20,0.14);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--ink); background: var(--paper);
+  font-size: 15px; line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ============== Shell ============== */
+.shell {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100vh;
+}
+
+/* ============== Header ============== */
+header.masthead {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 18px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  z-index: 30;
+}
+.title-block { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.title-block h1 {
+  margin: 0; font-family: 'Spectral', serif;
+  font-weight: 500; font-size: 20px; letter-spacing: -0.005em;
+  color: var(--ink); line-height: 1.15;
+}
+.title-block h1 .v {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-weight: 400; font-size: 12px; color: var(--ink-mute);
+  margin-left: 6px;
+}
+.title-block .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: var(--ink-mute); margin-top: 1px;
+}
+.header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btn-ghost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; padding: 5px 10px;
+  background: var(--paper); border: 1px solid var(--rule);
+  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
+  text-decoration: none; line-height: 1.3;
+}
+.btn-ghost:hover { background: var(--paper-3); border-color: var(--ink-mute); color: var(--ink); }
+.btn-ghost.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-ghost.spinning::after { content: ' ⟳'; display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============== Toolbar (compact: just filters + browse) ============== */
+.toolbar {
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 18px 6px;
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  z-index: 20;
+  min-height: 36px;
+}
+.tb-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.tb-group .group-label {
+  color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 9.5px; margin-right: 2px;
+}
+.tb-pip { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.08); }
+.tb-bar { width: 14px; height: 8px; display: inline-block; border-radius: 1px; }
+.tb-legend-item { display: flex; align-items: center; gap: 4px; color: var(--ink-soft); white-space: nowrap; }
+
+.tb-chip {
+  padding: 3px 9px; background: var(--paper);
+  border: 1px solid var(--rule); color: var(--ink-soft);
+  cursor: pointer; border-radius: 2px;
+  font-family: inherit; font-size: 10.5px; line-height: 1.3;
+  letter-spacing: 0.03em;
+}
+.tb-chip:hover { background: var(--paper-2); border-color: var(--ink-mute); color: var(--ink); }
+.tb-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tb-chip .ct { margin-left: 4px; color: var(--ink-faint); }
+.tb-chip.active .ct { color: rgba(251,249,241,0.6); }
+
+.tb-divider { width: 1px; align-self: stretch; background: var(--rule); margin: 0 4px; }
+.tb-spacer { flex: 1; }
+.tb-reset {
+  font-size: 10px; color: var(--accent);
+  text-decoration: underline dotted;
+  cursor: pointer; background: none; border: none;
+  font-family: inherit;
+}
+
+/* Browse dropdown */
+.browse-wrap { position: relative; }
+.browse-btn {
+  padding: 5px 10px 5px 9px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink);
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 2px;
+}
+.browse-btn:hover { background: var(--paper-2); }
+.browse-btn .caret { font-size: 9px; opacity: 0.7; }
+.browse-btn.active { background: var(--ink); color: var(--paper); }
+.browse-menu {
+  position: absolute; top: 100%; left: 0;
+  margin-top: 4px;
+  background: var(--paper); border: 1px solid var(--ink);
+  min-width: 280px; max-width: 360px;
+  max-height: 60vh; overflow-y: auto;
+  z-index: 80; box-shadow: var(--shadow-hard);
+  display: none;
+  border-radius: 2px;
+}
+.browse-menu.open { display: block; }
+.browse-menu .menu-group {
+  border-bottom: 1px solid var(--rule-soft);
+}
+.browse-menu .menu-group:last-child { border-bottom: none; }
+.browse-menu .menu-group-head {
+  padding: 8px 12px 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-mute); font-weight: 600;
+  background: var(--paper-2);
+}
+.browse-menu .menu-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  font-family: 'Crimson Pro', serif; font-size: 13px;
+  color: var(--ink); cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.browse-menu .menu-item:last-child { border-bottom: none; }
+.browse-menu .menu-item:hover { background: var(--paper-3); }
+.browse-menu .menu-item .menu-symbol {
+  font-family: 'Spectral', serif; font-weight: 600;
+  font-size: 13px; min-width: 38px; color: var(--ink);
+}
+.browse-menu .menu-item .menu-name { flex: 1; }
+.browse-menu .menu-item .menu-counts {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  color: var(--ink-mute); white-space: nowrap;
+}
+.browse-menu .menu-search {
+  padding: 8px 10px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 1;
+}
+.browse-menu .menu-search input {
+  width: 100%; padding: 5px 8px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--ink); border-radius: 2px;
+}
+
+/* ============== Body grid (map | splitter | sidebar) ============== */
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr 6px var(--panel-width, 380px);
+  overflow: hidden;
+  min-height: 0;
+}
+.body-grid.sidebar-collapsed {
+  grid-template-columns: 1fr 0 0;
+}
+
+/* ============== Splitter (draggable) ============== */
+.splitter {
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 140ms ease;
+}
+.splitter::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 2.5px; right: 2.5px;
+  background: var(--rule);
+  transition: background 140ms ease;
+}
+.splitter::after {
+  /* grip dots — appear on hover/drag */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px; height: 36px;
+  background-image: radial-gradient(circle, var(--paper) 0.9px, transparent 0.9px);
+  background-size: 2px 5px;
+  background-repeat: repeat-y;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+.splitter:hover::before,
+.splitter.dragging::before { background: var(--ink-mute); }
+.splitter:hover::after,
+.splitter.dragging::after { opacity: 0.95; }
+body.splitter-dragging {
+  cursor: col-resize !important;
+  user-select: none;
+}
+body.splitter-dragging * { cursor: col-resize !important; }
+.body-grid.sidebar-collapsed .splitter { pointer-events: none; }
+.body-grid.sidebar-collapsed .splitter::before { display: none; }
+
+/* ============== Map pane ============== */
+.map-pane {
+  position: relative;
+  overflow: auto;
+  background: var(--paper);
+}
+.map-zoom-wrap {
+  /* This is the zoomable layer; everything in the map lives inside. */
+  transform-origin: 0 0;
+  transition: transform 0.18s ease;
+  padding: 56px 18px 60px;  /* top padding leaves room for zoom controls */
+  min-width: 100%;
+  display: inline-block;
+}
+
+/* Zoom controls — pinned top-left of the visible map pane */
+.zoom-controls {
+  position: absolute;
+  top: 10px; left: 12px;
+  display: inline-flex; gap: 0;
+  z-index: 30;
+  background: var(--paper);
+  border: 1px solid var(--ink-mute);
+  border-radius: 3px;
+  box-shadow: var(--shadow-hard);
+}
+.zoom-controls button {
+  width: 32px; height: 32px;
+  background: var(--paper); border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; color: var(--ink);
+  line-height: 1; padding: 0;
+  font-weight: 600;
+}
+.zoom-controls button:last-child { border-right: none; }
+.zoom-controls button:hover { background: var(--paper-3); color: var(--accent); }
+.zoom-controls button:active { background: var(--paper-4); }
+.zoom-controls button:disabled { color: var(--ink-faint); cursor: default; background: var(--paper); }
+.zoom-controls .zoom-level {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 500;
+  color: var(--ink-soft); border-right: 1px solid var(--rule);
+  min-width: 48px;
+  background: var(--paper-2);
+}
+
+/* Sidebar collapse / expand — on the right edge of the map pane */
+.sidebar-toggle {
+  position: absolute; top: 50%;
+  right: 0; transform: translateY(-50%);
+  width: 18px; height: 60px;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  border-right: none;
+  cursor: pointer; z-index: 26;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--ink-mute);
+}
+.sidebar-toggle:hover { background: var(--paper-3); color: var(--ink); }
+
+/* ============== Intro + summary stats (above the table) ============== */
+.pt-intro {
+  display: flex; flex-wrap: wrap; gap: 14px 24px;
+  align-items: flex-end; max-width: 1280px;
+  margin: 0 0 12px;
+}
+.pt-intro .blurb {
+  font-size: 13px; line-height: 1.5; color: var(--ink-soft); max-width: 600px;
+}
+.pt-intro .blurb strong { color: var(--ink); }
+.pt-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.pt-stat { line-height: 1; }
+.pt-stat .n {
+  font-family: 'Spectral', serif; font-size: 20px; font-weight: 500;
+  display: inline-block;
+}
+.pt-stat .lbl {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.04em;
+  display: inline-block; margin-left: 4px;
+}
+
+/* ============== Periodic table ============== */
+.pt-table {
+  position: relative;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.pt-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 14px;
+  padding: 5px 0;
+  border-top: 1px dashed var(--rule-soft);
+  align-items: stretch;
+}
+.pt-row:first-child { border-top: none; }
+.pt-row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-soft); padding-top: 14px;
+  line-height: 1.3; text-align: right;
+}
+.pt-row-label .row-meta {
+  display: block; font-weight: 400;
+  font-size: 9.5px; color: var(--ink-mute);
+  letter-spacing: 0.04em; margin-top: 2px;
+  text-transform: none;
+}
+.pt-row-tiles {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 4px 0;
+}
+
+/* Tile = a classification (Mendeleev-style element box) */
+.pt-tile {
+  width: 110px; min-height: 124px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  padding: 7px 8px 8px;
+  box-shadow: var(--shadow-tile);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.18s ease, border-color 0.12s ease;
+}
+.pt-tile:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-tile-hover);
+  border-color: var(--ink-mute);
+  z-index: 2;
+}
+.pt-tile.structural { border-left: 4px solid var(--struct); }
+.pt-tile.hybrid     { border-left: 4px solid var(--hybrid); }
+.pt-tile.phenomenon { border-left: 4px solid var(--phen); }
+.pt-tile.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(139,26,26,0.18), var(--shadow-tile-hover);
+}
+.pt-tile.dim { opacity: 0.25; box-shadow: none; }
+.pt-tile.dim:hover { opacity: 1; }
+.pt-tile.spot {
+  box-shadow: 0 0 0 2px rgba(139,26,26,0.12), var(--shadow-tile);
+}
+
+.tile-corner {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--ink-mute);
+  margin-bottom: 3px; min-height: 12px;
+}
+.tile-corner .cell-ct { color: var(--ink-soft); }
+.fals-flag {
+  color: var(--st-falsified); font-weight: 700;
+  background: rgba(139,26,26,0.08); padding: 0 4px;
+  border-radius: 2px; font-size: 9px;
+}
+
+.tile-symbol {
+  font-family: 'Spectral', serif;
+  font-size: 22px; font-weight: 600;
+  line-height: 1; text-align: center;
+  color: var(--ink); letter-spacing: -0.01em;
+  margin: 3px 0 4px;
+}
+.pt-tile.structural .tile-symbol { color: var(--struct); }
+.pt-tile.hybrid     .tile-symbol { color: var(--hybrid); }
+.pt-tile.phenomenon .tile-symbol { color: var(--phen); }
+
+.tile-name {
+  font-family: 'Crimson Pro', serif;
+  font-size: 10.5px; line-height: 1.2;
+  color: var(--ink-soft); text-align: center;
+  flex: 1; min-height: 22px;
+}
+.tile-yield {
+  display: flex; height: 5px; margin-top: 5px;
+  background: var(--paper-3); border-radius: 1px;
+  overflow: hidden;
+}
+.tile-yield .seg { height: 100%; }
+.tile-yield .seg.confirmed    { background: var(--st-confirmed); }
+.tile-yield .seg.tension      { background: var(--st-tension); }
+.tile-yield .seg.not-tested   { background: var(--st-not-tested); }
+.tile-yield .seg.falsified    { background: var(--st-falsified); }
+.tile-yield .seg.retro        { background: var(--st-retro); }
+.tile-yield-meta {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: var(--ink-mute);
+  margin-top: 2px;
+}
+.tile-yield-meta.empty { color: var(--ink-faint); justify-content: center; font-style: italic; }
+
+/* Overlay SVG for phen-phen edges, on top of the periodic table */
+.pt-overlay-svg {
+  position: absolute; inset: 0;
+  /* z-index 5 sits above the tile :hover state (z-index 2) so edge lines
+     and their hit-areas remain reachable even when the cursor approaches
+     a tile. pointer-events: none on the parent SVG lets clicks pass
+     through everywhere; individual paths re-enable as needed below. */
+  pointer-events: none; z-index: 5;
+  width: 100%; height: 100%;
+  display: none;
+}
+.pt-overlay-svg.show { display: block; }
+.pt-overlay-svg path { stroke: var(--accent); stroke-width: 1.6; fill: none; opacity: 0.55; }
+.pt-overlay-svg path.arrow-head { fill: var(--accent); stroke: none; opacity: 0.75; }
+
+
+/* ============== Tooltip ============== */
+.tooltip {
+  position: fixed;
+  background: var(--ink); color: var(--paper);
+  padding: 8px 11px; border-radius: 2px;
+  font-family: 'Crimson Pro', serif; font-size: 12px;
+  line-height: 1.4; pointer-events: none;
+  max-width: 280px; box-shadow: var(--shadow-hard);
+  z-index: 100; opacity: 0;
+  transition: opacity 0.1s ease;
+}
+.tooltip.visible { opacity: 1; }
+.tooltip .tt-title {
+  font-family: 'Spectral', serif; font-weight: 600;
+  font-size: 13px; margin-bottom: 2px;
+}
+.tooltip .tt-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.04em; color: var(--paper-2); opacity: 0.7;
+  margin-bottom: 4px;
+}
+.tooltip .tt-body { color: var(--paper-2); }
+
+/* ============== Sidebar ============== */
+.sidebar {
+  border-left: 1px solid var(--rule);
+  background: var(--paper);
+  overflow-y: auto;
+  position: relative;
+}
+.sidebar-inner { padding: 14px 18px 60px; }
+.sidebar-empty { padding: 30px 18px; color: var(--ink-mute); font-style: italic; font-size: 13px; line-height: 1.5; }
+.sidebar-empty strong { color: var(--ink); font-style: normal; }
+
+.sidebar-section {
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.sidebar-section:last-child { border-bottom: none; }
+.sidebar-section h3 {
+  font-family: 'Spectral', serif;
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 6px;
+}
+.sidebar-section h3.muted { color: var(--ink-mute); }
+.sidebar-section .sec-sub {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-mute);
+  margin-bottom: 10px; line-height: 1.4;
+}
+
+/* Sidebar breadcrumb + close */
+.sb-crumb {
+  display: flex; align-items: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--ink-mute); margin-bottom: 10px;
+  padding: 5px 8px;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.sb-crumb .crumb-trail { flex: 1; }
+.sb-crumb .crumb-trail a {
+  color: var(--accent); cursor: pointer;
+  text-decoration: underline dotted;
+}
+.sb-crumb .crumb-trail a:hover { text-decoration: underline; }
+.sb-crumb .crumb-current { color: var(--ink); font-weight: 600; }
+.sb-crumb .crumb-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; color: var(--ink-mute); line-height: 1;
+  padding: 0 0 0 8px;
+}
+.sb-crumb .crumb-close:hover { color: var(--accent); }
+
+/* Detail card in sidebar */
+.detail-card { font-size: 13px; line-height: 1.5; }
+.detail-card .dc-symbol {
+  font-family: 'Spectral', serif; font-size: 22px; font-weight: 600;
+  padding: 4px 12px; border-radius: 3px;
+  background: var(--paper-3); color: var(--ink);
+  display: inline-block; line-height: 1; margin-right: 8px;
+}
+.detail-card.structural .dc-symbol { color: var(--struct); background: var(--struct-tint); }
+.detail-card.hybrid     .dc-symbol { color: var(--hybrid); background: var(--hybrid-tint); }
+.detail-card.phenomenon .dc-symbol { color: var(--phen);   background: var(--phen-tint); }
+.detail-card .dc-title {
+  font-family: 'Spectral', serif; font-weight: 500; font-size: 18px;
+  margin: 8px 0 4px; line-height: 1.2; color: var(--ink);
+}
+.detail-card .dc-fullname {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  color: var(--ink-mute); font-size: 12px; margin-bottom: 8px;
+}
+.detail-card .dc-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  color: var(--ink-mute);
+  display: flex; flex-direction: column; gap: 2px;
+  margin-bottom: 12px;
+  padding: 8px 10px; background: var(--paper-2);
+  border-left: 3px solid var(--rule); border-radius: 0 2px 2px 0;
+}
+.detail-card .dc-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+.dc-yield {
+  margin: 10px 0;
+}
+.dc-yield-bar {
+  display: flex; height: 12px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 5px;
+}
+.dc-yield-bar .seg { height: 100%; }
+.dc-yield-bar .seg.confirmed    { background: var(--st-confirmed); }
+.dc-yield-bar .seg.tension      { background: var(--st-tension); }
+.dc-yield-bar .seg.not-tested   { background: var(--st-not-tested); }
+.dc-yield-bar .seg.falsified    { background: var(--st-falsified); }
+.dc-yield-bar .seg.retro        { background: var(--st-retro); }
+.dc-yield-counts {
+  display: flex; flex-wrap: wrap; gap: 6px 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+}
+.yc { color: var(--ink-soft); }
+.yc .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+
+.detail-card .dc-desc {
+  font-size: 13px; line-height: 1.55;
+  color: var(--ink-soft); margin: 10px 0;
+}
+.detail-card .dc-desc p { margin: 0 0 8px; }
+.detail-card .dc-desc strong { color: var(--ink); }
+
+.synthesized-warning {
+  background: var(--paper-2); border-left: 3px solid var(--hybrid);
+  padding: 6px 10px; margin: 8px 0;
+  font-size: 10.5px; color: var(--ink-soft);
+  font-family: 'JetBrains Mono', monospace; border-radius: 0 2px 2px 0;
+  line-height: 1.45;
+}
+
+/* Axes inside detail card */
+.dc-axes-list { display: flex; flex-direction: column; gap: 7px; margin: 6px 0; }
+.dc-axis {
+  background: var(--paper-2); border: 1px solid var(--rule-soft);
+  padding: 6px 8px; border-radius: 2px; font-size: 11.5px;
+}
+.dc-axis .ax-name { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11px; }
+.dc-axis .ax-kind { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--ink-mute); margin-left: 6px; }
+.dc-axis .ax-vals { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.dc-axis .ax-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  padding: 1px 5px; background: var(--paper); color: var(--ink-soft);
+  border: 1px solid var(--rule-soft); border-radius: 1px;
+}
+
+/* Cells list inside detail card */
+.dc-cells {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+  margin: 6px 0;
+}
+.dc-cell {
+  background: var(--paper); border: 1px solid var(--rule);
+  padding: 6px 8px; border-radius: 2px; cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  font-size: 11px; line-height: 1.3;
+  min-height: 48px;
+  display: flex; flex-direction: column;
+}
+.dc-cell:hover { border-color: var(--ink-mute); box-shadow: var(--shadow-tile); }
+.dc-cell.excluded { opacity: 0.55; background: var(--paper-2); }
+.dc-cell.has-preds { border-color: var(--struct); }
+.dc-cell.has-falsified { border-color: var(--st-falsified); border-width: 1.5px; }
+.dc-cell .cell-mini-id {
+  font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+  color: var(--ink-mute); margin-bottom: 2px;
+}
+.dc-cell .cell-mini-content { font-weight: 500; color: var(--ink); font-size: 11px; }
+.dc-cell .cell-mini-status { margin-top: 3px; display: flex; gap: 2px; }
+.dc-cell .cell-mini-status span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+
+/* Pred filter row in sidebar */
+.pred-filters { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 8px; }
+.pred-filters button {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  padding: 2px 7px; background: var(--paper);
+  border: 1px solid var(--rule); color: var(--ink-soft);
+  cursor: pointer; border-radius: 2px;
+  letter-spacing: 0.03em;
+}
+.pred-filters button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pred-filters button .n { margin-left: 3px; color: var(--ink-mute); }
+.pred-filters button.active .n { color: rgba(251,249,241,0.6); }
+
+/* Predictions list in sidebar */
+.dc-preds { display: flex; flex-direction: column; gap: 6px; }
+.dc-pred {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 7px 10px 7px 12px;
+  border-left: 3px solid; border-radius: 2px;
+  font-size: 12px; line-height: 1.45;
+}
+.dc-pred.confirmed                  { border-left-color: var(--st-confirmed); }
+.dc-pred.unconfirmed-tension        { border-left-color: var(--st-tension); }
+.dc-pred.unconfirmed-not-yet-tested { border-left-color: var(--st-not-tested); }
+.dc-pred.falsified                  { border-left-color: var(--st-falsified); background: rgba(139,26,26,0.02); }
+.dc-pred.retro-explanatory-only     { border-left-color: var(--st-retro); }
+.dc-pred .pred-status {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+.dc-pred .pred-status.confirmed                  { color: var(--st-confirmed); }
+.dc-pred .pred-status.unconfirmed-tension        { color: var(--st-tension); }
+.dc-pred .pred-status.unconfirmed-not-yet-tested { color: var(--st-not-tested); }
+.dc-pred .pred-status.falsified                  { color: var(--st-falsified); font-weight: 700; }
+.dc-pred .pred-status.retro-explanatory-only     { color: var(--st-retro); }
+.dc-pred .pred-text { font-size: 12px; line-height: 1.45; color: var(--ink); }
+.dc-pred .pred-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  color: var(--ink-mute); margin-top: 3px;
+}
+
+/* Edges in sidebar */
+.dc-edges { display: flex; flex-direction: column; gap: 5px; }
+.dc-edge {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 6px 9px; border-radius: 2px; font-size: 11.5px;
+}
+.dc-edge .edge-header { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.edge-subtype, .edge-status-pill, .edge-dir {
+  padding: 1px 5px; font-size: 8.5px; text-transform: uppercase;
+  border-radius: 1px; border: 1px solid var(--rule);
+  background: var(--paper-3); color: var(--ink-soft); letter-spacing: 0.04em;
+}
+.edge-status-pill.established { background: rgba(46,125,91,0.12); color: var(--st-confirmed); border-color: var(--st-confirmed); }
+.edge-status-pill.partial     { background: rgba(184,134,11,0.12); color: var(--st-tension); border-color: var(--st-tension); }
+.edge-status-pill.conjectured, .edge-status-pill.aspired { background: rgba(110,105,87,0.12); color: var(--ink-mute); border-color: var(--ink-mute); }
+.edge-target {
+  color: var(--ink); font-weight: 500; cursor: pointer;
+  border-bottom: 1px dotted var(--ink-mute);
+}
+.edge-target:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.edge-arrow { color: var(--ink-mute); font-family: 'JetBrains Mono', monospace; }
+.edge-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; margin-top: 3px; }
+
+
+/* Sidebar legend sections (used in the default state) */
+.sb-legend-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+}
+.sb-legend-row .swatch-pip {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(26,24,20,0.18);
+  justify-self: center;
+}
+.sb-legend-row .swatch-bar {
+  width: 16px; height: 6px; border-radius: 1px;
+  justify-self: center;
+}
+.sb-legend-row .swatch-square {
+  width: 14px; height: 14px; border-radius: 2px;
+  border-left-width: 4px; border-left-style: solid;
+  background: var(--paper); border: 1px solid var(--rule);
+  justify-self: center;
+}
+.sb-legend-row .swatch-square.structural { border-left-color: var(--struct); border-left-width: 4px; }
+.sb-legend-row .swatch-square.hybrid     { border-left-color: var(--hybrid);   border-left-width: 4px; }
+.sb-legend-row .swatch-square.phenomenon { border-left-color: var(--phen);     border-left-width: 4px; }
+.sb-legend-row .label {
+  font-family: 'Crimson Pro', serif;
+  color: var(--ink); line-height: 1.35;
+}
+.sb-legend-row .label .lab-name { font-weight: 600; }
+.sb-legend-row .label .lab-desc {
+  display: block;
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-mute); line-height: 1.35;
+}
+
+/* Default sidebar intro card */
+.intro-card {
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent);
+  padding: 11px 13px 10px;
+  font-size: 12px; line-height: 1.5; color: var(--ink);
+}
+.intro-card p { margin: 0 0 8px; }
+.intro-card p:last-child { margin-bottom: 0; }
+.intro-card .eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.intro-card strong { font-weight: 600; }
+.intro-card em { color: var(--ink-soft); font-style: italic; }
+.intro-card code {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  background: var(--paper-3); padding: 1px 4px; border-radius: 2px;
+}
+
+/* Tip card (alongside intro) */
+.tip-card {
+  margin-top: 10px;
+  border: 1px dashed var(--rule);
+  padding: 9px 11px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  color: var(--ink-mute); line-height: 1.45;
+}
+.tip-card .tip-key {
+  display: inline-block; padding: 0 5px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  border-radius: 2px; color: var(--ink); font-size: 9.5px;
+  margin: 0 2px;
+}
+
+/* ============== Help overlay ============== */
+.help-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(26,24,20,0.45); z-index: 200;
+  padding: 6vh 6vw; overflow-y: auto;
+}
+.help-overlay.show { display: block; }
+.help-modal {
+  background: var(--paper); border: 1px solid var(--rule);
+  max-width: 720px; margin: 0 auto;
+  padding: 24px 28px 28px;
+  font-size: 13.5px; line-height: 1.55;
+  position: relative;
+  box-shadow: var(--shadow-hard); border-radius: 3px;
+}
+.help-modal h2 {
+  font-family: 'Spectral', serif; font-weight: 500;
+  font-size: 22px; margin: 0 0 14px;
+}
+.help-modal h3 {
+  font-family: 'Spectral', serif; font-size: 11px;
+  font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--accent); margin: 18px 0 6px;
+}
+.help-modal p { margin: 0 0 8px; color: var(--ink-soft); }
+.help-modal strong { color: var(--ink); }
+.help-modal code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  background: var(--paper-3); padding: 1px 5px; border-radius: 2px;
+}
+.help-modal .close {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  font-size: 22px; color: var(--ink-mute); line-height: 1;
+}
+.help-modal .close:hover { color: var(--accent); }
+
+/* ============== Toast ============== */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 18px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  box-shadow: var(--shadow-hard);
+  opacity: 0; transition: opacity 0.2s;
+  z-index: 250; pointer-events: none;
+  max-width: 90vw;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: var(--st-falsified); }
+.toast.success { background: var(--st-confirmed); }
+
+/* ============== Narrow widths ==============
+   No "mobile mode" — same map + splitter + sidebar at every size.
+   At very narrow widths the splitter still works; the user can either
+   collapse the sidebar with the › tab or drag the splitter to give
+   the map more room. */
+@media (max-width: 900px) {
+  .body-grid { grid-template-columns: 1fr 6px var(--panel-width, 300px); }
+}
+@media (max-width: 600px) {
+  /* At very narrow widths use a smaller default panel; still draggable */
+  .body-grid { grid-template-columns: 1fr 6px var(--panel-width, 260px); }
+  .pt-tile { width: 96px; min-height: 116px; }
+  .toolbar { padding: 5px 10px; gap: 8px; }
+  header.masthead { padding: 8px 12px; }
+  .map-zoom-wrap { padding: 56px 10px 60px; }
+}
+
+/* ===================================================================
+   Update A additions: phenomena highlight, drag-pan, cell search,
+   About/Education/Research panels, redesigned Browse menu.
+   =================================================================== */
+
+/* ---- Sidebar quick-bar (Update A.1) — Legend/Phenomena/About one click away ---- */
+.sidebar-quick-bar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 14px 6px;
+  border-bottom: 1px solid var(--rule-soft);
+  background: var(--paper-2);
+  flex-shrink: 0;
+}
+.quick-bar-btn {
+  font: inherit;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.quick-bar-btn:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+  border-color: var(--ink-mute);
+}
+.quick-bar-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+/* Sidebar needs to be flex-column for the quick-bar to stack above the scrolling inner */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+.sidebar-inner {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* ---- Phenomena highlight on tiles ---- */
+/* Multi-ring outline is set inline (box-shadow) by renderTile so each
+   matching category contributes one concentric ring. Background tint
+   comes through a CSS var also set inline (--phen-tint). */
+.pt-tile.phen-on {
+  background: linear-gradient(180deg, var(--phen-tint, rgba(31, 111, 235, 0.06)), transparent 60%), var(--paper);
+  z-index: 2;
+}
+.pt-tile.phen-off-and-active {
+  /* Tile does not match any toggled-on phenomenon, but at least one phenomenon is on */
+  opacity: 0.32;
+  filter: saturate(0.55);
+}
+
+/* ---- Drag cursor on the map ---- */
+.map-pane.grabbable .map-zoom-wrap { cursor: grab; }
+.map-pane.grabbing .map-zoom-wrap { cursor: grabbing; }
+.map-pane.grabbing { user-select: none; }
+.map-zoom-wrap.is-panned {
+  /* When user has scrolled/panned the map, anchor transform-origin */
+  transform-origin: 0 0;
+}
+
+/* ---- Cell search box (in toolbar) ---- */
+.cell-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.cell-search-wrap input {
+  font-family: inherit;
+  font-size: 12.5px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 5px 9px 5px 26px;
+  width: 200px;
+  color: var(--ink);
+  transition: border-color 0.15s, width 0.2s;
+}
+.cell-search-wrap input::placeholder { color: var(--ink-mute); font-style: italic; }
+.cell-search-wrap input:focus { outline: none; border-color: var(--ink); width: 260px; }
+.cell-search-wrap::before {
+  content: '⌕';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--ink-mute);
+  pointer-events: none;
+}
+
+/* ---- Redesigned Browse menu (Legend / About / etc. tabs) ---- */
+.browse-menu .menu-tab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-soft);
+  transition: background 0.1s;
+}
+.browse-menu .menu-tab:last-child { border-bottom: none; }
+.browse-menu .menu-tab:hover { background: var(--paper-3); color: var(--ink); }
+.browse-menu .menu-tab.active { background: var(--paper-3); color: var(--ink); font-weight: 600; }
+.browse-menu .menu-tab .tab-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+.browse-menu .menu-tab.active .tab-icon { color: var(--ink); }
+.browse-menu .menu-tab .tab-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+  font-weight: 400;
+}
+.browse-menu .menu-tab-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ---- Phenomena panel ---- */
+.phen-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.phen-panel-head .phen-actions {
+  display: flex;
+  gap: 6px;
+}
+.phen-action-btn {
+  font: inherit;
+  font-size: 11px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: background 0.1s, color 0.1s;
+}
+.phen-action-btn:hover { background: var(--paper-3); color: var(--ink); }
+.phen-summary {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+  line-height: 1.45;
+}
+.phen-summary strong { color: var(--ink-soft); font-weight: 600; }
+.phen-cat {
+  margin: 14px 0 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.phen-cat:first-of-type { margin-top: 0; }
+.phen-cat .cat-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+  border: 1.5px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.phen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.phen-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-align: left;
+  font-family: inherit;
+}
+.phen-item:hover { background: var(--paper-3); color: var(--ink); }
+.phen-item.on {
+  background: var(--phen-item-tint, rgba(31, 111, 235, 0.07));
+  border-color: var(--phen-item-border, rgba(31, 111, 235, 0.25));
+  color: var(--ink);
+}
+.phen-item .phen-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rule);
+  flex: 0 0 10px;
+  transition: background 0.1s;
+  border: 1.5px solid transparent;
+}
+.phen-item.on .phen-dot { background: var(--phen-item-dot, var(--phen-glow)); }
+.phen-item .phen-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.phen-item .phen-label-text { display: block; }
+.phen-item .phen-note {
+  display: block;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  font-style: italic;
+  line-height: 1.4;
+}
+.phen-item .phen-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+
+/* ---- About / Education / Research panels ---- */
+.ap-lead {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 16px;
+  font-family: 'Spectral', 'Iowan Old Style', Georgia, serif;
+}
+.ap-lead em { font-style: italic; color: var(--accent); font-weight: 500; }
+.ap-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 16px 0 6px;
+}
+.ap-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+}
+.ap-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ap-list li { margin-bottom: 6px; }
+.ap-list strong { color: var(--ink); font-weight: 600; }
+.ap-jumps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.ap-jump {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: var(--ink);
+  transition: background 0.1s, border-color 0.1s, transform 0.05s;
+}
+.ap-jump:hover { background: var(--paper-3); border-color: var(--ink-mute); }
+.ap-jump:active { transform: translateY(1px); }
+.ap-jump .jump-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  width: 18px;
+  flex: 0 0 18px;
+}
+.ap-jump .jump-text { flex: 1; }
+.ap-jump .jump-title { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+.ap-jump .jump-desc { font-size: 11.5px; color: var(--ink-mute); line-height: 1.4; margin-top: 2px; }
+.ap-jump .jump-arrow { font-size: 14px; color: var(--ink-mute); }
+.ap-jump:hover .jump-arrow { color: var(--ink); }
+
+/* ---- Cell-search results panel ---- */
+.csr-summary {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.csr-summary strong { color: var(--ink-soft); font-weight: 600; }
+.csr-empty {
+  padding: 24px 8px;
+  font-style: italic;
+  color: var(--ink-mute);
+  text-align: center;
+  font-size: 13px;
+}
+.csr-group {
+  margin-bottom: 14px;
+}
+.csr-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--paper-3);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.csr-group-head:hover { background: var(--paper-2); }
+.csr-group-head .group-sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.csr-group-head .group-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  font-weight: 400;
+  margin-left: auto;
+}
+.csr-cell {
+  padding: 7px 10px;
+  margin-bottom: 3px;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.csr-cell:hover { background: var(--paper-3); border-color: var(--rule); }
+.csr-cell .csr-cell-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 2px;
+}
+.csr-cell mark {
+  background: rgba(31, 111, 235, 0.18);
+  color: var(--ink);
+  font-weight: 500;
+  padding: 0 1px;
+  border-radius: 1px;
+}
+
+
+
+</style>
+
+<!-- Update C — typography pass. CSS extracted from the inline <style>
+     so the HTML stays under its 65 KB soft cap; KaTeX added for math
+     rendering in discourse-layer prose. Load order:
+       (1) base styles inline above
+       (2) update-b.css     — discourse layer + spotlight + rows-by
+       (3) update-c.css     — glossary panel
+       (4) update-c-edges.css — clickable on-map edges
+       (5) katex.min.css      — KaTeX runtime (CDN, pinned to 0.16.47)
+       (6) update-c-typography.css — math+prose integration overrides -->
+<link rel="stylesheet" href="update-b.css">
+<link rel="stylesheet" href="update-c.css">
+<link rel="stylesheet" href="update-c-edges.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css"
+      integrity="sha384-nH0MfJ44wi1dd7w6jinlyBgljjS8EJAh2JBoRad8a3VDw2K69vfaaqm4WnR+gXtA"
+      crossorigin="anonymous">
+<link rel="stylesheet" href="update-c-typography.css">
+</head>
+<body>
+<div class="shell">
+
+  <header class="masthead">
+    <div class="title-block">
+      <h1>Periodic Table of Physics<span class="v" id="header-version">v34</span></h1>
+      <div class="subtitle" id="header-subtitle">loading…</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" id="btn-help">? how to read</button>
+      <button class="btn-ghost" id="btn-refresh" title="Re-fetch from the live MCP server">↻ refresh</button>
+      <a class="btn-ghost" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="browse-wrap" id="browse-wrap">
+      <button class="browse-btn" id="browse-btn">Browse <span class="caret">▾</span></button>
+      <div class="browse-menu" id="browse-menu"></div>
+    </div>
+
+    <div class="cell-search-wrap">
+      <input type="search" id="cell-search-input" placeholder="find a thing… (black holes, gluons, light)" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-group tb-discourse-tabs">
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-classifications" type="button" title="Catalogue of all formal classifications — searchable, grouped by sector"><span class="dt-icon">☰</span> Classifications</button>
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-architectures"  type="button" title="Catalogue of architecture nodes — established + candidate-foundational programs"><span class="dt-icon">⌬</span> Architectures</button>
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-frontiers"      type="button" title="Catalogue of open frontiers, grouped by structural reason"><span class="dt-icon">✕</span> Frontiers</button>
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-totalities"     type="button" title="Catalogue of totality approaches — whole-system organizing principles"><span class="dt-icon">◇</span> Totalities</button>
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-regime-content" type="button" title="Catalogue of regime-content nodes — empirically-confirmed regimes"><span class="dt-icon">▣</span> Regime</button>
+      <button class="toolbar-button discourse-tab" data-disc-tab="browse-programs"       type="button" title="Catalogue of experimental programs — collaborations, accelerators, surveys"><span class="dt-icon">⚙</span> Programs</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="rowsby-wrap" id="rowsby-wrap">
+      <button class="toolbar-button" id="rowsby-btn" type="button" title="Group rows by sector / category / closure">Rows: <span class="tb-btn-label">sector</span> <span class="tb-btn-caret">▾</span></button>
+      <div class="rowsby-menu" id="rowsby-menu" role="menu"></div>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <button class="toolbar-button" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▾</span></button>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-group">
+      <span class="group-label">overlay</span>
+      <button class="tb-chip active" data-filter="overlay" data-value="none">none</button>
+      <button class="tb-chip" data-filter="overlay" data-value="phen-phen" title="draw arrows between phenomenon classifications">phen↔phen</button>
+    </div>
+
+    <div class="tb-spacer"></div>
+
+    <button class="tb-reset" id="btn-reset-layers">reset layers</button>
+  </div>
+
+  <div class="body-grid" id="body-grid">
+
+    <div class="map-pane" id="map-pane">
+      <div class="zoom-controls" id="zoom-controls">
+        <button id="zoom-out" title="Zoom out">−</button>
+        <span class="zoom-level" id="zoom-level">100%</span>
+        <button id="zoom-in" title="Zoom in">+</button>
+        <button id="zoom-reset" title="Fit map to view (or press 0 / f)">⟲</button>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Hide sidebar">›</button>
+      <div class="map-zoom-wrap" id="map-zoom-wrap">
+        <div id="pt-content"></div>
+      </div>
+    </div>
+
+    <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" tabindex="0" title="Drag to resize the sidebar"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-quick-bar" id="sidebar-quick-bar">
+        <button class="quick-bar-btn" data-quick-panel="legend" title="Open the legend">◈ Legend</button>
+        <button class="quick-bar-btn" data-quick-panel="phenomena" title="Open the physical phenomena panel">◉ Phenomena</button>
+        <button class="quick-bar-btn" data-quick-panel="glossary" title="Open the glossary of map terms">§ Glossary</button>
+        <button class="quick-bar-btn" data-quick-panel="about" title="About the table">? About</button>
+      </div>
+      <div class="sidebar-inner" id="sidebar-inner">
+        <!-- populated by JS -->
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="help-overlay" id="help-overlay">
+  <div class="help-modal">
+    <button class="close" id="help-close">×</button>
+    <h2>How to read this periodic table</h2>
+    <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a Mendeleev-style partition of physical or mathematical structure. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
+
+    <h3>Tile anatomy</h3>
+    <p>The big 2–3 letter mark is the classification's <strong>symbol</strong> (SM, GUT, 10W for ten-fold way, MGr for modified gravity, …). The left-edge stripe is the <strong>category colour</strong>: blue = structural, green = phenomenon, amber = hybrid. Top-right shows <strong>cell count</strong>; if there are falsified predictions inside, you'll see a red ⚠. The thin bar at the bottom is the <strong>predictive yield</strong>: green = confirmed, amber = tension, gray = not yet tested, red = falsified, purple = retro-explanatory.</p>
+
+    <h3>Drill-down</h3>
+    <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. The periodic table stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
+
+    <h3>Physical phenomena</h3>
+    <p>Click the <strong>Phenomena</strong> button at the top of the sidebar (or open <strong>Browse → Physical phenomena</strong>). Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset.</p>
+
+    <h3>Finding a specific thing</h3>
+    <p>The search box at the top of the toolbar searches all 484 cells. Type <em>black holes</em>, <em>gluons</em>, <em>AdS/CFT</em>, <em>topological insulator</em>, or anything else. Results are grouped by classification with cell snippets; clicking a result opens that exact cell. For the terms used to describe how the map itself is organised (<em>open frontier</em>, <em>discharge status</em>, <em>candidate-foundational</em>, …) open the <strong>Glossary</strong> via the sidebar quick-bar or Browse menu.</p>
+
+    <h3>Layers + filters</h3>
+    <p><strong>Rows by</strong> reorganises the table: by sector (default), category (structural/hybrid/phenomenon), or closure level. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. <strong>Overlay: phen↔phen edges</strong> draws arrows on the map showing the 8 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
+
+    <h3>Map controls</h3>
+    <p><strong>Drag</strong> anywhere on the map background to pan. <strong>Scroll / pinch</strong> over the map to zoom (cursor-anchored). Buttons in the top-left: <strong>+</strong> / <strong>−</strong> step zoom, <strong>⟲</strong> fits the whole map to your viewport. Keyboard: <kbd class="tip-key">+</kbd> / <kbd class="tip-key">−</kbd> step zoom, <kbd class="tip-key">0</kbd> or <kbd class="tip-key">f</kbd> fit to view, <kbd class="tip-key">Esc</kbd> to clear a selection. The sidebar collapses with the <kbd class="tip-key">›</kbd> tab on its left edge.</p>
+
+    <h3>What's in the data</h3>
+    <p>30 formal classifications · 484 cells · 209 predictions (223 including cell-scoped) · 97 cross-classification edges · 17 falsifications · 8 phenomenon-to-phenomenon edges. The dataset is fetched live from the GitHub repo at page load.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- KaTeX runtime — version-pinned + SRI-hashed; loads synchronously so katex is available when explorer modules first call it (the deferred form would race fetchCanonicalData from cache) -->
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.js"
+        integrity="sha384-CwjPRVHTvLiMBFjEoij+QZViMV5rhTOIp7CJzl24JEqpRDA1sJFHVXXLURktbYYp"
+        crossorigin="anonymous"></script>
+<script src="explorer-data.js"></script>
+<script src="explorer-map.js"></script>
+<script src="explorer-sidebar.js"></script>
+<script src="explorer-phenomena.js"></script>
+<script src="explorer-discourse.js"></script>
+<script src="explorer-glossary.js"></script>
+<script>init();</script>
+</body>
+</html>
