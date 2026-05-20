@@ -1,0 +1,3461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodic Table of Physics — v34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --ink-soft: #3d3a32; --ink-mute: #6e6957; --ink-faint: #a09a85;
+  --paper: #fbf9f1; --paper-2: #f4f0e2; --paper-3: #ebe6cf; --paper-4: #e0d9bd;
+  --rule: #cfc8b4; --rule-soft: #e3ddc5;
+  --accent: #8b1a1a;
+  --struct: #1564A8; --hybrid: #B8860B; --phen: #2E7D5B;
+  --struct-tint: rgba(21,100,168,0.08);
+  --hybrid-tint: rgba(184,134,11,0.08);
+  --phen-tint:   rgba(46,125,91,0.08);
+  --st-confirmed: #2E7D5B;
+  --st-tension:   #B8860B;
+  --st-not-tested: #9c9783;
+  --st-falsified: #8b1a1a;
+  --st-retro:     #5a4a8a;
+  --shadow-soft: 0 1px 0 rgba(26,24,20,0.04), 0 4px 14px rgba(26,24,20,0.06);
+  --shadow-hard: 0 1px 0 rgba(26,24,20,0.06), 0 8px 24px rgba(26,24,20,0.10);
+  --shadow-tile: 0 1px 2px rgba(26,24,20,0.05);
+  --shadow-tile-hover: 0 4px 14px rgba(26,24,20,0.14);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--ink); background: var(--paper);
+  font-size: 15px; line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ============== Shell ============== */
+.shell {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100vh;
+}
+
+/* ============== Header ============== */
+header.masthead {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 18px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  z-index: 30;
+}
+.title-block { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.title-block h1 {
+  margin: 0; font-family: 'Spectral', serif;
+  font-weight: 500; font-size: 20px; letter-spacing: -0.005em;
+  color: var(--ink); line-height: 1.15;
+}
+.title-block h1 .v {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-weight: 400; font-size: 12px; color: var(--ink-mute);
+  margin-left: 6px;
+}
+.title-block .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: var(--ink-mute); margin-top: 1px;
+}
+.header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btn-ghost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; padding: 5px 10px;
+  background: var(--paper); border: 1px solid var(--rule);
+  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
+  text-decoration: none; line-height: 1.3;
+}
+.btn-ghost:hover { background: var(--paper-3); border-color: var(--ink-mute); color: var(--ink); }
+.btn-ghost.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-ghost.spinning::after { content: ' ⟳'; display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============== Toolbar (compact: just filters + browse) ============== */
+.toolbar {
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 18px 6px;
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  z-index: 20;
+  min-height: 36px;
+}
+.tb-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.tb-group .group-label {
+  color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 9.5px; margin-right: 2px;
+}
+.tb-pip { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.08); }
+.tb-bar { width: 14px; height: 8px; display: inline-block; border-radius: 1px; }
+.tb-legend-item { display: flex; align-items: center; gap: 4px; color: var(--ink-soft); white-space: nowrap; }
+
+.tb-chip {
+  padding: 3px 9px; background: var(--paper);
+  border: 1px solid var(--rule); color: var(--ink-soft);
+  cursor: pointer; border-radius: 2px;
+  font-family: inherit; font-size: 10.5px; line-height: 1.3;
+  letter-spacing: 0.03em;
+}
+.tb-chip:hover { background: var(--paper-2); border-color: var(--ink-mute); color: var(--ink); }
+.tb-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tb-chip .ct { margin-left: 4px; color: var(--ink-faint); }
+.tb-chip.active .ct { color: rgba(251,249,241,0.6); }
+
+.tb-divider { width: 1px; align-self: stretch; background: var(--rule); margin: 0 4px; }
+.tb-spacer { flex: 1; }
+.tb-reset {
+  font-size: 10px; color: var(--accent);
+  text-decoration: underline dotted;
+  cursor: pointer; background: none; border: none;
+  font-family: inherit;
+}
+
+/* Browse dropdown */
+.browse-wrap { position: relative; }
+.browse-btn {
+  padding: 5px 10px 5px 9px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink);
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 2px;
+}
+.browse-btn:hover { background: var(--paper-2); }
+.browse-btn .caret { font-size: 9px; opacity: 0.7; }
+.browse-btn.active { background: var(--ink); color: var(--paper); }
+.browse-menu {
+  position: absolute; top: 100%; left: 0;
+  margin-top: 4px;
+  background: var(--paper); border: 1px solid var(--ink);
+  min-width: 280px; max-width: 360px;
+  max-height: 60vh; overflow-y: auto;
+  z-index: 80; box-shadow: var(--shadow-hard);
+  display: none;
+  border-radius: 2px;
+}
+.browse-menu.open { display: block; }
+.browse-menu .menu-group {
+  border-bottom: 1px solid var(--rule-soft);
+}
+.browse-menu .menu-group:last-child { border-bottom: none; }
+.browse-menu .menu-group-head {
+  padding: 8px 12px 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-mute); font-weight: 600;
+  background: var(--paper-2);
+}
+.browse-menu .menu-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  font-family: 'Crimson Pro', serif; font-size: 13px;
+  color: var(--ink); cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.browse-menu .menu-item:last-child { border-bottom: none; }
+.browse-menu .menu-item:hover { background: var(--paper-3); }
+.browse-menu .menu-item .menu-symbol {
+  font-family: 'Spectral', serif; font-weight: 600;
+  font-size: 13px; min-width: 38px; color: var(--ink);
+}
+.browse-menu .menu-item .menu-name { flex: 1; }
+.browse-menu .menu-item .menu-counts {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  color: var(--ink-mute); white-space: nowrap;
+}
+.browse-menu .menu-search {
+  padding: 8px 10px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 1;
+}
+.browse-menu .menu-search input {
+  width: 100%; padding: 5px 8px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--ink); border-radius: 2px;
+}
+
+/* ============== Body grid (map | splitter | sidebar) ============== */
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr 6px var(--panel-width, 380px);
+  overflow: hidden;
+  min-height: 0;
+}
+.body-grid.sidebar-collapsed {
+  grid-template-columns: 1fr 0 0;
+}
+
+/* ============== Splitter (draggable) ============== */
+.splitter {
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 140ms ease;
+}
+.splitter::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 2.5px; right: 2.5px;
+  background: var(--rule);
+  transition: background 140ms ease;
+}
+.splitter::after {
+  /* grip dots — appear on hover/drag */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px; height: 36px;
+  background-image: radial-gradient(circle, var(--paper) 0.9px, transparent 0.9px);
+  background-size: 2px 5px;
+  background-repeat: repeat-y;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+.splitter:hover::before,
+.splitter.dragging::before { background: var(--ink-mute); }
+.splitter:hover::after,
+.splitter.dragging::after { opacity: 0.95; }
+body.splitter-dragging {
+  cursor: col-resize !important;
+  user-select: none;
+}
+body.splitter-dragging * { cursor: col-resize !important; }
+.body-grid.sidebar-collapsed .splitter { pointer-events: none; }
+.body-grid.sidebar-collapsed .splitter::before { display: none; }
+
+/* ============== Map pane ============== */
+.map-pane {
+  position: relative;
+  overflow: auto;
+  background: var(--paper);
+}
+.map-zoom-wrap {
+  /* This is the zoomable layer; everything in the map lives inside. */
+  transform-origin: 0 0;
+  transition: transform 0.18s ease;
+  padding: 56px 18px 60px;  /* top padding leaves room for zoom controls */
+  min-width: 100%;
+  display: inline-block;
+}
+
+/* Zoom controls — pinned top-left of the visible map pane */
+.zoom-controls {
+  position: absolute;
+  top: 10px; left: 12px;
+  display: inline-flex; gap: 0;
+  z-index: 30;
+  background: var(--paper);
+  border: 1px solid var(--ink-mute);
+  border-radius: 3px;
+  box-shadow: var(--shadow-hard);
+}
+.zoom-controls button {
+  width: 32px; height: 32px;
+  background: var(--paper); border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; color: var(--ink);
+  line-height: 1; padding: 0;
+  font-weight: 600;
+}
+.zoom-controls button:last-child { border-right: none; }
+.zoom-controls button:hover { background: var(--paper-3); color: var(--accent); }
+.zoom-controls button:active { background: var(--paper-4); }
+.zoom-controls button:disabled { color: var(--ink-faint); cursor: default; background: var(--paper); }
+.zoom-controls .zoom-level {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 500;
+  color: var(--ink-soft); border-right: 1px solid var(--rule);
+  min-width: 48px;
+  background: var(--paper-2);
+}
+
+/* Sidebar collapse / expand — on the right edge of the map pane */
+.sidebar-toggle {
+  position: absolute; top: 50%;
+  right: 0; transform: translateY(-50%);
+  width: 18px; height: 60px;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  border-right: none;
+  cursor: pointer; z-index: 26;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--ink-mute);
+}
+.sidebar-toggle:hover { background: var(--paper-3); color: var(--ink); }
+
+/* ============== Intro + summary stats (above the table) ============== */
+.pt-intro {
+  display: flex; flex-wrap: wrap; gap: 14px 24px;
+  align-items: flex-end; max-width: 1280px;
+  margin: 0 0 12px;
+}
+.pt-intro .blurb {
+  font-size: 13px; line-height: 1.5; color: var(--ink-soft); max-width: 600px;
+}
+.pt-intro .blurb strong { color: var(--ink); }
+.pt-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.pt-stat { line-height: 1; }
+.pt-stat .n {
+  font-family: 'Spectral', serif; font-size: 20px; font-weight: 500;
+  display: inline-block;
+}
+.pt-stat .lbl {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.04em;
+  display: inline-block; margin-left: 4px;
+}
+
+/* ============== Periodic table ============== */
+.pt-table {
+  position: relative;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.pt-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 14px;
+  padding: 5px 0;
+  border-top: 1px dashed var(--rule-soft);
+  align-items: stretch;
+}
+.pt-row:first-child { border-top: none; }
+.pt-row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-soft); padding-top: 14px;
+  line-height: 1.3; text-align: right;
+}
+.pt-row-label .row-meta {
+  display: block; font-weight: 400;
+  font-size: 9.5px; color: var(--ink-mute);
+  letter-spacing: 0.04em; margin-top: 2px;
+  text-transform: none;
+}
+.pt-row-tiles {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 4px 0;
+}
+
+/* Tile = a classification (Mendeleev-style element box) */
+.pt-tile {
+  width: 110px; min-height: 124px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  padding: 7px 8px 8px;
+  box-shadow: var(--shadow-tile);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.18s ease, border-color 0.12s ease;
+}
+.pt-tile:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-tile-hover);
+  border-color: var(--ink-mute);
+  z-index: 2;
+}
+.pt-tile.structural { border-left: 4px solid var(--struct); }
+.pt-tile.hybrid     { border-left: 4px solid var(--hybrid); }
+.pt-tile.phenomenon { border-left: 4px solid var(--phen); }
+.pt-tile.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(139,26,26,0.18), var(--shadow-tile-hover);
+}
+.pt-tile.dim { opacity: 0.25; box-shadow: none; }
+.pt-tile.dim:hover { opacity: 1; }
+.pt-tile.spot {
+  box-shadow: 0 0 0 2px rgba(139,26,26,0.12), var(--shadow-tile);
+}
+
+.tile-corner {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--ink-mute);
+  margin-bottom: 3px; min-height: 12px;
+}
+.tile-corner .cell-ct { color: var(--ink-soft); }
+.fals-flag {
+  color: var(--st-falsified); font-weight: 700;
+  background: rgba(139,26,26,0.08); padding: 0 4px;
+  border-radius: 2px; font-size: 9px;
+}
+
+.tile-symbol {
+  font-family: 'Spectral', serif;
+  font-size: 22px; font-weight: 600;
+  line-height: 1; text-align: center;
+  color: var(--ink); letter-spacing: -0.01em;
+  margin: 3px 0 4px;
+}
+.pt-tile.structural .tile-symbol { color: var(--struct); }
+.pt-tile.hybrid     .tile-symbol { color: var(--hybrid); }
+.pt-tile.phenomenon .tile-symbol { color: var(--phen); }
+
+.tile-name {
+  font-family: 'Crimson Pro', serif;
+  font-size: 10.5px; line-height: 1.2;
+  color: var(--ink-soft); text-align: center;
+  flex: 1; min-height: 22px;
+}
+.tile-yield {
+  display: flex; height: 5px; margin-top: 5px;
+  background: var(--paper-3); border-radius: 1px;
+  overflow: hidden;
+}
+.tile-yield .seg { height: 100%; }
+.tile-yield .seg.confirmed    { background: var(--st-confirmed); }
+.tile-yield .seg.tension      { background: var(--st-tension); }
+.tile-yield .seg.not-tested   { background: var(--st-not-tested); }
+.tile-yield .seg.falsified    { background: var(--st-falsified); }
+.tile-yield .seg.retro        { background: var(--st-retro); }
+.tile-yield-meta {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: var(--ink-mute);
+  margin-top: 2px;
+}
+.tile-yield-meta.empty { color: var(--ink-faint); justify-content: center; font-style: italic; }
+
+/* Overlay SVG for phen-phen edges, on top of the periodic table */
+.pt-overlay-svg {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 1;
+  width: 100%; height: 100%;
+  display: none;
+}
+.pt-overlay-svg.show { display: block; }
+.pt-overlay-svg path { stroke: var(--accent); stroke-width: 1.6; fill: none; opacity: 0.55; }
+.pt-overlay-svg path.arrow-head { fill: var(--accent); stroke: none; opacity: 0.75; }
+
+/* ============== Tooltip ============== */
+.tooltip {
+  position: fixed;
+  background: var(--ink); color: var(--paper);
+  padding: 8px 11px; border-radius: 2px;
+  font-family: 'Crimson Pro', serif; font-size: 12px;
+  line-height: 1.4; pointer-events: none;
+  max-width: 280px; box-shadow: var(--shadow-hard);
+  z-index: 100; opacity: 0;
+  transition: opacity 0.1s ease;
+}
+.tooltip.visible { opacity: 1; }
+.tooltip .tt-title {
+  font-family: 'Spectral', serif; font-weight: 600;
+  font-size: 13px; margin-bottom: 2px;
+}
+.tooltip .tt-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.04em; color: var(--paper-2); opacity: 0.7;
+  margin-bottom: 4px;
+}
+.tooltip .tt-body { color: var(--paper-2); }
+
+/* ============== Sidebar ============== */
+.sidebar {
+  border-left: 1px solid var(--rule);
+  background: var(--paper);
+  overflow-y: auto;
+  position: relative;
+}
+.sidebar-inner { padding: 14px 18px 60px; }
+.sidebar-empty { padding: 30px 18px; color: var(--ink-mute); font-style: italic; font-size: 13px; line-height: 1.5; }
+.sidebar-empty strong { color: var(--ink); font-style: normal; }
+
+.sidebar-section {
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.sidebar-section:last-child { border-bottom: none; }
+.sidebar-section h3 {
+  font-family: 'Spectral', serif;
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 6px;
+}
+.sidebar-section h3.muted { color: var(--ink-mute); }
+.sidebar-section .sec-sub {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-mute);
+  margin-bottom: 10px; line-height: 1.4;
+}
+
+/* Sidebar breadcrumb + close */
+.sb-crumb {
+  display: flex; align-items: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--ink-mute); margin-bottom: 10px;
+  padding: 5px 8px;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.sb-crumb .crumb-trail { flex: 1; }
+.sb-crumb .crumb-trail a {
+  color: var(--accent); cursor: pointer;
+  text-decoration: underline dotted;
+}
+.sb-crumb .crumb-trail a:hover { text-decoration: underline; }
+.sb-crumb .crumb-current { color: var(--ink); font-weight: 600; }
+.sb-crumb .crumb-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; color: var(--ink-mute); line-height: 1;
+  padding: 0 0 0 8px;
+}
+.sb-crumb .crumb-close:hover { color: var(--accent); }
+
+/* Detail card in sidebar */
+.detail-card { font-size: 13px; line-height: 1.5; }
+.detail-card .dc-symbol {
+  font-family: 'Spectral', serif; font-size: 22px; font-weight: 600;
+  padding: 4px 12px; border-radius: 3px;
+  background: var(--paper-3); color: var(--ink);
+  display: inline-block; line-height: 1; margin-right: 8px;
+}
+.detail-card.structural .dc-symbol { color: var(--struct); background: var(--struct-tint); }
+.detail-card.hybrid     .dc-symbol { color: var(--hybrid); background: var(--hybrid-tint); }
+.detail-card.phenomenon .dc-symbol { color: var(--phen);   background: var(--phen-tint); }
+.detail-card .dc-title {
+  font-family: 'Spectral', serif; font-weight: 500; font-size: 18px;
+  margin: 8px 0 4px; line-height: 1.2; color: var(--ink);
+}
+.detail-card .dc-fullname {
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  color: var(--ink-mute); font-size: 12px; margin-bottom: 8px;
+}
+.detail-card .dc-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  color: var(--ink-mute);
+  display: flex; flex-direction: column; gap: 2px;
+  margin-bottom: 12px;
+  padding: 8px 10px; background: var(--paper-2);
+  border-left: 3px solid var(--rule); border-radius: 0 2px 2px 0;
+}
+.detail-card .dc-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+.dc-yield {
+  margin: 10px 0;
+}
+.dc-yield-bar {
+  display: flex; height: 12px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 5px;
+}
+.dc-yield-bar .seg { height: 100%; }
+.dc-yield-bar .seg.confirmed    { background: var(--st-confirmed); }
+.dc-yield-bar .seg.tension      { background: var(--st-tension); }
+.dc-yield-bar .seg.not-tested   { background: var(--st-not-tested); }
+.dc-yield-bar .seg.falsified    { background: var(--st-falsified); }
+.dc-yield-bar .seg.retro        { background: var(--st-retro); }
+.dc-yield-counts {
+  display: flex; flex-wrap: wrap; gap: 6px 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+}
+.yc { color: var(--ink-soft); }
+.yc .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+
+.detail-card .dc-desc {
+  font-size: 13px; line-height: 1.55;
+  color: var(--ink-soft); margin: 10px 0;
+}
+.detail-card .dc-desc p { margin: 0 0 8px; }
+.detail-card .dc-desc strong { color: var(--ink); }
+
+.synthesized-warning {
+  background: var(--paper-2); border-left: 3px solid var(--hybrid);
+  padding: 6px 10px; margin: 8px 0;
+  font-size: 10.5px; color: var(--ink-soft);
+  font-family: 'JetBrains Mono', monospace; border-radius: 0 2px 2px 0;
+  line-height: 1.45;
+}
+
+/* Axes inside detail card */
+.dc-axes-list { display: flex; flex-direction: column; gap: 7px; margin: 6px 0; }
+.dc-axis {
+  background: var(--paper-2); border: 1px solid var(--rule-soft);
+  padding: 6px 8px; border-radius: 2px; font-size: 11.5px;
+}
+.dc-axis .ax-name { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11px; }
+.dc-axis .ax-kind { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--ink-mute); margin-left: 6px; }
+.dc-axis .ax-vals { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.dc-axis .ax-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  padding: 1px 5px; background: var(--paper); color: var(--ink-soft);
+  border: 1px solid var(--rule-soft); border-radius: 1px;
+}
+
+/* Cells list inside detail card */
+.dc-cells {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+  margin: 6px 0;
+}
+.dc-cell {
+  background: var(--paper); border: 1px solid var(--rule);
+  padding: 6px 8px; border-radius: 2px; cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  font-size: 11px; line-height: 1.3;
+  min-height: 48px;
+  display: flex; flex-direction: column;
+}
+.dc-cell:hover { border-color: var(--ink-mute); box-shadow: var(--shadow-tile); }
+.dc-cell.excluded { opacity: 0.55; background: var(--paper-2); }
+.dc-cell.has-preds { border-color: var(--struct); }
+.dc-cell.has-falsified { border-color: var(--st-falsified); border-width: 1.5px; }
+.dc-cell .cell-mini-id {
+  font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+  color: var(--ink-mute); margin-bottom: 2px;
+}
+.dc-cell .cell-mini-content { font-weight: 500; color: var(--ink); font-size: 11px; }
+.dc-cell .cell-mini-status { margin-top: 3px; display: flex; gap: 2px; }
+.dc-cell .cell-mini-status span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+
+/* Pred filter row in sidebar */
+.pred-filters { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 8px; }
+.pred-filters button {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  padding: 2px 7px; background: var(--paper);
+  border: 1px solid var(--rule); color: var(--ink-soft);
+  cursor: pointer; border-radius: 2px;
+  letter-spacing: 0.03em;
+}
+.pred-filters button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pred-filters button .n { margin-left: 3px; color: var(--ink-mute); }
+.pred-filters button.active .n { color: rgba(251,249,241,0.6); }
+
+/* Predictions list in sidebar */
+.dc-preds { display: flex; flex-direction: column; gap: 6px; }
+.dc-pred {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 7px 10px 7px 12px;
+  border-left: 3px solid; border-radius: 2px;
+  font-size: 12px; line-height: 1.45;
+}
+.dc-pred.confirmed                  { border-left-color: var(--st-confirmed); }
+.dc-pred.unconfirmed-tension        { border-left-color: var(--st-tension); }
+.dc-pred.unconfirmed-not-yet-tested { border-left-color: var(--st-not-tested); }
+.dc-pred.falsified                  { border-left-color: var(--st-falsified); background: rgba(139,26,26,0.02); }
+.dc-pred.retro-explanatory-only     { border-left-color: var(--st-retro); }
+.dc-pred .pred-status {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+.dc-pred .pred-status.confirmed                  { color: var(--st-confirmed); }
+.dc-pred .pred-status.unconfirmed-tension        { color: var(--st-tension); }
+.dc-pred .pred-status.unconfirmed-not-yet-tested { color: var(--st-not-tested); }
+.dc-pred .pred-status.falsified                  { color: var(--st-falsified); font-weight: 700; }
+.dc-pred .pred-status.retro-explanatory-only     { color: var(--st-retro); }
+.dc-pred .pred-text { font-size: 12px; line-height: 1.45; color: var(--ink); }
+.dc-pred .pred-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+  color: var(--ink-mute); margin-top: 3px;
+}
+
+/* Edges in sidebar */
+.dc-edges { display: flex; flex-direction: column; gap: 5px; }
+.dc-edge {
+  border: 1px solid var(--rule); background: var(--paper);
+  padding: 6px 9px; border-radius: 2px; font-size: 11.5px;
+}
+.dc-edge .edge-header { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.edge-subtype, .edge-status-pill, .edge-dir {
+  padding: 1px 5px; font-size: 8.5px; text-transform: uppercase;
+  border-radius: 1px; border: 1px solid var(--rule);
+  background: var(--paper-3); color: var(--ink-soft); letter-spacing: 0.04em;
+}
+.edge-status-pill.established { background: rgba(46,125,91,0.12); color: var(--st-confirmed); border-color: var(--st-confirmed); }
+.edge-status-pill.partial     { background: rgba(184,134,11,0.12); color: var(--st-tension); border-color: var(--st-tension); }
+.edge-status-pill.conjectured, .edge-status-pill.aspired { background: rgba(110,105,87,0.12); color: var(--ink-mute); border-color: var(--ink-mute); }
+.edge-target {
+  color: var(--ink); font-weight: 500; cursor: pointer;
+  border-bottom: 1px dotted var(--ink-mute);
+}
+.edge-target:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.edge-arrow { color: var(--ink-mute); font-family: 'JetBrains Mono', monospace; }
+.edge-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; margin-top: 3px; }
+
+/* Sidebar legend sections (used in the default state) */
+.sb-legend-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+}
+.sb-legend-row .swatch-pip {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(26,24,20,0.18);
+  justify-self: center;
+}
+.sb-legend-row .swatch-bar {
+  width: 16px; height: 6px; border-radius: 1px;
+  justify-self: center;
+}
+.sb-legend-row .swatch-square {
+  width: 14px; height: 14px; border-radius: 2px;
+  border-left-width: 4px; border-left-style: solid;
+  background: var(--paper); border: 1px solid var(--rule);
+  justify-self: center;
+}
+.sb-legend-row .swatch-square.structural { border-left-color: var(--struct); border-left-width: 4px; }
+.sb-legend-row .swatch-square.hybrid     { border-left-color: var(--hybrid);   border-left-width: 4px; }
+.sb-legend-row .swatch-square.phenomenon { border-left-color: var(--phen);     border-left-width: 4px; }
+.sb-legend-row .label {
+  font-family: 'Crimson Pro', serif;
+  color: var(--ink); line-height: 1.35;
+}
+.sb-legend-row .label .lab-name { font-weight: 600; }
+.sb-legend-row .label .lab-desc {
+  display: block;
+  font-family: 'Crimson Pro', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-mute); line-height: 1.35;
+}
+
+/* Default sidebar intro card */
+.intro-card {
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent);
+  padding: 11px 13px 10px;
+  font-size: 12px; line-height: 1.5; color: var(--ink);
+}
+.intro-card p { margin: 0 0 8px; }
+.intro-card p:last-child { margin-bottom: 0; }
+.intro-card .eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.intro-card strong { font-weight: 600; }
+.intro-card em { color: var(--ink-soft); font-style: italic; }
+.intro-card code {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  background: var(--paper-3); padding: 1px 4px; border-radius: 2px;
+}
+
+/* Tip card (alongside intro) */
+.tip-card {
+  margin-top: 10px;
+  border: 1px dashed var(--rule);
+  padding: 9px 11px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  color: var(--ink-mute); line-height: 1.45;
+}
+.tip-card .tip-key {
+  display: inline-block; padding: 0 5px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  border-radius: 2px; color: var(--ink); font-size: 9.5px;
+  margin: 0 2px;
+}
+
+/* ============== Help overlay ============== */
+.help-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(26,24,20,0.45); z-index: 200;
+  padding: 6vh 6vw; overflow-y: auto;
+}
+.help-overlay.show { display: block; }
+.help-modal {
+  background: var(--paper); border: 1px solid var(--rule);
+  max-width: 720px; margin: 0 auto;
+  padding: 24px 28px 28px;
+  font-size: 13.5px; line-height: 1.55;
+  position: relative;
+  box-shadow: var(--shadow-hard); border-radius: 3px;
+}
+.help-modal h2 {
+  font-family: 'Spectral', serif; font-weight: 500;
+  font-size: 22px; margin: 0 0 14px;
+}
+.help-modal h3 {
+  font-family: 'Spectral', serif; font-size: 11px;
+  font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--accent); margin: 18px 0 6px;
+}
+.help-modal p { margin: 0 0 8px; color: var(--ink-soft); }
+.help-modal strong { color: var(--ink); }
+.help-modal code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  background: var(--paper-3); padding: 1px 5px; border-radius: 2px;
+}
+.help-modal .close {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  font-size: 22px; color: var(--ink-mute); line-height: 1;
+}
+.help-modal .close:hover { color: var(--accent); }
+
+/* ============== Toast ============== */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 18px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  box-shadow: var(--shadow-hard);
+  opacity: 0; transition: opacity 0.2s;
+  z-index: 250; pointer-events: none;
+  max-width: 90vw;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: var(--st-falsified); }
+.toast.success { background: var(--st-confirmed); }
+
+/* ============== Narrow widths ==============
+   No "mobile mode" — same map + splitter + sidebar at every size.
+   At very narrow widths the splitter still works; the user can either
+   collapse the sidebar with the › tab or drag the splitter to give
+   the map more room. */
+@media (max-width: 900px) {
+  .body-grid { grid-template-columns: 1fr 6px var(--panel-width, 300px); }
+}
+@media (max-width: 600px) {
+  /* At very narrow widths use a smaller default panel; still draggable */
+  .body-grid { grid-template-columns: 1fr 6px var(--panel-width, 260px); }
+  .pt-tile { width: 96px; min-height: 116px; }
+  .toolbar { padding: 5px 10px; gap: 8px; }
+  header.masthead { padding: 8px 12px; }
+  .map-zoom-wrap { padding: 56px 10px 60px; }
+}
+
+/* ===================================================================
+   Update A additions: phenomena highlight, drag-pan, cell search,
+   About/Education/Research panels, redesigned Browse menu.
+   =================================================================== */
+
+/* ---- Sidebar quick-bar (Update A.1) — Legend/Phenomena/About one click away ---- */
+.sidebar-quick-bar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 14px 6px;
+  border-bottom: 1px solid var(--rule-soft);
+  background: var(--paper-2);
+  flex-shrink: 0;
+}
+.quick-bar-btn {
+  font: inherit;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.quick-bar-btn:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+  border-color: var(--ink-mute);
+}
+.quick-bar-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+/* Sidebar needs to be flex-column for the quick-bar to stack above the scrolling inner */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+.sidebar-inner {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* ---- Phenomena highlight on tiles ---- */
+/* Multi-ring outline is set inline (box-shadow) by renderTile so each
+   matching category contributes one concentric ring. Background tint
+   comes through a CSS var also set inline (--phen-tint). */
+.pt-tile.phen-on {
+  background: linear-gradient(180deg, var(--phen-tint, rgba(31, 111, 235, 0.06)), transparent 60%), var(--paper);
+  z-index: 2;
+}
+.pt-tile.phen-off-and-active {
+  /* Tile does not match any toggled-on phenomenon, but at least one phenomenon is on */
+  opacity: 0.32;
+  filter: saturate(0.55);
+}
+
+/* ---- Drag cursor on the map ---- */
+.map-pane.grabbable .map-zoom-wrap { cursor: grab; }
+.map-pane.grabbing .map-zoom-wrap { cursor: grabbing; }
+.map-pane.grabbing { user-select: none; }
+.map-zoom-wrap.is-panned {
+  /* When user has scrolled/panned the map, anchor transform-origin */
+  transform-origin: 0 0;
+}
+
+/* ---- Cell search box (in toolbar) ---- */
+.cell-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.cell-search-wrap input {
+  font-family: inherit;
+  font-size: 12.5px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 5px 9px 5px 26px;
+  width: 200px;
+  color: var(--ink);
+  transition: border-color 0.15s, width 0.2s;
+}
+.cell-search-wrap input::placeholder { color: var(--ink-mute); font-style: italic; }
+.cell-search-wrap input:focus { outline: none; border-color: var(--ink); width: 260px; }
+.cell-search-wrap::before {
+  content: '⌕';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--ink-mute);
+  pointer-events: none;
+}
+
+/* ---- Redesigned Browse menu (Legend / About / etc. tabs) ---- */
+.browse-menu .menu-tab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-soft);
+  transition: background 0.1s;
+}
+.browse-menu .menu-tab:last-child { border-bottom: none; }
+.browse-menu .menu-tab:hover { background: var(--paper-3); color: var(--ink); }
+.browse-menu .menu-tab.active { background: var(--paper-3); color: var(--ink); font-weight: 600; }
+.browse-menu .menu-tab .tab-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+.browse-menu .menu-tab.active .tab-icon { color: var(--ink); }
+.browse-menu .menu-tab .tab-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+  font-weight: 400;
+}
+.browse-menu .menu-tab-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ---- Phenomena panel ---- */
+.phen-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.phen-panel-head .phen-actions {
+  display: flex;
+  gap: 6px;
+}
+.phen-action-btn {
+  font: inherit;
+  font-size: 11px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: background 0.1s, color 0.1s;
+}
+.phen-action-btn:hover { background: var(--paper-3); color: var(--ink); }
+.phen-summary {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+  line-height: 1.45;
+}
+.phen-summary strong { color: var(--ink-soft); font-weight: 600; }
+.phen-cat {
+  margin: 14px 0 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.phen-cat:first-of-type { margin-top: 0; }
+.phen-cat .cat-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+  border: 1.5px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.phen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.phen-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-align: left;
+  font-family: inherit;
+}
+.phen-item:hover { background: var(--paper-3); color: var(--ink); }
+.phen-item.on {
+  background: var(--phen-item-tint, rgba(31, 111, 235, 0.07));
+  border-color: var(--phen-item-border, rgba(31, 111, 235, 0.25));
+  color: var(--ink);
+}
+.phen-item .phen-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rule);
+  flex: 0 0 10px;
+  transition: background 0.1s;
+  border: 1.5px solid transparent;
+}
+.phen-item.on .phen-dot { background: var(--phen-item-dot, var(--phen-glow)); }
+.phen-item .phen-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.phen-item .phen-label-text { display: block; }
+.phen-item .phen-note {
+  display: block;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  font-style: italic;
+  line-height: 1.4;
+}
+.phen-item .phen-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+
+/* ---- About / Education / Research panels ---- */
+.ap-lead {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 16px;
+  font-family: 'Spectral', 'Iowan Old Style', Georgia, serif;
+}
+.ap-lead em { font-style: italic; color: var(--accent); font-weight: 500; }
+.ap-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 16px 0 6px;
+}
+.ap-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+}
+.ap-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ap-list li { margin-bottom: 6px; }
+.ap-list strong { color: var(--ink); font-weight: 600; }
+.ap-jumps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.ap-jump {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: var(--ink);
+  transition: background 0.1s, border-color 0.1s, transform 0.05s;
+}
+.ap-jump:hover { background: var(--paper-3); border-color: var(--ink-mute); }
+.ap-jump:active { transform: translateY(1px); }
+.ap-jump .jump-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  width: 18px;
+  flex: 0 0 18px;
+}
+.ap-jump .jump-text { flex: 1; }
+.ap-jump .jump-title { font-size: 12.5px; font-weight: 600; line-height: 1.3; }
+.ap-jump .jump-desc { font-size: 11.5px; color: var(--ink-mute); line-height: 1.4; margin-top: 2px; }
+.ap-jump .jump-arrow { font-size: 14px; color: var(--ink-mute); }
+.ap-jump:hover .jump-arrow { color: var(--ink); }
+
+/* ---- Cell-search results panel ---- */
+.csr-summary {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.csr-summary strong { color: var(--ink-soft); font-weight: 600; }
+.csr-empty {
+  padding: 24px 8px;
+  font-style: italic;
+  color: var(--ink-mute);
+  text-align: center;
+  font-size: 13px;
+}
+.csr-group {
+  margin-bottom: 14px;
+}
+.csr-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--paper-3);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.csr-group-head:hover { background: var(--paper-2); }
+.csr-group-head .group-sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.csr-group-head .group-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  font-weight: 400;
+  margin-left: auto;
+}
+.csr-cell {
+  padding: 7px 10px;
+  margin-bottom: 3px;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.csr-cell:hover { background: var(--paper-3); border-color: var(--rule); }
+.csr-cell .csr-cell-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 2px;
+}
+.csr-cell mark {
+  background: rgba(31, 111, 235, 0.18);
+  color: var(--ink);
+  font-weight: 500;
+  padding: 0 1px;
+  border-radius: 1px;
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="masthead">
+    <div class="title-block">
+      <h1>Periodic Table of Physics<span class="v" id="header-version">v34</span></h1>
+      <div class="subtitle" id="header-subtitle">loading…</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" id="btn-help">? how to read</button>
+      <button class="btn-ghost" id="btn-refresh" title="Re-fetch from the live MCP server">↻ refresh</button>
+      <a class="btn-ghost" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="browse-wrap" id="browse-wrap">
+      <button class="browse-btn" id="browse-btn">Browse <span class="caret">▾</span></button>
+      <div class="browse-menu" id="browse-menu"></div>
+    </div>
+
+    <div class="cell-search-wrap">
+      <input type="search" id="cell-search-input" placeholder="find a thing… (black holes, gluons, light)" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-group">
+      <span class="group-label">rows by</span>
+      <button class="tb-chip active" data-filter="group" data-value="sector">sector</button>
+      <button class="tb-chip" data-filter="group" data-value="category">category</button>
+      <button class="tb-chip" data-filter="group" data-value="closure">closure</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-group">
+      <span class="group-label">spotlight</span>
+      <button class="tb-chip active" data-filter="highlight" data-value="all">all</button>
+      <button class="tb-chip" data-filter="highlight" data-value="confirmed">confirmed</button>
+      <button class="tb-chip" data-filter="highlight" data-value="unconfirmed-tension">tension</button>
+      <button class="tb-chip" data-filter="highlight" data-value="unconfirmed-not-yet-tested">not tested</button>
+      <button class="tb-chip" data-filter="highlight" data-value="falsified">falsified</button>
+      <button class="tb-chip" data-filter="highlight" data-value="retro-explanatory-only">retro</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-group">
+      <span class="group-label">overlay</span>
+      <button class="tb-chip active" data-filter="overlay" data-value="none">none</button>
+      <button class="tb-chip" data-filter="overlay" data-value="phen-phen" title="draw arrows between phenomenon classifications">phen↔phen</button>
+    </div>
+
+    <div class="tb-spacer"></div>
+
+    <button class="tb-reset" id="btn-reset-layers">reset layers</button>
+  </div>
+
+  <div class="body-grid" id="body-grid">
+
+    <div class="map-pane" id="map-pane">
+      <div class="zoom-controls" id="zoom-controls">
+        <button id="zoom-out" title="Zoom out">−</button>
+        <span class="zoom-level" id="zoom-level">100%</span>
+        <button id="zoom-in" title="Zoom in">+</button>
+        <button id="zoom-reset" title="Fit map to view (or press 0 / f)">⟲</button>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Hide sidebar">›</button>
+      <div class="map-zoom-wrap" id="map-zoom-wrap">
+        <div id="pt-content"></div>
+      </div>
+    </div>
+
+    <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" tabindex="0" title="Drag to resize the sidebar"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-quick-bar" id="sidebar-quick-bar">
+        <button class="quick-bar-btn" data-quick-panel="legend" title="Open the legend">◈ Legend</button>
+        <button class="quick-bar-btn" data-quick-panel="phenomena" title="Open the physical phenomena panel">◉ Phenomena</button>
+        <button class="quick-bar-btn" data-quick-panel="about" title="About the table">? About</button>
+      </div>
+      <div class="sidebar-inner" id="sidebar-inner">
+        <!-- populated by JS -->
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="help-overlay" id="help-overlay">
+  <div class="help-modal">
+    <button class="close" id="help-close">×</button>
+    <h2>How to read this periodic table</h2>
+    <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a Mendeleev-style partition of physical or mathematical structure. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
+
+    <h3>Tile anatomy</h3>
+    <p>The big 2–3 letter mark is the classification's <strong>symbol</strong> (SM, GUT, 10W for ten-fold way, MGr for modified gravity, …). The left-edge stripe is the <strong>category colour</strong>: blue = structural, green = phenomenon, amber = hybrid. Top-right shows <strong>cell count</strong>; if there are falsified predictions inside, you'll see a red ⚠. The thin bar at the bottom is the <strong>predictive yield</strong>: green = confirmed, amber = tension, gray = not yet tested, red = falsified, purple = retro-explanatory.</p>
+
+    <h3>Drill-down</h3>
+    <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. The periodic table stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
+
+    <h3>Physical phenomena</h3>
+    <p>Click the <strong>Phenomena</strong> button at the top of the sidebar (or open <strong>Browse → Physical phenomena</strong>). Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset.</p>
+
+    <h3>Finding a specific thing</h3>
+    <p>The search box at the top of the toolbar searches all 484 cells. Type <em>black holes</em>, <em>gluons</em>, <em>AdS/CFT</em>, <em>topological insulator</em>, or anything else. Results are grouped by classification with cell snippets; clicking a result opens that exact cell.</p>
+
+    <h3>Layers + filters</h3>
+    <p><strong>Rows by</strong> reorganises the table: by sector (default), category (structural/hybrid/phenomenon), or closure level. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. <strong>Overlay: phen↔phen edges</strong> draws arrows on the map showing the 8 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
+
+    <h3>Map controls</h3>
+    <p><strong>Drag</strong> anywhere on the map background to pan. <strong>Scroll / pinch</strong> over the map to zoom (cursor-anchored). Buttons in the top-left: <strong>+</strong> / <strong>−</strong> step zoom, <strong>⟲</strong> fits the whole map to your viewport. Keyboard: <kbd class="tip-key">+</kbd> / <kbd class="tip-key">−</kbd> step zoom, <kbd class="tip-key">0</kbd> or <kbd class="tip-key">f</kbd> fit to view, <kbd class="tip-key">Esc</kbd> to clear a selection. The sidebar collapses with the <kbd class="tip-key">›</kbd> tab on its left edge.</p>
+
+    <h3>What's in the data</h3>
+    <p>30 formal classifications · 484 cells · 209 predictions (223 including cell-scoped) · 97 cross-classification edges · 17 falsifications · 8 phenomenon-to-phenomenon edges. The dataset is fetched live from the GitHub repo at page load.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+// =============================================================
+//   Periodic Table of Physics — v4 (data fetched at runtime)
+//   Persistent map + sidebar. No navigation away from the map.
+// =============================================================
+
+// Will be populated by loadData() before init() runs:
+let DATA = null, FCS = null, FC_BY_ID = null, SECTORS = null, STATUSES = null;
+
+const CAT_ORDER = ['structural','hybrid','phenomenon'];
+const CLOSURE_ORDER = ['complete-within-domain','partial','conjectural'];
+
+const STATUS_KEY = {
+  'confirmed':'confirmed',
+  'unconfirmed-tension':'tension',
+  'unconfirmed-not-yet-tested':'not-tested',
+  'falsified':'falsified',
+  'retro-explanatory-only':'retro',
+};
+const STATUS_LABEL = {
+  'confirmed':'confirmed',
+  'unconfirmed-tension':'tension',
+  'unconfirmed-not-yet-tested':'not yet tested',
+  'falsified':'falsified',
+  'retro-explanatory-only':'retro',
+};
+const STATUS_COLOR = {
+  'confirmed':'var(--st-confirmed)',
+  'unconfirmed-tension':'var(--st-tension)',
+  'unconfirmed-not-yet-tested':'var(--st-not-tested)',
+  'falsified':'var(--st-falsified)',
+  'retro-explanatory-only':'var(--st-retro)',
+};
+
+// =============================================================
+//   Presentation maps (FC id → sector, symbol, category)
+//   These are presentation choices that augment the canonical data.
+// =============================================================
+const SYMBOLS = {
+  "tenfold-way":                                            ["10W",  "Ten-fold way"],
+  "sm-rep-content":                                         ["SM",   "Standard Model"],
+  "ade-lie-algebras":                                       ["ADE",  "ADE Lie alg."],
+  "ade-su2-subgroups":                                      ["SU2",  "ADE SU(2)"],
+  "ade-du-val":                                             ["DuV",  "Du Val sing."],
+  "ade-modular-invariants":                                 ["CIZ",  "ADE mod. inv."],
+  "ade-quivers":                                            ["Qvr",  "ADE quivers"],
+  "spacetime-symmetry-groups":                              ["Sym",  "Spacetime sym."],
+  "freed-hopkins-cobordism":                                ["FH",   "Freed-Hopkins"],
+  "su5-gut-rep-content":                                    ["GUT",  "SU(5) GUT"],
+  "cft-bootstrap-exclusion-regions":                        ["CFT",  "CFT bootstrap"],
+  "modular-tensor-categories":                              ["MTC",  "Modular t.c."],
+  "generalized-symmetries":                                 ["GSy",  "Gen. symmetries"],
+  "higgs-coulomb-branches":                                 ["HCB",  "Higgs/Coulomb br."],
+  "hadronic-states":                                        ["Had",  "Hadronic states"],
+  "fractional-quantum-hall-states":                         ["FQH",  "Frac. quantum Hall"],
+  "compact-astrophysical-objects":                          ["CAO",  "Compact astro"],
+  "topological-insulator-and-superconductor-materials":     ["TI",   "Topo. ins./sc"],
+  "neutrino-sector-phenomenology":                          ["νSec", "Neutrino sector"],
+  "real-critical-systems":                                  ["RCr",  "Real critical"],
+  "dark-matter-candidates":                                 ["DM",   "Dark matter"],
+  "cosmological-observations":                              ["Cos",  "Cosmo. obs."],
+  "gravitational-wave-event-catalog":                       ["GW",   "GW events"],
+  "qcd-phase-diagram":                                      ["QCD",  "QCD phase diag."],
+  "electromagnetic-phenomena-across-energy-regimes":        ["EM",   "EM phenomena"],
+  "proton-decay-searches":                                  ["pD",   "Proton decay"],
+  "N2-SCFT-spectrum-data":                                  ["N=2",  "N=2 SCFT"],
+  "SPT-phase-and-anomaly-matching-observations":            ["SPT",  "SPT phases"],
+  "modified-gravity-alternatives":                          ["MGr",  "Mod. gravity"],
+  "macroscopic-classical-phenomena":                        ["Mac",  "Macro/classical"],
+};
+
+const SECTOR_MAP = {
+  "tenfold-way":                                            "Condensed matter",
+  "sm-rep-content":                                         "Particle physics (SM)",
+  "ade-lie-algebras":                                       "Formal HE theory",
+  "ade-su2-subgroups":                                      "Formal HE theory",
+  "ade-du-val":                                             "Formal HE theory",
+  "ade-modular-invariants":                                 "Formal HE theory",
+  "ade-quivers":                                            "Formal HE theory",
+  "spacetime-symmetry-groups":                              "Formal HE theory",
+  "freed-hopkins-cobordism":                                "Formal HE theory",
+  "su5-gut-rep-content":                                    "BSM-GUT",
+  "cft-bootstrap-exclusion-regions":                        "Formal HE theory",
+  "modular-tensor-categories":                              "Formal HE theory",
+  "generalized-symmetries":                                 "Formal HE theory",
+  "higgs-coulomb-branches":                                 "Formal HE theory",
+  "hadronic-states":                                        "Hadronic",
+  "fractional-quantum-hall-states":                         "Condensed matter",
+  "compact-astrophysical-objects":                          "Astrophysics",
+  "topological-insulator-and-superconductor-materials":     "Condensed matter",
+  "neutrino-sector-phenomenology":                          "Neutrino",
+  "real-critical-systems":                                  "Condensed matter",
+  "dark-matter-candidates":                                 "Dark matter",
+  "cosmological-observations":                              "Cosmology",
+  "gravitational-wave-event-catalog":                       "Gravitational/transient",
+  "qcd-phase-diagram":                                      "Hadronic",
+  "electromagnetic-phenomena-across-energy-regimes":        "Electromagnetic",
+  "proton-decay-searches":                                  "BSM-GUT",
+  "N2-SCFT-spectrum-data":                                  "Formal HE theory",
+  "SPT-phase-and-anomaly-matching-observations":            "Formal HE theory",
+  "modified-gravity-alternatives":                          "BSM-non-GUT-non-DM",
+  "macroscopic-classical-phenomena":                        "Macroscopic / classical",
+};
+
+const CATEGORY_MAP = {
+  "tenfold-way":                                            "structural",
+  "sm-rep-content":                                         "hybrid",
+  "ade-lie-algebras":                                       "structural",
+  "ade-su2-subgroups":                                      "structural",
+  "ade-du-val":                                             "structural",
+  "ade-modular-invariants":                                 "structural",
+  "ade-quivers":                                            "structural",
+  "spacetime-symmetry-groups":                              "structural",
+  "freed-hopkins-cobordism":                                "structural",
+  "su5-gut-rep-content":                                    "hybrid",
+  "cft-bootstrap-exclusion-regions":                        "structural",
+  "modular-tensor-categories":                              "structural",
+  "generalized-symmetries":                                 "structural",
+  "higgs-coulomb-branches":                                 "structural",
+  "hadronic-states":                                        "phenomenon",
+  "fractional-quantum-hall-states":                         "phenomenon",
+  "compact-astrophysical-objects":                          "phenomenon",
+  "topological-insulator-and-superconductor-materials":     "phenomenon",
+  "neutrino-sector-phenomenology":                          "phenomenon",
+  "real-critical-systems":                                  "phenomenon",
+  "dark-matter-candidates":                                 "phenomenon",
+  "cosmological-observations":                              "phenomenon",
+  "gravitational-wave-event-catalog":                       "phenomenon",
+  "qcd-phase-diagram":                                      "phenomenon",
+  "electromagnetic-phenomena-across-energy-regimes":        "phenomenon",
+  "proton-decay-searches":                                  "phenomenon",
+  "N2-SCFT-spectrum-data":                                  "structural",
+  "SPT-phase-and-anomaly-matching-observations":            "hybrid",
+  "modified-gravity-alternatives":                          "phenomenon",
+  "macroscopic-classical-phenomena":                        "phenomenon",
+};
+
+const SECTOR_ORDER = [
+  "Particle physics (SM)", "Hadronic", "Condensed matter", "Astrophysics",
+  "Neutrino", "Cosmology", "Dark matter", "Gravitational/transient",
+  "Electromagnetic", "BSM-GUT", "BSM-non-GUT-non-DM",
+  "Formal HE theory", "Macroscopic / classical", "Other",
+];
+
+// =============================================================
+//   Data fetch + transform
+// =============================================================
+const DATA_URLS = [
+  // Try relative paths first (works if HTML is served alongside the JSON)
+  './Map_v34_consolidated.json',
+  '../data/Map_v34_consolidated.json',
+  // Fall back to the canonical raw URL on GitHub
+  'https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json',
+];
+
+async function fetchCanonicalData() {
+  let lastErr = null;
+  for (const url of DATA_URLS) {
+    try {
+      const r = await fetch(url, { cache: 'default' });
+      if (!r.ok) { lastErr = new Error(url + ' → HTTP ' + r.status); continue; }
+      const j = await r.json();
+      console.log('[map] loaded canonical data from', url);
+      return { data: j, url };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('All data URLs failed');
+}
+
+function augmentDataset(raw) {
+  // The consolidated file has shape: { schema_version, dataset_version, nodes:[...], edges:[...], glossary:[...] }
+  // (Best-effort: also handle a few alternate shapes for forward-compatibility.)
+  const nodes = raw.nodes || raw.formal_classifications || [];
+  const edges = raw.edges || [];
+  const glossary = raw.glossary || raw.glossary_entries || [];
+
+  const fcs = nodes
+    .filter(n => (n.type === 'formal-classification') || n.classification_axes)
+    .map(fc => {
+      const sym = SYMBOLS[fc.id] || [fc.id.slice(0, 3).toUpperCase(), fc.label];
+      const predictions = fc.predictive_yield || fc.predictions || [];
+      const cells = (fc.cells || []).map(c => ({
+        ...c,
+        has_predictions: !!(c.predictions && c.predictions.length) ||
+                         predictions.some(p => p.cell_ref === c.cell_id),
+        structurally_excluded: c.structurally_excluded ||
+          String(c.content || '').toLowerCase().includes('structurally-excluded'),
+      }));
+      const yield_stats = {};
+      for (const p of predictions) {
+        const s = p.status || 'unknown';
+        yield_stats[s] = (yield_stats[s] || 0) + 1;
+      }
+      return {
+        id: fc.id,
+        label: fc.label,
+        full_name: fc.full_name || fc.label,
+        subtype: fc.subtype || '',
+        description: fc.description || '',
+        domain_of_applicability: fc.domain_of_applicability || '',
+        classification_axes: fc.classification_axes || [],
+        cells,
+        predictions,
+        citations: fc.citations || [],
+        cross_cutting_concepts: fc.cross_cutting_concepts || [],
+        symbol: sym[0],
+        short_label: sym[1],
+        sector: SECTOR_MAP[fc.id] || 'Other',
+        category: CATEGORY_MAP[fc.id] || 'phenomenon',
+        closure_level: (fc.closure_status && fc.closure_status.level) || fc.closure_level || 'unknown',
+        closure_description: (fc.closure_status && fc.closure_status.description) || fc.closure_description || '',
+        cell_count: cells.length,
+        prediction_count: predictions.length,
+        yield_stats,
+        _has_detailed_header: (fc.description || '').length > 200,
+      };
+    });
+
+  // Index FCs for fast lookup
+  const fcById = Object.fromEntries(fcs.map(f => [f.id, f]));
+
+  // Build edges_by_fc and phen↔phen list from cross-classification edges
+  const xEdges = edges.filter(e => e.type === 'cross-classification' || e.edge_type === 'cross-classification');
+  const edges_by_fc = {};
+  const phen_phen_edges = [];
+  for (const e of xEdges) {
+    const from = e.from || e.source;
+    const to   = e.to   || e.target;
+    if (!from || !to) continue;
+    if (!edges_by_fc[from]) edges_by_fc[from] = [];
+    if (!edges_by_fc[to])   edges_by_fc[to]   = [];
+    edges_by_fc[from].push({ direction: 'outgoing', from, to, subtype: e.subtype, status: e.status, description: e.description });
+    edges_by_fc[to].push  ({ direction: 'incoming', from, to, subtype: e.subtype, status: e.status, description: e.description });
+    if ((fcById[from] && fcById[from].category === 'phenomenon') &&
+        (fcById[to]   && fcById[to].category   === 'phenomenon')) {
+      phen_phen_edges.push({ from, to, subtype: e.subtype, status: e.status, description: e.description });
+    }
+  }
+
+  // Falsifications list
+  const falsifications = [];
+  for (const fc of fcs) {
+    for (const p of fc.predictions) {
+      if (p.status === 'falsified') {
+        falsifications.push({
+          classification_id: fc.id,
+          classification_label: fc.label,
+          sector: fc.sector,
+          prediction: p.prediction,
+          prediction_citation: p.prediction_citation,
+          confirmation_citation: p.confirmation_citation,
+          cell_ref: p.cell_ref,
+          cell_id: p.cell_id,
+        });
+      }
+    }
+  }
+
+  // Canonical sector list, in display order
+  const presentSectors = new Set(fcs.map(f => f.sector));
+  const sectors = SECTOR_ORDER.filter(s => presentSectors.has(s)).concat(
+    Array.from(presentSectors).filter(s => !SECTOR_ORDER.includes(s))
+  );
+
+  // Status order
+  const prediction_statuses = ['confirmed','unconfirmed-tension','unconfirmed-not-yet-tested','falsified','retro-explanatory-only'];
+
+  // Totals
+  const total_cells = fcs.reduce((s, f) => s + f.cell_count, 0);
+  const total_predictions = fcs.reduce((s, f) => s + f.prediction_count, 0);
+
+  return {
+    formal_classifications: fcs,
+    sectors,
+    prediction_statuses,
+    edges_by_fc,
+    phen_phen_edges,
+    falsifications,
+    glossary,
+    _meta: {
+      dataset_version: raw.dataset_version || raw.schema_version || 'v34',
+      generated_at: new Date().toISOString(),
+      counts: {
+        formal_classifications: fcs.length,
+        cells: total_cells,
+        predictions: total_predictions,
+        cross_classification_edges: xEdges.length,
+        falsifications: falsifications.length,
+        phen_phen_edges: phen_phen_edges.length,
+      },
+    },
+  };
+}
+
+function renderFatalError(msg, detail) {
+  document.getElementById('sidebar-inner').innerHTML = `
+    <div class="sidebar-section">
+      <h3 style="color:var(--st-falsified)">Could not load dataset</h3>
+      <div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">${esc(msg)}</div>
+      ${detail ? `<pre style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-mute);background:var(--paper-2);padding:8px 10px;border-radius:2px;margin-top:8px;white-space:pre-wrap">${esc(String(detail))}</pre>` : ''}
+      <div style="margin-top:10px;font-size:12px;color:var(--ink-mute)">
+        The explorer fetches <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">data/Map_v34_consolidated.json</code> from the repo at load time. Either check your connection or place the JSON file beside this HTML.
+      </div>
+      <button class="btn-ghost" style="margin-top:10px" onclick="location.reload()">↻ retry</button>
+    </div>
+  `;
+  document.getElementById('pt-content').innerHTML =
+    `<div style="padding:80px 20px;text-align:center;color:var(--ink-mute);font-style:italic">Dataset could not be loaded. See the sidebar →</div>`;
+}
+
+// =============================================================
+//   Phenomena layer (Update A) — physical things a non-specialist
+//   would recognise, mapped to the classifications that contain them.
+//   Mappings precomputed from queries against the live v34 dataset.
+//   Update A.1: phenomena with identical classification sets are merged,
+//   so the merge itself reveals "these share machinery" patterns.
+// =============================================================
+
+// Per-category palette — distinct, harmonious, readable on the cream/paper background
+const PHEN_CAT_COLORS = {
+  'Light & electromagnetism': '#c89c14',   // warm gold
+  'Particles':                '#2553b3',   // cobalt blue
+  'Astrophysical objects':    '#7a3e9c',   // purple
+  'Spacetime & gravitation':  '#1d6f6a',   // deep teal
+  'Cosmological':             '#a82a35',   // brick red
+  'Condensed-matter':         '#3f7a1c',   // olive green
+  'Phases of matter':         '#c9591f',   // burnt orange
+};
+
+const PHENOMENA = [
+  // Light & EM
+  { id: 'light', label: 'Light (photons)', category: 'Light & electromagnetism',
+    classifications: ['electromagnetic-phenomena-across-energy-regimes', 'sm-rep-content', 'cosmological-observations'] },
+
+  // Particles
+  { id: 'quarks', label: 'Quarks', category: 'Particles',
+    classifications: ['sm-rep-content', 'qcd-phase-diagram', 'hadronic-states', 'su5-gut-rep-content'] },
+  { id: 'gluons', label: 'Gluons', category: 'Particles',
+    classifications: ['sm-rep-content', 'qcd-phase-diagram', 'su5-gut-rep-content'] },
+  // Merged: leptons + higgs + W/Z bosons all map to {SM, SU(5) GUT}
+  { id: 'electroweak-inhabitants', label: 'Leptons / Higgs / W and Z bosons', category: 'Particles',
+    note: 'These three share identical classification machinery — they all live in the Standard Model and the SU(5) GUT, and nowhere else.',
+    classifications: ['sm-rep-content', 'su5-gut-rep-content'] },
+  { id: 'neutrinos', label: 'Neutrinos', category: 'Particles',
+    classifications: ['neutrino-sector-phenomenology', 'sm-rep-content', 'dark-matter-candidates'] },
+
+  // Astrophysical objects
+  { id: 'stellar-bh', label: 'Stellar-mass black holes', category: 'Astrophysical objects',
+    classifications: ['compact-astrophysical-objects', 'gravitational-wave-event-catalog'] },
+  // Merged: SMBHs and white dwarfs both only live in compact-astro
+  { id: 'compact-singletons', label: 'Supermassive black holes / White dwarfs', category: 'Astrophysical objects',
+    note: 'Both live in only one classification (compact astrophysical objects) — none of the other tiles classify them.',
+    classifications: ['compact-astrophysical-objects'] },
+  { id: 'pbh', label: 'Primordial black holes', category: 'Astrophysical objects',
+    classifications: ['compact-astrophysical-objects', 'dark-matter-candidates'] },
+  { id: 'neutron-stars', label: 'Neutron stars', category: 'Astrophysical objects',
+    classifications: ['compact-astrophysical-objects', 'gravitational-wave-event-catalog', 'modified-gravity-alternatives'] },
+  { id: 'pulsars', label: 'Pulsars and magnetars', category: 'Astrophysical objects',
+    classifications: ['compact-astrophysical-objects', 'gravitational-wave-event-catalog', 'electromagnetic-phenomena-across-energy-regimes', 'modified-gravity-alternatives'] },
+
+  // Spacetime & gravitation
+  { id: 'gravity', label: 'Gravity (and modified gravity)', category: 'Spacetime & gravitation',
+    classifications: ['modified-gravity-alternatives', 'gravitational-wave-event-catalog'] },
+  { id: 'grav-waves', label: 'Gravitational waves', category: 'Spacetime & gravitation',
+    classifications: ['gravitational-wave-event-catalog', 'compact-astrophysical-objects', 'modified-gravity-alternatives'] },
+  { id: 'spacetime', label: 'Space-time structure', category: 'Spacetime & gravitation',
+    classifications: ['spacetime-symmetry-groups', 'modified-gravity-alternatives'] },
+
+  // Cosmological
+  { id: 'dark-matter', label: 'Dark matter', category: 'Cosmological',
+    classifications: ['dark-matter-candidates', 'cosmological-observations', 'compact-astrophysical-objects'] },
+  { id: 'dark-energy', label: 'Dark energy', category: 'Cosmological',
+    classifications: ['cosmological-observations', 'modified-gravity-alternatives', 'spacetime-symmetry-groups'] },
+  { id: 'cmb', label: 'Cosmic microwave background', category: 'Cosmological',
+    classifications: ['cosmological-observations', 'electromagnetic-phenomena-across-energy-regimes'] },
+  { id: 'inflation', label: 'Cosmic inflation', category: 'Cosmological',
+    classifications: ['cosmological-observations'] },
+  { id: 'baryogenesis', label: 'Matter-antimatter asymmetry', category: 'Cosmological',
+    classifications: ['cosmological-observations', 'sm-rep-content'] },
+
+  // Condensed-matter
+  { id: 'superconductivity', label: 'Superconductivity', category: 'Condensed-matter',
+    classifications: ['topological-insulator-and-superconductor-materials', 'tenfold-way', 'real-critical-systems'] },
+  { id: 'topo-insulators', label: 'Topological insulators', category: 'Condensed-matter',
+    classifications: ['topological-insulator-and-superconductor-materials', 'tenfold-way', 'SPT-phase-and-anomaly-matching-observations'] },
+  { id: 'quantum-hall', label: 'Quantum Hall states', category: 'Condensed-matter',
+    classifications: ['fractional-quantum-hall-states', 'tenfold-way', 'modular-tensor-categories'] },
+  { id: 'superfluidity', label: 'Superfluidity', category: 'Condensed-matter',
+    classifications: ['real-critical-systems', 'compact-astrophysical-objects'] },
+
+  // Phases of matter
+  { id: 'qgp', label: 'Quark-gluon plasma', category: 'Phases of matter',
+    classifications: ['qcd-phase-diagram'] },
+  { id: 'color-sc', label: 'Color superconductivity', category: 'Phases of matter',
+    classifications: ['qcd-phase-diagram', 'compact-astrophysical-objects'] },
+  { id: 'hadrons', label: 'Hadrons (protons, neutrons, mesons)', category: 'Phases of matter',
+    classifications: ['hadronic-states', 'qcd-phase-diagram', 'proton-decay-searches'] },
+];
+
+const PHEN_CATEGORIES = [
+  'Light & electromagnetism',
+  'Particles',
+  'Astrophysical objects',
+  'Spacetime & gravitation',
+  'Cosmological',
+  'Condensed-matter',
+  'Phases of matter',
+];
+
+// Index: classification_id → { phenIds: Set, cats: Set } describing which
+// phenomena (and which categories) point at this tile.
+const PHEN_BY_FC = (() => {
+  const m = {};
+  for (const p of PHENOMENA) {
+    for (const fc of p.classifications) {
+      if (!m[fc]) m[fc] = { phenIds: new Set(), cats: new Set() };
+      m[fc].phenIds.add(p.id);
+      m[fc].cats.add(p.category);
+    }
+  }
+  return m;
+})();
+// Quick lookup: phenomenon id → its category color
+const PHEN_COLOR_BY_ID = (() => {
+  const m = {};
+  for (const p of PHENOMENA) m[p.id] = PHEN_CAT_COLORS[p.category];
+  return m;
+})();
+// Quick lookup: phenomenon id → its category
+const PHEN_CAT_BY_ID = (() => {
+  const m = {};
+  for (const p of PHENOMENA) m[p.id] = p.category;
+  return m;
+})();
+
+const state = {
+  selectedFC: null,           // currently-shown FC in sidebar (null = default intro)
+  selectedCell: null,         // sub-selection within FC's cells
+  group: 'sector',            // sector | category | closure
+  highlight: 'all',           // all | confirmed | unconfirmed-tension | ...
+  overlay: 'none',            // none | phen-phen
+  predFilter: 'all',          // status filter for sidebar's predictions list
+  zoom: 1.0,                  // 1.0 = 100%
+  sidebarCollapsed: false,
+  // Update A: phenomena layer + panel routing
+  activePanel: 'about',       // phenomena | legend | about | education | research | search | fc
+  phenomenaActive: new Set(), // start with none on (user opts in via the panel)
+  searchQuery: '',
+  panX: 0,                    // map pan offset
+  panY: 0,
+};
+const ZOOM_LEVELS = [0.5, 0.65, 0.8, 1.0, 1.25, 1.5, 1.85, 2.25];
+
+// =============================================================
+//   Helpers
+// =============================================================
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatPara(s) {
+  if (!s) return '';
+  return s.split(/\n\n+/).map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
+}
+function showToast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' ' + kind : '');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.className = 'toast', 2800);
+}
+
+// =============================================================
+//   URL hash (informational — never causes navigation)
+// =============================================================
+function parseHash() {
+  const h = location.hash.replace(/^#\/?/, '');
+  if (!h) return;
+  const [path, qs] = h.split('?');
+  const parts = path.split('/').filter(Boolean);
+  if (parts[0] === 'fc' && parts[1]) {
+    state.selectedFC = parts[1];
+    state.selectedCell = parts[2] || null;
+  }
+  if (qs) {
+    const p = new URLSearchParams(qs);
+    if (p.get('group'))     state.group = p.get('group');
+    if (p.get('highlight')) state.highlight = p.get('highlight');
+    if (p.get('overlay'))   state.overlay = p.get('overlay');
+    if (p.get('pred'))      state.predFilter = p.get('pred');
+  }
+}
+function writeHash() {
+  let h = '#/';
+  if (state.selectedFC) {
+    h += 'fc/' + encodeURIComponent(state.selectedFC);
+    if (state.selectedCell) h += '/' + encodeURIComponent(state.selectedCell);
+  }
+  const qs = [];
+  if (state.group     !== 'sector') qs.push('group='     + encodeURIComponent(state.group));
+  if (state.highlight !== 'all')    qs.push('highlight=' + encodeURIComponent(state.highlight));
+  if (state.overlay   !== 'none')   qs.push('overlay='   + encodeURIComponent(state.overlay));
+  if (state.selectedFC && state.predFilter !== 'all') qs.push('pred=' + encodeURIComponent(state.predFilter));
+  if (qs.length) h += '?' + qs.join('&');
+  if (location.hash !== h) {
+    try { history.replaceState(null, '', h); }
+    catch (e) { try { location.hash = h; } catch (e2) {} }
+  }
+}
+
+// =============================================================
+//   Yield-bar helper (used by tiles and sidebar)
+// =============================================================
+function yieldSegments(fc) {
+  const stats = fc.yield_stats || {};
+  const total = Object.values(stats).reduce((a,b) => a+b, 0);
+  if (total === 0) return { html: '', total: 0 };
+  const order = ['confirmed','unconfirmed-tension','unconfirmed-not-yet-tested','falsified','retro-explanatory-only'];
+  const segs = order.map(st => {
+    const n = stats[st] || 0;
+    if (!n) return '';
+    const pct = (n/total)*100;
+    return `<span class="seg ${STATUS_KEY[st]}" style="width:${pct}%"></span>`;
+  }).join('');
+  return { html: segs, total };
+}
+
+// =============================================================
+//   Periodic table render (Level 1; persistent)
+// =============================================================
+function renderMap() {
+  // Group classifications
+  let groupOf, groupOrder;
+  if (state.group === 'sector') {
+    groupOf = f => f.sector;
+    groupOrder = SECTORS.slice();
+  } else if (state.group === 'category') {
+    groupOf = f => f.category;
+    groupOrder = CAT_ORDER.slice();
+  } else {
+    groupOf = f => f.closure_level;
+    groupOrder = CLOSURE_ORDER.slice();
+  }
+  const groups = {};
+  for (const fc of FCS) {
+    const k = groupOf(fc) || 'Other';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(fc);
+  }
+  const keys = groupOrder.filter(k => groups[k]).concat(
+    Object.keys(groups).filter(k => !groupOrder.includes(k))
+  );
+
+  // Intro + stats
+  const m = DATA._meta.counts;
+  const intro = `
+    <div class="pt-intro">
+      <div class="blurb">
+        <strong>v${DATA._meta.dataset_version}.</strong> Each tile below is a <em>formal classification</em>. Rows are sectors of physics. <strong>Hover</strong> a tile for a preview, <strong>click</strong> for full detail in the sidebar.
+      </div>
+      <div class="pt-stats">
+        <div class="pt-stat"><span class="n">${m.formal_classifications}</span><span class="lbl">classifications</span></div>
+        <div class="pt-stat"><span class="n">${m.cells}</span><span class="lbl">cells</span></div>
+        <div class="pt-stat"><span class="n">${m.predictions}</span><span class="lbl">predictions</span></div>
+        <div class="pt-stat"><span class="n">${m.cross_classification_edges}</span><span class="lbl">edges</span></div>
+        <div class="pt-stat"><span class="n" style="color:var(--st-falsified)">${m.falsifications}</span><span class="lbl">falsified</span></div>
+      </div>
+    </div>
+  `;
+
+  // Build rows
+  const rows = keys.map(k => {
+    const arr = groups[k];
+    const sub = state.group === 'sector'
+      ? `${arr.length} class · ${arr.reduce((s,f)=>s+f.cell_count,0)} cells`
+      : `${arr.length} class`;
+    const tiles = arr.map(renderTile).join('');
+    return `
+      <div class="pt-row" data-key="${esc(k)}">
+        <div class="pt-row-label">${esc(k)}<span class="row-meta">${sub}</span></div>
+        <div class="pt-row-tiles">${tiles}</div>
+      </div>
+    `;
+  }).join('');
+
+  const ptContent = document.getElementById('pt-content');
+  ptContent.innerHTML = `<div class="pt-table" id="pt-table">${rows}<svg class="pt-overlay-svg" id="pt-overlay"></svg></div>`;
+
+  // Wire tile interactions
+  ptContent.querySelectorAll('.pt-tile').forEach(el => {
+    el.addEventListener('click', () => selectFC(el.dataset.fc));
+    el.addEventListener('mouseenter', e => showTileTooltip(e, el.dataset.fc));
+    el.addEventListener('mousemove',  e => moveTooltip(e));
+    el.addEventListener('mouseleave', hideTooltip);
+  });
+
+  // Overlay
+  if (state.overlay === 'phen-phen') drawPhenPhenOverlay();
+  else document.getElementById('pt-overlay').classList.remove('show');
+}
+
+function renderTile(fc) {
+  const y = yieldSegments(fc);
+  const dim  = (state.highlight !== 'all') && !(fc.yield_stats[state.highlight] > 0);
+  const spot = (state.highlight !== 'all') && (fc.yield_stats[state.highlight] > 0);
+  const selected = (state.selectedFC === fc.id);
+  const fals = fc.yield_stats.falsified || 0;
+
+  // Phenomena highlight: tile is "on" if any active phenomenon points at it.
+  // Color resolution: collect the set of categories whose active phenomena hit
+  // this tile, and build a multi-ring outline (one ring per category) so a
+  // tile that's hit by, say, both Particles and Cosmological shows both colours.
+  const entry = PHEN_BY_FC[fc.id];
+  const anyPhenActive = state.phenomenaActive.size > 0;
+  let phenOn = false;
+  let phenOffWhileActive = false;
+  let phenStyle = '';
+  if (entry) {
+    const matchedCats = [];
+    for (const cat of PHEN_CATEGORIES) {
+      // Order rings by canonical category order so visual stacking is stable
+      const hasAny = [...entry.phenIds].some(pid =>
+        PHEN_CAT_BY_ID[pid] === cat && state.phenomenaActive.has(pid));
+      if (hasAny) matchedCats.push(cat);
+    }
+    if (matchedCats.length > 0) {
+      phenOn = true;
+      // Stack box-shadow rings: each ring is 2px thick. Outermost ring is the
+      // first matched category in PHEN_CATEGORIES order.
+      const rings = matchedCats.slice(0, 3).map((cat, i) => {
+        const col = PHEN_CAT_COLORS[cat];
+        const r = 2 * (i + 1);
+        return `0 0 0 ${r}px ${col}`;
+      });
+      // Soft outer glow using the dominant (first) category color
+      const dom = PHEN_CAT_COLORS[matchedCats[0]];
+      // Apply as inline style. The .phen-on class also tints the background.
+      phenStyle = `box-shadow:${rings.join(', ')}, 0 0 14px ${dom}55; --phen-tint:${dom}1a;`;
+    } else if (anyPhenActive) {
+      phenOffWhileActive = true;
+    }
+  } else if (anyPhenActive) {
+    phenOffWhileActive = true;
+  }
+
+  return `
+    <div class="pt-tile ${fc.category}${dim?' dim':''}${spot?' spot':''}${selected?' selected':''}${phenOn?' phen-on':''}${phenOffWhileActive?' phen-off-and-active':''}" data-fc="${esc(fc.id)}" tabindex="0" aria-label="${esc(fc.label)}"${phenStyle?' style="'+phenStyle+'"':''}>
+      <div class="tile-corner">
+        <span class="cell-ct">${fc.cell_count}c · ${fc.prediction_count}p</span>
+        ${fals ? `<span class="fals-flag" title="${fals} falsified">⚠${fals}</span>` : '<span></span>'}
+      </div>
+      <div class="tile-symbol">${esc(fc.symbol)}</div>
+      <div class="tile-name">${esc(fc.short_label || fc.label)}</div>
+      <div class="tile-yield">${y.html || '<span style="background:var(--paper-3);width:100%"></span>'}</div>
+      <div class="tile-yield-meta${y.total===0?' empty':''}">${y.total ? `<span>${y.total}</span><span style="color:var(--ink-faint)">${fc.closure_level==='complete-within-domain'?'■':fc.closure_level==='partial'?'◐':'□'}</span>` : 'no preds'}</div>
+    </div>
+  `;
+}
+
+// =============================================================
+//   Tooltip (hover preview)
+// =============================================================
+function showTileTooltip(e, fcId) {
+  const fc = FC_BY_ID[fcId];
+  if (!fc) return;
+  const t = document.getElementById('tooltip');
+  const stats = fc.yield_stats || {};
+  const statLine = Object.entries(stats).map(([s,n]) => `${STATUS_LABEL[s] || s}: ${n}`).join(' · ') || 'no predictions';
+  t.innerHTML = `
+    <div class="tt-title">${esc(fc.symbol)} · ${esc(fc.label)}</div>
+    <div class="tt-meta">${esc(fc.category)} · ${esc(fc.sector)} · ${esc(fc.closure_level)}</div>
+    <div class="tt-body">${esc(fc.cell_count)} cells · ${esc(fc.prediction_count)} predictions<br>${esc(statLine)}</div>
+  `;
+  t.classList.add('visible');
+  moveTooltip(e);
+}
+function moveTooltip(e) {
+  const t = document.getElementById('tooltip');
+  if (!t.classList.contains('visible')) return;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  const r = t.getBoundingClientRect();
+  if (x + r.width  > window.innerWidth)  x = e.clientX - r.width  - 14;
+  if (y + r.height > window.innerHeight) y = e.clientY - r.height - 14;
+  t.style.left = x + 'px'; t.style.top = y + 'px';
+}
+function hideTooltip() {
+  document.getElementById('tooltip').classList.remove('visible');
+}
+
+// =============================================================
+//   Phen↔phen overlay (uses sticky positions of the tiles)
+// =============================================================
+function drawPhenPhenOverlay() {
+  const svg = document.getElementById('pt-overlay');
+  const tableEl = document.getElementById('pt-table');
+  if (!svg || !tableEl) return;
+  const tableRect = tableEl.getBoundingClientRect();
+  svg.classList.add('show');
+  svg.setAttribute('viewBox', `0 0 ${tableRect.width} ${tableRect.height}`);
+  svg.setAttribute('width', tableRect.width);
+  svg.setAttribute('height', tableRect.height);
+
+  function tileCenter(fcId) {
+    const tile = tableEl.querySelector(`.pt-tile[data-fc="${CSS.escape(fcId)}"]`);
+    if (!tile) return null;
+    const r = tile.getBoundingClientRect();
+    return { x: r.left - tableRect.left + r.width/2, y: r.top - tableRect.top + r.height/2 };
+  }
+
+  const paths = [];
+  for (const e of DATA.phen_phen_edges) {
+    const a = tileCenter(e.from), b = tileCenter(e.to);
+    if (!a || !b) continue;
+    const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.sqrt(dx*dx + dy*dy) || 1;
+    const off = Math.min(28, len/6);
+    const cx = mx - (dy/len)*off;
+    const cy = my + (dx/len)*off;
+    paths.push(`<path d="M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}"/>`);
+    const ang = Math.atan2(b.y - cy, b.x - cx);
+    const ahx = b.x - 9*Math.cos(ang);
+    const ahy = b.y - 9*Math.sin(ang);
+    const w = 4.5;
+    paths.push(`<path class="arrow-head" d="M${b.x},${b.y} L${ahx + w*Math.sin(ang)},${ahy - w*Math.cos(ang)} L${ahx - w*Math.sin(ang)},${ahy + w*Math.cos(ang)} Z"/>`);
+  }
+  svg.innerHTML = paths.join('');
+}
+
+// =============================================================
+//   Sidebar: default state (legend + intro + tips)
+// =============================================================
+function renderSidebarDefault() {
+  const inner = document.getElementById('sidebar-inner');
+  const m = DATA._meta.counts;
+
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Legend</h3>
+      <div style="font-size:11.5px;color:var(--ink-mute);line-height:1.5;margin-bottom:12px">
+        How to read every tile on the map. Each tile is a <em>formal classification</em> with five visual signals: category stripe, symbol, cell count, predictive-yield bar, closure mark.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Category</h3>
+      <div class="sec-sub">The left-edge stripe on each tile.</div>
+      <div class="sb-legend-row">
+        <span class="swatch-square structural"></span>
+        <span class="label"><span class="lab-name">Structural</span><span class="lab-desc">Pure mathematical scaffolding (e.g. ADE families, modular tensor categories).</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-square hybrid"></span>
+        <span class="label"><span class="lab-name">Hybrid</span><span class="lab-desc">Mathematical structure with empirical content (e.g. SM rep content).</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-square phenomenon"></span>
+        <span class="label"><span class="lab-name">Phenomenon</span><span class="lab-desc">Empirical territory (e.g. compact astro, hadronic states, neutrino sector).</span></span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Prediction status</h3>
+      <div class="sec-sub">The bar at the bottom of each tile.</div>
+      <div class="sb-legend-row">
+        <span class="swatch-bar" style="background:var(--st-confirmed)"></span>
+        <span class="label"><span class="lab-name">Confirmed</span><span class="lab-desc">Predicted then observed.</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-bar" style="background:var(--st-tension)"></span>
+        <span class="label"><span class="lab-name">Tension</span><span class="lab-desc">Evidence is unresolved or in conflict.</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-bar" style="background:var(--st-not-tested)"></span>
+        <span class="label"><span class="lab-name">Not yet tested</span><span class="lab-desc">Theoretical prediction without experimental verdict.</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-bar" style="background:var(--st-falsified)"></span>
+        <span class="label"><span class="lab-name">Falsified</span><span class="lab-desc">Ruled out by experiment. <span style="color:var(--st-falsified)">⚠</span> appears on tiles that contain at least one.</span></span>
+      </div>
+      <div class="sb-legend-row">
+        <span class="swatch-bar" style="background:var(--st-retro)"></span>
+        <span class="label"><span class="lab-name">Retro-explanatory</span><span class="lab-desc">Phenomenon observed before, classification developed after.</span></span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Closure level</h3>
+      <div class="sec-sub">In the small symbol under the yield bar.</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--ink-soft)">
+        <span style="color:var(--ink);font-size:13px;margin-right:4px">■</span>complete-within-domain<br>
+        <span style="color:var(--ink);font-size:13px;margin-right:4px">◐</span>partial<br>
+        <span style="color:var(--ink);font-size:13px;margin-right:4px">□</span>conjectural
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Phenomena overlay colours</h3>
+      <div class="sec-sub">When phenomena are toggled on, tiles glow in their category's colour.</div>
+      ${PHEN_CATEGORIES.map(cat => `
+        <div class="sb-legend-row">
+          <span class="swatch-square" style="background:${PHEN_CAT_COLORS[cat]}"></span>
+          <span class="label"><span class="lab-name">${esc(cat)}</span></span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Quick spotlights</h3>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <button class="tb-chip" data-quick="falsified" style="text-align:left;padding:5px 9px">tiles with falsified predictions →</button>
+        <button class="tb-chip" data-quick="overlay-phen" style="text-align:left;padding:5px 9px">show phen↔phen edges (CAO is hub) →</button>
+        <button class="tb-chip" data-quick="confirmed" style="text-align:left;padding:5px 9px">tiles with confirmed predictions →</button>
+      </div>
+      <div class="tip-card" style="margin-top:10px">
+        <strong style="color:var(--ink)">Keyboard</strong>: <span class="tip-key">Esc</span> clear · <span class="tip-key">+</span>/<span class="tip-key">−</span> zoom · <span class="tip-key">0</span> or <span class="tip-key">f</span> fit-to-view · drag the divider to resize this panel
+      </div>
+    </div>
+  `;
+  inner.querySelectorAll('[data-quick]').forEach(b => {
+    b.addEventListener('click', () => {
+      const v = b.dataset.quick;
+      if (v === 'falsified') { state.highlight = 'falsified'; }
+      else if (v === 'confirmed') { state.highlight = 'confirmed'; }
+      else if (v === 'overlay-phen') { state.overlay = 'phen-phen'; }
+      syncToolbarChips();
+      writeHash();
+      renderMap();
+    });
+  });
+}
+
+// =============================================================
+//   Sidebar: Phenomena panel (Update A — physical-things layer)
+// =============================================================
+function renderSidebarPhenomena() {
+  const inner = document.getElementById('sidebar-inner');
+  const activeCount = state.phenomenaActive.size;
+  const totalCount = PHENOMENA.length;
+
+  const byCat = {};
+  for (const p of PHENOMENA) {
+    if (!byCat[p.category]) byCat[p.category] = [];
+    byCat[p.category].push(p);
+  }
+  const catKeys = PHEN_CATEGORIES.filter(c => byCat[c]);
+
+  // Convert hex to rgba(...) string for tints
+  const tint = (hex, a) => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  };
+
+  const html = catKeys.map(cat => {
+    const color = PHEN_CAT_COLORS[cat];
+    const items = byCat[cat].map(p => {
+      const isOn = state.phenomenaActive.has(p.id);
+      const n = p.classifications.length;
+      const itemStyle = `--phen-item-tint:${tint(color, 0.09)}; --phen-item-border:${tint(color, 0.4)}; --phen-item-dot:${color};`;
+      return `<button class="phen-item${isOn?' on':''}" data-phen="${esc(p.id)}" type="button" aria-pressed="${isOn}" style="${itemStyle}">
+        <span class="phen-dot"></span>
+        <span class="phen-label">
+          <span class="phen-label-text">${esc(p.label)}</span>
+          ${p.note ? `<span class="phen-note">${esc(p.note)}</span>` : ''}
+        </span>
+        <span class="phen-ct">${n} tile${n===1?'':'s'}</span>
+      </button>`;
+    }).join('');
+    return `<div class="phen-cat"><span class="cat-swatch" style="background:${color}"></span>${esc(cat)}</div><div class="phen-list">${items}</div>`;
+  }).join('');
+
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Physical phenomena</h3>
+      <div class="phen-panel-head">
+        <div class="phen-summary"><strong>${activeCount}</strong> of ${totalCount} active</div>
+        <div class="phen-actions">
+          <button class="phen-action-btn" id="phen-all-on">all on</button>
+          <button class="phen-action-btn" id="phen-all-off">all off</button>
+        </div>
+      </div>
+      <div class="phen-summary">
+        Each phenomenon highlights the classifications that contain it, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information (they share machinery).
+      </div>
+      ${html}
+    </div>
+  `;
+
+  inner.querySelectorAll('[data-phen]').forEach(el => {
+    el.addEventListener('click', () => {
+      const pid = el.dataset.phen;
+      if (state.phenomenaActive.has(pid)) state.phenomenaActive.delete(pid);
+      else state.phenomenaActive.add(pid);
+      renderSidebarPhenomena();
+      renderMap();
+    });
+  });
+  document.getElementById('phen-all-on').addEventListener('click', () => {
+    state.phenomenaActive = new Set(PHENOMENA.map(p => p.id));
+    renderSidebarPhenomena();
+    renderMap();
+  });
+  document.getElementById('phen-all-off').addEventListener('click', () => {
+    state.phenomenaActive = new Set();
+    renderSidebarPhenomena();
+    renderMap();
+  });
+}
+
+// =============================================================
+//   Sidebar: About / Education / Research panels (Update A)
+// =============================================================
+function renderSidebarAbout() {
+  const inner = document.getElementById('sidebar-inner');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>About the table</h3>
+      <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time.</p>
+
+      <div class="ap-section">What it is</div>
+      <p class="ap-text">Each tile is a formal classification: a taxonomy of physical content that nature appears to respect, with its own internal axis structure, predictive yield, and citations to primary literature. Until now these have been scattered across separate subfields. This is the first artifact that assembles them.</p>
+
+      <div class="ap-section">How to read a tile</div>
+      <p class="ap-text">The left-edge stripe is the <strong>category</strong>: blue = structural (pure mathematical scaffolding), green = phenomenon (empirical territory), amber = hybrid. The bar at the bottom is the <strong>predictive yield</strong>: green confirmed, amber under tension, gray not yet tested, red falsified, purple retro-explanatory. The corner shows the cell count, with ⚠ if the tile contains falsified predictions.</p>
+
+      <div class="ap-section">What it's for</div>
+      <ul class="ap-list">
+        <li><strong>Cross-subfield navigation.</strong> Two classifications under different sectors may share machinery — the map makes those connections visible.</li>
+        <li><strong>Auditing predictive yield.</strong> See in one glance what physics has predicted, what got confirmed, what got falsified, and what's still being tested.</li>
+        <li><strong>Locating a problem.</strong> A working physicist can find the classifications that bear on their frontier and the cells inside each one that constrain it.</li>
+      </ul>
+
+      <div class="ap-section">Who it serves</div>
+      <p class="ap-text">Two audiences. Pick the one closer to you:</p>
+      <div class="ap-jumps">
+        <button class="ap-jump" data-panel-jump="education">
+          <span class="jump-num">01</span>
+          <span class="jump-text">
+            <span class="jump-title">For education</span>
+            <span class="jump-desc">Students, teachers, curious newcomers — what physics knows and what it doesn't, on one screen.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-panel-jump="research">
+          <span class="jump-num">02</span>
+          <span class="jump-text">
+            <span class="jump-title">For research</span>
+            <span class="jump-desc">Working researchers, grant writers, grad students — direction-setting and cross-disciplinary navigation.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="ap-section">What it isn't</div>
+      <p class="ap-text">Not a textbook. Not a complete catalogue — coverage of the discourse-level layer (architectures, frontiers, candidate-foundational programs, and the bears-on edges between them) is forthcoming. Not predictive of which research programs will succeed. Every placement carries an explicit rationale a reader can audit and disagree with.</p>
+    </div>
+  `;
+  wirePanelJumps(inner);
+}
+
+function renderSidebarEducation() {
+  const inner = document.getElementById('sidebar-inner');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>For education</h3>
+      <p class="ap-lead">For students, teachers, and curious newcomers: a single map showing both what physics has worked out and what it hasn't.</p>
+
+      <div class="ap-section">What's useful here</div>
+      <p class="ap-text">This is not a chemistry-style periodic table you memorize. The useful thing is the bottom-of-tile bar — the predictive yield. Physics teaching usually shows the settled parts in isolation. Here you see them next to what's still being tested, what's contested, and what's already been ruled out. Knowing which is which is half of learning the subject.</p>
+
+      <div class="ap-section">First pass — where to start</div>
+      <div class="ap-jumps">
+        <button class="ap-jump" data-fc-jump="sm-rep-content">
+          <span class="jump-num">01</span>
+          <span class="jump-text">
+            <span class="jump-title">Open the Standard Model</span>
+            <span class="jump-desc">Particle physics's own periodic table — every elementary particle, organised by the rules governing it.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-spotlight="confirmed">
+          <span class="jump-num">02</span>
+          <span class="jump-text">
+            <span class="jump-title">See confirmed predictions</span>
+            <span class="jump-desc">Highlights classifications that predicted something experiment later found.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-spotlight="falsified">
+          <span class="jump-num">03</span>
+          <span class="jump-text">
+            <span class="jump-title">See where physics has been wrong</span>
+            <span class="jump-desc">Highlights falsified predictions. Showing what got ruled out is as important as showing what got confirmed.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-panel-jump="phenomena">
+          <span class="jump-num">04</span>
+          <span class="jump-text">
+            <span class="jump-title">Browse by physical phenomena</span>
+            <span class="jump-desc">Toggle phenomena — light, black holes, neutrinos, gravity — to highlight where they live on the map.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="ap-section">Then</div>
+      <p class="ap-text">Click any tile to read its classification description, see its cells (the specific theories, particles, phases, or observations it covers), and check the predictions it has staked on experiment. From inside a tile, click any cell for its full record.</p>
+    </div>
+  `;
+  wirePanelJumps(inner);
+}
+
+function renderSidebarResearch() {
+  const inner = document.getElementById('sidebar-inner');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>For research</h3>
+      <p class="ap-lead">For working researchers, grad students, and grant writers: physics's Mendeleev-grade structural content, assembled and cross-referenced. The map as a structural lens on where productive work sits.</p>
+
+      <div class="ap-section">What's on screen</div>
+      <p class="ap-text">Each tile is a formal classification with its own internal axis structure, predictive-yield record, and primary-literature anchors. Tiles connect through cross-classification edges. Inside a tile, cells carry axis values, realized examples, and per-cell prediction status.</p>
+
+      <div class="ap-section">Direction-setting</div>
+      <ul class="ap-list">
+        <li>Spot under-attacked classifications relative to their structural tractability.</li>
+        <li>Identify cross-classification structural similarities — formal machinery shared across sectors that are not usually compared.</li>
+        <li>Locate which classifications carry confirmed predictions versus contested or falsified ones.</li>
+      </ul>
+
+      <div class="ap-section">Where to start</div>
+      <div class="ap-jumps">
+        <button class="ap-jump" data-panel-jump="browse-classifications">
+          <span class="jump-num">01</span>
+          <span class="jump-text">
+            <span class="jump-title">Browse all 30 classifications</span>
+            <span class="jump-desc">Searchable list grouped by sector — the original Browse menu.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-spotlight="unconfirmed-tension">
+          <span class="jump-num">02</span>
+          <span class="jump-text">
+            <span class="jump-title">Spotlight tiles under tension</span>
+            <span class="jump-desc">Where predictions are in conflict with experiment or with each other.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-overlay="phen-phen">
+          <span class="jump-num">03</span>
+          <span class="jump-text">
+            <span class="jump-title">Overlay phenomenon-to-phenomenon links</span>
+            <span class="jump-desc">Connective tissue between phenomenon-type classifications across subfields.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-rows-by="closure">
+          <span class="jump-num">04</span>
+          <span class="jump-text">
+            <span class="jump-title">Re-row by closure level</span>
+            <span class="jump-desc">Group tiles by complete-within-domain / partial / conjectural to see closure distribution.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="ap-section">AI-augmented workflows</div>
+      <p class="ap-text">The dataset (71 nodes, 186 edges, 484 cells, 209 predictions, 17 falsifications) is queryable via the live MCP server at <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">map-of-physics.eddie-8e5.workers.dev</code>. 25 read-only tools for cell content search, prediction filtering, edge traversal, and cross-classification comparison.</p>
+
+      <p class="ap-text" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-style: italic; color: var(--ink-mute);">The map's success condition is whether the cuts the taxonomy makes turn out to predict things, organize work productively, or reveal connections that weren't visible before. That's the test the project welcomes — challenge any edge status or classification placement via the GitHub repo.</p>
+    </div>
+  `;
+  wirePanelJumps(inner);
+}
+
+function wirePanelJumps(root) {
+  root.querySelectorAll('[data-panel-jump]').forEach(el => {
+    el.addEventListener('click', () => switchSidebarPanel(el.dataset.panelJump));
+  });
+  root.querySelectorAll('[data-fc-jump]').forEach(el => {
+    el.addEventListener('click', () => selectFC(el.dataset.fcJump));
+  });
+  root.querySelectorAll('[data-spotlight]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.highlight = el.dataset.spotlight;
+      syncToolbarChips();
+      writeHash();
+      renderMap();
+      showToast(`Spotlight: ${state.highlight}`);
+    });
+  });
+  root.querySelectorAll('[data-overlay]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.overlay = el.dataset.overlay;
+      syncToolbarChips();
+      writeHash();
+      renderMap();
+      showToast(`Overlay: ${state.overlay}`);
+    });
+  });
+  root.querySelectorAll('[data-rows-by]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.group = el.dataset.rowsBy;
+      syncToolbarChips();
+      writeHash();
+      renderMap();
+      showToast(`Rows by: ${state.group}`);
+    });
+  });
+}
+
+// =============================================================
+//   Sidebar: cell-content search results (Update A)
+// =============================================================
+function renderSidebarSearch(query) {
+  const inner = document.getElementById('sidebar-inner');
+  const q = (query || '').trim().toLowerCase();
+  state.searchQuery = q;
+  if (!q) {
+    inner.innerHTML = `
+      <div class="sidebar-section">
+        <h3>Search</h3>
+        <div class="csr-summary">Type into the box at the top to search the 484 cells of the table by content. Try <strong>black holes</strong>, <strong>gluons</strong>, <strong>light</strong>, <strong>neutron stars</strong>, <strong>AdS/CFT</strong>, or anything else you'd like to find.</div>
+      </div>`;
+    return;
+  }
+
+  // Search across cells (content, examples, cell_id, axis_values) and classifications (label, symbol, description)
+  const groups = {};
+  const lowerEsc = s => String(s || '').toLowerCase();
+  for (const fc of FCS) {
+    const fcMatch = lowerEsc(fc.label).includes(q) || lowerEsc(fc.symbol).includes(q) || lowerEsc(fc.description).includes(q) || lowerEsc(fc.subtype).includes(q);
+    const cellMatches = [];
+    for (const c of (fc.cells || [])) {
+      const blob = lowerEsc(c.content) + ' ' + lowerEsc(c.cell_id) + ' ' +
+                   (c.realized_examples || []).map(lowerEsc).join(' ') + ' ' +
+                   Object.values(c.axis_values || {}).map(lowerEsc).join(' ');
+      if (blob.includes(q)) cellMatches.push(c);
+    }
+    if (fcMatch || cellMatches.length > 0) {
+      groups[fc.id] = { fc, cellMatches, fcMatch };
+    }
+  }
+
+  const fcIds = Object.keys(groups);
+  const totalCells = fcIds.reduce((s, k) => s + groups[k].cellMatches.length, 0);
+
+  if (fcIds.length === 0) {
+    inner.innerHTML = `
+      <div class="sidebar-section">
+        <h3>Search</h3>
+        <div class="csr-summary">Searching for <strong>${esc(query)}</strong>…</div>
+        <div class="csr-empty">No matches in the 484 cells or 30 classifications. Try a more common term or a different spelling.</div>
+      </div>`;
+    return;
+  }
+
+  const highlight = (text, q) => {
+    const idx = text.toLowerCase().indexOf(q);
+    if (idx < 0) return esc(text);
+    return esc(text.slice(0, idx)) + '<mark>' + esc(text.slice(idx, idx + q.length)) + '</mark>' + esc(text.slice(idx + q.length));
+  };
+
+  const trim = (s, n) => {
+    s = String(s || '');
+    if (s.length <= n) return s;
+    return s.slice(0, n - 1) + '…';
+  };
+
+  const groupsHtml = fcIds.map(fcId => {
+    const { fc, cellMatches } = groups[fcId];
+    const cellsHtml = cellMatches.slice(0, 10).map(c => {
+      // Find a snippet around the query
+      const content = String(c.content || '');
+      const lc = content.toLowerCase();
+      const idx = lc.indexOf(q);
+      let snippet;
+      if (idx >= 0) {
+        const start = Math.max(0, idx - 30);
+        const end = Math.min(content.length, idx + q.length + 60);
+        snippet = (start > 0 ? '…' : '') + content.slice(start, end) + (end < content.length ? '…' : '');
+      } else {
+        snippet = trim(content, 90);
+      }
+      return `<div class="csr-cell" data-fc="${esc(fc.id)}" data-cell="${esc(c.cell_id)}">
+        <span class="csr-cell-id">${esc(c.cell_id)}</span>
+        ${highlight(snippet, q)}
+      </div>`;
+    }).join('');
+    const overflow = cellMatches.length > 10 ? `<div style="font-size:11px;color:var(--ink-mute);font-style:italic;padding:4px 8px">+${cellMatches.length - 10} more — open the tile for the full list.</div>` : '';
+    return `<div class="csr-group">
+      <div class="csr-group-head" data-fc-open="${esc(fc.id)}">
+        <span class="group-sym">${esc(fc.symbol)}</span>
+        <span>${esc(fc.label)}</span>
+        <span class="group-ct">${cellMatches.length} match${cellMatches.length===1?'':'es'}</span>
+      </div>
+      ${cellsHtml || ''}${overflow}
+    </div>`;
+  }).join('');
+
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Search</h3>
+      <div class="csr-summary">Searching for <strong>${esc(query)}</strong> — <strong>${totalCells}</strong> cell match${totalCells===1?'':'es'} across <strong>${fcIds.length}</strong> classification${fcIds.length===1?'':'s'}.</div>
+      ${groupsHtml}
+    </div>
+  `;
+
+  inner.querySelectorAll('[data-cell]').forEach(el => {
+    el.addEventListener('click', () => selectCell(el.dataset.fc, el.dataset.cell));
+  });
+  inner.querySelectorAll('[data-fc-open]').forEach(el => {
+    el.addEventListener('click', () => selectFC(el.dataset.fcOpen));
+  });
+}
+
+// =============================================================
+//   Panel routing (Update A)
+// =============================================================
+function switchSidebarPanel(panel) {
+  // Special-case: 'browse-classifications' opens the original classifications dropdown
+  if (panel === 'browse-classifications') {
+    browseMode = 'classifications';
+    buildBrowseMenu('');
+    document.getElementById('browse-menu').classList.add('open');
+    document.getElementById('browse-btn').classList.add('active');
+    setTimeout(() => {
+      const s = document.getElementById('browse-search');
+      if (s) s.focus();
+    }, 30);
+    return;
+  }
+  state.activePanel = panel;
+  state.selectedFC = null;
+  state.selectedCell = null;
+  writeHash();
+  renderPanel();
+  closeBrowseMenu();
+}
+
+function renderPanel() {
+  // Honors state.activePanel; only used when no FC is selected
+  switch (state.activePanel) {
+    case 'phenomena': renderSidebarPhenomena(); break;
+    case 'about':     renderSidebarAbout();     break;
+    case 'education': renderSidebarEducation(); break;
+    case 'research':  renderSidebarResearch();  break;
+    case 'search':    renderSidebarSearch(state.searchQuery); break;
+    case 'legend':    renderSidebarDefault();   break;
+    default:          renderSidebarAbout();
+  }
+  syncSidebarQuickBar();
+}
+
+function syncSidebarQuickBar() {
+  document.querySelectorAll('.quick-bar-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.quickPanel === state.activePanel);
+  });
+}
+
+function wireSidebarQuickBar() {
+  document.querySelectorAll('.quick-bar-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      switchSidebarPanel(b.dataset.quickPanel);
+    });
+  });
+}
+
+// =============================================================
+//   Sidebar: FC detail
+// =============================================================
+function renderSidebarFC(fc) {
+  const inner = document.getElementById('sidebar-inner');
+  const y = yieldSegments(fc);
+  const yieldBar = y.total ? `<div class="dc-yield-bar">${y.html}</div>` : '';
+  const yieldCounts = Object.entries(fc.yield_stats).map(([s,n]) =>
+    `<span class="yc"><span class="dot" style="background:${STATUS_COLOR[s]}"></span>${esc(STATUS_LABEL[s]||s)}: ${n}</span>`
+  ).join('') || '<span class="yc" style="color:var(--ink-mute)">no predictions</span>';
+
+  // Axes
+  const axesHtml = (fc.classification_axes || []).map(ax => `
+    <div class="dc-axis">
+      <span class="ax-name">${esc(ax.name)}</span><span class="ax-kind">${esc(ax.kind)}</span>
+      ${ax.values && ax.values.length ? `<div class="ax-vals">${ax.values.slice(0,12).map(v => `<span class="ax-val">${esc(String(v))}</span>`).join('')}${ax.values.length > 12 ? `<span class="ax-val" style="color:var(--ink-mute)">+${ax.values.length-12} more</span>`:''}</div>`:''}
+    </div>
+  `).join('') || '<em style="color:var(--ink-mute);font-size:12px">No axes recorded.</em>';
+
+  // Cells preview (first 12 sorted: falsified > preds > rest)
+  const cellsSorted = [...fc.cells].sort((a,b) => {
+    const aF = (fc.predictions||[]).some(p => p.cell_ref === a.cell_id && p.status === 'falsified') ? 1 : 0;
+    const bF = (fc.predictions||[]).some(p => p.cell_ref === b.cell_id && p.status === 'falsified') ? 1 : 0;
+    if (bF !== aF) return bF - aF;
+    return (b.has_predictions?1:0) - (a.has_predictions?1:0);
+  });
+  const cellsPreview = cellsSorted.slice(0, 14);
+  const cellsHtml = cellsPreview.map(c => {
+    const isExcl = String(c.content || '').toLowerCase().includes('structurally-excluded') || c.structurally_excluded;
+    const predsHere = (fc.predictions||[]).filter(p => p.cell_ref === c.cell_id || p.cell_id === c.cell_id);
+    const inlinePreds = c.predictions || [];
+    const all = [...inlinePreds, ...predsHere];
+    const hasFals = all.some(p => p.status === 'falsified');
+    const statusDots = [...new Set(all.map(p => p.status).filter(Boolean))].slice(0,5).map(s => `<span class="${STATUS_KEY[s]||''}" style="background:${STATUS_COLOR[s]||'var(--ink-faint)'}"></span>`).join('');
+    return `<div class="dc-cell${isExcl?' excluded':''}${all.length?' has-preds':''}${hasFals?' has-falsified':''}" data-cell="${esc(c.cell_id)}" title="${esc(c.cell_id)}">
+      <div class="cell-mini-id">${esc(c.cell_id)}</div>
+      <div class="cell-mini-content">${esc((c.content || '').slice(0,60))}${(c.content||'').length>60?'…':''}</div>
+      ${statusDots ? `<div class="cell-mini-status">${statusDots}</div>` : ''}
+    </div>`;
+  }).join('');
+  const cellsMore = cellsSorted.length > 14
+    ? `<button class="btn-ghost" id="show-all-cells" style="margin-top:8px;font-size:10.5px">show all ${cellsSorted.length} cells</button>`
+    : '';
+
+  // Predictions with filter
+  const presentStatuses = STATUSES.filter(s => fc.predictions.some(p => p.status === s));
+  const predTabs = ['all', ...presentStatuses];
+  const predFilterBar = `
+    <div class="pred-filters">
+      ${predTabs.map(s => `<button data-pred="${s}" class="${state.predFilter === s ? 'active' : ''}">${esc(s === 'all' ? 'all' : (STATUS_LABEL[s] || s))}<span class="n">${s === 'all' ? fc.predictions.length : fc.predictions.filter(p=>p.status===s).length}</span></button>`).join('')}
+    </div>
+  `;
+  const visiblePreds = fc.predictions.filter(p => state.predFilter === 'all' || p.status === state.predFilter);
+  const predsHtml = visiblePreds.length ? visiblePreds.map(p => `
+    <div class="dc-pred ${p.status || ''}">
+      <div class="pred-status ${p.status || ''}">${esc(STATUS_LABEL[p.status] || p.status || 'unknown')}${p.cell_ref ? ` · ${esc(p.cell_ref)}` : ''}</div>
+      <div class="pred-text">${esc(p.prediction || '')}</div>
+      ${p.prediction_citation ? `<div class="pred-meta">predicted: ${esc(p.prediction_citation)}</div>` : ''}
+      ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
+    </div>
+  `).join('') : '<em style="color:var(--ink-mute);font-size:12px">No predictions match this filter.</em>';
+
+  // Edges
+  const edges = DATA.edges_by_fc[fc.id] || [];
+  const edgesHtml = edges.length ? edges.map(e => {
+    const other = e.direction === 'outgoing' ? e.to : e.from;
+    const otherLabel = (FC_BY_ID[other] && FC_BY_ID[other].label) || other;
+    const arrow = e.direction === 'outgoing' ? '→' : '←';
+    return `
+      <div class="dc-edge">
+        <div class="edge-header">
+          <span class="edge-subtype">${esc(e.subtype || 'unknown')}</span>
+          ${e.status ? `<span class="edge-status-pill ${e.status}">${esc(e.status)}</span>` : ''}
+          <span class="edge-arrow">${arrow}</span>
+          <span class="edge-target" data-fc="${esc(other)}">${esc(otherLabel)}</span>
+        </div>
+        ${e.description ? `<div class="edge-desc">${esc(e.description)}</div>` : ''}
+      </div>
+    `;
+  }).join('') : '<em style="color:var(--ink-mute);font-size:12px">No edges.</em>';
+
+  inner.innerHTML = `
+    <div class="sb-crumb">
+      <div class="crumb-trail"><span class="crumb-current">${esc(fc.symbol)} · ${esc(fc.label)}</span></div>
+      <button class="crumb-close" title="Close (Esc)">×</button>
+    </div>
+
+    <div class="detail-card ${fc.category}">
+      <div style="display:flex;align-items:center;gap:0;margin-bottom:4px">
+        <span class="dc-symbol">${esc(fc.symbol)}</span>
+      </div>
+      <div class="dc-title">${esc(fc.label)}</div>
+      <div class="dc-fullname">${esc(fc.full_name)}</div>
+      <div class="dc-meta">
+        <span><strong>category:</strong> ${esc(fc.category)}</span>
+        <span><strong>sector:</strong> ${esc(fc.sector)}</span>
+        <span><strong>subtype:</strong> ${esc(fc.subtype)}</span>
+        <span><strong>closure:</strong> ${esc(fc.closure_level)}</span>
+        <span><strong>extent:</strong> ${fc.cell_count} cells · ${fc.prediction_count} predictions</span>
+      </div>
+
+      <div class="dc-yield">
+        ${yieldBar}
+        <div class="dc-yield-counts">${yieldCounts}</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Description</h3>
+      ${!fc._has_detailed_header ? `<div class="synthesized-warning">⚠ Synthesized description — click <strong>↻ refresh</strong> in the header for the full record from the live server.</div>` : ''}
+      <div class="dc-desc">${formatPara(fc.description)}</div>
+      ${fc.domain_of_applicability ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Domain</strong>${esc(fc.domain_of_applicability)}</div>` : ''}
+      ${fc.closure_description ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Closure</strong>${esc(fc.closure_description)}</div>` : ''}
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Classification axes</h3>
+      <div class="dc-axes-list">${axesHtml}</div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Cells <span style="color:var(--ink-mute);font-weight:400">· ${fc.cells.length}</span></h3>
+      <div class="dc-cells">${cellsHtml}</div>
+      ${cellsMore}
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Predictions <span style="color:var(--ink-mute);font-weight:400">· ${fc.predictions.length}</span></h3>
+      ${predFilterBar}
+      <div class="dc-preds">${predsHtml}</div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Cross-classification edges <span style="color:var(--ink-mute);font-weight:400">· ${edges.length}</span></h3>
+      <div class="dc-edges">${edgesHtml}</div>
+    </div>
+
+    ${fc.citations && fc.citations.length ? `<div class="sidebar-section"><h3>Key citations</h3><div style="font-size:11.5px;line-height:1.6;color:var(--ink-soft);font-family:'JetBrains Mono',monospace">${fc.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
+    ${fc.cross_cutting_concepts && fc.cross_cutting_concepts.length ? `<div class="sidebar-section"><h3>Cross-cutting concepts</h3><div style="display:flex;flex-wrap:wrap;gap:4px">${fc.cross_cutting_concepts.map(c => `<span class="ax-val">${esc(c)}</span>`).join('')}</div></div>` : ''}
+  `;
+
+  // Wire interactions inside sidebar
+  inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
+  inner.querySelectorAll('.dc-cell[data-cell]').forEach(el => {
+    el.addEventListener('click', () => selectCell(fc.id, el.dataset.cell));
+  });
+  const showAll = inner.querySelector('#show-all-cells');
+  if (showAll) showAll.addEventListener('click', () => renderSidebarAllCells(fc));
+  inner.querySelectorAll('.edge-target').forEach(el => {
+    el.addEventListener('click', () => selectFC(el.dataset.fc));
+  });
+  inner.querySelectorAll('.pred-filters button').forEach(b => {
+    b.addEventListener('click', () => {
+      state.predFilter = b.dataset.pred;
+      writeHash();
+      renderSidebarFC(fc);
+    });
+  });
+}
+
+function renderSidebarAllCells(fc) {
+  const inner = document.getElementById('sidebar-inner');
+  // Build "all cells" view inside the sidebar
+  const cellsHtml = fc.cells.map(c => {
+    const isExcl = String(c.content || '').toLowerCase().includes('structurally-excluded') || c.structurally_excluded;
+    const predsHere = (fc.predictions||[]).filter(p => p.cell_ref === c.cell_id || p.cell_id === c.cell_id);
+    const inlinePreds = c.predictions || [];
+    const all = [...inlinePreds, ...predsHere];
+    const hasFals = all.some(p => p.status === 'falsified');
+    const statusDots = [...new Set(all.map(p => p.status).filter(Boolean))].slice(0,5).map(s => `<span style="background:${STATUS_COLOR[s]||'var(--ink-faint)'}"></span>`).join('');
+    return `<div class="dc-cell${isExcl?' excluded':''}${all.length?' has-preds':''}${hasFals?' has-falsified':''}" data-cell="${esc(c.cell_id)}">
+      <div class="cell-mini-id">${esc(c.cell_id)}</div>
+      <div class="cell-mini-content">${esc(c.content || '')}</div>
+      ${statusDots ? `<div class="cell-mini-status">${statusDots}</div>` : ''}
+    </div>`;
+  }).join('');
+  inner.innerHTML = `
+    <div class="sb-crumb">
+      <div class="crumb-trail"><a data-back-to-fc>${esc(fc.symbol)} · ${esc(fc.label)}</a> › <span class="crumb-current">all cells</span></div>
+      <button class="crumb-close" title="Close (Esc)">×</button>
+    </div>
+    <div class="sidebar-section">
+      <h3>All cells <span style="color:var(--ink-mute);font-weight:400">· ${fc.cells.length}</span></h3>
+      <div class="dc-cells" style="grid-template-columns: 1fr">${cellsHtml}</div>
+    </div>
+  `;
+  inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
+  inner.querySelector('[data-back-to-fc]').addEventListener('click', () => renderSidebarFC(fc));
+  inner.querySelectorAll('.dc-cell[data-cell]').forEach(el => {
+    el.addEventListener('click', () => selectCell(fc.id, el.dataset.cell));
+  });
+  document.getElementById('sidebar').scrollTop = 0;
+}
+
+// =============================================================
+//   Sidebar: cell detail
+// =============================================================
+function renderSidebarCell(fc, cell) {
+  const inner = document.getElementById('sidebar-inner');
+  const predsForCell = (fc.predictions||[]).filter(p => p.cell_ref === cell.cell_id || p.cell_id === cell.cell_id);
+  const inlinePreds  = cell.predictions || [];
+  const allPreds     = [...inlinePreds, ...predsForCell.filter(p => !inlinePreds.some(cp => cp.prediction === p.prediction))];
+
+  inner.innerHTML = `
+    <div class="sb-crumb">
+      <div class="crumb-trail">
+        <a data-back-to-fc>${esc(fc.symbol)} · ${esc(fc.label)}</a> ›
+        <span class="crumb-current">${esc(cell.cell_id)}</span>
+      </div>
+      <button class="crumb-close" title="Close (Esc)">×</button>
+    </div>
+
+    <div class="detail-card ${fc.category}" style="border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:18px">
+      <div class="dc-title">${esc(cell.content || cell.cell_id)}</div>
+      <div class="dc-fullname">in ${esc(fc.label)}</div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Axis values</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${Object.entries(cell.axis_values || {}).map(([k,v]) => `<span class="ax-val"><strong style="color:var(--ink)">${esc(k)}</strong>: ${esc(String(v))}</span>`).join('')}
+      </div>
+    </div>
+
+    ${cell.description ? `<div class="sidebar-section"><h3>Description</h3><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">${esc(cell.description)}</div></div>` : ''}
+
+    ${(cell.realized_examples && cell.realized_examples.length) ? `<div class="sidebar-section"><h3>Realized examples</h3><ul style="font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin:0;padding-left:18px">${cell.realized_examples.map(e => `<li style="margin-bottom:3px">${esc(e)}</li>`).join('')}</ul></div>` : ''}
+
+    ${allPreds.length ? `<div class="sidebar-section"><h3>Predictions for this cell <span style="color:var(--ink-mute);font-weight:400">· ${allPreds.length}</span></h3><div class="dc-preds">${allPreds.map(p => `
+      <div class="dc-pred ${p.status || ''}">
+        <div class="pred-status ${p.status || ''}">${esc(STATUS_LABEL[p.status] || p.status || 'unknown')}</div>
+        <div class="pred-text">${esc(p.prediction || '')}</div>
+        ${p.prediction_citation ? `<div class="pred-meta">predicted: ${esc(p.prediction_citation)}</div>` : ''}
+        ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
+      </div>`).join('')}</div></div>` : ''}
+
+    ${cell.citations && cell.citations.length ? `<div class="sidebar-section"><h3>Citations</h3><div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--ink-soft)">${cell.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
+  `;
+
+  inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
+  inner.querySelector('[data-back-to-fc]').addEventListener('click', () => renderSidebarFC(fc));
+}
+
+// =============================================================
+//   Selection state changers
+// =============================================================
+function selectFC(fcId) {
+  const fc = FC_BY_ID[fcId];
+  if (!fc) return;
+  state.selectedFC = fcId;
+  state.selectedCell = null;
+  state.predFilter = 'all';
+  state.activePanel = 'fc';
+  writeHash();
+  renderSidebarFC(fc);
+  document.getElementById('sidebar').scrollTop = 0;
+  renderMap();   // re-render to show the selected ring on the tile
+  closeBrowseMenu();
+  syncSidebarQuickBar();
+}
+function selectCell(fcId, cellId) {
+  const fc = FC_BY_ID[fcId];
+  if (!fc) return;
+  const cell = fc.cells.find(c => c.cell_id === cellId);
+  if (!cell) return;
+  state.selectedFC = fcId;
+  state.selectedCell = cellId;
+  state.activePanel = 'fc';
+  writeHash();
+  renderSidebarCell(fc, cell);
+  document.getElementById('sidebar').scrollTop = 0;
+}
+function clearSelection() {
+  state.selectedFC = null;
+  state.selectedCell = null;
+  state.predFilter = 'all';
+  writeHash();
+  renderPanel();
+  renderMap();
+}
+
+// =============================================================
+//   Render dispatch
+// =============================================================
+function renderAll() {
+  renderMap();
+  if (state.selectedFC) {
+    const fc = FC_BY_ID[state.selectedFC];
+    if (fc) {
+      if (state.selectedCell) {
+        const cell = fc.cells.find(c => c.cell_id === state.selectedCell);
+        if (cell) { renderSidebarCell(fc, cell); return; }
+      }
+      renderSidebarFC(fc);
+      return;
+    }
+  }
+  renderPanel();
+}
+
+// =============================================================
+//   Toolbar wiring
+// =============================================================
+function wireToolbar() {
+  document.querySelectorAll('.tb-chip[data-filter]').forEach(b => {
+    b.addEventListener('click', () => {
+      const f = b.dataset.filter, v = b.dataset.value;
+      state[f] = v;
+      syncToolbarChips();
+      writeHash();
+      renderMap();
+    });
+  });
+  document.getElementById('btn-reset-layers').addEventListener('click', () => {
+    state.group = 'sector';
+    state.highlight = 'all';
+    state.overlay = 'none';
+    syncToolbarChips();
+    writeHash();
+    renderMap();
+  });
+}
+function syncToolbarChips() {
+  ['group','highlight','overlay'].forEach(f => {
+    document.querySelectorAll(`.tb-chip[data-filter="${f}"]`).forEach(b => {
+      b.classList.toggle('active', b.dataset.value === state[f]);
+    });
+  });
+}
+
+// =============================================================
+//   Zoom + pan
+// =============================================================
+const ZOOM_MIN = 0.35;
+const ZOOM_MAX = 2.0;
+
+function applyZoom() {
+  const wrap = document.getElementById('map-zoom-wrap');
+  // Combine zoom + pan in the transform
+  wrap.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+  wrap.style.transformOrigin = '0 0';
+  wrap.style.width = `${100/state.zoom}%`;
+  document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
+  if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 220);
+}
+
+function clampPan() {
+  const pane = document.getElementById('map-pane');
+  const wrap = document.getElementById('map-zoom-wrap');
+  if (!pane || !wrap) return;
+  // Visible content always spans paneW wide (the wrap width trick).
+  // Visible content height = wrap.scrollHeight * zoom.
+  const paneW = pane.clientWidth;
+  const paneH = pane.clientHeight;
+  const visH = wrap.scrollHeight * state.zoom;
+  const MARGIN = 80; // always keep at least this many px of map in the viewport
+  // Horizontal: visible content is always paneW wide, so panX should stay close to 0.
+  // Allow some give for cursor-anchored zoom, but not enough to leave the viewport.
+  state.panX = Math.max(-paneW + MARGIN, Math.min(paneW - MARGIN, state.panX));
+  // Vertical:
+  if (visH <= paneH) {
+    state.panY = Math.max(-(visH - MARGIN), Math.min(paneH - MARGIN, state.panY));
+  } else {
+    // Map taller than pane: allow scrolling within bounds
+    state.panY = Math.max(-(visH - MARGIN), Math.min(MARGIN, state.panY));
+  }
+}
+
+function zoomFitToView() {
+  // Goal: set zoom so the whole map content fits inside the pane vertically
+  // (horizontal already fits at every zoom level thanks to the width:100/zoom trick).
+  const pane = document.getElementById('map-pane');
+  const wrap = document.getElementById('map-zoom-wrap');
+  if (!pane || !wrap) { state.zoom = 1; state.panX = 0; state.panY = 0; applyZoom(); return; }
+
+  // Step 1: reset to zoom=1 to measure natural height
+  state.zoom = 1; state.panX = 0; state.panY = 0;
+  applyZoom();
+  // Force layout
+  void wrap.offsetHeight;
+
+  const paneH = pane.clientHeight - 80;  // leave room for zoom controls + bottom padding
+  const naturalH = wrap.scrollHeight;
+  if (naturalH < 50) return;
+
+  // Step 2: compute the target zoom (vertical fit) and clamp
+  let target = paneH / naturalH;
+  // Note: as zoom decreases, more tiles fit per row, so actual height shrinks
+  // further than this calculation predicts — leaving a small comfortable margin.
+  target = Math.max(ZOOM_MIN, Math.min(1.0, target));
+  state.zoom = target;
+  state.panX = 0;
+  state.panY = 0;
+  applyZoom();
+  showToast(`Fit to view — zoom ${Math.round(target * 100)}%`);
+}
+
+// Drag-to-pan (Update A): click-and-hold on the map background, drag to move.
+// Skips when the user starts a click on a tile (so tile click still works).
+function wireMapDragPan() {
+  const pane = document.getElementById('map-pane');
+  const wrap = document.getElementById('map-zoom-wrap');
+  pane.classList.add('grabbable');
+
+  let dragging = false;
+  let startX = 0, startY = 0;
+  let startPanX = 0, startPanY = 0;
+  let moved = false;
+
+  pane.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    const t = e.target;
+    if (t.closest('.pt-tile')) return;
+    if (t.closest('.zoom-controls')) return;
+    if (t.closest('.sidebar-toggle')) return;
+    dragging = true;
+    moved = false;
+    startX = e.clientX; startY = e.clientY;
+    startPanX = state.panX; startPanY = state.panY;
+    pane.classList.add('grabbing');
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+    state.panX = startPanX + dx;
+    state.panY = startPanY + dy;
+    clampPan();
+    applyZoom();
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    pane.classList.remove('grabbing');
+  });
+
+  // Trackpad / wheel zoom (cursor-anchored)
+  pane.addEventListener('wheel', e => {
+    e.preventDefault();
+    const rect = wrap.getBoundingClientRect();
+    const px = (e.clientX - rect.left);
+    const py = (e.clientY - rect.top);
+    const localX = px / state.zoom;
+    const localY = py / state.zoom;
+    const oldZoom = state.zoom;
+    // Gentler zoom factor than before — was 1.1, now ~1.06 per wheel tick
+    const factor = e.deltaY < 0 ? 1.07 : 1/1.07;
+    let newZoom = oldZoom * factor;
+    newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newZoom));
+    if (newZoom === oldZoom) return; // hit a limit, don't move pan
+    state.zoom = newZoom;
+    state.panX -= localX * (newZoom - oldZoom);
+    state.panY -= localY * (newZoom - oldZoom);
+    clampPan();
+    applyZoom();
+  }, { passive: false });
+}
+function zoomIn()  {
+  const i = ZOOM_LEVELS.findIndex(z => z >= state.zoom - 1e-6);
+  const next = ZOOM_LEVELS[Math.min(ZOOM_LEVELS.length-1, (i<0?ZOOM_LEVELS.length-1:i)+1)];
+  state.zoom = Math.min(ZOOM_MAX, next);
+  clampPan();
+  applyZoom();
+}
+function zoomOut() {
+  const i = ZOOM_LEVELS.findIndex(z => z >= state.zoom - 1e-6);
+  const prev = ZOOM_LEVELS[Math.max(0, (i<0?0:i)-1)];
+  state.zoom = Math.max(ZOOM_MIN, prev);
+  clampPan();
+  applyZoom();
+}
+
+// =============================================================
+//   Refresh from live server
+// =============================================================
+const MCP_BASE = 'https://map-of-physics.eddie-8e5.workers.dev';
+async function refreshFromServer() {
+  const btn = document.getElementById('btn-refresh');
+  btn.classList.add('spinning'); btn.disabled = true;
+  try {
+    const r = await fetch(MCP_BASE + '/', { method: 'GET', mode: 'cors' });
+    if (r.ok) showToast('Live MCP server reachable. Embedded snapshot is from ' + (DATA._meta.generated_at || 'build time'), 'success');
+    else throw new Error('HTTP ' + r.status);
+  } catch (err) {
+    showToast('Browser fetch blocked (CORS). Opening server URL in a new tab.', 'error');
+    setTimeout(() => window.open(MCP_BASE, '_blank'), 500);
+  } finally {
+    btn.classList.remove('spinning'); btn.disabled = false;
+  }
+}
+
+// =============================================================
+//   Splitter drag (resize the sidebar)
+// =============================================================
+function wireSplitter() {
+  const splitter = document.getElementById('splitter');
+  const grid = document.getElementById('body-grid');
+  if (!splitter || !grid) return;
+
+  const MIN_PANEL = 240;
+  const MAX_PANEL = 700;
+  const STORAGE_KEY = 'mop-panel-width';
+
+  // Restore saved width
+  try {
+    const saved = parseInt(localStorage.getItem(STORAGE_KEY) || '', 10);
+    if (saved && saved >= MIN_PANEL && saved <= MAX_PANEL) {
+      grid.style.setProperty('--panel-width', saved + 'px');
+    }
+  } catch (e) {}
+
+  let dragging = false;
+  let startX = 0;
+  let startWidth = 0;
+
+  function onMouseDown(e) {
+    if (grid.classList.contains('sidebar-collapsed')) return;
+    dragging = true;
+    splitter.classList.add('dragging');
+    document.body.classList.add('splitter-dragging');
+    startX = e.clientX;
+    const cur = getComputedStyle(grid).getPropertyValue('--panel-width').trim() || '380px';
+    startWidth = parseInt(cur, 10) || 380;
+    e.preventDefault();
+  }
+  function onMouseMove(e) {
+    if (!dragging) return;
+    const dx = startX - e.clientX;        // drag left = grow panel
+    let w = startWidth + dx;
+    if (w < MIN_PANEL) w = MIN_PANEL;
+    if (w > MAX_PANEL) w = MAX_PANEL;
+    // Also constrain to keep at least 320px of map visible
+    const maxByViewport = Math.max(MIN_PANEL, window.innerWidth - 320);
+    if (w > maxByViewport) w = maxByViewport;
+    grid.style.setProperty('--panel-width', w + 'px');
+  }
+  function onMouseUp() {
+    if (!dragging) return;
+    dragging = false;
+    splitter.classList.remove('dragging');
+    document.body.classList.remove('splitter-dragging');
+    try {
+      const cur = getComputedStyle(grid).getPropertyValue('--panel-width').trim();
+      const w = parseInt(cur, 10);
+      if (w) localStorage.setItem(STORAGE_KEY, String(w));
+    } catch (e) {}
+    // Overlay arrows need to be redrawn if active
+    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 0);
+  }
+  // Keyboard accessibility — left/right arrow keys
+  function onKeyDown(e) {
+    if (grid.classList.contains('sidebar-collapsed')) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const cur = getComputedStyle(grid).getPropertyValue('--panel-width').trim() || '380px';
+    let w = parseInt(cur, 10) || 380;
+    w += (e.key === 'ArrowLeft' ? 16 : -16);
+    if (w < MIN_PANEL) w = MIN_PANEL;
+    if (w > MAX_PANEL) w = MAX_PANEL;
+    grid.style.setProperty('--panel-width', w + 'px');
+    try { localStorage.setItem(STORAGE_KEY, String(w)); } catch (e2) {}
+    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 0);
+    e.preventDefault();
+  }
+
+  splitter.addEventListener('mousedown', onMouseDown);
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  splitter.addEventListener('keydown', onKeyDown);
+
+  // Touch support
+  splitter.addEventListener('touchstart', e => {
+    const t = e.touches[0]; if (!t) return;
+    onMouseDown({ clientX: t.clientX, preventDefault: () => e.preventDefault() });
+  }, { passive: false });
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const t = e.touches[0]; if (!t) return;
+    onMouseMove({ clientX: t.clientX });
+  }, { passive: true });
+  document.addEventListener('touchend', onMouseUp);
+}
+
+// =============================================================
+//   Browse dropdown — six-tab navigator (Update A)
+//   When a tab is in "classifications" mode, the original list +
+//   type-ahead search appears.
+// =============================================================
+let browseMode = 'tabs'; // 'tabs' | 'classifications'
+function buildBrowseMenu(filter) {
+  const menu = document.getElementById('browse-menu');
+  if (browseMode === 'tabs') {
+    const tabs = [
+      { id: 'phenomena', icon: '◉', title: 'Physical phenomena', desc: 'Toggle physical things on and off to highlight where they live.' },
+      { id: 'legend',    icon: '◈', title: 'Legend',             desc: 'Colour stripes, status bars, closure marks — how to read a tile.' },
+      { id: 'about',     icon: '?', title: 'About the table',    desc: 'What this map is, what it\'s for, what it isn\'t.' },
+      { id: 'education', icon: '✎', title: 'For education',      desc: 'Students, teachers, curious newcomers.' },
+      { id: 'research',  icon: '⚙', title: 'For research',       desc: 'Working researchers, grant writers, grad students.' },
+      { id: 'browse-classifications', icon: '☰', title: 'All 30 classifications', desc: 'Searchable list, grouped by sector.' },
+    ];
+    menu.innerHTML = tabs.map(t => {
+      const active = (state.activePanel === t.id && t.id !== 'browse-classifications');
+      return `<div class="menu-tab${active?' active':''}" data-tab="${esc(t.id)}" role="menuitem" tabindex="0">
+        <span class="tab-icon">${esc(t.icon)}</span>
+        <div class="menu-tab-block">
+          <span>${esc(t.title)}</span>
+          <span class="tab-desc">${esc(t.desc)}</span>
+        </div>
+      </div>`;
+    }).join('');
+    menu.querySelectorAll('[data-tab]').forEach(el => {
+      el.addEventListener('click', () => {
+        const tab = el.dataset.tab;
+        if (tab === 'browse-classifications') {
+          browseMode = 'classifications';
+          buildBrowseMenu('');
+          return;
+        }
+        switchSidebarPanel(tab);
+      });
+    });
+    return;
+  }
+
+  // Classifications list (the original Browse behavior)
+  const q = (filter || '').toLowerCase().trim();
+  const groups = {};
+  for (const fc of FCS) {
+    if (q) {
+      const hay = (fc.symbol + ' ' + fc.label + ' ' + fc.short_label + ' ' + fc.sector + ' ' + fc.subtype).toLowerCase();
+      if (!hay.includes(q)) continue;
+    }
+    const k = fc.sector;
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(fc);
+  }
+  const orderedKeys = SECTORS.filter(s => groups[s]).concat(
+    Object.keys(groups).filter(k => !SECTORS.includes(k))
+  );
+
+  const back = `<div class="menu-tab" data-back="1" style="cursor:pointer;font-weight:600;font-size:11.5px"><span class="tab-icon">‹</span>back to menu</div>`;
+  const searchBar = `<div class="menu-search"><input type="search" id="browse-search" placeholder="filter by symbol or name…" value="${esc(filter || '')}" autocomplete="off"></div>`;
+
+  if (orderedKeys.length === 0) {
+    menu.innerHTML = back + searchBar + `<div style="padding:14px;font-size:12px;color:var(--ink-mute);font-style:italic">no matches</div>`;
+  } else {
+    const html = orderedKeys.map(sector => {
+      const items = groups[sector].map(fc => `
+        <div class="menu-item" data-fc="${esc(fc.id)}">
+          <span class="menu-symbol" style="color:var(--${fc.category === 'structural' ? 'struct' : fc.category === 'hybrid' ? 'hybrid' : 'phen'})">${esc(fc.symbol)}</span>
+          <span class="menu-name">${esc(fc.label)}</span>
+          <span class="menu-counts">${fc.cell_count}c · ${fc.prediction_count}p</span>
+        </div>
+      `).join('');
+      return `<div class="menu-group">
+        <div class="menu-group-head">${esc(sector)} <span style="opacity:0.6">(${groups[sector].length})</span></div>
+        ${items}
+      </div>`;
+    }).join('');
+    menu.innerHTML = back + searchBar + html;
+  }
+
+  menu.querySelectorAll('.menu-item').forEach(el => {
+    el.addEventListener('click', () => {
+      selectFC(el.dataset.fc);
+      closeBrowseMenu();
+    });
+  });
+  const backEl = menu.querySelector('[data-back]');
+  if (backEl) backEl.addEventListener('click', () => { browseMode = 'tabs'; buildBrowseMenu(''); });
+  const search = menu.querySelector('#browse-search');
+  if (search) {
+    search.addEventListener('input', () => buildBrowseMenu(search.value));
+    if (filter) {
+      const pos = search.value.length;
+      search.focus();
+      try { search.setSelectionRange(pos, pos); } catch (e) {}
+    }
+  }
+}
+function openBrowseMenu() {
+  browseMode = 'tabs';
+  buildBrowseMenu('');
+  document.getElementById('browse-menu').classList.add('open');
+  document.getElementById('browse-btn').classList.add('active');
+}
+function closeBrowseMenu() {
+  document.getElementById('browse-menu').classList.remove('open');
+  document.getElementById('browse-btn').classList.remove('active');
+}
+function wireBrowseDropdown() {
+  const btn = document.getElementById('browse-btn');
+  const menu = document.getElementById('browse-menu');
+  const wrap = document.getElementById('browse-wrap');
+  if (!btn || !menu || !wrap) return;
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (menu.classList.contains('open')) closeBrowseMenu();
+    else openBrowseMenu();
+  });
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (!menu.classList.contains('open')) return;
+    if (wrap.contains(e.target)) return;
+    closeBrowseMenu();
+  });
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && menu.classList.contains('open')) {
+      closeBrowseMenu();
+      e.stopPropagation();
+    }
+  });
+}
+
+// =============================================================
+//   Boot
+// =============================================================
+async function init() {
+  // First: fetch and augment the canonical dataset.
+  // Show a sidebar "loading" line while the network request is in flight.
+  document.getElementById('sidebar-inner').innerHTML = `
+    <div class="sidebar-section">
+      <h3 class="muted">Loading dataset…</h3>
+      <div style="font-size:12.5px;color:var(--ink-mute);line-height:1.5">
+        Fetching <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">data/Map_v34_consolidated.json</code> from the repo. This may take a couple of seconds on first load.
+      </div>
+    </div>`;
+  document.getElementById('pt-content').innerHTML =
+    `<div style="padding:80px 20px;text-align:center;color:var(--ink-mute);font-style:italic">Loading the periodic table…</div>`;
+
+  try {
+    const { data: raw, url } = await fetchCanonicalData();
+    DATA = augmentDataset(raw);
+    FCS = DATA.formal_classifications;
+    FC_BY_ID = Object.fromEntries(FCS.map(f => [f.id, f]));
+    SECTORS = DATA.sectors;
+    STATUSES = DATA.prediction_statuses;
+  } catch (err) {
+    console.error('[map] failed to load canonical data:', err);
+    renderFatalError('Could not load the physics-map dataset.', err && err.message ? err.message : err);
+    return;
+  }
+
+  const m = DATA._meta.counts;
+  document.getElementById('header-subtitle').textContent =
+    `${m.formal_classifications} classifications · ${m.cells} cells · ${m.predictions} predictions · ${m.falsifications} falsifications`;
+
+  wireToolbar();
+  wireSplitter();
+  wireBrowseDropdown();
+  wireMapDragPan();
+  wireSidebarQuickBar();
+
+  // Cell-content search (Update A)
+  const searchInput = document.getElementById('cell-search-input');
+  if (searchInput) {
+    let debounce = null;
+    const runSearch = () => {
+      const q = searchInput.value;
+      state.activePanel = 'search';
+      state.selectedFC = null;
+      state.selectedCell = null;
+      renderSidebarSearch(q);
+    };
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(runSearch, 120);
+    });
+    searchInput.addEventListener('focus', () => {
+      if (searchInput.value.trim() && state.activePanel !== 'search') {
+        runSearch();
+      }
+    });
+  }
+
+  document.getElementById('btn-help').addEventListener('click', () => {
+    document.getElementById('help-overlay').classList.add('show');
+  });
+  document.getElementById('help-close').addEventListener('click', () => {
+    document.getElementById('help-overlay').classList.remove('show');
+  });
+  document.getElementById('help-overlay').addEventListener('click', e => {
+    if (e.target.id === 'help-overlay') document.getElementById('help-overlay').classList.remove('show');
+  });
+
+  document.getElementById('btn-refresh').addEventListener('click', refreshFromServer);
+
+  document.getElementById('zoom-in').addEventListener('click', zoomIn);
+  document.getElementById('zoom-out').addEventListener('click', zoomOut);
+  document.getElementById('zoom-reset').addEventListener('click', zoomFitToView);
+
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    const grid = document.getElementById('body-grid');
+    const collapsed = grid.classList.toggle('sidebar-collapsed');
+    state.sidebarCollapsed = collapsed;
+    document.getElementById('sidebar-toggle').textContent = collapsed ? '‹' : '›';
+    document.getElementById('sidebar-toggle').title = collapsed ? 'Show sidebar' : 'Hide sidebar';
+    setTimeout(() => { if (state.overlay === 'phen-phen') drawPhenPhenOverlay(); }, 220);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('help-overlay').classList.contains('show')) {
+      if (e.key === 'Escape') document.getElementById('help-overlay').classList.remove('show');
+      return;
+    }
+    if (e.key === 'Escape') { clearSelection(); return; }
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key === '+' || e.key === '=') { zoomIn(); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoomOut(); e.preventDefault(); }
+    else if (e.key === '0') { zoomFitToView(); e.preventDefault(); }
+    else if (e.key === 'f' || e.key === 'F') { zoomFitToView(); e.preventDefault(); }
+  });
+
+  window.addEventListener('resize', () => {
+    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 60);
+  });
+
+  parseHash();
+  syncToolbarChips();
+  applyZoom();
+  renderAll();
+  // After the first render settles, fit the map to the viewport so the user
+  // sees everything at once (Update A.1 — answering "the whole map should be
+  // able to be seen at once by zooming out").
+  setTimeout(() => {
+    if (!state.selectedFC && location.hash.indexOf('zoom=') < 0) {
+      zoomFitToView();
+    }
+  }, 80);
+}
+init();
+</script>
+</body>
+</html>
