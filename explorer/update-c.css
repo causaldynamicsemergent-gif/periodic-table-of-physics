@@ -1,0 +1,90 @@
+/* ---- Glossary panel (Update C) ---- */
+/* Renders the 22 entries in DATA.glossary, grouped by category. Reuses
+   sb-classif-search for the search input and dx-browse-group-head for
+   category headers; adds entry-card styling here. */
+.glossary-group { margin-bottom: 18px; }
+.glossary-group:last-child { margin-bottom: 0; }
+
+.glossary-entry {
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--rule);
+  border-radius: 2px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: border-left-color 0.15s, background 0.15s;
+}
+.glossary-entry:last-child { margin-bottom: 0; }
+.glossary-entry.focused {
+  border-left-color: var(--ink);
+  background: var(--paper-3);
+}
+
+.glossary-term-row { display: flex; align-items: baseline; gap: 6px; }
+.glossary-term {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+.glossary-aliases {
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.glossary-field { margin-top: 8px; }
+.glossary-field:first-of-type { margin-top: 10px; }
+.glossary-field-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  margin-bottom: 2px;
+}
+.glossary-field-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.glossary-field-body p { margin: 0; }
+.glossary-field-body p + p { margin-top: 6px; }
+
+.glossary-related-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.glossary-related-pill {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 2px 6px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+.glossary-related-pill:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.glossary-related-pill:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.glossary-related-pill.inert {
+  cursor: default;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.glossary-related-pill.inert:hover {
+  background: var(--paper);
+  color: var(--ink-faint);
+  border-color: var(--rule);
+}
+

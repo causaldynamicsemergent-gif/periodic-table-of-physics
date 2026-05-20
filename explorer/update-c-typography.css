@@ -1,0 +1,123 @@
+/* =============================================================
+   Update C — typography pass.
+
+   Loads after KaTeX's own stylesheet so it can override the
+   defaults. Responsibilities:
+
+   1. KaTeX integration. Inline math should inherit color and line
+      box from surrounding prose; display math gets balanced vertical
+      space and stays centered without distorting the paragraph's
+      rhythm. The KaTeX-default font-size of ~1.21em is reduced to
+      1em so math doesn't visually outrank the prose around it.
+
+   2. Body-face readability. Crimson Pro is already the body face
+      (set in the base inline <style>) so we don't reset it here.
+      What we add is OpenType numeric features for figures inside
+      prose, and slightly tighter rendering hints so the math/CMU
+      baseline pairs well with the scholarly serif.
+
+   3. Math-error recovery. KaTeX's throwOnError:false outputs a
+      red marked-up source span; we style that to fit the prose
+      rather than scream at the reader.
+   ============================================================= */
+
+/* --- KaTeX core integration ------------------------------------- */
+.katex {
+  /* KaTeX defaults to 1.21em which is louder than surrounding prose
+     in scholarly typography. 1em keeps the math at the same visual
+     weight as the words around it. */
+  font-size: 1em;
+  color: inherit;
+  /* Avoid line-height runaway when a fraction or sqrt pushes vertical
+     space; the line-leading is already set on the prose surface. */
+  line-height: normal;
+}
+
+/* Inline math gets a hair of horizontal breathing room so adjacent
+   words don't crowd the glyphs. KaTeX uses CMU's natural sidebearings
+   already; this is a small additive. */
+.katex:not(.katex-display) {
+  padding: 0 0.05em;
+}
+
+/* Display math (rendered via $$...$$ with displayMode: true) gets
+   block-level spacing instead of the KaTeX-default margins, which
+   often clash with the prose surface's own margins. */
+.katex-display {
+  margin: 0.8em 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Stop a long display equation from forcing the sidebar to
+     horizontal-scroll the whole panel. */
+  max-width: 100%;
+}
+.katex-display > .katex {
+  display: inline-block;
+  text-align: initial;
+}
+
+/* --- Math inside specific prose surfaces ------------------------- */
+/* On the discourse/FC/edge description body the prose color is
+   var(--ink-soft); the math should match. The `color: inherit` above
+   handles this — listing the surfaces here makes the integration
+   explicit and lets us tweak per-surface later without hunting. */
+.dc-desc .katex,
+.glossary-field-body .katex,
+.xc-edge-card .dc-desc .katex,
+.dc-pred .pred-text .katex {
+  color: inherit;
+}
+
+/* --- Math-error recovery ---------------------------------------- */
+/* When KaTeX renderToString receives malformed input with
+   throwOnError:false, it emits a span with class "katex-error" wrapping
+   the raw source. Default styling is bright red on white; we want
+   something the reader can still parse without panic. */
+.katex .katex-error,
+.katex-error {
+  color: var(--st-falsified, #8b1a1a);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95em;
+  background: rgba(139, 26, 26, 0.06);
+  padding: 0 3px;
+  border-radius: 2px;
+  /* Default KaTeX cursor:help is fine. */
+}
+
+/* --- Scholarly-serif prose tuning ------------------------------- */
+/* OpenType figures: Crimson Pro ships old-style numerals which read
+   better in body prose alongside math; lining figures are reserved
+   for tabular/mono surfaces. */
+.dc-desc,
+.glossary-field-body,
+.dc-pred .pred-text,
+.ap-text {
+  font-feature-settings: 'onum' 1, 'liga' 1, 'kern' 1;
+  /* Slightly looser tracking pairs well with CMU's open spacing in
+     adjacent math. */
+  letter-spacing: 0.005em;
+}
+
+/* In math-dense paragraphs the inline KaTeX glyphs can sit a touch
+   below the Crimson Pro baseline. A tiny vertical-align nudge brings
+   the math back onto the text baseline. The value is small enough not
+   to be visible on math-free lines. */
+.dc-desc .katex,
+.glossary-field-body .katex,
+.dc-pred .pred-text .katex {
+  vertical-align: -0.06em;
+}
+
+/* --- Defensive: KaTeX must not interfere with sidebar layout ---- */
+/* KaTeX defaults to `white-space: nowrap` on the rendered span. In a
+   narrow sidebar that can push the panel into horizontal scroll. We
+   let inline math wrap onto a new line if absolutely necessary; the
+   user can always widen the panel. */
+.dc-desc .katex-html,
+.glossary-field-body .katex-html {
+  /* `pre-wrap` would break individual symbols apart, which we don't
+     want. `normal` lets long expressions wrap between operators only,
+     which is the right balance. */
+  white-space: normal;
+}
