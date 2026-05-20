@@ -1,0 +1,806 @@
+'use strict';
+// =============================================================
+//   Periodic Table of Physics — modular build
+//   File: explorer-discourse.js  (Update B)
+//
+//   Holds: the discourse layer (41 non-FC nodes — 11 architectures,
+//   11 open-frontiers, 6 totality-approaches, 6 regime-content,
+//   7 experimental-programs — and the ~89 discourse edges that connect
+//   them). Renders one sidebar detail card per node type, builds the
+//   five new Browse sub-catalogues, manages the selection state, and
+//   exposes the connected-FC set for the amber discourse-highlight
+//   ring on the map (the ring itself is drawn by renderTile in map.js).
+//
+//   Reads: state, DATA, esc, formatPara, STATUS_COLOR (data.js);
+//   FC_BY_ID for FC label/symbol lookups when an edge crosses the
+//   layer boundary; selectFC / selectCell / clearSelection /
+//   switchSidebarPanel / closeBrowseMenu / syncSidebarQuickBar
+//   (sidebar.js); renderMap, syncToolbarChips (map.js).
+//
+//   Load order in HTML: data → map → sidebar → phenomena → discourse.
+//   Discourse loads last among the modules so it can freely reference
+//   functions defined in any of the earlier files at call time.
+// =============================================================
+
+// =============================================================
+//   Node-type metadata (presentation layer)
+// =============================================================
+var DISCOURSE_TYPE_LABELS = {
+  'architecture':         'Architecture',
+  'open-frontier':        'Open frontier',
+  'totality-approach':    'Totality approach',
+  'regime-content':       'Regime content',
+  'experimental-program': 'Experimental program',
+};
+var DISCOURSE_TYPE_ICONS = {
+  'architecture':         '⌬',
+  'open-frontier':        '✕',
+  'totality-approach':    '◇',
+  'regime-content':       '▣',
+  'experimental-program': '⚙',
+};
+// Order in which discourse types appear in the Browse CATALOGUES section
+var DISCOURSE_TYPE_ORDER = [
+  'architecture', 'open-frontier', 'totality-approach',
+  'regime-content', 'experimental-program',
+];
+
+// Pretty labels for the structural-reason-category groupings used to
+// satisfy PROJECT_GOAL.md §8 "Distinctive" — clicking through frontiers
+// grouped by the same category surfaces cross-frontier formal-content
+// commonality. Labels lifted from the spec; the canonical values come
+// from the live MCP server.
+var STRUCTURAL_REASON_LABELS = {
+  'cross-architecture-non-sharing': 'Cross-architecture non-sharing',
+  'reach-termination':              'Reach termination',
+  'apparatus-mechanism-failure':    'Apparatus / mechanism failure',
+  'organizing-structure-failure':   'Organizing-structure failure',
+  'bridge-failure':                 'Bridge failure',
+  'interpretive-underdetermination':'Interpretive underdetermination',
+  'solvability-failure':            'Solvability failure',
+};
+
+// Pretty labels for experimental-program subtypes
+var PROGRAM_SUBTYPE_LABELS = {
+  'data-curation-collaboration': 'Data-curation collaboration',
+  'experimental-collaboration':  'Experimental collaboration',
+  'accelerator-program':         'Accelerator program',
+  'survey-program':              'Survey program',
+};
+
+// Discourse-highlight color — used by the amber ring on connected FC tiles.
+// Picked to be distinct from all 7 phenomenon category colors so the two
+// highlight layers compose without visual collision.
+var DISCOURSE_RING_COLOR = '#b8651a';
+
+// =============================================================
+//   Edge-grouping helper
+//   Splits a node's incident edges by edge type + direction so each
+//   card section can iterate over just what it needs.
+// =============================================================
+function groupDiscourseEdges(nodeId) {
+  const incident = (DATA.discourse_edges_by_node && DATA.discourse_edges_by_node[nodeId]) || [];
+  const out = {};
+  for (const e of incident) {
+    const key = e.type + '/' + e.direction;     // e.g. "emergence/out"
+    if (!out[key]) out[key] = [];
+    out[key].push(e);
+  }
+  return out;
+}
+function ge(grouped, key) {
+  return grouped[key] || [];
+}
+
+// =============================================================
+//   discharge_status renderer (the polymorphic field on hosting /
+//   targeting / bears-on edges that's sometimes a string, sometimes
+//   a 3-key object {local|global|universal: substantial|partial|gestural},
+//   and sometimes carries a subclaim_examples sub-object).
+// =============================================================
+function dischargeClass(v) {
+  if (v == null) return 'ds-neutral';
+  const k = String(v).toLowerCase();
+  // Order matters — match the most specific labels first
+  if (k === 'substantial')              return 'ds-substantial';
+  if (k === 'gestural')                 return 'ds-gestural';
+  if (k.indexOf('partial') === 0)       return 'ds-partial';   // 'partial', 'partial-to-gestural'
+  if (k === 'structural'
+   || k === 'structural-only')          return 'ds-structural';
+  if (k === 'open')                     return 'ds-open';
+  if (k === 'constrains'
+   || k === 'partially-solves'
+   || k === 'established')              return 'ds-substantial';
+  return 'ds-neutral';
+}
+
+function renderDischargeStatus(ds) {
+  if (ds == null) return '';
+  // String form — just a pill
+  if (typeof ds === 'string') {
+    return `<span class="discharge-pill ${dischargeClass(ds)}">${esc(ds)}</span>`;
+  }
+  // Object form — split top-level keys from subclaim_examples
+  const entries = Object.entries(ds).filter(([k]) => k !== 'subclaim_examples');
+  const subclaims = ds.subclaim_examples;
+  let html = '';
+  if (entries.length) {
+    html += `<div class="discharge-grid">` + entries.map(([k, v]) => `
+      <div class="discharge-cell">
+        <span class="discharge-key">${esc(k)}</span>
+        <span class="discharge-pill ${dischargeClass(v)}">${esc(String(v))}</span>
+      </div>
+    `).join('') + `</div>`;
+  }
+  if (subclaims && typeof subclaims === 'object') {
+    const subEntries = Object.entries(subclaims);
+    html += `<details class="discharge-subclaims"><summary>subclaim breakdown · ${subEntries.length}</summary>` +
+      subEntries.map(([k, v]) => `
+        <div class="discharge-subclaim">
+          <span class="discharge-subclaim-key">${esc(k)}</span>
+          <span class="discharge-pill ${dischargeClass(v)}">${esc(String(v))}</span>
+        </div>
+      `).join('') + `</details>`;
+  }
+  return html;
+}
+
+// =============================================================
+//   Neighbor renderers — turn an edge's neighbor id into a clickable
+//   inline pill that walks across the layer boundary.
+// =============================================================
+function renderFCPill(fcId) {
+  const fc = FC_BY_ID && FC_BY_ID[fcId];
+  if (!fc) {
+    return `<span class="dx-fc-pill dx-fc-pill-unknown">${esc(fcId)}</span>`;
+  }
+  return `<button type="button" class="dx-fc-pill dx-fc-pill-${esc(fc.category)}" data-fc-jump="${esc(fc.id)}" title="${esc(fc.full_name || fc.label)}">
+    <span class="dx-fc-pill-sym">${esc(fc.symbol)}</span>
+    <span class="dx-fc-pill-lbl">${esc(fc.label)}</span>
+  </button>`;
+}
+function renderDiscoursePill(nodeId) {
+  const n = DATA.discourse_by_id && DATA.discourse_by_id[nodeId];
+  if (!n) {
+    return `<span class="dx-disc-pill dx-disc-pill-unknown">${esc(nodeId)}</span>`;
+  }
+  return `<button type="button" class="dx-disc-pill dx-disc-pill-${esc(n.type)}" data-disc-jump="${esc(n.id)}" title="${esc(n.label)}">
+    <span class="dx-disc-pill-icon">${esc(DISCOURSE_TYPE_ICONS[n.type] || '·')}</span>
+    <span class="dx-disc-pill-lbl">${esc(n.label)}</span>
+  </button>`;
+}
+function renderNeighborPill(neighborId) {
+  // Resolve whichever layer the neighbor lives in
+  if (FC_BY_ID && FC_BY_ID[neighborId]) return renderFCPill(neighborId);
+  return renderDiscoursePill(neighborId);
+}
+function renderCellRefPills(fcId, cellRefs) {
+  if (!cellRefs || !cellRefs.length) return '';
+  return `<div class="dx-cell-pills">` + cellRefs.map(cid =>
+    `<button type="button" class="dx-cell-pill" data-fc-cell-jump="${esc(fcId)}|${esc(cid)}" title="${esc(cid)}">${esc(cid)}</button>`
+  ).join('') + `</div>`;
+}
+
+// =============================================================
+//   Edge-row renderers — small helpers each card type reuses
+// =============================================================
+function renderEdgeRow(e, opts) {
+  opts = opts || {};
+  const arrow = e.direction === 'out' ? '→' : '←';
+  const neighborPill = renderNeighborPill(e.neighbor);
+  // Figure out cell refs and which FC they belong to (for uses-classification etc.)
+  let cellPills = '';
+  if (e.cell_refs && e.cell_refs.length) {
+    // The FC side of the edge — if neighbor is the FC, use it; otherwise the source.
+    const fcSide = (FC_BY_ID && FC_BY_ID[e.neighbor]) ? e.neighbor
+                 : (FC_BY_ID && FC_BY_ID[e.from])     ? e.from
+                 : (FC_BY_ID && FC_BY_ID[e.to])       ? e.to : null;
+    if (fcSide) cellPills = renderCellRefPills(fcSide, e.cell_refs);
+  }
+  // nature pill (bears-on only) — canonical from the live tool
+  let naturePill = '';
+  if (e.nature) {
+    naturePill = `<span class="dx-nature-pill dx-nature-${esc(e.nature)}">${esc(e.nature)}</span>`;
+  }
+  const dsHtml = renderDischargeStatus(e.discharge_status);
+  return `
+    <div class="dx-edge-row">
+      <div class="dx-edge-head">
+        <span class="dx-edge-arrow">${arrow}</span>
+        ${neighborPill}
+        ${naturePill}
+      </div>
+      ${e.description ? `<div class="dx-edge-desc">${esc(e.description)}</div>` : ''}
+      ${dsHtml ? `<div class="dx-edge-discharge">${dsHtml}</div>` : ''}
+      ${cellPills}
+    </div>
+  `;
+}
+
+function renderEdgeSection(title, edgeList, opts) {
+  opts = opts || {};
+  const empty = opts.emptyText || `No <em>${esc(title.toLowerCase())}</em> edges recorded.`;
+  if (!edgeList || edgeList.length === 0) {
+    if (opts.hideWhenEmpty) return '';
+    return `<div class="sidebar-section"><h3>${esc(title)}</h3><div class="dx-edge-empty">${empty}</div></div>`;
+  }
+  const intro = opts.intro ? `<div class="sec-sub">${esc(opts.intro)}</div>` : '';
+  return `
+    <div class="sidebar-section">
+      <h3>${esc(title)} <span class="dx-section-ct">· ${edgeList.length}</span></h3>
+      ${intro}
+      <div class="dx-edge-list">${edgeList.map(e => renderEdgeRow(e, opts)).join('')}</div>
+    </div>
+  `;
+}
+
+// =============================================================
+//   Detail-card chrome (breadcrumb + header) shared across all 5 types
+// =============================================================
+function renderDiscourseCardHead(node, extraPills) {
+  const typeLbl = DISCOURSE_TYPE_LABELS[node.type] || node.type;
+  const icon = DISCOURSE_TYPE_ICONS[node.type] || '·';
+  const pills = (extraPills || []).filter(Boolean).join('');
+  return `
+    <div class="sb-crumb">
+      <div class="crumb-trail"><span class="crumb-current">${esc(icon)} · ${esc(node.label)}</span></div>
+      <button class="crumb-close" title="Close (Esc)">×</button>
+    </div>
+
+    <div class="dx-card-head dx-card-head-${esc(node.type)}">
+      <div class="dx-card-type">${esc(typeLbl)}</div>
+      <div class="dx-card-title">${esc(node.label)}</div>
+      ${node.full_name && node.full_name !== node.label ? `<div class="dx-card-fullname">${esc(node.full_name)}</div>` : ''}
+      ${pills ? `<div class="dx-card-pills">${pills}</div>` : ''}
+    </div>
+  `;
+}
+
+// =============================================================
+//   Architecture card
+// =============================================================
+function renderArchitectureCard(node) {
+  const grouped = groupDiscourseEdges(node.id);
+  const stratumPillClass = node.stratum === '2a' ? 'dx-stratum-2a' : 'dx-stratum-2b';
+  const stratumLabel = node.stratum === '2a' ? 'Established (2a)' :
+                       node.stratum === '2b' ? 'Candidate-foundational (2b)' :
+                       'Stratum ' + (node.stratum || '?');
+  const stratumPill = `<span class="dx-pill ${stratumPillClass}">${esc(stratumLabel)}</span>`;
+  const statusPill = node.empirical_status
+    ? `<span class="dx-pill dx-status-pill">${esc(node.empirical_status)}</span>`
+    : '';
+
+  const head = renderDiscourseCardHead(node, [stratumPill, statusPill]);
+  const desc = node.description
+    ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  // Sections (only show what's present so 2a vs 2b architectures naturally differ)
+  const sections = [
+    renderEdgeSection('Hosting (stratum 2a)',
+      ge(grouped, 'candidate-hosting/out'),
+      { intro: 'Established architectures this candidate-foundational program claims to host.', hideWhenEmpty: true }),
+    renderEdgeSection('Hosted by (candidates)',
+      ge(grouped, 'candidate-hosting/in'),
+      { intro: 'Candidate-foundational programs claiming to host this architecture.', hideWhenEmpty: true }),
+    renderEdgeSection('Targets (frontiers)',
+      ge(grouped, 'candidate-targeting/out'),
+      { intro: 'Open frontiers this program aims to discharge.', hideWhenEmpty: true }),
+    renderEdgeSection('Produces (regime content)',
+      ge(grouped, 'emergence/out'),
+      { intro: 'Empirical-regime content that emerges from this architecture.', hideWhenEmpty: true }),
+    renderEdgeSection('Frontiers not spanned',
+      ge(grouped, 'open-frontier-architecture-edge/in')
+        .concat(ge(grouped, 'open-frontier-architecture-edge/out')),
+      { intro: 'Where this architecture fails to span an open frontier.', hideWhenEmpty: true }),
+    renderEdgeSection('Uses (classifications)',
+      ge(grouped, 'uses-classification/out'),
+      { intro: 'Formal classifications this architecture invokes as machinery.', hideWhenEmpty: true }),
+    renderEdgeSection('Produces (classifications)',
+      ge(grouped, 'produces-classification/out'),
+      { intro: 'Formal classifications this architecture established.', hideWhenEmpty: true }),
+    renderEdgeSection('Multi-architecture interference',
+      ge(grouped, 'multi-architecture-interference-edge/in')
+        .concat(ge(grouped, 'multi-architecture-interference-edge/out')),
+      { intro: 'Anomaly / interference observations spanning this architecture.', hideWhenEmpty: true }),
+  ].join('');
+
+  const citations = (node.citations && node.citations.length)
+    ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+    : '';
+
+  return head + desc + sections + citations;
+}
+
+// =============================================================
+//   Open-frontier card
+// =============================================================
+function renderFrontierCard(node) {
+  const grouped = groupDiscourseEdges(node.id);
+  const srPill = node.structural_reason_category
+    ? `<span class="dx-pill dx-struct-reason" title="Structural reason this frontier remains open">${esc(STRUCTURAL_REASON_LABELS[node.structural_reason_category] || node.structural_reason_category)}</span>`
+    : '';
+  const stratumPill = node.stratum
+    ? `<span class="dx-pill dx-stratum-other">Stratum ${esc(String(node.stratum))}</span>`
+    : '';
+
+  const head = renderDiscourseCardHead(node, [srPill, stratumPill]);
+  const desc = node.description
+    ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  const sections = [
+    renderEdgeSection('Architectures that fail to span this frontier',
+      ge(grouped, 'open-frontier-architecture-edge/out')
+        .concat(ge(grouped, 'open-frontier-architecture-edge/in')),
+      { intro: 'The architecture-level failure-to-span edges. Together these tell the story of why the frontier remains open.', hideWhenEmpty: true }),
+    renderEdgeSection('Classifications that bear on this frontier',
+      ge(grouped, 'bears-on/in'),
+      { intro: 'Formal classifications constraining, partially-solving, or structurally delimiting the frontier. nature pill is canonical.', hideWhenEmpty: true }),
+    renderEdgeSection('Programs targeting this frontier',
+      ge(grouped, 'candidate-targeting/in'),
+      { intro: 'Candidate-foundational programs that aim to discharge this frontier.', hideWhenEmpty: true }),
+    renderEdgeSection('Empirical loci',
+      ge(grouped, 'open-frontier-content-edge/out')
+        .concat(ge(grouped, 'open-frontier-content-edge/in')),
+      { intro: 'Regime-content and totality-approach contexts where the gap is empirically visible.', hideWhenEmpty: true }),
+    renderEdgeSection('Uses (classifications)',
+      ge(grouped, 'uses-classification/out'),
+      { intro: 'Formal classifications the frontier itself invokes.', hideWhenEmpty: true }),
+    renderEdgeSection('Produces (classifications)',
+      ge(grouped, 'produces-classification/out'),
+      { intro: 'Formal classifications the frontier helped establish.', hideWhenEmpty: true }),
+  ].join('');
+
+  const citations = (node.citations && node.citations.length)
+    ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+    : '';
+
+  return head + desc + sections + citations;
+}
+
+// =============================================================
+//   Totality-approach card
+// =============================================================
+function renderTotalityCard(node) {
+  const grouped = groupDiscourseEdges(node.id);
+  const statusPill = node.empirical_status
+    ? `<span class="dx-pill dx-status-pill" title="Empirical status">${esc(node.empirical_status)}</span>`
+    : '';
+  const stratumPill = node.stratum
+    ? `<span class="dx-pill dx-stratum-other">Stratum ${esc(String(node.stratum))}</span>`
+    : '';
+
+  const head = renderDiscourseCardHead(node, [statusPill, stratumPill]);
+  const desc = node.description
+    ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  const sections = [
+    renderEdgeSection('Regime-content contributing here',
+      ge(grouped, 'cross-architecture-emergence/in'),
+      { intro: 'Established regime content feeding into this totality.', hideWhenEmpty: true }),
+    renderEdgeSection('Architectures interfering here',
+      ge(grouped, 'multi-architecture-interference-edge/out')
+        .concat(ge(grouped, 'multi-architecture-interference-edge/in')),
+      { intro: 'Architectures whose joint application matters for this totality.', hideWhenEmpty: true }),
+    renderEdgeSection('Classifications that bear on this totality',
+      ge(grouped, 'bears-on/in'),
+      { intro: 'Formal classifications constraining or partially-solving the totality.', hideWhenEmpty: true }),
+    renderEdgeSection('Frontiers visible here',
+      ge(grouped, 'open-frontier-content-edge/in'),
+      { intro: 'Open frontiers whose empirical locus includes this totality.', hideWhenEmpty: true }),
+  ].join('');
+
+  const citations = (node.citations && node.citations.length)
+    ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+    : '';
+
+  return head + desc + sections + citations;
+}
+
+// =============================================================
+//   Regime-content card
+// =============================================================
+function renderRegimeContentCard(node) {
+  const grouped = groupDiscourseEdges(node.id);
+  const statusPill = node.empirical_status
+    ? `<span class="dx-pill dx-status-pill">${esc(node.empirical_status)}</span>`
+    : '';
+  const stratumPill = node.stratum
+    ? `<span class="dx-pill dx-stratum-other">Stratum ${esc(String(node.stratum))}</span>`
+    : '';
+
+  const head = renderDiscourseCardHead(node, [statusPill, stratumPill]);
+  const desc = node.description
+    ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  const sections = [
+    renderEdgeSection('Emerges from',
+      ge(grouped, 'emergence/in'),
+      { intro: 'Architectures this regime content emerges from.', hideWhenEmpty: true }),
+    renderEdgeSection('Contributes to totality',
+      ge(grouped, 'cross-architecture-emergence/out'),
+      { intro: 'Totality approaches this regime content feeds into.', hideWhenEmpty: true }),
+    renderEdgeSection('Frontiers visible here',
+      ge(grouped, 'open-frontier-content-edge/in'),
+      { intro: 'Open frontiers whose empirical locus includes this regime.', hideWhenEmpty: true }),
+  ].join('');
+
+  const citations = (node.citations && node.citations.length)
+    ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+    : '';
+
+  return head + desc + sections + citations;
+}
+
+// =============================================================
+//   Experimental-program card
+// =============================================================
+function renderProgramCard(node) {
+  const grouped = groupDiscourseEdges(node.id);
+  const subtypePill = node.subtype
+    ? `<span class="dx-pill dx-program-subtype">${esc(PROGRAM_SUBTYPE_LABELS[node.subtype] || node.subtype)}</span>`
+    : '';
+  const periodPill = node.operational_period
+    ? `<span class="dx-pill dx-program-period">${esc(node.operational_period)}</span>`
+    : '';
+
+  const head = renderDiscourseCardHead(node, [subtypePill, periodPill]);
+  const desc = node.description
+    ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  // Host institutions (program-specific metadata)
+  let hostsSection = '';
+  if (node.host_institutions && node.host_institutions.length) {
+    hostsSection = `<div class="sidebar-section"><h3>Host institutions</h3><div class="dx-hosts">${node.host_institutions.map(h => `<span class="dx-host-pill">${esc(h)}</span>`).join('')}</div></div>`;
+  }
+
+  const sections = [
+    hostsSection,
+    renderEdgeSection('Produces classifications',
+      ge(grouped, 'produces-classification/out'),
+      { intro: 'Formal classifications this program established empirically. Cell-ref pills below each edge link to the specific cells the program confirmed.', hideWhenEmpty: true }),
+  ].join('');
+
+  // Key publications — for programs the citations are typically formatted differently
+  const pubs = (node.key_publications && node.key_publications.length)
+    ? `<div class="sidebar-section"><h3>Key publications</h3><div class="dx-citation-list">${node.key_publications.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+    : (node.citations && node.citations.length)
+      ? `<div class="sidebar-section"><h3>Key publications</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
+      : '';
+
+  return head + desc + sections + pubs;
+}
+
+// =============================================================
+//   Top-level discourse-card renderer (dispatches by type)
+// =============================================================
+function renderDiscourseCard(nodeId) {
+  const node = DATA.discourse_by_id && DATA.discourse_by_id[nodeId];
+  if (!node) {
+    return `<div class="sidebar-section"><h3>Not found</h3><div class="dc-desc">No discourse node with id <code>${esc(nodeId)}</code> in the current dataset.</div></div>`;
+  }
+  switch (node.type) {
+    case 'architecture':         return renderArchitectureCard(node);
+    case 'open-frontier':        return renderFrontierCard(node);
+    case 'totality-approach':    return renderTotalityCard(node);
+    case 'regime-content':       return renderRegimeContentCard(node);
+    case 'experimental-program': return renderProgramCard(node);
+    default:
+      return `<div class="sidebar-section"><h3>${esc(node.label)}</h3><div class="dc-desc">No card layout registered for type <code>${esc(node.type)}</code>.</div></div>`;
+  }
+}
+
+// =============================================================
+//   Sidebar render — selection state changers
+// =============================================================
+function renderSidebarDiscourse(node) {
+  const inner = document.getElementById('sidebar-inner');
+  inner.innerHTML = renderDiscourseCard(node.id);
+  wireDiscourseCardLinks(inner);
+}
+
+function wireDiscourseCardLinks(root) {
+  // Close button on the breadcrumb
+  const closeBtn = root.querySelector('.crumb-close');
+  if (closeBtn) closeBtn.addEventListener('click', clearSelection);
+
+  // FC pills → jump to FC card (via sidebar.js's selectFC)
+  root.querySelectorAll('[data-fc-jump]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      selectFC(el.dataset.fcJump);
+    });
+  });
+  // FC+cell pills → jump straight to the cell card
+  root.querySelectorAll('[data-fc-cell-jump]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const [fcId, cellId] = el.dataset.fcCellJump.split('|');
+      selectCell(fcId, cellId);
+    });
+  });
+  // Other discourse-node pills → jump to that discourse card
+  root.querySelectorAll('[data-disc-jump]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      selectDiscourseNode(el.dataset.discJump);
+    });
+  });
+}
+
+function selectDiscourseNode(nodeId) {
+  const n = DATA.discourse_by_id && DATA.discourse_by_id[nodeId];
+  if (!n) return;
+  state.selectedDiscourseNode = nodeId;
+  state.selectedFC = null;
+  state.selectedCell = null;
+  state.selectedEdgeId = null;       // Update C — symmetric clear
+  state.activePanel = 'discourse';
+  writeHash();
+  renderSidebarDiscourse(n);
+  document.getElementById('sidebar').scrollTop = 0;
+  renderMap();   // re-render so the amber ring appears on connected FC tiles
+  if (typeof closeBrowseMenu === 'function') closeBrowseMenu();
+  if (typeof syncSidebarQuickBar === 'function') syncSidebarQuickBar();
+}
+
+function clearDiscourseSelection() {
+  state.selectedDiscourseNode = null;
+}
+
+// =============================================================
+//   Browse CATALOGUES sub-tab list builders — one per discourse type
+//   Each produces a sidebar panel showing all nodes of that type,
+//   grouped by an appropriate axis, with one-click selection.
+// =============================================================
+
+function renderSidebarBrowseArchitectures() {
+  const inner = document.getElementById('sidebar-inner');
+  const list = (DATA.discourse_by_type && DATA.discourse_by_type['architecture']) || [];
+  // Group by stratum (2a / 2b)
+  const groups = { '2a': [], '2b': [] };
+  for (const n of list) {
+    const k = n.stratum || 'other';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(n);
+  }
+  const groupOrder = ['2a', '2b'].concat(Object.keys(groups).filter(k => k !== '2a' && k !== '2b'));
+  const groupLabel = { '2a': 'Established (stratum 2a)', '2b': 'Candidate-foundational (stratum 2b)' };
+  const groupsHtml = groupOrder
+    .filter(g => groups[g] && groups[g].length)
+    .map(g => `
+      <div class="dx-browse-group">
+        <div class="dx-browse-group-head">${esc(groupLabel[g] || ('Stratum ' + g))} <span class="dx-browse-group-ct">(${groups[g].length})</span></div>
+        ${groups[g].map(n => renderBrowseItem(n)).join('')}
+      </div>
+    `).join('');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Architectures <span class="dx-section-ct">· ${list.length}</span></h3>
+      <div class="sec-sub">The architecture layer: empirically-established and candidate-foundational programs that organize how physics gets done.</div>
+      ${groupsHtml || '<div class="dx-edge-empty">No architectures in this dataset.</div>'}
+    </div>
+  `;
+  wireBrowseList(inner);
+}
+
+function renderSidebarBrowseFrontiers() {
+  const inner = document.getElementById('sidebar-inner');
+  const list = (DATA.discourse_by_type && DATA.discourse_by_type['open-frontier']) || [];
+  // Group by structural_reason_category — directly satisfies PROJECT_GOAL.md §8 "Distinctive"
+  const groups = {};
+  for (const n of list) {
+    const k = n.structural_reason_category || 'unclassified';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(n);
+  }
+  const groupOrder = Object.keys(groups).sort();
+  const groupsHtml = groupOrder.map(g => `
+    <div class="dx-browse-group">
+      <div class="dx-browse-group-head">${esc(STRUCTURAL_REASON_LABELS[g] || g)} <span class="dx-browse-group-ct">(${groups[g].length})</span></div>
+      ${groups[g].map(n => renderBrowseItem(n)).join('')}
+    </div>
+  `).join('');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Open frontiers <span class="dx-section-ct">· ${list.length}</span></h3>
+      <div class="sec-sub">Grouped by the structural reason the frontier remains open. Click two frontiers under the same heading to see whether they share formal-classification machinery.</div>
+      ${groupsHtml || '<div class="dx-edge-empty">No frontiers in this dataset.</div>'}
+    </div>
+  `;
+  wireBrowseList(inner);
+}
+
+function renderSidebarBrowseTotalities() {
+  const inner = document.getElementById('sidebar-inner');
+  const list = (DATA.discourse_by_type && DATA.discourse_by_type['totality-approach']) || [];
+  // Group by empirical_status (long strings — render each as its own group)
+  const groups = {};
+  for (const n of list) {
+    const k = n.empirical_status || 'unclassified';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(n);
+  }
+  const groupOrder = Object.keys(groups).sort();
+  const groupsHtml = groupOrder.map(g => `
+    <div class="dx-browse-group">
+      <div class="dx-browse-group-head">${esc(g)} <span class="dx-browse-group-ct">(${groups[g].length})</span></div>
+      ${groups[g].map(n => renderBrowseItem(n)).join('')}
+    </div>
+  `).join('');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Totality approaches <span class="dx-section-ct">· ${list.length}</span></h3>
+      <div class="sec-sub">Whole-system organizing principles that span multiple architectures (BH thermo, cosmological models, etc.).</div>
+      ${groupsHtml || '<div class="dx-edge-empty">No totality approaches in this dataset.</div>'}
+    </div>
+  `;
+  wireBrowseList(inner);
+}
+
+function renderSidebarBrowseRegimeContent() {
+  const inner = document.getElementById('sidebar-inner');
+  const list = (DATA.discourse_by_type && DATA.discourse_by_type['regime-content']) || [];
+  // Alphabetical
+  const sorted = list.slice().sort((a, b) => (a.label || '').localeCompare(b.label || ''));
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Regime content <span class="dx-section-ct">· ${list.length}</span></h3>
+      <div class="sec-sub">Empirically-confirmed regimes the architectures produce. Stratum 3 by construction.</div>
+      <div class="dx-browse-group">
+        ${sorted.map(n => renderBrowseItem(n)).join('')}
+      </div>
+    </div>
+  `;
+  wireBrowseList(inner);
+}
+
+function renderSidebarBrowsePrograms() {
+  const inner = document.getElementById('sidebar-inner');
+  const list = (DATA.discourse_by_type && DATA.discourse_by_type['experimental-program']) || [];
+  // Group by subtype
+  const groups = {};
+  for (const n of list) {
+    const k = n.subtype || 'other';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(n);
+  }
+  const groupOrder = ['data-curation-collaboration', 'experimental-collaboration', 'accelerator-program', 'survey-program', 'other']
+    .filter(k => groups[k]);
+  const groupsHtml = groupOrder.map(g => `
+    <div class="dx-browse-group">
+      <div class="dx-browse-group-head">${esc(PROGRAM_SUBTYPE_LABELS[g] || g)} <span class="dx-browse-group-ct">(${groups[g].length})</span></div>
+      ${groups[g].map(n => renderBrowseItem(n)).join('')}
+    </div>
+  `).join('');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Experimental programs <span class="dx-section-ct">· ${list.length}</span></h3>
+      <div class="sec-sub">Collaborations, accelerator programs, surveys, and data-curation efforts that established the empirical content of the FCs.</div>
+      ${groupsHtml || '<div class="dx-edge-empty">No experimental programs in this dataset.</div>'}
+    </div>
+  `;
+  wireBrowseList(inner);
+}
+
+function renderBrowseItem(n) {
+  const icon = DISCOURSE_TYPE_ICONS[n.type] || '·';
+  // Try to summarize the node in one line — count incident edges
+  const incidentCt = ((DATA.discourse_edges_by_node && DATA.discourse_edges_by_node[n.id]) || []).length;
+  return `
+    <div class="dx-browse-item" data-disc-jump="${esc(n.id)}" role="button" tabindex="0">
+      <span class="dx-browse-icon">${esc(icon)}</span>
+      <span class="dx-browse-name">${esc(n.label)}</span>
+      <span class="dx-browse-ct" title="incident edges">${incidentCt}e</span>
+    </div>
+  `;
+}
+
+function wireBrowseList(root) {
+  root.querySelectorAll('[data-disc-jump]').forEach(el => {
+    el.addEventListener('click', () => selectDiscourseNode(el.dataset.discJump));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectDiscourseNode(el.dataset.discJump);
+      }
+    });
+  });
+}
+
+// =============================================================
+//   Spotlight sidebar panel (Update B)
+//   The new multi-select spotlight panel. Replaces the old inline
+//   spotlight chip group in the toolbar.
+// =============================================================
+function renderSidebarSpotlight() {
+  const inner = document.getElementById('sidebar-inner');
+
+  // Compute counts: how many predictions across the whole dataset carry
+  // each status. Counts are recomputed live so a future data update
+  // doesn't require remembering to bump a hardcoded number.
+  const counts = {};
+  for (const fc of FCS) {
+    for (const [st, n] of Object.entries(fc.yield_stats || {})) {
+      counts[st] = (counts[st] || 0) + n;
+    }
+  }
+
+  const rows = [
+    { key: 'confirmed',                  title: 'Confirmed',         desc: 'Predicted then observed.' },
+    { key: 'unconfirmed-tension',        title: 'Tension',           desc: 'Evidence is unresolved or in conflict.' },
+    { key: 'unconfirmed-not-yet-tested', title: 'Not yet tested',    desc: 'Theoretical prediction without experimental verdict.' },
+    { key: 'falsified',                  title: 'Falsified',         desc: 'Ruled out by experiment. ⚠ flag marks tiles containing these.' },
+    { key: 'retro-explanatory-only',     title: 'Retro-explanatory', desc: 'Phenomenon observed before, classification developed after.' },
+  ];
+
+  const rowsHtml = rows.map(r => {
+    const on = state.spotlightActive.has(r.key);
+    const n  = counts[r.key] || 0;
+    return `
+      <button type="button" class="dx-spot-row${on ? ' on' : ''}" data-spot-key="${esc(r.key)}" aria-pressed="${on}">
+        <span class="dx-spot-check"><span class="dx-spot-check-inner"></span></span>
+        <span class="dx-spot-body">
+          <span class="dx-spot-title-row">
+            <span class="dx-spot-title">${esc(r.title)}</span>
+            <span class="dx-spot-count">${n}</span>
+          </span>
+          <span class="dx-spot-desc">${esc(r.desc)}</span>
+        </span>
+        <span class="dx-spot-swatch dx-spot-swatch-${esc(STATUS_KEY[r.key] || r.key)}"></span>
+      </button>
+    `;
+  }).join('');
+
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <h3>Spotlight</h3>
+      <div class="sec-sub">Highlight tiles by their prediction status. Each toggle is independent — turn on as many as you like. Tiles matching at least one active status are highlighted; others are dimmed.</div>
+      <div class="dx-spot-list">${rowsHtml}</div>
+      <div class="dx-spot-actions">
+        <button class="phen-action-btn" id="dx-spot-all-off" type="button">all off</button>
+        <button class="phen-action-btn" id="dx-spot-all-on"  type="button">all on</button>
+      </div>
+    </div>
+  `;
+
+  inner.querySelectorAll('[data-spot-key]').forEach(el => {
+    el.addEventListener('click', () => {
+      const k = el.dataset.spotKey;
+      if (state.spotlightActive.has(k)) state.spotlightActive.delete(k);
+      else state.spotlightActive.add(k);
+      writeHash();
+      syncToolbarChips();
+      renderSidebarSpotlight();
+      renderMap();
+    });
+  });
+  document.getElementById('dx-spot-all-on').addEventListener('click', () => {
+    state.spotlightActive = new Set(rows.map(r => r.key));
+    writeHash();
+    syncToolbarChips();
+    renderSidebarSpotlight();
+    renderMap();
+  });
+  document.getElementById('dx-spot-all-off').addEventListener('click', () => {
+    state.spotlightActive = new Set();
+    writeHash();
+    syncToolbarChips();
+    renderSidebarSpotlight();
+    renderMap();
+  });
+}
+
+// =============================================================
+//   Public helper for renderTile in map.js to query whether an
+//   FC should get the amber discourse ring.
+// =============================================================
+function isFCConnectedToSelectedDiscourse(fcId) {
+  if (!state.selectedDiscourseNode) return false;
+  const fcSet = DATA && DATA.fcs_connected_to_discourse && DATA.fcs_connected_to_discourse[state.selectedDiscourseNode];
+  return !!(fcSet && fcSet.has(fcId));
+}
