@@ -27,9 +27,10 @@ The Predictive Layer is an additive layer on top of the existing structural + ph
 
 - **Step 2 — v16 schema JSON.** `Map_v16_schema.json` committed to `/schema/`. Three new `$defs` (`constructive_status`, `forced_by_entry`, `axis_mapping_entry`), two new cell properties, one new edge property, new `allOf` block on cell with §5.1 and §5.2, two new entries on edge `allOf` for §5.3 and §5.4, five new entries in `_validator_side_rules`. Validated against Draft 2020-12 metaschema. **29/29 unit tests pass** covering backward-compat (4 tests), acceptance of valid v16 shapes (7 tests), rejection of invalid v16 shapes (16 tests), and design corners (2 tests). **Real-data backward-compat against v34**: 484 cells and 71 nodes validate cleanly; 4 edge failures are the documented pre-firewall "constrains" carryover that already fails v15.3 — zero new errors introduced. File is 934 lines (~148 lines over v15.3's 786), formatted to match v15.3's hand-curated compact-when-possible style so git diff shows the additions, not formatting churn.
 
+- **Step 3 — validator extension.** `/scripts/validate.py` updated to point at `Map_v16_schema.json` and implement Rules 19–23. Four hard-error rules (19, 20, 21, 23) plus one warning-level rule (22). Each rule is its own function (`check_rule_19_forced_by_edge_resolution`, `check_rule_20_forced_by_applicable_subtype`, `check_rule_21_forced_by_host_classification`, `check_rule_22_axis_mapping_recommended`, `check_rule_23_axis_mapping_axis_resolution`) called from a single `run_validator_side_rules` entry point that returns `(errors, warnings)`. Lookup indices (`edges_by_id`, `fcs_by_id`, `cells_indexed`) are built once and reused. The pre-existing "legacy errors" partition for the 4 `constrains`-subtype carryovers is preserved unchanged. Output format adds a "Validator-side rule errors" section (fatal) and a "Validator-side warnings" section (informational). Exit code 1 fires on any new schema error, any rule-19/20/21/23 error, or excess legacy errors; warnings alone do NOT fail CI. **Real-data validation against v34**: 0 new schema errors, 0 rule errors, **5 Rule 22 warnings** on the five ADE-clique established bijection / categorically-equivalent edges queued for Step 5 (`edge-xc-mckay-subgroups-lie`, `edge-xc-gabriel-quivers-lie`, `edge-xc-ciz-modular-lie`, `edge-xc-bkr-duval-quivers`, `edge-xc-mckay-quiver-subgroups-quivers`). Exit 0, CI passes. **Negative smoke tests pass**: constructive_status forcing without forced_by fails at JSON Schema §5.1; non-existent edge_id fails Rule 19; specializes-subtype forcing edge fails Rule 20; host-classification mismatch fails Rule 21; misspelled from_axis fails Rule 23. Validator file grew from 105 lines to 363, all additions; the v15.3-era main loop and legacy-partition logic are byte-identical to before.
+
 ### What's queued (live)
 
-- **Step 3 — validator extension.** `/scripts/validate.py` needs to point at `Map_v16_schema.json` (currently points at `Map_v15_3_schema.json`) and implement Rules 19–23. The sketch in §"Step 3 sketch" below has the specifics.
 - **Step 4 — Bucket 2 + Bucket 4 backfill.** Backfill `constructive_status` across all 484 cells using `realized` for cells with `realized_examples` non-empty or confirmed predictions, and either `indeterminate` or field-absent for cells with neither (equivalent under the spec). Mechanical authoring; one PR.
 - **Step 5 — ADE-clique `axis_mapping` decoration.** Substantive authoring sweep over the five ADE-connected classifications (`modular-tensor-categories`, `ade-lie-algebras`, `ade-modular-invariants`, `ade-quivers`, `ade-du-val`). The highest-leverage Phase A authoring per the spec §1 and the goal doc §5.
 - **Step 6 — Bucket 3 backfill.** SU(5)-GUT cells (X/Y bosons, monopoles, proton-decay channels) get `constructive_status: conjectured-by-pattern` plus `forced_by` referring to the SM↔SU(5) cross-classification edge. Smaller-scale than Step 5; one PR.
@@ -68,6 +69,8 @@ Decisions that are NOT recoverable from the spec doc alone — captured here so 
 - **Schema-level `additionalProperties: false` on cells preserved.** New v16 fields are declared explicitly; the strictness stays. Future Phase B/C fields on cells will need explicit declaration too — they cannot rely on `additionalProperties: true`.
 - **The v15.3 → v16 transition is a one-way ratchet.** Every v15.3-conforming data file is also v16-conforming because all Phase A fields are optional. Rollback to v15.3 would be a no-op (v15.3 is a strict subset of v16-conforming data). This pattern matches the v14 → v15 transition.
 
+- **The spec extension's Bucket 1 recommendation conflicts with Rule 20.** Surfaced during Step 3 implementation. The spec extension §7.2 (around line 290 of `MAP_v16_schema_spec_extension.md`) recommends Bucket 1 closure-constraint self-edges with `subtype: specializes` and `axis_mapping` describing the closure axis. But Rule 20 (spec §7 and Rule 20 text on line 264 of the same spec) excludes `specializes` from the forcing-subtype enum, and JSON Schema §5.3 forbids `axis_mapping` on `specializes` subtypes. Step 3 implements Rule 20 exactly as the sketch and Rule 20 text specify — `specializes` cannot force cells — so the Bucket 1 self-edges as currently sketched will fail validation. **Resolution path for Step 7 authoring**: most plausibly, the closure-constraint self-edges land with `subtype: derives-from` instead (which is in both the Rule 20 forcing set AND permits `axis_mapping`). Alternative paths: lift the Phase A `forced_by_entry.kind` enum to include `closure_constraint` (a Phase A+ schema bump, deferred per spec §9), or amend the spec extension §7.2 recommendation. Decision belongs to the Step 7 chat after looking at the actual 17 SM structurally-excluded cells.
+
 ### Worth-knowing about the v34 data
 
 - **The data file's `_meta._schema` field already said `"Map_v16_schema.json"`** before v16 existed. Labeling drift that predated the work. As of Step 2, the label finally matches reality. A future schema bump should expect to update this field too.
@@ -88,7 +91,9 @@ Decisions that are NOT recoverable from the spec doc alone — captured here so 
 
 ---
 
-## Step 3 sketch: validator extension
+## Step 3 sketch: validator extension *(completed — kept for reference)*
+
+> **Status:** Shipped. See the "Step 3" entry under Shipped milestones above for what actually landed. The sketch below is retained because it is the binding instruction for what Step 3 implemented, and because the smoke-test plan it describes is the regression-test recipe future schema work should follow.
 
 **File:** `/scripts/validate.py`
 
@@ -134,11 +139,15 @@ These carry forward from EXPLORER_HANDOFF.md but worth re-stating in context:
 
 ---
 
-## Lessons from Steps 0–2
+## Lessons from Steps 0–3
 
 - **The raw CDN negative-response cache is real.** During Step 2, `web_fetch` returned a 404 on `Map_v15_3_schema.json` even though the file was sitting in the repo. The github.com blob HTML fallback worked (handoff documents this in `EXPLORER_HANDOFF.md`). Current payload path in May 2026: `data["payload"]["codeViewBlobLayoutRoute.StyledBlob"]["rawLines"]`. Probe the structure with a small inspector before assuming the path — GitHub web-app refactors keep the data accessible but rename the route.
 
 - **The v34 dataset's `_meta._schema` field already said `"Map_v16_schema.json"`** before v16 existed. Caught during Step 2 by inspecting the file during real-data validation. Was a labeling drift; resolved when v16 actually shipped. **Lesson for future schema bumps:** the `_meta._schema` field is the authoritative pointer in the data file, and it can drift ahead of the actual schema. Check it explicitly at the start of any schema-bump work.
+
+- **The Step 1 validator was pure JSON Schema; Step 3 added the first validator-side rules.** Inspecting the v15.3 `validate.py` revealed that despite the v15.3 schema declaring `_validator_side_rules` 4–14, the Python script did NOT implement them as separate checks — it only ran `Draft202012Validator` and partitioned the resulting errors into legacy vs new. Rules 4–14 are JSON-Schema-expressible (and are expressed in the schema's `allOf` blocks), so the partition-only approach validated them correctly via the schema itself. **Rule 19 onward changes that pattern:** rules 19, 20, 21, 23 cross-reference between cells and edges, which JSON Schema cannot do natively (no `$ref` from one part of the document to another), and Rule 22 is warning-level which JSON Schema has no concept of. Step 3 therefore added the first Python-side rule functions to the codebase. Future schema bumps that introduce more cross-reference rules should follow the same `run_validator_side_rules → (errors, warnings)` pattern; the `_build_indices` helper provides the lookup dicts.
+
+- **Warning-level rules need their own output channel and pass-through pass/fail logic.** Rule 22's warning level is intentionally distinct from CI-failing errors. The validator now reports three counts (legacy errors, new schema errors + rule errors, warnings) and the PASS line includes the warning count tail (e.g., "PASS — dataset validates cleanly (legacy errors within tolerance) (5 warnings)."). Phase B and Phase C will likely introduce more warning-level rules (e.g., `if_real_implies` consistency checks); the same channel handles them without further changes to the output skeleton.
 
 - **JSON Schema 2020-12 conditional `allOf` + `if`/`then` rules compose well.** All four Phase A conditional rules use this pattern; the 29-assertion test suite confirms it works as expected. The pattern is: `{ "if": { properties + required }, "then": { required or properties-with-false } }`. The `"properties": { "fieldname": false }` idiom is the JSON Schema 2020-12 way to forbid a field conditionally.
 
@@ -200,4 +209,4 @@ None of these block Phase A.
 
 ---
 
-*End of PREDICTIVE_LAYER_HANDOFF.md, v1. Update after every shipped step.*
+*End of PREDICTIVE_LAYER_HANDOFF.md, v2 (updated for Step 3 shipped). Update after every shipped step.*
