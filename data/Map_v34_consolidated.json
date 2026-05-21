@@ -23,10 +23,10 @@
       "MAP_v19_entry_hadrons.json",
       "MAP_v20_entry_fqh.json"
     ],
-    "_state": "71 nodes / 186 edges / 30 FCs / 97 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 5 ADE-clique cross-classification edges decorated with axis_mapping / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells under strict spec reading (Step 6 inspection finding — empty binding set; see v37 changelog)",
+    "_state": "71 nodes / 189 edges / 30 FCs / 100 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 17 cells annotated constructive_status=forbidden-by-pattern (Step 7 — SM rep-content Bucket 1) / 5 ADE-clique cross-classification edges decorated with axis_mapping / 3 closure-constraint self-edges on sm-rep-content with axis_mapping / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells (Step 6b deferred pending review)",
     "_note": "This is a CONSOLIDATED VIEW for convenience. Canonical authoritative source is the union of the source_files. When making additions, author a new file rather than editing this consolidated file.",
-    "version": "v37",
-    "previous_version": "v36",
+    "version": "v38",
+    "previous_version": "v37",
     "changelog": [
       "v22: Added phenomenon-FC topological-insulator-and-superconductor-materials (18 cells, 10 predictions, 4 cross-classification edges). First authoring step under post-2026-05-17 firewall methodology.",
       "v23: Added phenomenon-FC neutrino-sector-phenomenology (18 cells, 10 predictions, 3 cross-classification edges). Second authoring step under post-2026-05-17 firewall methodology.",
@@ -43,7 +43,8 @@
       "v34: Added phenomenon-FC macroscopic-classical-phenomena (16 cells, 10 predictions, 3 cross-classification edges including 1 phen-phen edge to EM-phenomena). Covers macroscopic/classical §6 sector — LAST UNCOVERED SECTOR. All §6 sectors now covered (12/12). Seventeenth explicit phenomenon-FC.",
       "v35: Predictive Layer Phase A Step 4 — backfilled constructive_status across all 484 cells per MAP_v16_schema_spec_extension.md §7.2 Bucket 2 / Bucket 4 rule. Promoted 376 cells with realized_examples non-empty to constructive_status=\"realized\". Remaining 108 cells (with realized_examples absent or empty list) left with constructive_status field-absent, equivalent to Bucket 4 indeterminate per spec §2 and §7.2. Decision rule for this step: a cell is \"realized\" iff its realized_examples array is present and non-empty. The spec's \"or a confirmed prediction\" clause is redundant on v34 — all 12 cells with inline confirmed predictions already qualify via realized_examples; FC-level predictive_yield is not cell-scoped. Bucket 1 (forbidden-by-pattern) and Bucket 3 (conjectured-by-pattern) are deferred to Steps 7 and 6 respectively and remain field-absent in this PR. Annotational change only — no cells, edges, or content prose added or removed. Validator passes: 0 errors, 5 Rule 22 warnings (unchanged from Step 3).",
       "v36: Predictive Layer Phase A Step 5 — ADE-clique axis_mapping decoration per MAP_v16_schema_spec_extension.md §4. Decorated 5 cross-classification edges in the ADE clique with axis_mapping arrays: edge-xc-mckay-subgroups-lie (McKay correspondence, McKay 1980), edge-xc-gabriel-quivers-lie (Gabriel theorem, Gabriel 1972), edge-xc-ciz-modular-lie (Cappelli-Itzykson-Zuber classification, CIZ 1987), edge-xc-bkr-duval-quivers (Bridgeland-King-Reid / Kapranov-Vasserot equivalence, BKR 2001 / KV 2000), edge-xc-mckay-quiver-subgroups-quivers (McKay quiver construction, McKay 1980). All five FCs share a single \"cartan-type\" axis ranging over [A-series, D-series, E_6, E_7, E_8]; each edge therefore receives exactly one axis_mapping entry with from_axis=to_axis=\"cartan-type\" and correspondence=\"identity\" (per handoff guidance: the substantive theorem name is recorded in the entry description and the edge citations; \"identity\" is the shape-of-mapping value that downstream tooling, including find_forced_cells, will read). One new citation appended: Kapranov-Vasserot 2000 on the BKR/Du Val edge; the other four edges already cite their canonical theorem of record. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per entry: each named theorem is published and load-bearing on math-content grounds alone, independent of any pattern observation in this dataset. No cells, edges, FCs, predictions, or content prose added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19-23), 0 Rule 22 warnings (down from 5).",
-      "v37: Predictive Layer Phase A Step 6 — Bucket 3 (conjectured-by-pattern) inspection of su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Outcome: empty binding set under strict spec reading + Rule 20 — zero cells annotated, no edges modified. Two blockers identified for maintainer review. (a) The SM↔SU(5) cross-classification edge edge-xc-sm-specializes-su5-gut has subtype \"specializes\", which Rule 20 explicitly excludes from the forcing-subtype set {bijection, categorically-equivalent, derives-from}; the spec §7.2 Bucket 3 recommendation (\"forced_by array referring to the SM↔SU(5) cross-classification edge\") therefore cannot be executed without either changing that edge's subtype to derives-from, adding a new derives-from SM↔SU(5) edge alongside the existing specializes edge, or admitting a Phase A+ schema mechanism (closure-constraint kind). This conflict mirrors the documented Bucket 1 / Step 7 conflict already recorded in PREDICTIVE_LAYER_HANDOFF.md. (b) Even if (a) were resolved, the binding set inside su5-gut-rep-content under strict spec reading is empty: the X/Y leptoquarks named as the canonical Bucket 3 population share cell-su5-24-NA with the realized SM gauge bosons (Step 4's strict reading classified that cell realized because realized_examples is non-empty); the five structurally-excluded cells (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) are Bucket 1 candidates not Bucket 3; the monopole and proton-decay populations the handoff named live in electromagnetic-phenomena-across-energy-regimes (cell-em-monopole-EM-empty, already realized via null-search realized_examples) and proton-decay-searches respectively, not in su5-gut-rep-content. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied: splitting cell-su5-24-NA into two cells (one realized SM-bosons, one conjectured-by-pattern X/Y-bosons) to fit the constructive_status field would be motivated by wanting the field to fit, not by physics-content grounds — rejected. No cells, edges, FCs, predictions, content prose, or annotations added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19–23 unchanged from Step 5), 0 Rule 22 warnings. Total cells with constructive_status=\"conjectured-by-pattern\" remains 0. The substantive Bucket 3 authoring decision is deferred to a future chat after Step 7's Bucket 1 resolution sets the precedent for handling the Rule 20 / specializes conflict."
+      "v37: Predictive Layer Phase A Step 6 — Bucket 3 (conjectured-by-pattern) inspection of su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Outcome: empty binding set under strict spec reading + Rule 20 — zero cells annotated, no edges modified. Two blockers identified for maintainer review. (a) The SM↔SU(5) cross-classification edge edge-xc-sm-specializes-su5-gut has subtype \"specializes\", which Rule 20 explicitly excludes from the forcing-subtype set {bijection, categorically-equivalent, derives-from}; the spec §7.2 Bucket 3 recommendation (\"forced_by array referring to the SM↔SU(5) cross-classification edge\") therefore cannot be executed without either changing that edge's subtype to derives-from, adding a new derives-from SM↔SU(5) edge alongside the existing specializes edge, or admitting a Phase A+ schema mechanism (closure-constraint kind). This conflict mirrors the documented Bucket 1 / Step 7 conflict already recorded in PREDICTIVE_LAYER_HANDOFF.md. (b) Even if (a) were resolved, the binding set inside su5-gut-rep-content under strict spec reading is empty: the X/Y leptoquarks named as the canonical Bucket 3 population share cell-su5-24-NA with the realized SM gauge bosons (Step 4's strict reading classified that cell realized because realized_examples is non-empty); the five structurally-excluded cells (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) are Bucket 1 candidates not Bucket 3; the monopole and proton-decay populations the handoff named live in electromagnetic-phenomena-across-energy-regimes (cell-em-monopole-EM-empty, already realized via null-search realized_examples) and proton-decay-searches respectively, not in su5-gut-rep-content. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied: splitting cell-su5-24-NA into two cells (one realized SM-bosons, one conjectured-by-pattern X/Y-bosons) to fit the constructive_status field would be motivated by wanting the field to fit, not by physics-content grounds — rejected. No cells, edges, FCs, predictions, content prose, or annotations added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19–23 unchanged from Step 5), 0 Rule 22 warnings. Total cells with constructive_status=\"conjectured-by-pattern\" remains 0. The substantive Bucket 3 authoring decision is deferred to a future chat after Step 7's Bucket 1 resolution sets the precedent for handling the Rule 20 / specializes conflict.",
+      "v38: Predictive Layer Phase A Step 7 — Bucket 1 (forbidden-by-pattern) backfill of the 17 SM structurally-excluded cells in sm-rep-content per MAP_v16_schema_spec_extension.md §7.2. Resolved the Rule 20 / 'specializes' conflict surfaced in Step 6 by Path 1 of the handoff's documented resolution paths: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set {bijection, categorically-equivalent, derives-from} AND permits axis_mapping per JSON Schema §5.3. The spec §7.2 'specializes' recommendation is superseded by this Path 1 resolution; the recommended subtype for Phase A closure-constraint self-edges is 'derives-from'. (a) Three closure-constraint self-edges added to sm-rep-content, each status=established with axis_mapping declaring the closure on the 'generation' axis: edge-xc-sm-fermion-generation-closure (forces 5 cells: fermion multiplets at generation=N/A); edge-xc-sm-gauge-generation-closure (forces 9 cells: gauge bosons at generation∈{1,2,3}); edge-xc-sm-higgs-generation-closure (forces 3 cells: Higgs at generation∈{1,2,3}). Total: 17 cells forced. Three edges rather than one preserves the three distinct physics mechanisms (fermion-generation replication, gauge-boson multiplicity from dim(G), minimal-Higgs-sector convention) as separately citable structural claims. (b) Each of the 17 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Firewall self-check (META_v21_1 §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion; the v38 annotations make this existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings (Rule 22 only fires on bijection/categorically-equivalent subtypes; the closure-constraint edges are derives-from and so do not trigger Rule 22). Diff shape: 17 cell annotations + 3 new edges + 4 _meta field updates + 1 new changelog entry. Cumulative cells annotated constructive_status: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Step 6b (Bucket 3 revisit on su5-gut-rep-content) inherits this Step 7 resolution: the SM↔SU(5) edge edge-xc-sm-specializes-su5-gut and the proton-decay edge edge-xc-pd-specializes-su5 can be either relabeled to subtype='derives-from' (single-edge path) or kept as 'specializes' with parallel 'derives-from' edges authored alongside (parallel-edge path); whichever lands, Step 6b must apply the resolution consistently and document the choice in its milestone entry."
     ]
   },
   "nodes": [
@@ -5634,7 +5635,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Fermion multiplets replicate over generations; the N/A generation does not apply."
+          "description": "Fermion multiplets replicate over generations; the N/A generation does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-fermion-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-uR-g1",
@@ -5695,7 +5703,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Fermion multiplet; N/A generation does not apply."
+          "description": "Fermion multiplet; N/A generation does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-fermion-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-dR-g1",
@@ -5748,7 +5763,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Fermion multiplet; N/A generation does not apply."
+          "description": "Fermion multiplet; N/A generation does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-fermion-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-LL-g1",
@@ -5804,7 +5826,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Fermion multiplet; N/A generation does not apply."
+          "description": "Fermion multiplet; N/A generation does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-fermion-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-eR-g1",
@@ -5849,7 +5878,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Fermion multiplet; N/A generation does not apply."
+          "description": "Fermion multiplet; N/A generation does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-fermion-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-gluons-g1",
@@ -5858,7 +5894,14 @@
             "generation": "1"
           },
           "content": "structurally-excluded",
-          "description": "Gauge bosons do not replicate over fermion generations; this is a positive structural claim of the SM. The gluon multiplicity is fixed by dim SU(3)_c = 8, not by generation count."
+          "description": "Gauge bosons do not replicate over fermion generations; this is a positive structural claim of the SM. The gluon multiplicity is fixed by dim SU(3)_c = 8, not by generation count.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-gluons-g2",
@@ -5867,7 +5910,14 @@
             "generation": "2"
           },
           "content": "structurally-excluded",
-          "description": "See cell-gluons-g1."
+          "description": "See cell-gluons-g1.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-gluons-g3",
@@ -5876,7 +5926,14 @@
             "generation": "3"
           },
           "content": "structurally-excluded",
-          "description": "See cell-gluons-g1."
+          "description": "See cell-gluons-g1.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-gluons-gNA",
@@ -5898,7 +5955,14 @@
             "generation": "1"
           },
           "content": "structurally-excluded",
-          "description": "Gauge bosons do not replicate over fermion generations."
+          "description": "Gauge bosons do not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-W-g2",
@@ -5907,7 +5971,14 @@
             "generation": "2"
           },
           "content": "structurally-excluded",
-          "description": "See cell-W-g1."
+          "description": "See cell-W-g1.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-W-g3",
@@ -5916,7 +5987,14 @@
             "generation": "3"
           },
           "content": "structurally-excluded",
-          "description": "See cell-W-g1."
+          "description": "See cell-W-g1.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-W-gNA",
@@ -5948,7 +6026,14 @@
             "generation": "1"
           },
           "content": "structurally-excluded",
-          "description": "Gauge bosons do not replicate over fermion generations."
+          "description": "Gauge bosons do not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-B-g2",
@@ -5957,7 +6042,14 @@
             "generation": "2"
           },
           "content": "structurally-excluded",
-          "description": "Gauge bosons do not replicate over fermion generations."
+          "description": "Gauge bosons do not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-B-g3",
@@ -5966,7 +6058,14 @@
             "generation": "3"
           },
           "content": "structurally-excluded",
-          "description": "Gauge bosons do not replicate over fermion generations."
+          "description": "Gauge bosons do not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-gauge-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-B-gNA",
@@ -5988,7 +6087,14 @@
             "generation": "1"
           },
           "content": "structurally-excluded",
-          "description": "The Higgs scalar does not replicate over fermion generations."
+          "description": "The Higgs scalar does not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-higgs-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-H-g2",
@@ -5997,7 +6103,14 @@
             "generation": "2"
           },
           "content": "structurally-excluded",
-          "description": "The Higgs scalar does not replicate over fermion generations."
+          "description": "The Higgs scalar does not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-higgs-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-H-g3",
@@ -6006,7 +6119,14 @@
             "generation": "3"
           },
           "content": "structurally-excluded",
-          "description": "The Higgs scalar does not replicate over fermion generations."
+          "description": "The Higgs scalar does not replicate over fermion generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-sm-higgs-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-H-gNA",
@@ -20714,6 +20834,69 @@
       "description": "Specific macroscopic-classical cells overlap with EM-phenomena cells via the electromagnetic emission of plasma processes. Specifically: (i) cell-mc-solar-flare-reconnection produces observable hard X-ray (RHESSI) + EUV (SDO) emissions — characterized in EM-phenomena AGN-and-Galactic-source cells; (ii) Parker Solar Probe measures in-situ plasma but the solar wind emits across the radio-to-UV spectrum. PHENOMENON↔PHENOMENON EDGE — eighth such FC-level edge in the dataset. Status `partial` — only specific plasma-EM cells participate.",
       "citations": [
         "Shibata, Magara 2011, Living Rev. Solar Phys. 8, 6"
+      ]
+    },
+    {
+      "id": "edge-xc-sm-fermion-generation-closure",
+      "type": "cross-classification",
+      "from": "sm-rep-content",
+      "to": "sm-rep-content",
+      "subtype": "derives-from",
+      "status": "established",
+      "description": "Closure constraint on the SM rep-content table. The five fermion multiplets (Q_L, u_R, d_R, L_L, e_R) replicate over exactly three generations; the 'N/A' generation value is structurally excluded for every fermion multiplet by construction of the SM matter content. The five (fermion-multiplet, generation=N/A) cells are forced empty by this closure. Self-edge on sm-rep-content with subtype 'derives-from': the forced cells' forbidden-by-pattern status is read off the SM's definition of the fermion sector as three generations of identical-gauge-rep copies.",
+      "citations": [
+        "Particle Data Group, Review of Particle Physics, latest revision (live document at pdg.lbl.gov)",
+        "Weinberg 1996, The Quantum Theory of Fields Vol. II, §21.3"
+      ],
+      "axis_mapping": [
+        {
+          "from_axis": "generation",
+          "to_axis": "generation",
+          "correspondence": "closure-constraint",
+          "description": "Closure operates along the generation axis. For particle-multiplet ∈ {Q_L, u_R, d_R, L_L, e_R}, the permitted generation values are exactly {1, 2, 3}; the value 'N/A' is structurally excluded."
+        }
+      ]
+    },
+    {
+      "id": "edge-xc-sm-gauge-generation-closure",
+      "type": "cross-classification",
+      "from": "sm-rep-content",
+      "to": "sm-rep-content",
+      "subtype": "derives-from",
+      "status": "established",
+      "description": "Closure constraint on the SM rep-content table. SM gauge bosons (eight gluons of SU(3)_c, three W's of SU(2)_L, one B of U(1)_Y) are connection 1-forms on the G_SM gauge bundle whose multiplicities are fixed by dim(G_SM) = 8 + 3 + 1 = 12. Gauge fields do not replicate over the fermion generation index; the generation values 1, 2, 3 are structurally excluded for gauge-boson multiplets. The nine (gauge-multiplet, generation∈{1,2,3}) cells are forced empty by this closure. Self-edge on sm-rep-content with subtype 'derives-from': the forced cells' forbidden-by-pattern status is read off the bundle-theoretic structure of gauge fields as connections on a principal G_SM bundle, independent of matter content.",
+      "citations": [
+        "Particle Data Group, Review of Particle Physics, latest revision (live document at pdg.lbl.gov)",
+        "Weinberg 1996, The Quantum Theory of Fields Vol. II, §21.3"
+      ],
+      "axis_mapping": [
+        {
+          "from_axis": "generation",
+          "to_axis": "generation",
+          "correspondence": "closure-constraint",
+          "description": "Closure operates along the generation axis. For particle-multiplet ∈ {gluons, W, B}, the permitted generation value is exactly {N/A}; the values 1, 2, 3 are structurally excluded."
+        }
+      ]
+    },
+    {
+      "id": "edge-xc-sm-higgs-generation-closure",
+      "type": "cross-classification",
+      "from": "sm-rep-content",
+      "to": "sm-rep-content",
+      "subtype": "derives-from",
+      "status": "established",
+      "description": "Closure constraint on the SM rep-content table. The minimal Standard Model contains a single scalar Higgs SU(2)_L doublet, not replicated over the fermion generation index; the generation values 1, 2, 3 are structurally excluded for the Higgs multiplet. The three (H, generation∈{1,2,3}) cells are forced empty by this closure. Self-edge on sm-rep-content with subtype 'derives-from': the forced cells' forbidden-by-pattern status is read off the SM's minimal Higgs-sector definition (one scalar doublet), as distinct from extended scalar sectors such as the two-Higgs-doublet model that lie beyond the SM.",
+      "citations": [
+        "Particle Data Group, Review of Particle Physics, latest revision (live document at pdg.lbl.gov)",
+        "Weinberg 1996, The Quantum Theory of Fields Vol. II, §21.3"
+      ],
+      "axis_mapping": [
+        {
+          "from_axis": "generation",
+          "to_axis": "generation",
+          "correspondence": "closure-constraint",
+          "description": "Closure operates along the generation axis. For particle-multiplet = H, the permitted generation value is exactly {N/A}; the values 1, 2, 3 are structurally excluded."
+        }
       ]
     }
   ],
