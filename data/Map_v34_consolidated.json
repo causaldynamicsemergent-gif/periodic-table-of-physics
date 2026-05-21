@@ -23,10 +23,10 @@
       "MAP_v19_entry_hadrons.json",
       "MAP_v20_entry_fqh.json"
     ],
-    "_state": "71 nodes / 189 edges / 30 FCs / 100 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 17 cells annotated constructive_status=forbidden-by-pattern (Step 7 — SM rep-content Bucket 1) / 5 ADE-clique cross-classification edges decorated with axis_mapping / 3 closure-constraint self-edges on sm-rep-content with axis_mapping / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells (Step 6b inspection complete — empty binding set across SU(5)-related FCs; 5 cells in su5-gut-rep-content surfaced as Bucket 1 candidates and queued for Step 7b)",
+    "_state": "71 nodes / 191 edges / 30 FCs / 102 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 22 cells annotated constructive_status=forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) / 5 ADE-clique cross-classification edges decorated with axis_mapping / 5 closure-constraint self-edges with axis_mapping (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b) / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells (Step 6b empty-binding-set finding)",
     "_note": "This is a CONSOLIDATED VIEW for convenience. Canonical authoritative source is the union of the source_files. When making additions, author a new file rather than editing this consolidated file.",
-    "version": "v39",
-    "previous_version": "v38",
+    "version": "v40",
+    "previous_version": "v39",
     "changelog": [
       "v22: Added phenomenon-FC topological-insulator-and-superconductor-materials (18 cells, 10 predictions, 4 cross-classification edges). First authoring step under post-2026-05-17 firewall methodology.",
       "v23: Added phenomenon-FC neutrino-sector-phenomenology (18 cells, 10 predictions, 3 cross-classification edges). Second authoring step under post-2026-05-17 firewall methodology.",
@@ -45,7 +45,8 @@
       "v36: Predictive Layer Phase A Step 5 — ADE-clique axis_mapping decoration per MAP_v16_schema_spec_extension.md §4. Decorated 5 cross-classification edges in the ADE clique with axis_mapping arrays: edge-xc-mckay-subgroups-lie (McKay correspondence, McKay 1980), edge-xc-gabriel-quivers-lie (Gabriel theorem, Gabriel 1972), edge-xc-ciz-modular-lie (Cappelli-Itzykson-Zuber classification, CIZ 1987), edge-xc-bkr-duval-quivers (Bridgeland-King-Reid / Kapranov-Vasserot equivalence, BKR 2001 / KV 2000), edge-xc-mckay-quiver-subgroups-quivers (McKay quiver construction, McKay 1980). All five FCs share a single \"cartan-type\" axis ranging over [A-series, D-series, E_6, E_7, E_8]; each edge therefore receives exactly one axis_mapping entry with from_axis=to_axis=\"cartan-type\" and correspondence=\"identity\" (per handoff guidance: the substantive theorem name is recorded in the entry description and the edge citations; \"identity\" is the shape-of-mapping value that downstream tooling, including find_forced_cells, will read). One new citation appended: Kapranov-Vasserot 2000 on the BKR/Du Val edge; the other four edges already cite their canonical theorem of record. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per entry: each named theorem is published and load-bearing on math-content grounds alone, independent of any pattern observation in this dataset. No cells, edges, FCs, predictions, or content prose added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19-23), 0 Rule 22 warnings (down from 5).",
       "v37: Predictive Layer Phase A Step 6 — Bucket 3 (conjectured-by-pattern) inspection of su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Outcome: empty binding set under strict spec reading + Rule 20 — zero cells annotated, no edges modified. Two blockers identified for maintainer review. (a) The SM↔SU(5) cross-classification edge edge-xc-sm-specializes-su5-gut has subtype \"specializes\", which Rule 20 explicitly excludes from the forcing-subtype set {bijection, categorically-equivalent, derives-from}; the spec §7.2 Bucket 3 recommendation (\"forced_by array referring to the SM↔SU(5) cross-classification edge\") therefore cannot be executed without either changing that edge's subtype to derives-from, adding a new derives-from SM↔SU(5) edge alongside the existing specializes edge, or admitting a Phase A+ schema mechanism (closure-constraint kind). This conflict mirrors the documented Bucket 1 / Step 7 conflict already recorded in PREDICTIVE_LAYER_HANDOFF.md. (b) Even if (a) were resolved, the binding set inside su5-gut-rep-content under strict spec reading is empty: the X/Y leptoquarks named as the canonical Bucket 3 population share cell-su5-24-NA with the realized SM gauge bosons (Step 4's strict reading classified that cell realized because realized_examples is non-empty); the five structurally-excluded cells (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) are Bucket 1 candidates not Bucket 3; the monopole and proton-decay populations the handoff named live in electromagnetic-phenomena-across-energy-regimes (cell-em-monopole-EM-empty, already realized via null-search realized_examples) and proton-decay-searches respectively, not in su5-gut-rep-content. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied: splitting cell-su5-24-NA into two cells (one realized SM-bosons, one conjectured-by-pattern X/Y-bosons) to fit the constructive_status field would be motivated by wanting the field to fit, not by physics-content grounds — rejected. No cells, edges, FCs, predictions, content prose, or annotations added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19–23 unchanged from Step 5), 0 Rule 22 warnings. Total cells with constructive_status=\"conjectured-by-pattern\" remains 0. The substantive Bucket 3 authoring decision is deferred to a future chat after Step 7's Bucket 1 resolution sets the precedent for handling the Rule 20 / specializes conflict.",
       "v38: Predictive Layer Phase A Step 7 — Bucket 1 (forbidden-by-pattern) backfill of the 17 SM structurally-excluded cells in sm-rep-content per MAP_v16_schema_spec_extension.md §7.2. Resolved the Rule 20 / 'specializes' conflict surfaced in Step 6 by Path 1 of the handoff's documented resolution paths: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set {bijection, categorically-equivalent, derives-from} AND permits axis_mapping per JSON Schema §5.3. The spec §7.2 'specializes' recommendation is superseded by this Path 1 resolution; the recommended subtype for Phase A closure-constraint self-edges is 'derives-from'. (a) Three closure-constraint self-edges added to sm-rep-content, each status=established with axis_mapping declaring the closure on the 'generation' axis: edge-xc-sm-fermion-generation-closure (forces 5 cells: fermion multiplets at generation=N/A); edge-xc-sm-gauge-generation-closure (forces 9 cells: gauge bosons at generation∈{1,2,3}); edge-xc-sm-higgs-generation-closure (forces 3 cells: Higgs at generation∈{1,2,3}). Total: 17 cells forced. Three edges rather than one preserves the three distinct physics mechanisms (fermion-generation replication, gauge-boson multiplicity from dim(G), minimal-Higgs-sector convention) as separately citable structural claims. (b) Each of the 17 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Firewall self-check (META_v21_1 §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion; the v38 annotations make this existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings (Rule 22 only fires on bijection/categorically-equivalent subtypes; the closure-constraint edges are derives-from and so do not trigger Rule 22). Diff shape: 17 cell annotations + 3 new edges + 4 _meta field updates + 1 new changelog entry. Cumulative cells annotated constructive_status: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Step 6b (Bucket 3 revisit on su5-gut-rep-content) inherits this Step 7 resolution: the SM↔SU(5) edge edge-xc-sm-specializes-su5-gut and the proton-decay edge edge-xc-pd-specializes-su5 can be either relabeled to subtype='derives-from' (single-edge path) or kept as 'specializes' with parallel 'derives-from' edges authored alongside (parallel-edge path); whichever lands, Step 6b must apply the resolution consistently and document the choice in its milestone entry.",
-      "v39: Predictive Layer Phase A Step 6b — Bucket 3 (conjectured-by-pattern) authoring revisit on su5-gut-rep-content and adjacent FCs (proton-decay-searches, electromagnetic-phenomena-across-energy-regimes) per MAP_v16_schema_spec_extension.md §7.2, with Step 7's Path 1 resolution mechanism in hand. Outcome: empty binding set across all named candidate FCs; no cell annotations changed, no edges modified, no edges relabeled. Three live decisions resolved. (1) The Rule 20 / 'specializes' conflict on edge-xc-sm-specializes-su5-gut and edge-xc-pd-specializes-su5: deferred — no edits to either edge. Both retain their existing subtype='specializes' and existing status (conjectured / established respectively). The Path 1 mechanism is in hand from Step 7 and applies to both edges identically when needed, but because Decisions (2) and (3) below yield zero forced cells, neither edge currently plays a forcing role; the choice between Path 1's relabel sub-path (rewrite existing specializes claim) and parallel-edge sub-path (add derives-from edge alongside) becomes well-defined only when a candidate cell actually requires forcing via one of these edges. Making the choice now would either rewrite or duplicate edge semantics for a no-op. (2) cell-su5-24-NA reclassification: conservative path. The cell remains constructive_status='realized' per Step 4. Step 6's firewall §2.5 rejection of splitting the cell into observed-SM-bosons and predicted-X/Y-leptoquarks halves still applies — the SU(5) 24 adjoint representation is one rep containing both populations, and the physics-content organization is by SU(5) rep, not by observed/unobserved status. Splitting to fit the constructive_status field would be schema-driven, not physics-driven authoring. (3) Application of Path 1 to qualifying cells: empty binding set. Per-FC inspection findings: (i) su5-gut-rep-content has 12 cells — 7 already realized (5̄ and 10 reps by generation: cell-su5-5bar-g1/g2/g3, cell-su5-10-g1/g2/g3, cell-su5-24-NA); the remaining 5 (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) all carry content prose 'structurally-excluded' with explicit closure reasons in their descriptions ('Matter rep — replicates over generations; N/A does not apply' / 'Gauge boson rep — does not replicate over generations'), placing them as Bucket 1 candidates analogous to Step 7's sm-rep-content cells, not Bucket 3. (ii) proton-decay-searches has 17 cells; Step 4 classified all 17 as realized because the experimental search activity itself is real (recorded null bounds, falsifications, future-program sensitivities) even when the predicted decay channels are not observed; no Bucket 3 candidates. (iii) electromagnetic-phenomena-across-energy-regimes / cell-em-monopole-EM-empty is realized via null-search realized_examples (MACRO, MoEDAL, IceCube, ANTARES, Auger); the GUT-monopole structural relationship is recorded in the cell's prose but the cell as a whole is observationally a realized-search; no Bucket 3 candidate. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per inspection: would I author any cell with constructive_status='conjectured-by-pattern' on physics-content grounds alone, given the current cell layout? No — the candidate cells either don't exist as separable cells (X/Y leptoquarks share cell-su5-24-NA with SM gauge bosons), are already realized as search activity (proton decay channels, monopole searches), or are structurally excluded for closure reasons (the 5 ABSENT SU(5) cells, which are Bucket 1 candidates not Bucket 3). No cells, edges, FCs, predictions, content prose, citations, or annotations added or modified. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings — identical to Step 7 output, confirming no regressions. Total cells with constructive_status='conjectured-by-pattern' remains 0. Cumulative constructive_status distribution unchanged from v38: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Diff shape: 2 lines removed (the v38 _state line and the version/previous_version pair, replaced by their bumped values) + 1 line appended (this v39 changelog entry) + 1 trailing-comma change on the v38 changelog entry — matches Step 6's no-op envelope. Bonus finding queued for follow-up: the 5 ABSENT cells in su5-gut-rep-content are Bucket 1 candidates analogous to Step 7's sm-rep-content work (matter reps replicate over generations; gauge boson rep does not replicate); a follow-up step ('Step 7b — Bucket 1 backfill on su5-gut-rep-content') is queued in PREDICTIVE_LAYER_HANDOFF.md, scoped to mirror Step 7's three closure-constraint self-edges on the analogous SU(5)-rep / generation axes."
+      "v39: Predictive Layer Phase A Step 6b — Bucket 3 (conjectured-by-pattern) authoring revisit on su5-gut-rep-content and adjacent FCs (proton-decay-searches, electromagnetic-phenomena-across-energy-regimes) per MAP_v16_schema_spec_extension.md §7.2, with Step 7's Path 1 resolution mechanism in hand. Outcome: empty binding set across all named candidate FCs; no cell annotations changed, no edges modified, no edges relabeled. Three live decisions resolved. (1) The Rule 20 / 'specializes' conflict on edge-xc-sm-specializes-su5-gut and edge-xc-pd-specializes-su5: deferred — no edits to either edge. Both retain their existing subtype='specializes' and existing status (conjectured / established respectively). The Path 1 mechanism is in hand from Step 7 and applies to both edges identically when needed, but because Decisions (2) and (3) below yield zero forced cells, neither edge currently plays a forcing role; the choice between Path 1's relabel sub-path (rewrite existing specializes claim) and parallel-edge sub-path (add derives-from edge alongside) becomes well-defined only when a candidate cell actually requires forcing via one of these edges. Making the choice now would either rewrite or duplicate edge semantics for a no-op. (2) cell-su5-24-NA reclassification: conservative path. The cell remains constructive_status='realized' per Step 4. Step 6's firewall §2.5 rejection of splitting the cell into observed-SM-bosons and predicted-X/Y-leptoquarks halves still applies — the SU(5) 24 adjoint representation is one rep containing both populations, and the physics-content organization is by SU(5) rep, not by observed/unobserved status. Splitting to fit the constructive_status field would be schema-driven, not physics-driven authoring. (3) Application of Path 1 to qualifying cells: empty binding set. Per-FC inspection findings: (i) su5-gut-rep-content has 12 cells — 7 already realized (5̄ and 10 reps by generation: cell-su5-5bar-g1/g2/g3, cell-su5-10-g1/g2/g3, cell-su5-24-NA); the remaining 5 (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) all carry content prose 'structurally-excluded' with explicit closure reasons in their descriptions ('Matter rep — replicates over generations; N/A does not apply' / 'Gauge boson rep — does not replicate over generations'), placing them as Bucket 1 candidates analogous to Step 7's sm-rep-content cells, not Bucket 3. (ii) proton-decay-searches has 17 cells; Step 4 classified all 17 as realized because the experimental search activity itself is real (recorded null bounds, falsifications, future-program sensitivities) even when the predicted decay channels are not observed; no Bucket 3 candidates. (iii) electromagnetic-phenomena-across-energy-regimes / cell-em-monopole-EM-empty is realized via null-search realized_examples (MACRO, MoEDAL, IceCube, ANTARES, Auger); the GUT-monopole structural relationship is recorded in the cell's prose but the cell as a whole is observationally a realized-search; no Bucket 3 candidate. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per inspection: would I author any cell with constructive_status='conjectured-by-pattern' on physics-content grounds alone, given the current cell layout? No — the candidate cells either don't exist as separable cells (X/Y leptoquarks share cell-su5-24-NA with SM gauge bosons), are already realized as search activity (proton decay channels, monopole searches), or are structurally excluded for closure reasons (the 5 ABSENT SU(5) cells, which are Bucket 1 candidates not Bucket 3). No cells, edges, FCs, predictions, content prose, citations, or annotations added or modified. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings — identical to Step 7 output, confirming no regressions. Total cells with constructive_status='conjectured-by-pattern' remains 0. Cumulative constructive_status distribution unchanged from v38: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Diff shape: 2 lines removed (the v38 _state line and the version/previous_version pair, replaced by their bumped values) + 1 line appended (this v39 changelog entry) + 1 trailing-comma change on the v38 changelog entry — matches Step 6's no-op envelope. Bonus finding queued for follow-up: the 5 ABSENT cells in su5-gut-rep-content are Bucket 1 candidates analogous to Step 7's sm-rep-content work (matter reps replicate over generations; gauge boson rep does not replicate); a follow-up step ('Step 7b — Bucket 1 backfill on su5-gut-rep-content') is queued in PREDICTIVE_LAYER_HANDOFF.md, scoped to mirror Step 7's three closure-constraint self-edges on the analogous SU(5)-rep / generation axes.",
+      "v40: Predictive Layer Phase A Step 7b — Bucket 1 (forbidden-by-pattern) backfill of the 5 SU(5) structurally-excluded cells in su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Direct mechanical reuse of Step 7's authoring pattern, applied to the FC surfaced by Step 6b's inspection. Path 1 mechanism inherited from Step 7: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set and permits axis_mapping per JSON Schema §5.3. (a) Two closure-constraint self-edges added to su5-gut-rep-content, each status=established with axis_mapping declaring closure on the 'generation' axis: edge-xc-su5-matter-generation-closure (forces 2 cells: cell-su5-5bar-NA, cell-su5-10-NA — matter reps 5̄ and 10 replicate over generations); edge-xc-su5-adjoint-generation-closure (forces 3 cells: cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3 — gauge-boson rep 24 (adjoint) does not replicate over generations, multiplicity fixed by dim(SU(5)) = 24). Total: 5 cells forced. Granularity decision: 2 edges rather than 3 (Step 7's count on sm-rep-content). The two distinct physics mechanisms in su5-gut-rep-content are (i) matter-rep replication over generations and (ii) gauge-boson-rep non-replication fixed by dim(SU(5)); there is no Higgs cell in su5-gut-rep-content (the SU(5) classification_axes are su5-rep ∈ {5̄, 10, 24 (adjoint)} and generation ∈ {1, 2, 3, N/A}; SU(5) Higgs sectors are non-minimal-SU(5) content and live outside this FC), so Step 7's third mechanism (minimal-Higgs-sector convention) has no analog here. (b) Each of the 5 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Citations on each edge: Georgi-Glashow 1974 (original SU(5) proposal, foundational for both matter-rep and gauge-rep assignments) + Langacker 1981 Phys. Rep. 72, 185 (canonical GUT review covering the structural claims systematically). Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion ('Matter rep — replicates over generations; N/A does not apply' for the two matter-N/A cells; 'Gauge boson rep — does not replicate over generations' for the three adjoint-with-generation cells); Step 7b annotations make the existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23 — Rule 21 satisfied automatically by the self-edge construction since from = to = su5-gut-rep-content), 0 Rule 22 warnings (the closure-constraint edges are derives-from, not bijection/categorically-equivalent, so Rule 22 does not fire). Cumulative cells annotated constructive_status: 376 realized + 22 forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) + 0 conjectured-by-pattern + 86 field-absent (Bucket 4 indeterminate) = 484 total. Cumulative closure-constraint self-edges: 5 (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b). Diff shape: 5 cell annotations (each adds 6 lines + trailing-comma flip on the previous description field) + 2 new edges (~20 lines each) + 4 _meta field updates + 1 new changelog entry. Step 7b is the direct analog of Step 7 on a different FC; the bucket-by-bucket migration is now complete on the two FCs (sm-rep-content, su5-gut-rep-content) whose cells carry explicit 'structurally-excluded' content prose. Future inspection-style steps may surface analogous Bucket 1 candidates on other FCs (per the Step 6b 'bucket-by-bucket sweep is FC-blind' lesson); those become future Step-Nb-style follow-ups."
     ]
   },
   "nodes": [
@@ -7451,7 +7452,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Matter rep — replicates over generations; N/A does not apply."
+          "description": "Matter rep — replicates over generations; N/A does not apply.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-su5-matter-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-su5-10-g1",
@@ -7497,7 +7505,14 @@
             "generation": "N/A"
           },
           "content": "structurally-excluded",
-          "description": "Matter rep — replicates over generations."
+          "description": "Matter rep — replicates over generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-su5-matter-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-su5-24-g1",
@@ -7506,7 +7521,14 @@
             "generation": "1"
           },
           "content": "structurally-excluded",
-          "description": "Gauge boson rep — does not replicate over generations."
+          "description": "Gauge boson rep — does not replicate over generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-su5-adjoint-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-su5-24-g2",
@@ -7515,7 +7537,14 @@
             "generation": "2"
           },
           "content": "structurally-excluded",
-          "description": "Gauge boson rep — does not replicate over generations."
+          "description": "Gauge boson rep — does not replicate over generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-su5-adjoint-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-su5-24-g3",
@@ -7524,7 +7553,14 @@
             "generation": "3"
           },
           "content": "structurally-excluded",
-          "description": "Gauge boson rep — does not replicate over generations."
+          "description": "Gauge boson rep — does not replicate over generations.",
+          "constructive_status": "forbidden-by-pattern",
+          "forced_by": [
+            {
+              "kind": "edge",
+              "edge_id": "edge-xc-su5-adjoint-generation-closure"
+            }
+          ]
         },
         {
           "cell_id": "cell-su5-24-NA",
@@ -20897,6 +20933,48 @@
           "to_axis": "generation",
           "correspondence": "closure-constraint",
           "description": "Closure operates along the generation axis. For particle-multiplet = H, the permitted generation value is exactly {N/A}; the values 1, 2, 3 are structurally excluded."
+        }
+      ]
+    },
+    {
+      "id": "edge-xc-su5-matter-generation-closure",
+      "type": "cross-classification",
+      "from": "su5-gut-rep-content",
+      "to": "su5-gut-rep-content",
+      "subtype": "derives-from",
+      "status": "established",
+      "description": "Closure constraint on the SU(5) rep-content table. The matter representations 5̄ and 10 of SU(5) house one Standard Model generation each: 5̄ ⊃ (d_R^c, L_L) and 10 ⊃ (Q_L, u_R^c, e_R^c). They replicate over the three SM generations under the SU(5) → SM breaking that preserves the SM matter content. The generation value 'N/A' is structurally excluded for matter reps. The two (matter-rep, generation=N/A) cells are forced empty by this closure. Self-edge on su5-gut-rep-content with subtype 'derives-from': the forced cells' forbidden-by-pattern status is read off SU(5)'s definition of the matter sector as three generations of (5̄+10), mirroring the analogous Step 7 closure on sm-rep-content where the SM matter multiplets Q_L, u_R, d_R, L_L, e_R replicate over the same three generations.",
+      "citations": [
+        "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438",
+        "Langacker 1981, Phys. Rep. 72, 185"
+      ],
+      "axis_mapping": [
+        {
+          "from_axis": "generation",
+          "to_axis": "generation",
+          "correspondence": "closure-constraint",
+          "description": "Closure operates along the generation axis. For su5-rep ∈ {5̄, 10}, the permitted generation values are exactly {1, 2, 3}; the value 'N/A' is structurally excluded."
+        }
+      ]
+    },
+    {
+      "id": "edge-xc-su5-adjoint-generation-closure",
+      "type": "cross-classification",
+      "from": "su5-gut-rep-content",
+      "to": "su5-gut-rep-content",
+      "subtype": "derives-from",
+      "status": "established",
+      "description": "Closure constraint on the SU(5) rep-content table. The 24 (adjoint) is the SU(5) gauge-boson representation; gauge fields are connection 1-forms on the SU(5) principal bundle whose multiplicity is fixed by dim(SU(5)) = 24, independent of the fermion-generation index. Under SU(5) → SM the 24 decomposes into the 12 SM gauge bosons (8 gluons + 3 W + 1 B) plus 12 X/Y leptoquarks that mediate proton decay; the generation values 1, 2, 3 are structurally excluded for the 24 because the gauge sector is not generation-indexed. The three (24, generation∈{1,2,3}) cells are forced empty by this closure. Self-edge on su5-gut-rep-content with subtype 'derives-from': the forced cells' forbidden-by-pattern status is read off the bundle-theoretic structure of SU(5) gauge fields as connections on a principal SU(5) bundle, mirroring the analogous Step 7 closure on sm-rep-content where gauge-boson multiplicity is fixed by dim(G_SM) = 12.",
+      "citations": [
+        "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438",
+        "Langacker 1981, Phys. Rep. 72, 185"
+      ],
+      "axis_mapping": [
+        {
+          "from_axis": "generation",
+          "to_axis": "generation",
+          "correspondence": "closure-constraint",
+          "description": "Closure operates along the generation axis. For su5-rep = 24 (adjoint), the permitted generation value is exactly {N/A}; the values 1, 2, 3 are structurally excluded."
         }
       ]
     }
