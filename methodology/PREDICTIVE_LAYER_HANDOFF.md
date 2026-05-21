@@ -48,7 +48,7 @@ Project files are auto-attached when you open a new chat in the Claude project. 
 
 1. Open a fresh chat in the project.
 2. Confirm the assistant can list `/mnt/project/` — should include `PREDICTIVE_LAYER_HANDOFF.md`, `MAP_v16_schema_spec_extension.md`, `PROJECT_GOAL_PREDICTIVE_LAYER.md`, plus the standing methodology docs (`PROJECT_GOAL.md`, `PROJECT_INFRASTRUCTURE.md`, `META_v21_1_methodology_firewall.md`, `EXPLORER_HANDOFF.md`).
-3. Tell it which step the work resumes at — e.g., *"Pick up at Step 3 of PREDICTIVE_LAYER_HANDOFF.md, the validator extension."*
+3. Tell it which step the work resumes at — e.g., *"Pick up at Step 5 of PREDICTIVE_LAYER_HANDOFF.md, the ADE-clique axis_mapping decoration."* The §"Step 5 sketch" below has the specifics.
 4. The chat fetches files from GitHub via `web_fetch` as needed. Raw URLs are in the "Quick reference" section at the bottom.
 
 The Map of Physics MCP tools are usually deferred behind `tool_search` in fresh chats. If the assistant doesn't see them, ask it to call `tool_search` with the keyword *"map of physics"*. **Important:** the connector is still serving v15.3 / v34 until Step 8. Any v16-specific queries (e.g., "find forced cells") have no tool yet — until Step 8, the v16 fields are queryable only by parsing the data file directly.
@@ -125,6 +125,57 @@ Decisions that are NOT recoverable from the spec doc alone — captured here so 
 A dev-only smoke-test script (matching the explorer's JSDOM pattern: not committed to repo, lives in `/home/claude/...` of the Step 3 chat) is the recommended sanity-check pattern. The CI itself runs the live `validate.py` against the live v34 dataset, which is the binding signal.
 
 **One subtlety the Step 3 chat should know about.** The current `_meta._schema` field on the v34 data says `"Map_v16_schema.json"` (labeling drift resolved by Step 2). If the validator currently reads this field and switches schemas based on it, point-at-v16 may already be implicit. The Step 3 chat should inspect the validator's schema-loading code before assuming.
+
+---
+
+## Step 5 sketch: ADE-clique `axis_mapping` decoration
+
+**File:** `data/Map_v34_consolidated.json`. In-place edit, same pattern as Step 4 — load with `json.load`, decorate the 5 target edges in `data['edges']`, write with `json.dumps(data, indent=2, ensure_ascii=False)` (byte-identical to the existing formatter, verified in Step 4).
+
+**Current state.** Five cross-classification edges between the ADE-connected formal classifications carry `status: established` plus `subtype ∈ {bijection, categorically-equivalent}` but no `axis_mapping`. The validator emits five Rule 22 warnings on them. The 5 edges (verbatim from the Step 3 validator output, in the order they appear in the data file):
+
+1. `edge-xc-mckay-subgroups-lie` — `ade-su2-subgroups → ade-lie-algebras`, subtype `bijection`. McKay correspondence: irreducible representations of finite subgroups of SU(2) ↔ vertices of the affine ADE Dynkin diagram (1979).
+2. `edge-xc-gabriel-quivers-lie` — `ade-quivers → ade-lie-algebras`, subtype `bijection`. Gabriel's theorem (1972): connected quivers of finite representation type are exactly the ADE Dynkin quivers; indecomposable representations are in bijection with positive roots of the corresponding Lie algebra.
+3. `edge-xc-ciz-modular-lie` — `ade-modular-invariants → ade-lie-algebras`, subtype `bijection`. Cappelli-Itzykson-Zuber (1987): modular invariant partition functions of the $\widehat{su}(2)_k$ WZW model are classified by ADE simply-laced Lie algebras with Coxeter number $k+2$.
+4. `edge-xc-bkr-duval-quivers` — `ade-du-val → ade-quivers`, subtype `categorically-equivalent`. The Bridgeland-King-Reid / Kapranov-Vasserot equivalence: $D^b(\text{Coh}(\widetilde{X}))$ for a crepant resolution $\widetilde{X}$ of an ADE Du Val singularity is equivalent to $D^b(\text{Rep}(Q))$ for the McKay quiver $Q$ of the corresponding finite subgroup.
+5. `edge-xc-mckay-quiver-subgroups-quivers` — `ade-su2-subgroups → ade-quivers`, subtype `bijection`. McKay quiver construction: the same McKay correspondence in quiver language — vertices labelled by irreducible representations of $\Gamma < SU(2)$, arrows from the tensor action of the defining representation.
+
+The headline numbers above (mathematician, year, theorem identification) are orienting cues, not authoring text. The Step 5 chat is responsible for verifying each claim against primary or canonical secondary references before naming it in a `correspondence` field, and for citing in `description` text only what those references actually say.
+
+**Authoring process per edge.** For each of the five edges:
+
+1. **Read the source and target FCs.** Use `Map of Physics:get_node` on the `from` and `to` IDs (the MCP server is still on v15.3 / v34, but `classification_axes` and `cells` are v15.3-vintage fields, so they work). Identify each FC's `classification_axes[].name` values — these are the only strings that may appear as `from_axis` / `to_axis` (Rule 23 enforces this).
+2. **Decide which axes correspond.** Not every axis must be mapped; map the axes for which the named correspondence actually establishes a pairing. If FC1 has axes [A, B] and FC2 has axes [A', C], and the correspondence pairs A ↔ A' but says nothing about B and C, the edge gets one `axis_mapping` entry (A → A'), not two.
+3. **Compose each entry.** Shape per spec §4:
+   ```json
+   {
+     "from_axis": "<axis name in source FC's classification_axes>",
+     "to_axis":   "<axis name in target FC's classification_axes>",
+     "correspondence": "<short name of the math theorem, e.g. 'McKay correspondence', 'Gabriel theorem', 'identity'>",
+     "description": "<one-line gloss, optional but recommended>"
+   }
+   ```
+   `correspondence` is free text; the spec calls it "the edge author's substantive claim, not validator-checked." Keep it short and citation-able. `"identity"` is a valid value when the two axes are literally the same enumeration.
+4. **Add or extend the `citations` array on the edge** with the canonical reference (McKay 1980, Gabriel 1972, Cappelli-Itzykson-Zuber 1987, Bridgeland-King-Reid 2001, etc.). Edges already have a `citations` array; append rather than replace. If an edge's existing citations already cover the theorem, no addition is needed.
+5. **Firewall self-check** (`META_v21_1_methodology_firewall.md` §2.5). Before writing each entry, ask: *"Would I author this axis mapping on math-content grounds alone, independent of any pattern observation in the existing dataset?"* For the five ADE correspondences this should be an unqualified yes — each is a published theorem with a name. The self-check is on the record, not just informal; the PR description should state that it was applied.
+
+**Post-Step-5 validation expectation.** Run `python3 scripts/validate.py` against the modified data. Expected output:
+- Legacy errors: 4 (unchanged — the `constrains`-subtype carryovers per `PROJECT_INFRASTRUCTURE.md` §2).
+- New schema errors: 0.
+- Validator-side rule errors (19, 20, 21, 23): 0. **Rule 23 is the binding check** — every `from_axis` and `to_axis` string must match an existing `classification_axes[].name` on the respective FC. If Rule 23 fires, the offending entry is misspelled; fix and re-run.
+- Validator-side warnings (Rule 22): **0** (down from 5). This is the headline signal that Step 5 shipped.
+
+**Subtleties the Step 5 chat should know about.**
+
+- **The MCP server's `find_status_distribution` and `get_classification` tools are the fast path for inspection.** Both work against the v15.3 / v34 surface and return `classification_axes` cleanly. The data file is 1.4 MB which exceeds the github.com blob fallback size limit, so MCP queries (or raw CDN curl) are the only reachable inspection paths from a fresh chat.
+- **`correspondence: "identity"` is meaningful and not a placeholder.** When the two FCs share a Cartan-type axis (e.g. both have an axis named `"cartan-type"` ranging over A/D/E series), the right value is `"identity"`, not `"same"` or empty string. The validator doesn't check this string, but downstream tooling (`find_forced_cells`, eventually) will.
+- **The five ADE FCs may not all carry an axis named `cartan-type`.** Some might use different naming (e.g. `simply-laced-type`, `dynkin-diagram`, etc.) for the same underlying enum. The Step 5 chat must read the actual axis names before composing the entries; do not assume.
+- **An edge's `axis_mapping` is `minItems: 1`.** An edge either has zero entries (field absent) or at least one. Writing an empty array would be a schema error.
+- **Per spec §4, only `bijection`, `categorically-equivalent`, and *structure-preserving* `derives-from` edges may carry `axis_mapping`.** Step 5's scope is the 5 edges that triggered Rule 22 — all `bijection` or `categorically-equivalent`. A future authoring pass may decorate structure-preserving `derives-from` edges (e.g. some ADE-clique edges might exist as `derives-from`); Step 5 does not.
+- **Diff shape will be much smaller than Step 4.** Approximately 5-15 `axis_mapping` arrays (5 edges, 1-3 entries per edge) plus possibly a few new citations. Probably 30-80 added lines total, all localized to the 5 target edges in `data['edges']`. The `_meta._state` field and changelog entry add a handful more. The `version` bump goes v35 → v36.
+- **The 4 legacy `constrains` errors continue to be tolerated.** Don't try to "fix" them by adding `constrains` to the subtype enum.
+
+**What Step 5 is NOT.** Step 5 does not add new cells, new edges, new FCs, new predictions, new citations beyond the canonical references for the five correspondences, and does not modify any existing cell content. If the authoring process surfaces a temptation to add cells (e.g., "the McKay correspondence implies there should be a cell here that doesn't exist yet"), that's a Bucket 3 (`conjectured-by-pattern`) authoring question for Step 6 or beyond, not for Step 5.
 
 ---
 
@@ -214,4 +265,4 @@ None of these block Phase A.
 
 ---
 
-*End of PREDICTIVE_LAYER_HANDOFF.md, v3 (updated for Step 4 shipped). Update after every shipped step.*
+*End of PREDICTIVE_LAYER_HANDOFF.md, v4 (Step 4 shipped; Step 5 sketch added). Update after every shipped step.*
