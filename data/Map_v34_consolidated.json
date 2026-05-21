@@ -1,7 +1,7 @@
 {
   "_meta": {
     "_file_role": "Consolidated v34 cumulative dataset (MVP-complete against PROJECT_GOAL_PHENOMENON_LAYER §3/§5/§6)",
-    "_assembled": "2026-05-17",
+    "_assembled": "2026-05-21",
     "_schema": "Map_v16_schema.json",
     "_source_files": [
       "Map_v12_data.json",
@@ -23,10 +23,10 @@
       "MAP_v19_entry_hadrons.json",
       "MAP_v20_entry_fqh.json"
     ],
-    "_state": "71 nodes / 186 edges / 30 FCs / 97 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover)",
+    "_state": "71 nodes / 186 edges / 30 FCs / 97 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized",
     "_note": "This is a CONSOLIDATED VIEW for convenience. Canonical authoritative source is the union of the source_files. When making additions, author a new file rather than editing this consolidated file.",
-    "version": "v34",
-    "previous_version": "v29",
+    "version": "v35",
+    "previous_version": "v34",
     "changelog": [
       "v22: Added phenomenon-FC topological-insulator-and-superconductor-materials (18 cells, 10 predictions, 4 cross-classification edges). First authoring step under post-2026-05-17 firewall methodology.",
       "v23: Added phenomenon-FC neutrino-sector-phenomenology (18 cells, 10 predictions, 3 cross-classification edges). Second authoring step under post-2026-05-17 firewall methodology.",
@@ -40,7 +40,8 @@
       "v31: Added phenomenon-FC N2-SCFT-spectrum-data (16 cells, 10 predictions, 3 cross-classification edges). Closes §5 higgs-coulomb-branches natural-pairing (last unpaired structural-FC). Fourteenth explicit phenomenon-FC. First FC in formal-HE-theory-phenomenology sector. Primary structural↔phenomenon edge: categorically-equivalent → higgs-coulomb-branches (partial). Borderline phenomenon-FC because 4D N=2 SCFTs not experimentally accessible — but data (computed scaling dimensions, central charges, Schur indices, BPS spectra) well-defined; §5 explicitly recognizes pairing.",
       "v32: Added phenomenon-FC SPT-phase-and-anomaly-matching-observations (16 cells, 10 predictions, 4 cross-classification edges including 4th phen-phen edge: specializes topological-insulator-and-superconductor-materials). Closes §5 freed-hopkins-cobordism natural-pairing — LAST UNPAIRED §5 PAIRING. ALL §5 NATURAL PAIRINGS NOW SATISFIED. Fifteenth explicit phenomenon-FC.",
       "v33: Added phenomenon-FC modified-gravity-alternatives (16 cells, 10 predictions including 5 falsified, 4 cross-classification edges including 3 phen-phen edges: specializes GW-catalog + compact-astro, derives-from DM-candidates). Covers BSM-non-GUT-non-DM §6 sector (previously uncovered). MAJOR falsification entry — 5 new falsifications (TeVeS, pure MOND clusters, DGP self-acceleration, Horndeski G_5, Brans-Dicke natural-parameter γ) — raises cumulative falsified count from 12 to 17.",
-      "v34: Added phenomenon-FC macroscopic-classical-phenomena (16 cells, 10 predictions, 3 cross-classification edges including 1 phen-phen edge to EM-phenomena). Covers macroscopic/classical §6 sector — LAST UNCOVERED SECTOR. All §6 sectors now covered (12/12). Seventeenth explicit phenomenon-FC."
+      "v34: Added phenomenon-FC macroscopic-classical-phenomena (16 cells, 10 predictions, 3 cross-classification edges including 1 phen-phen edge to EM-phenomena). Covers macroscopic/classical §6 sector — LAST UNCOVERED SECTOR. All §6 sectors now covered (12/12). Seventeenth explicit phenomenon-FC.",
+      "v35: Predictive Layer Phase A Step 4 — backfilled constructive_status across all 484 cells per MAP_v16_schema_spec_extension.md §7.2 Bucket 2 / Bucket 4 rule. Promoted 376 cells with realized_examples non-empty to constructive_status=\"realized\". Remaining 108 cells (with realized_examples absent or empty list) left with constructive_status field-absent, equivalent to Bucket 4 indeterminate per spec §2 and §7.2. Decision rule for this step: a cell is \"realized\" iff its realized_examples array is present and non-empty. The spec's \"or a confirmed prediction\" clause is redundant on v34 — all 12 cells with inline confirmed predictions already qualify via realized_examples; FC-level predictive_yield is not cell-scoped. Bucket 1 (forbidden-by-pattern) and Bucket 3 (conjectured-by-pattern) are deferred to Steps 7 and 6 respectively and remain field-absent in this PR. Annotational change only — no cells, edges, or content prose added or removed. Validator passes: 0 errors, 5 Rule 22 warnings (unchanged from Step 3)."
     ]
   },
   "nodes": [
@@ -5205,7 +5206,8 @@
           "realized_examples": [
             "integer quantum Hall effect (von Klitzing et al. 1980)",
             "anomalous quantum Hall effect in magnetically-doped (Bi,Sb)₂Te₃ thin films (Chang et al. 2013)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-A-d3",
@@ -5226,7 +5228,8 @@
           "description": "Class AIII (chiral unitary) in 1d: ℤ-classified by a winding number.",
           "realized_examples": [
             "Su-Schrieffer-Heeger (SSH) model (Su-Schrieffer-Heeger 1979) — theoretical paradigm; physical realizations in cold-atom and photonic lattices"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-AIII-d2",
@@ -5280,7 +5283,8 @@
           "description": "Class BDI (T² = +1, C² = +1, chiral) in 1d: ℤ-classified at the free-fermion level. The Kitaev chain (Kitaev 2001) is the canonical realization, with the winding number counting Majorana edge modes. Note: under interactions this classification collapses to ℤ₈ (Fidkowski-Kitaev 2010), a key example of the free-to-interacting reach-termination that motivates the open frontier.",
           "realized_examples": [
             "Kitaev p-wave wire (Kitaev 2001) — theoretical paradigm"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-BDI-d2",
@@ -5309,7 +5313,8 @@
           "realized_examples": [
             "semiconductor nanowire / superconductor heterostructures — disputed (see Mourik et al. 2012, Albrecht et al. 2016, Zhang et al. retraction 2021)",
             "vortex cores in topological-superconductor candidates (FeTe₀.₅₅Se₀.₄₅; Wang et al. 2018, also disputed)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-D-d2",
@@ -5321,7 +5326,8 @@
           "description": "Class D in 2d: ℤ-classified topological superconductors. Sr₂RuO₄ was a long-standing candidate; the chiral p-wave interpretation is now considered disfavored by polarized-neutron-scattering experiments (Pustogow et al. 2019).",
           "realized_examples": [
             "candidate p+ip topological superconductors (status revised)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-D-d3",
@@ -5358,7 +5364,8 @@
           "description": "Class DIII in 3d: ℤ-classified time-reversal-invariant topological superconductor. Superfluid ³He-B is the canonical realization.",
           "realized_examples": [
             "superfluid ³He-B (Volovik 2003; Qi-Hughes-Raghu-Zhang 2009)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-AII-d1",
@@ -5380,7 +5387,8 @@
             "HgTe/CdTe quantum wells (König et al. 2007)",
             "InAs/GaSb double quantum wells (Knez et al. 2011)",
             "monolayer WTe₂ (Wu et al. 2018)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-AII-d3",
@@ -5393,7 +5401,8 @@
           "realized_examples": [
             "Bi₁₋ₓSbₓ (Hsieh et al. 2008)",
             "Bi₂Se₃, Bi₂Te₃, Sb₂Te₃ family (Xia et al. 2009; Chen et al. 2009)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-CII-d1",
@@ -5587,7 +5596,8 @@
             "up quark",
             "down quark"
           ],
-          "description": "First-generation left-handed quark doublet. Components are weak-isospin partners; mass eigenstates after EWSB differ from gauge eigenstates via the CKM matrix."
+          "description": "First-generation left-handed quark doublet. Components are weak-isospin partners; mass eigenstates after EWSB differ from gauge eigenstates via the CKM matrix.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-QL-g2",
@@ -5599,7 +5609,8 @@
           "realized_examples": [
             "charm quark",
             "strange quark"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-QL-g3",
@@ -5611,7 +5622,8 @@
           "realized_examples": [
             "top quark",
             "bottom quark"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-QL-gNA",
@@ -5631,7 +5643,8 @@
           "content": "(3, 1, +2/3); right-handed up-quark",
           "realized_examples": [
             "up quark (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-uR-g2",
@@ -5650,7 +5663,8 @@
               "prediction_citation": "Glashow, Iliopoulos, Maiani 1970, Phys. Rev. D 2, 1285 (GIM mechanism)",
               "confirmation_citation": "Aubert et al. 1974, Phys. Rev. Lett. 33, 1404 (J/ψ at Brookhaven); Augustin et al. 1974, Phys. Rev. Lett. 33, 1406 (J/ψ at SLAC); confirmed as charm via subsequent charmonium spectroscopy"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-uR-g3",
@@ -5669,7 +5683,8 @@
               "prediction_citation": "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652 (three-generation structure for CP violation)",
               "confirmation_citation": "Abe et al. (CDF) 1995, Phys. Rev. Lett. 74, 2626; Abachi et al. (D0) 1995, Phys. Rev. Lett. 74, 2632 (top-quark observation at Fermilab)"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-uR-gNA",
@@ -5689,7 +5704,8 @@
           "content": "(3, 1, -1/3); right-handed down-quark",
           "realized_examples": [
             "down quark (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dR-g2",
@@ -5700,7 +5716,8 @@
           "content": "(3, 1, -1/3); right-handed strange-quark",
           "realized_examples": [
             "strange quark (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dR-g3",
@@ -5719,7 +5736,8 @@
               "prediction_citation": "Kobayashi, Maskawa 1973, Prog. Theor. Phys. 49, 652",
               "confirmation_citation": "Herb et al. 1977, Phys. Rev. Lett. 39, 252 (Upsilon discovery at Fermilab)"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dR-gNA",
@@ -5740,7 +5758,8 @@
           "realized_examples": [
             "electron neutrino",
             "electron"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-LL-g2",
@@ -5752,7 +5771,8 @@
           "realized_examples": [
             "muon neutrino",
             "muon"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-LL-g3",
@@ -5772,7 +5792,8 @@
               "prediction_citation": "Implied by Kobayashi-Maskawa 1973 plus the tau discovery (Perl et al. 1975, Phys. Rev. Lett. 35, 1489)",
               "confirmation_citation": "Kodama et al. (DONUT) 2001, Phys. Lett. B 504, 218 (direct tau-neutrino observation at Fermilab)"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-LL-gNA",
@@ -5792,7 +5813,8 @@
           "content": "(1, 1, -1); right-handed electron",
           "realized_examples": [
             "electron (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-eR-g2",
@@ -5803,7 +5825,8 @@
           "content": "(1, 1, -1); right-handed muon",
           "realized_examples": [
             "muon (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-eR-g3",
@@ -5814,7 +5837,8 @@
           "content": "(1, 1, -1); right-handed tau",
           "realized_examples": [
             "tau (right-handed component)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-eR-gNA",
@@ -5862,7 +5886,8 @@
           "realized_examples": [
             "gluons (eight color-octet vector bosons mediating the strong interaction)"
           ],
-          "description": "SU(3)_c gauge bosons. Massless; carry color and anti-color charges and self-interact. Asymptotically free (Gross-Wilczek 1973, Politzer 1973)."
+          "description": "SU(3)_c gauge bosons. Massless; carry color and anti-color charges and self-interact. Asymptotically free (Gross-Wilczek 1973, Politzer 1973).",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-W-g1",
@@ -5911,7 +5936,8 @@
               "prediction_citation": "Glashow 1961, Nucl. Phys. 22, 579; Weinberg 1967, Phys. Rev. Lett. 19, 1264; Salam 1968, in Elementary Particle Theory, Almqvist",
               "confirmation_citation": "Arnison et al. (UA1) 1983, Phys. Lett. B 122, 103 (W±); Bagnaia et al. (UA2) 1983, Phys. Lett. B 129, 130 (W±); Arnison et al. (UA1) 1983, Phys. Lett. B 126, 398 (Z); Banner et al. (UA2) 1983, Phys. Lett. B 129, 130 (Z); CERN p-pbar collider"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-B-g1",
@@ -5950,7 +5976,8 @@
           "realized_examples": [
             "B (mixes with W³ via Weinberg angle to give photon and Z after EWSB)"
           ],
-          "description": "U(1)_Y gauge boson. Does not appear as a mass eigenstate after EWSB; the physical mass eigenstates are the photon and Z, which are linear combinations of B and W³."
+          "description": "U(1)_Y gauge boson. Does not appear as a mass eigenstate after EWSB; the physical mass eigenstates are the photon and Z, which are linear combinations of B and W³.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-H-g1",
@@ -5997,7 +6024,8 @@
               "prediction_citation": "Englert, Brout 1964, Phys. Rev. Lett. 13, 321; Higgs 1964, Phys. Rev. Lett. 13, 508; Guralnik, Hagen, Kibble 1964, Phys. Rev. Lett. 13, 585",
               "confirmation_citation": "ATLAS Collaboration 2012, Phys. Lett. B 716, 1; CMS Collaboration 2012, Phys. Lett. B 716, 30 (Higgs observation at the LHC, 125 GeV)"
             }
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "closure_status": {
@@ -6299,7 +6327,8 @@
             "A_1 = sl(2,ℂ) ≃ su(2)_ℂ",
             "A_2 = sl(3,ℂ) — SU(3) flavor/color",
             "A_4 = sl(5,ℂ) — SU(5) GUT"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-lie-D",
@@ -6310,7 +6339,8 @@
           "realized_examples": [
             "D_4 = so(8) — triality, 8d spinors",
             "D_5 = so(10) — Fritzsch-Minkowski-Georgi GUT"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-lie-E6",
@@ -6320,7 +6350,8 @@
           "content": "E_6; rank 6; dim 78; fundamental 27-dimensional rep",
           "realized_examples": [
             "E_6 GUT (Gürsey-Ramond-Sikivie 1976)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-lie-E7",
@@ -6330,7 +6361,8 @@
           "content": "E_7; rank 7; dim 133; fundamental 56-dimensional rep",
           "realized_examples": [
             "N=8 supergravity in 4d (Cremmer-Julia 1979) — E_{7(7)} hidden symmetry"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-lie-E8",
@@ -6341,7 +6373,8 @@
           "realized_examples": [
             "E_8 × E_8 heterotic string",
             "E_8 in Ising-in-field (Zamolodchikov 1989; Coldea et al. 2010)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "closure_status": {
@@ -6760,7 +6793,8 @@
             "non-relativistic quantum mechanics (with Bargmann central extension)",
             "non-relativistic field theories (cold atoms, condensed matter at low temperature)"
           ],
-          "description": "Galilean group: symmetry group of Newtonian spacetime. The central extension (Bargmann 1954) is required for projective representations in QM."
+          "description": "Galilean group: symmetry group of Newtonian spacetime. The central extension (Bargmann 1954) is required for projective representations in QM.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-stsym-poincare",
@@ -6774,7 +6808,8 @@
             "the Standard Model (Poincaré-invariant at energies below the Planck scale)",
             "all of relativistic QFT in flat spacetime"
           ],
-          "description": "Poincaré group: symmetry group of Minkowski spacetime. Wigner's 1939 classification of unitary irreps by (mass², spin/helicity) defines the notion of 'particle' in relativistic QFT."
+          "description": "Poincaré group: symmetry group of Minkowski spacetime. Wigner's 1939 classification of unitary irreps by (mass², spin/helicity) defines the notion of 'particle' in relativistic QFT.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-stsym-conformal",
@@ -6787,7 +6822,8 @@
             "AdS/CFT (the CFT side)",
             "2D worldsheet of string theory (Virasoro constraints)"
           ],
-          "description": "Conformal group: extension of Poincaré by spatial dilations and special conformal transformations. The d = 2 case is qualitatively different — infinite-dimensional Virasoro algebra."
+          "description": "Conformal group: extension of Poincaré by spatial dilations and special conformal transformations. The d = 2 case is qualitatively different — infinite-dimensional Virasoro algebra.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-stsym-de-sitter",
@@ -6800,7 +6836,8 @@
             "dS-invariant inflation models",
             "the dS/CFT speculative correspondence"
           ],
-          "description": "de Sitter group: isometry group of de Sitter spacetime. The absence of a globally-defined positive-energy generator has major consequences for the swampland conjectures and dS thermodynamics (Gibbons-Hawking)."
+          "description": "de Sitter group: isometry group of de Sitter spacetime. The absence of a globally-defined positive-energy generator has major consequences for the swampland conjectures and dS thermodynamics (Gibbons-Hawking).",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-stsym-anti-de-sitter",
@@ -6813,7 +6850,8 @@
             "AdS/CFT-based holographic models",
             "exact non-perturbative QFT-like theories with negative cc"
           ],
-          "description": "Anti-de Sitter group. The group-level isomorphism SO(d-1,2) ≃ Conf(d-2,1) is the structural origin of AdS/CFT."
+          "description": "Anti-de Sitter group. The group-level isomorphism SO(d-1,2) ≃ Conf(d-2,1) is the structural origin of AdS/CFT.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-stsym-diff",
@@ -6824,7 +6862,8 @@
           "realized_examples": [
             "general relativity (all observationally-confirmed gravitational physics)"
           ],
-          "description": "General-coordinate (diffeomorphism) group. Infinite-dimensional; gauge of GR. Source of the 'problem of time' in canonical quantum gravity."
+          "description": "General-coordinate (diffeomorphism) group. Infinite-dimensional; gauge of GR. Source of the 'problem of time' in canonical quantum gravity.",
+          "constructive_status": "realized"
         }
       ],
       "closure_status": {
@@ -7050,7 +7089,8 @@
               "prediction_citation": "Wang, Senthil 2014, Phys. Rev. B 89, 195124; Freed, Hopkins 2016",
               "confirmation_citation": "Theoretical confirmation via multiple independent calculations; experimental confirmation is partial (the higher-Z_16 phases require specific interaction-induced phases not yet definitively isolated experimentally)."
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fh-Pinm-d0",
@@ -7086,7 +7126,8 @@
               "prediction_citation": "Fidkowski, Kitaev 2010, Phys. Rev. B 81, 134509 (first explicit demonstration); Kitaev 2011 talk on classifications; Freed-Hopkins 2016 (cobordism interpretation)",
               "confirmation_citation": "Theoretical confirmation via multiple independent calculations (Turner-Pollmann-Berg 2011; etc.)."
             }
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fh-Pinm-d3",
@@ -7130,7 +7171,8 @@
           "description": "Classified by the first Chern number; corresponds to the integer quantum Hall effect's TKNN invariant (Thouless-Kohmoto-Nightingale-den Nijs 1982).",
           "realized_examples": [
             "Integer quantum Hall effect (von Klitzing 1980; classified by Chern number)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fh-Spinc-d3",
@@ -7252,7 +7294,8 @@
           "realized_examples": [
             "first-generation lepton doublet and right-handed down quark in SM"
           ],
-          "description": "SU(5) embedding of the first-generation 5̄. Under SU(5) → SM breaking, decomposes into the SM (1, 2, -1/2) and (3̄, 1, +1/3) cells."
+          "description": "SU(5) embedding of the first-generation 5̄. Under SU(5) → SM breaking, decomposes into the SM (1, 2, -1/2) and (3̄, 1, +1/3) cells.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-5bar-g2",
@@ -7263,7 +7306,8 @@
           "content": "5̄ of second generation: contains L_L = (ν_μ, μ_L) and s_R^c",
           "realized_examples": [
             "second-generation lepton doublet and right-handed strange quark"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-5bar-g3",
@@ -7274,7 +7318,8 @@
           "content": "5̄ of third generation: contains L_L = (ν_τ, τ_L) and b_R^c",
           "realized_examples": [
             "third-generation lepton doublet and right-handed bottom quark"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-5bar-NA",
@@ -7295,7 +7340,8 @@
           "realized_examples": [
             "first-generation quark doublet, right-handed up-quark, right-handed charged lepton — all together in one SU(5) 10"
           ],
-          "description": "SU(5) embedding of the first-generation 10. Unifies quarks with charged-lepton chirality partner. The Δ(B-L) violating leptoquark interactions arise from this unification."
+          "description": "SU(5) embedding of the first-generation 10. Unifies quarks with charged-lepton chirality partner. The Δ(B-L) violating leptoquark interactions arise from this unification.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-10-g2",
@@ -7306,7 +7352,8 @@
           "content": "10 of second generation: contains Q_L = (c_L, s_L), c_R^c, and μ_R^c",
           "realized_examples": [
             "second-generation quark doublet, right-handed charm-quark, right-handed muon"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-10-g3",
@@ -7317,7 +7364,8 @@
           "content": "10 of third generation: contains Q_L = (t_L, b_L), t_R^c, and τ_R^c",
           "realized_examples": [
             "third-generation quark doublet, right-handed top-quark, right-handed tau"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-su5-10-NA",
@@ -7365,7 +7413,8 @@
           "realized_examples": [
             "The 12 SM gauge bosons are observed; the 12 X/Y leptoquarks are predicted at mass ~M_GUT and are not directly observed (their indirect signature would be proton decay)."
           ],
-          "description": "SU(5) gauge content. The 12 SM bosons + 12 X/Y leptoquarks unify into the adjoint 24. Proton decay (e.g., p → e^+ π^0) is mediated by tree-level X/Y exchange."
+          "description": "SU(5) gauge content. The 12 SM bosons + 12 X/Y leptoquarks unify into the adjoint 24. Proton decay (e.g., p → e^+ π^0) is mediated by tree-level X/Y exchange.",
+          "constructive_status": "realized"
         }
       ],
       "closure_status": {
@@ -7499,7 +7548,8 @@
           "citations": [
             "Belavin, Polyakov, Zamolodchikov 1984, Nucl. Phys. B 241, 333",
             "Friedan, Qiu, Shenker 1984, Phys. Rev. Lett. 52, 1575"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d2-free-scalar",
@@ -7512,7 +7562,8 @@
             "2D classical XY model at zero magnetic field, low-T Kosterlitz-Thouless phase",
             "free chiral boson (one chirality, c = 1/2 per chirality after pairing)"
           ],
-          "description": "The c = 1 line is the upper edge of the unitary minimal-model series and the most-studied non-minimal-model 2D CFT. The bootstrap recovers the entire family via U(1) current algebra plus T-duality."
+          "description": "The c = 1 line is the upper edge of the unitary minimal-model series and the most-studied non-minimal-model 2D CFT. The bootstrap recovers the entire family via U(1) current algebra plus T-duality.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d2-ising",
@@ -7525,7 +7576,8 @@
             "Lattice Ising model at the Onsager critical temperature",
             "Free Majorana fermion in 2D (equivalent by Jordan-Wigner)"
           ],
-          "description": "The 2D Ising cell coincides with the m=3 entry of cell-bs-d2-virasoro and is recorded separately to make the d=2 entry of the Ising-Z2 column explicit. The bootstrap-recovered exponents Δ_σ = 1/8 and Δ_ε = 1 match Onsager (1944) exactly because the algebra closes."
+          "description": "The 2D Ising cell coincides with the m=3 entry of cell-bs-d2-virasoro and is recorded separately to make the d=2 entry of the Ising-Z2 column explicit. The bootstrap-recovered exponents Δ_σ = 1/8 and Δ_ε = 1 match Onsager (1944) exactly because the algebra closes.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-ising",
@@ -7549,7 +7601,8 @@
               "cell_ref": "cell-bs-d3-ising"
             }
           ],
-          "description": "The flagship modern-bootstrap result. After El-Showk et al. (2012) identified the kink in the (Δ_σ, Δ_ε) exclusion plot as the 3D Ising point, Kos-Poland-Simmons-Duffin-Vichi (2014, 2016) sharpened the bound by imposing two-correlator crossing on (σσσσ, σσεε, εεεε) plus the assumption of a single relevant Z_2-odd scalar. The resulting 'island' confines (Δ_σ, Δ_ε) to a region of width ~10⁻⁵ in each direction. The values agree with Monte Carlo to six significant figures and exceed Monte Carlo precision for the central charge ratio."
+          "description": "The flagship modern-bootstrap result. After El-Showk et al. (2012) identified the kink in the (Δ_σ, Δ_ε) exclusion plot as the 3D Ising point, Kos-Poland-Simmons-Duffin-Vichi (2014, 2016) sharpened the bound by imposing two-correlator crossing on (σσσσ, σσεε, εεεε) plus the assumption of a single relevant Z_2-odd scalar. The resulting 'island' confines (Δ_σ, Δ_ε) to a region of width ~10⁻⁵ in each direction. The values agree with Monte Carlo to six significant figures and exceed Monte Carlo precision for the central charge ratio.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-ON-vector",
@@ -7573,7 +7626,8 @@
               "description": "The 'boson puzzle' or 'lambda-transition puzzle': bootstrap (2020) and Monte Carlo (Hasenbusch et al.) agree on α ≈ -0.0151 for the specific-heat exponent, but the space-station measurement gives -0.0127(3). The discrepancy is many sigma and unresolved as of 2026. Either the experiment has uncontrolled systematics or the theoretical universality class is wrong (e.g. gravitational corrections in the experiment break the O(2) symmetry pattern)."
             }
           ],
-          "description": "Multiple-correlator bootstrap on (φ_i φ_j, S, T) operators where S is the singlet and T the symmetric-traceless rep of O(N). Kos-Poland-Simmons-Duffin-Vichi (2015) localized islands for N=2,3,4. The O(2)/XY case is the 3D bootstrap's most famous unresolved prediction (the lambda-transition tension)."
+          "description": "Multiple-correlator bootstrap on (φ_i φ_j, S, T) operators where S is the singlet and T the symmetric-traceless rep of O(N). Kos-Poland-Simmons-Duffin-Vichi (2015) localized islands for N=2,3,4. The O(2)/XY case is the 3D bootstrap's most famous unresolved prediction (the lambda-transition tension).",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-GNY",
@@ -7593,7 +7647,8 @@
               "prediction_citation": "Iliesiu, Kos, Poland, Pufu, Simmons-Duffin 2018, JHEP 03, 121"
             }
           ],
-          "description": "First systematic bootstrap of a CFT involving fermions in d > 2. Iliesiu et al. (2017, 2018) developed the necessary tensor structures and exclusion-region machinery. Quantum-critical points in 2D Dirac materials provide a target empirical setting; experimental confirmation of the bootstrap predictions is currently inaccessible because of the difficulty of tuning to the critical point."
+          "description": "First systematic bootstrap of a CFT involving fermions in d > 2. Iliesiu et al. (2017, 2018) developed the necessary tensor structures and exclusion-region machinery. Quantum-critical points in 2D Dirac materials provide a target empirical setting; experimental confirmation of the bootstrap predictions is currently inaccessible because of the difficulty of tuning to the critical point.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d4-N4-max",
@@ -7614,7 +7669,8 @@
               "confirmation_citation": "Cross-check with integrability (Beisert-Eden-Staudacher 2007 cusp anomalous dimension) — bootstrap window agrees within stated error"
             }
           ],
-          "description": "The 4D N=4 SYM bootstrap is the canonical superconformal bootstrap case. The protected sector (1/2-BPS operators) is fixed by chiral algebra; the unprotected sector is constrained by crossing on the stress-tensor multiplet four-point function. Predictions match integrability and weak-coupling expansions in their respective regimes."
+          "description": "The 4D N=4 SYM bootstrap is the canonical superconformal bootstrap case. The protected sector (1/2-BPS operators) is fixed by chiral algebra; the unprotected sector is constrained by crossing on the stress-tensor multiplet four-point function. Predictions match integrability and weak-coupling expansions in their respective regimes.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d4-N2-SCFT",
@@ -7628,7 +7684,8 @@
             "N=2 SU(2) SYM with N_f = 4 fundamental hypermultiplets (the conformal point on the Seiberg-Witten plane)",
             "Class-S theories of type A_n (Gaiotto 2009)"
           ],
-          "description": "The 2015 result that 4D N=2 SCFTs have a protected 2D chiral algebra sector embedded in their operator content is one of the most consequential exact results from bootstrap-adjacent methods. The 4D bootstrap can be combined with chiral-algebra constraints to bound 4D conformal anomalies (a, c) and Coulomb-branch dimensions."
+          "description": "The 2015 result that 4D N=2 SCFTs have a protected 2D chiral algebra sector embedded in their operator content is one of the most consequential exact results from bootstrap-adjacent methods. The 4D bootstrap can be combined with chiral-algebra constraints to bound 4D conformal anomalies (a, c) and Coulomb-branch dimensions.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d4-free-scalar",
@@ -7640,7 +7697,8 @@
           "realized_examples": [
             "Free massless scalar field theory in 4D (upper critical dimension of φ⁴ theory)"
           ],
-          "description": "The Gaussian fixed point is the bootstrap's trivial-but-foundational reference. All bounds on interacting 4D CFTs are stated relative to this point; many bootstrap exclusion regions have the Gaussian point on their boundary."
+          "description": "The Gaussian fixed point is the bootstrap's trivial-but-foundational reference. All bounds on interacting 4D CFTs are stated relative to this point; many bootstrap exclusion regions have the Gaussian point on their boundary.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d4-ising",
@@ -7715,7 +7773,8 @@
               "confirmation_citation": "Chester, Pufu, Yacoby 2018 (large-N AdS/CFT cross-check); Lemos-Liendo-Meneghelli-Mitev 2017 (chiral algebra cross-check via W-algebras)"
             }
           ],
-          "description": "The (2,0) SCFT in 6D is one of the highest-dimensional unitary interacting CFTs allowed by Nahm's theorem. It has no known Lagrangian; the bootstrap and the 2D chiral-algebra approach (which for (2,0) gives W-algebras) are the principal non-perturbative tools. The bootstrap matches M-theory predictions for the M5-brane theory at large N."
+          "description": "The (2,0) SCFT in 6D is one of the highest-dimensional unitary interacting CFTs allowed by Nahm's theorem. It has no known Lagrangian; the bootstrap and the 2D chiral-algebra approach (which for (2,0) gives W-algebras) are the principal non-perturbative tools. The bootstrap matches M-theory predictions for the M5-brane theory at large N.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-N8-max",
@@ -7728,7 +7787,8 @@
             "ABJM theory at Chern-Simons level k=1 (the 3D N=8 maximally-supersymmetric CFT; Aharony-Bergman-Jafferis-Maldacena 2008)",
             "M2-brane worldvolume theory at large N (dual to AdS_4 × S^7)"
           ],
-          "description": "3D N=8 is the maximal SCFT in d=3 (Nahm). The bootstrap programme (Chester-Lee-Pufu-Yacoby 2014; Agmon-Chester-Pufu 2017) bounds the spectrum and reproduces the ABJM predictions at small N. The cell extends max-SCFT to its 3D incarnation."
+          "description": "3D N=8 is the maximal SCFT in d=3 (Nahm). The bootstrap programme (Chester-Lee-Pufu-Yacoby 2014; Agmon-Chester-Pufu 2017) bounds the spectrum and reproduces the ABJM predictions at small N. The cell extends max-SCFT to its 3D incarnation.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-virasoro",
@@ -7779,7 +7839,8 @@
               "confirmation_citation": "Bootstrap-recovered with tighter window in Komargodski-Zhiboedov 2012, JHEP 11, 140 (causality argument); Faller-Sarkar-Verma 2017 (stress-tensor bootstrap)"
             }
           ],
-          "description": "Stress-tensor four-point function bootstrap with no global symmetry assumed. Yields universal constraints on the central charges (a, c in 4D; analogous in other d) and on Hofman-Maldacena conformal-collider observables. These bounds apply to every unitary CFT in the dimension, providing the most universal bootstrap results."
+          "description": "Stress-tensor four-point function bootstrap with no global symmetry assumed. Yields universal constraints on the central charges (a, c in 4D; analogous in other d) and on Hofman-Maldacena conformal-collider observables. These bounds apply to every unitary CFT in the dimension, providing the most universal bootstrap results.",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d3-free-scalar",
@@ -7792,7 +7853,8 @@
             "3D free Klein-Gordon field (massless limit of 3D scalar field theory)",
             "Mean-field theory of phase transitions above the upper critical dimension (for d>4 in Ising-class)"
           ],
-          "description": "Free-scalar fixed points exist in every d. In d=3 the Gaussian fixed point is the universality class of mean-field theory above the upper critical dimension; it is the limit point of the O(N)-vector family at N → ∞ (cell-bs-d3-ON-vector)."
+          "description": "Free-scalar fixed points exist in every d. In d=3 the Gaussian fixed point is the universality class of mean-field theory above the upper critical dimension; it is the limit point of the O(N)-vector family at N → ∞ (cell-bs-d3-ON-vector).",
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-bs-d-range-free-scalar",
@@ -7961,7 +8023,8 @@
           "description": "The unique rank-1 MTC. Every fusion category has the trivial MTC as a sub-category. Realized physically as the gapped trivial phase (a product state) and as the boundary of a (2+1)D trivial phase. All other rank-1 cells are structurally-excluded by the axes' design (rank=1 forces only the vacuum family).",
           "citations": [
             "Etingof, Gelaki, Nikshych, Ostrik 2015, AMS Tensor Categories monograph"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r2-semion",
@@ -7979,7 +8042,8 @@
           "citations": [
             "Kalmeyer, Laughlin 1987, Phys. Rev. Lett. 59, 2095",
             "Wen 1991, Phys. Rev. B 44, 2664 (Z_2 and U(1) Chern-Simons theories)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r2-fibonacci",
@@ -7997,7 +8061,8 @@
           "citations": [
             "Freedman, Larsen, Wang 2002, Commun. Math. Phys. 227, 605 (universal quantum computation by topological methods)",
             "Trebst, Troyer, Wang, Ludwig 2008, Prog. Theor. Phys. Suppl. 176, 384 (review of Fibonacci-anyon computation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r2-lee-yang",
@@ -8014,7 +8079,8 @@
           "citations": [
             "Cardy 1985, Phys. Rev. Lett. 54, 1354 (Lee-Yang edge)",
             "Mussardo 1992, Phys. Rep. 218, 215 (review of non-unitary CFT)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r3-ising",
@@ -8033,7 +8099,8 @@
             "Moore, Read 1991, Nucl. Phys. B 360, 362 (Pfaffian state for ν=5/2)",
             "Kitaev 2006, Ann. Phys. 321, 2 (anyons in an exactly solved model — honeycomb)",
             "Nayak, Simon, Stern, Freedman, Das Sarma 2008, Rev. Mod. Phys. 80, 1083 (review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r3-su2-2",
@@ -8050,7 +8117,8 @@
           "citations": [
             "Knizhnik, Zamolodchikov 1984, Nucl. Phys. B 247, 83 (WZW)",
             "Witten 1989, Commun. Math. Phys. 121, 351 (Chern-Simons gauge theory and Jones polynomial)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r3-tri-Ising",
@@ -8066,7 +8134,8 @@
           "description": "The tricritical Ising MTC is another rank-3 unitary MTC distinct from both Ising and SU(2)_2. Its primaries arise from the M(4,5) Virasoro minimal model. Demonstrates the rich rank-3 unitary MTC zoo classified by Rowell-Stong-Wang.",
           "citations": [
             "Friedan, Qiu, Shenker 1984, Phys. Rev. Lett. 52, 1575 (unitary minimal models)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r4-toric-code",
@@ -8085,7 +8154,8 @@
             "Kitaev 2003, Ann. Phys. 303, 2 (fault-tolerant quantum computation by anyons)",
             "Satzinger et al. (Google Quantum AI) 2021, Science 374, 1237 (realizing topologically ordered states on a quantum processor)",
             "Banerjee et al. 2017, Nat. Mater. 17, 4 (Z_2 spin liquid in α-RuCl_3 — contested)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r4-three-fermion",
@@ -8102,7 +8172,8 @@
           "citations": [
             "Kitaev 2006, Ann. Phys. 321, 2 (3F in the honeycomb model spectrum)",
             "Lan, Kong, Wen 2017, Phys. Rev. B 95, 235140 (classification of (2+1)D topological orders)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r4-doubled-Ising",
@@ -8119,7 +8190,8 @@
           "citations": [
             "Levin, Wen 2005, Phys. Rev. B 71, 045110 (string-net condensation)",
             "Kong, Wen 2014, arXiv:1405.5858 (braided fusion categories of topological order)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r4-su2-3",
@@ -8137,7 +8209,8 @@
           "citations": [
             "Read, Rezayi 1999, Phys. Rev. B 59, 8084 (parafermion FQHE states)",
             "Xia et al. 2004, Phys. Rev. Lett. 93, 176809 (observation of ν=12/5 plateau)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r5-su2-4",
@@ -8153,7 +8226,8 @@
           "description": "SU(2)_k MTC at k=4. Contains the doubled-Ising and three-fermion MTCs as truncations. Continues the SU(2)_k family pattern (rank-(k+1), central-charge 3k/(k+2)) into rank 5 and beyond.",
           "citations": [
             "Bakalov, Kirillov 2001, Lectures on Tensor Categories and Modular Functor (AMS) — SU(2)_k tables"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r5-fib-square",
@@ -8170,7 +8244,8 @@
           "citations": [
             "Levin, Wen 2005, Phys. Rev. B 71, 045110 (string-net construction)",
             "Bonderson 2007, PhD thesis Caltech (non-abelian anyons and topological quantum computation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r6-su2-5",
@@ -8185,7 +8260,8 @@
           "description": "Continuation of the SU(2)_k family at k=5. Higher-rank SU(2)_k MTCs have not been the focus of experimental searches but are well-classified mathematically. Notable: SU(2)_k for k → ∞ approaches the irrational free-boson regime, which exits MTC into general bootstrap-allowed CFT territory.",
           "citations": [
             "Kac 1990, Infinite-Dimensional Lie Algebras (Cambridge)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mtc-r1-other",
@@ -8384,7 +8460,8 @@
           "citations": [
             "Dijkgraaf, Witten 1990, Commun. Math. Phys. 129, 393",
             "Gaiotto, Kulp 2021, JHEP 02, 132 (orbifold groupoids)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d2-p0-tambara-yamagami",
@@ -8404,7 +8481,8 @@
             "Tambara, Yamagami 1998, J. Algebra 209, 692",
             "Bhardwaj, Tachikawa 2017, JHEP 03, 189 (finite symmetries and category theory)",
             "Aasen, Mong, Fendley 2016, J. Phys. A 49, 354001 (Kramers-Wannier as topological defect)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d2-p0-categorical",
@@ -8424,7 +8502,8 @@
             "Petkova, Zuber 2001, Phys. Lett. B 504, 157",
             "Frohlich, Fuchs, Runkel, Schweigert 2007, Nucl. Phys. B 763, 354",
             "Chang, Lin, Shao, Wang, Yin 2019, JHEP 01, 026 (topological defect lines and renormalization group flows)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d3-p0-discrete",
@@ -8443,7 +8522,8 @@
           "citations": [
             "Wen 2014, Phys. Rev. B 89, 035147 (SPT phases via group cohomology)",
             "Kapustin 2014, arXiv:1403.1467 (cobordism and bosonic SPT phases)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d3-p1-discrete",
@@ -8462,7 +8542,8 @@
           "citations": [
             "Gaiotto, Kapustin, Seiberg, Willett 2015, JHEP 02, 172 (generalized global symmetries)",
             "Kitaev 2003, Ann. Phys. 303, 2 (toric code)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d4-p0-continuous",
@@ -8482,7 +8563,8 @@
           "citations": [
             "'t Hooft 1976, Phys. Rev. Lett. 37, 8 (chiral anomaly and instantons)",
             "Witten 1983, Nucl. Phys. B 223, 422 (current algebra anomaly)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d4-p1-discrete-center",
@@ -8502,7 +8584,8 @@
             "'t Hooft 1978, Nucl. Phys. B 138, 1 (Z_N center symmetry)",
             "Gaiotto, Kapustin, Seiberg, Willett 2015, JHEP 02, 172",
             "Komargodski, Sulejmanpasic, Unsal 2017, Phys. Rev. B 97, 054418 (walls and bound states)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d4-p0-non-invertible-abj",
@@ -8521,7 +8604,8 @@
           "citations": [
             "Choi, Cordova, Hsin, Lam, Shao 2022, Phys. Rev. Lett. 129, 161601",
             "Cordova, Ohmori 2022, Phys. Rev. X 13, 011034 (non-invertible chiral symmetry)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d4-p1-2group",
@@ -8540,7 +8624,8 @@
           "citations": [
             "Cordova, Dumitrescu, Intriligator 2019, JHEP 02, 184",
             "Tachikawa 2020, SciPost Phys. 8, 015 (on gauging finite subgroups)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d4-p2-discrete",
@@ -8557,7 +8642,8 @@
           "description": "2-form symmetries in 4D act on surface operators (2D defects). Drives the classification of higher-form gauge theories and certain (3+1)D topological orders. Less common in phenomenologically-relevant models.",
           "citations": [
             "Gaiotto, Kapustin, Seiberg, Willett 2015 (treatment of higher-form generally)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d6-p2-center",
@@ -8577,7 +8663,8 @@
             "Witten 1995, Nucl. Phys. B 463, 383 (5-branes and non-perturbative string theory)",
             "Cordova, Lam 2020, arXiv:2003.04579 (anomalies of 6D (2,0))",
             "Apruzzi et al. 2023, Commun. Math. Phys. 402, 895 (SymTFT from string theory — 6D (2,0) explicit construction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d3-p1-non-invertible",
@@ -8595,7 +8682,8 @@
           "citations": [
             "Kapustin, Saulina 2010, arXiv:1012.0911 (surface operators in gauge theories)",
             "Bhardwaj et al. 2023, Nucl. Phys. B 990, 116167 (review of non-invertible symmetries)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d5-p0-discrete",
@@ -8613,7 +8701,8 @@
           "citations": [
             "Seiberg 1996, Phys. Lett. B 388, 753 (5D SCFTs)",
             "Garcia-Etxebarria, Hayashi, Ohmori, Tachikawa 2021, JHEP 11, 246 (5D symmetries from cobordism)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-d2-p1-excluded-meaning",
@@ -8629,7 +8718,8 @@
           "description": "An edge case of the form-degree classification: in d=2 the 1-form symmetry's defects are codimension-1 (= boundary). The symmetry is meaningful for theories-with-boundary but trivial for closed surfaces. Distinct from structurally-excluded (where the kinematics rules out the symmetry); this cell is 'kinematically-degenerate' rather than excluded.",
           "citations": [
             "Affleck, Ludwig 1991, Nucl. Phys. B 352, 849 (boundary CFT and conformal boundary conditions)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gs-excl-d2-p2",
@@ -8814,7 +8904,8 @@
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 426, 19; B 431, 484",
             "Argyres, Douglas 1995, Nucl. Phys. B 448, 93 (extended to N=2 SCFT classification)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-su2-Nf4-higgs",
@@ -8832,7 +8923,8 @@
           "citations": [
             "Argyres, Douglas 1995, Nucl. Phys. B 448, 93",
             "Beasley, Heckman, Vafa 2009 (geometric realization)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-ad-h0",
@@ -8851,7 +8943,8 @@
           "citations": [
             "Argyres, Douglas 1995, Nucl. Phys. B 448, 93",
             "Argyres, Plesser, Seiberg, Witten 1996, Nucl. Phys. B 461, 71 (full structure of the H series)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-ad-h0-higgs",
@@ -8867,7 +8960,8 @@
           "description": "Records the absence of a non-trivial Higgs branch for the simplest AD theory — structurally distinct from 'structurally-excluded' since the moduli space genuinely consists of just the origin. Represents the rank-0 Higgs-branch case.",
           "citations": [
             "Argyres, Plesser, Seiberg, Witten 1996, Nucl. Phys. B 461, 71"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-mn-e6-coulomb",
@@ -8885,7 +8979,8 @@
           "citations": [
             "Minahan, Nemeschansky 1996, Nucl. Phys. B 482, 142 (E_6 theory)",
             "Minahan, Nemeschansky 1997, Nucl. Phys. B 489, 24 (E_7 and E_8 theories)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-mn-e6-higgs",
@@ -8903,7 +8998,8 @@
           "citations": [
             "Minahan, Nemeschansky 1996, Nucl. Phys. B 482, 142",
             "Beauville 2000, Bull. Soc. Math. France 128, 137 (symplectic singularities)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-mn-e7-higgs",
@@ -8919,7 +9015,8 @@
           "description": "The E_7 analog of the E_6 case. Larger exceptional symplectic singularity.",
           "citations": [
             "Minahan, Nemeschansky 1997, Nucl. Phys. B 489, 24"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-mn-e8-higgs",
@@ -8935,7 +9032,8 @@
           "description": "The E_8 analog. The exceptional series E_{6,7,8} provides the three rank-1 SCFTs with exceptional flavor symmetry; their Higgs branches are exactly the minimal nilpotent orbits of e_{6,7,8}.",
           "citations": [
             "Minahan, Nemeschansky 1997, Nucl. Phys. B 489, 24"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-class-s-A1-coulomb",
@@ -8953,7 +9051,8 @@
           "citations": [
             "Gaiotto 2009, JHEP 08, 034 (class-S construction)",
             "Argyres, Seiberg 2007 (rank-2 SCFT structure precursor)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-class-s-A1-higgs",
@@ -8969,7 +9068,8 @@
           "description": "The Higgs branch of the canonical class-S theory. Hyperkähler structure with SU(3) × SU(3) × SU(3) flavor symmetry acting as isometries.",
           "citations": [
             "Gaiotto 2009, JHEP 08, 034"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-N4-su2-coulomb",
@@ -8987,7 +9087,8 @@
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 431, 484 (mass-deformed N=4)",
             "Vafa, Witten 1994, Nucl. Phys. B 431, 3 (S-duality)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-N4-su2-higgs",
@@ -9005,7 +9106,8 @@
           "citations": [
             "Intriligator, Seiberg 1996, Phys. Lett. B 387, 513 (3D mirror symmetry)",
             "Hanany, Witten 1997, Nucl. Phys. B 492, 152 (brane realization)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-N2-star",
@@ -9023,7 +9125,8 @@
           "citations": [
             "Dorey 1999, JHEP 07, 021 (N=2* SU(N))",
             "Donagi, Witten 1996, Nucl. Phys. B 460, 299"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-free-coulomb",
@@ -9040,7 +9143,8 @@
           "description": "The trivial Coulomb-branch case — a free N=2 vector multiplet. Included as a reference cell; structurally important as the IR fixed point of generic N=2 Coulomb-branch flows where confinement does NOT occur.",
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 426, 19 (free abelian sector)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-free-higgs",
@@ -9056,7 +9160,8 @@
           "description": "Trivial Higgs-branch case — free N=2 hyper. Reference cell; canonical building block for hyperkähler quotients.",
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 426, 19 (free hyper)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-class-s-D-type",
@@ -9073,7 +9178,8 @@
           "description": "Class-S theory of D-type. Extends the class-S construction beyond A-type to the orthogonal series. The Z_2 orbifold structure of the D-type 6D (2,0) gives Higgs branches that are quotient hyperkähler manifolds.",
           "citations": [
             "Tachikawa 2014, Springer Lecture Notes in Physics 890 (class-S review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hcb-excl-rank-bound",
@@ -9273,7 +9379,8 @@
           "citations": [
             "Particle Data Group 2024, Phys. Rev. D 110, 030001 (compilation)",
             "Weinberg 1996, Quantum Theory of Fields Vol. II ch. 19 (chiral perturbation theory)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-rho",
@@ -9292,7 +9399,8 @@
           "description": "The lowest-lying vector mesons. The ρ-ω mass quasi-degeneracy reflects approximate SU(2) isospin symmetry; the φ mass elevation reflects the strange-quark content. The vector mesons play a central role in vector-meson-dominance models of electromagnetic interactions of hadrons.",
           "citations": [
             "Particle Data Group 2024, Phys. Rev. D 110, 030001"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-a2-f2",
@@ -9308,7 +9416,8 @@
           "description": "First tensor-meson multiplet. Lies on the Regge trajectory continuing from ρ (1--) through a_2 (2++) to higher-spin states; this trajectory is a classic example of meson Regge phenomenology.",
           "citations": [
             "Particle Data Group 2024"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-N",
@@ -9328,7 +9437,8 @@
           "citations": [
             "Gell-Mann 1962, Phys. Rev. 125, 1067 (eightfold way)",
             "Particle Data Group 2024"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Delta",
@@ -9348,7 +9458,8 @@
           "citations": [
             "Gell-Mann 1962, Phys. Rev. 125, 1067 (Omega- prediction)",
             "Barnes et al. 1964, Phys. Rev. Lett. 12, 204 (Omega- discovery)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Jpsi",
@@ -9368,7 +9479,8 @@
             "Aubert et al. 1974, Phys. Rev. Lett. 33, 1404 (J/psi discovery, BNL)",
             "Augustin et al. 1974, Phys. Rev. Lett. 33, 1406 (J/psi discovery, SLAC)",
             "Eichten et al. 1980, Phys. Rev. D 21, 203 (Cornell potential)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Upsilon",
@@ -9385,7 +9497,8 @@
           "description": "The bottomonium 1-- spectrum. The Υ(1S) discovery in 1977 confirmed the bottom quark. The narrow widths below B-Bbar threshold and broader widths above match QCD potential-model predictions.",
           "citations": [
             "Herb et al. 1977, Phys. Rev. Lett. 39, 252 (Upsilon discovery)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Lambdac",
@@ -9402,7 +9515,8 @@
           "description": "Charm-baryon spectrum (one c quark + two light quarks). Established 1980s-1990s; refined by recent LHCb measurements.",
           "citations": [
             "Particle Data Group 2024"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Lambdab",
@@ -9419,7 +9533,8 @@
           "description": "Bottom-baryon spectrum. Largely a 2007-2017 LHCb / Tevatron discovery program.",
           "citations": [
             "Particle Data Group 2024"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Xicc",
@@ -9437,7 +9552,8 @@
           "citations": [
             "Aaij et al. (LHCb) 2017, Phys. Rev. Lett. 119, 112001 (Xi_cc++)",
             "Karliner, Rosner 2014, Phys. Rev. D 90, 094007 (theoretical predictions for doubly-heavy baryons)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-X3872",
@@ -9455,7 +9571,8 @@
             "Choi et al. (Belle) 2003, Phys. Rev. Lett. 91, 262001",
             "Maiani, Polosa, Riquer 2005, Phys. Rev. D 71, 014028 (diquark interpretation)",
             "Tornqvist 2004, Phys. Lett. B 590, 209 (molecular interpretation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Pc-pentaquarks",
@@ -9475,7 +9592,8 @@
             "Aaij et al. (LHCb) 2015, Phys. Rev. Lett. 115, 072001",
             "Aaij et al. (LHCb) 2019, Phys. Rev. Lett. 122, 222001 (refined spectrum)",
             "Maiani, Polosa, Riquer 2015, Phys. Lett. B 749, 289 (diquark model prediction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-Zc-Zb",
@@ -9494,7 +9612,8 @@
           "citations": [
             "Ablikim et al. (BESIII) 2013, Phys. Rev. Lett. 110, 252001 (Zc(3900))",
             "Belle 2011, Phys. Rev. Lett. 108, 122001 (Zb states)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-glueball-scalar",
@@ -9514,7 +9633,8 @@
             "Morningstar, Peardon 1999, Phys. Rev. D 60, 034509 (lattice glueball spectrum)",
             "Amsler, Close 1996, Phys. Rev. D 53, 295 (glueball-q-qbar mixing analysis)",
             "Klempt, Zaitsev 2007, Phys. Rep. 454, 1 (glueball candidates review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-hybrid-1mp",
@@ -9534,7 +9654,8 @@
             "Lacock, Michael, Boyle, Rowland (UKQCD) 1996, Phys. Lett. B 401, 308 (lattice 1-+ hybrid)",
             "Adams et al. (E852) 1998, Phys. Rev. Lett. 81, 5760 (pi1(1600) candidate)",
             "Ablikim et al. (BESIII) 2022, Phys. Rev. Lett. 129, 192002 (η_1(1855) discovery)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-dibaryon-d2380",
@@ -9552,7 +9673,8 @@
             "Bashkanov et al. (WASA-at-COSY) 2014, Phys. Lett. B 736, 327 (d*(2380))",
             "Jaffe 1977, Phys. Rev. Lett. 38, 195 (H-dibaryon prediction — not confirmed)",
             "Clement 2017, Prog. Part. Nucl. Phys. 93, 195 (dibaryon review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-tetraquark-Tcc",
@@ -9569,7 +9691,8 @@
           "citations": [
             "Aaij et al. (LHCb) 2022, Nat. Commun. 13, 3351 (Tcc+)",
             "Karliner, Rosner 2017, Phys. Rev. Lett. 119, 202001 (prediction of stable Tcc)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-predicted-bb-tetra",
@@ -9587,7 +9710,8 @@
           "citations": [
             "Karliner, Rosner 2017, Phys. Rev. Lett. 119, 202001",
             "Eichten, Quigg 2017, Phys. Rev. Lett. 119, 202002 (independent prediction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-h-excl-charged-glueball",
@@ -9797,7 +9921,8 @@
             "Tsui, Stormer, Gossard 1982, Phys. Rev. Lett. 48, 1559",
             "Laughlin 1983, Phys. Rev. Lett. 50, 1395 (Laughlin wavefunction)",
             "Saminadayar, Glattli, Jin, Etienne 1997, Phys. Rev. Lett. 79, 2526 (e/3 fractional charge measurement)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-1-5-laughlin",
@@ -9813,7 +9938,8 @@
           "description": "The next Laughlin state. Less stable than 1/3 (smaller gap); observed in highest-mobility samples. Maps to Z_5 abelian MTC.",
           "citations": [
             "Pan et al. 2002, Phys. Rev. Lett. 88, 176802"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-2-5-jain",
@@ -9830,7 +9956,8 @@
           "citations": [
             "Willett et al. 1987, Phys. Rev. Lett. 59, 1776",
             "Jain 1989, Phys. Rev. Lett. 63, 199 (composite-fermion construction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-3-7-jain",
@@ -9846,7 +9973,8 @@
           "description": "Higher Jain state. Cleanly observed in high-mobility GaAs. Confirms the systematic CF sequence prediction.",
           "citations": [
             "Pan et al. 2003, Phys. Rev. Lett. 90, 016801"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-4-9-jain",
@@ -9862,7 +9990,8 @@
           "description": "Even higher Jain state. The series ν=p/(2p+1) approaches ν=1/2 as p→∞.",
           "citations": [
             "Pan et al. 2003, Phys. Rev. Lett. 90, 016801"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-2-3-ph-conj",
@@ -9878,7 +10007,8 @@
           "description": "PH-conjugate of the 1/3 Laughlin state. Has the same topological order (same MTC) but inverted edge structure (counter-propagating modes). One of the strongest non-Laughlin FQH plateaus.",
           "citations": [
             "MacDonald 1990, Phys. Rev. Lett. 64, 220 (PH conjugation edge structure)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-5-2-moore-read",
@@ -9897,7 +10027,8 @@
             "Moore, Read 1991, Nucl. Phys. B 360, 362 (Pfaffian wavefunction)",
             "Willett et al. 1987, Phys. Rev. Lett. 59, 1776 (5/2 discovery)",
             "Banerjee et al. 2018, Nature 559, 205 (thermal Hall at 5/2)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-5-2-anti-pfaffian",
@@ -9915,7 +10046,8 @@
           "citations": [
             "Levin, Halperin, Rosenow 2007, Phys. Rev. Lett. 99, 236806",
             "Lee, Ryu, Nayak, Fisher 2007, Phys. Rev. Lett. 99, 236807"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-5-2-ph-pfaffian",
@@ -9934,7 +10066,8 @@
             "Son 2015, Phys. Rev. X 5, 031027 (composite Dirac fermion)",
             "Banerjee et al. 2018, Nature 559, 205",
             "Simon 2020 (interpretation challenges)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-12-5-rr",
@@ -9954,7 +10087,8 @@
             "Read, Rezayi 1999, Phys. Rev. B 59, 8084 (parafermion state)",
             "Xia et al. 2004, Phys. Rev. Lett. 93, 176809 (12/5 observation)",
             "Bonderson, Slingerland 2008, Phys. Rev. B 78, 125323 (RR identification analysis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-7-2-moore-read",
@@ -9970,7 +10104,8 @@
           "description": "The 5/2 analog in the third Landau level. Weaker plateau; less detailed identification. Predicted to have similar topological content to 5/2 Pfaffian (or anti-Pfaffian / PH-Pfaffian).",
           "citations": [
             "Pan et al. 1999, Phys. Rev. Lett. 83, 3530"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-8-3-jain",
@@ -9986,7 +10121,8 @@
           "description": "Higher-LL CF state. Less standard CF physics due to second-LL form factor.",
           "citations": [
             "Pan et al. 1999"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-4-11-exotic",
@@ -10003,7 +10139,8 @@
           "citations": [
             "Pan et al. 2003, Phys. Rev. Lett. 90, 016801",
             "Goldman, Banerjee 1995 (precision charge measurements)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-rr-z4",
@@ -10020,7 +10157,8 @@
           "description": "The PH-conjugate of 12/5. If 12/5 is RR Z_3 parafermion, 7/5 should be its PH-conjugate. Mendeleev empty cell: predicted topological structure not unambiguously identified.",
           "citations": [
             "Read, Rezayi 1999, Phys. Rev. B 59, 8084"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-3-8-bosonic",
@@ -10036,7 +10174,8 @@
           "description": "A non-standard FQH state at 3/8. The interpretation involves hierarchical condensation of quasiparticles atop a 1/2-or-near-half-filled CF state.",
           "citations": [
             "Pan et al. 2003"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-fibonacci-predicted",
@@ -10053,7 +10192,8 @@
           "description": "The discovery of Fibonacci anyons in ANY 2DEG platform would be a landmark — enabling universal topological quantum computation by anyonic braiding alone. The 12/5 Read-Rezayi candidate (cell-fqh-12-5-rr) is the most-studied prediction; other proposals exist. Status: unconfirmed-not-yet-tested.",
           "citations": [
             "Nayak, Simon, Stern, Freedman, Das Sarma 2008, Rev. Mod. Phys. 80, 1083 (Fibonacci TQC review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-1-9-laughlin",
@@ -10069,7 +10209,8 @@
           "description": "Edge of the Laughlin series. Smaller gaps make this state difficult to access. Confirms the m=9 extension of the 1/m Laughlin series.",
           "citations": [
             "Goldman, Su 1995"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-fqh-excl-1-3-nonab",
@@ -10266,7 +10407,8 @@
             "Chandrasekhar 1931, Astrophys. J. 74, 81 (maximum mass calculation)",
             "Bond, Schaefer, Gilliland et al. 2017, Astrophys. J. 840, 70 (Sirius B HST mass)",
             "Tremblay et al. 2019, Nature 565, 202 (Gaia WD population)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-WD-Chandrasekhar-limit",
@@ -10285,7 +10427,8 @@
           "citations": [
             "Chandrasekhar 1931, Astrophys. J. 74, 81",
             "Hillebrandt, Niemeyer 2000, Annu. Rev. Astron. Astrophys. 38, 191 (Type-Ia models)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-WD-ultramassive",
@@ -10303,7 +10446,8 @@
           "citations": [
             "Caiazzo et al. 2021, Nature 595, 39 (ZTF J1901+1458)",
             "Cheng, Cummings, Ménard 2019, Astrophys. J. 886, 100 (merger-origin ultramassive WDs)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-NS-canonical",
@@ -10325,7 +10469,8 @@
             "Riley et al. 2019, Astrophys. J. Lett. 887, L21 (NICER J0030+0451 — group B)",
             "Hulse, Taylor 1975, Astrophys. J. 195, L51 (binary pulsar discovery)",
             "Choudhury et al. 2024, Astrophys. J. Lett. 971, L20 (NICER J0437-4715)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-NS-massive",
@@ -10348,7 +10493,8 @@
             "Antoniadis et al. 2013, Science 340, 6131 (PSR J0348+0432)",
             "Miller et al. 2021, Astrophys. J. Lett. 918, L28 (NICER + XMM J0740 mass-radius)",
             "Romani et al. 2022, Astrophys. J. Lett. 934, L17 (PSR J0952-0607 mass claim)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-magnetar",
@@ -10371,7 +10517,8 @@
             "CHIME/FRB Collaboration 2020, Nature 587, 54 (FRB 200428 from SGR J1935+2154)",
             "Bochenek et al. 2020, Nature 587, 59 (STARE2 detection of FRB 200428)",
             "Kaspi, Beloborodov 2017, Annu. Rev. Astron. Astrophys. 55, 261 (magnetars review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-NS-merger-remnant",
@@ -10389,7 +10536,8 @@
             "Bauswein, Stergioulas, Janka 2017, Phys. Rev. D 96, 124044 (post-merger oscillations)",
             "Margalit, Metzger 2017, Astrophys. J. Lett. 850, L19 (GW170817 remnant constraints)",
             "Radice et al. 2018, Astrophys. J. Lett. 852, L29 (kilonova + post-merger constraints)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-stellar-BH-XRB",
@@ -10412,7 +10560,8 @@
             "Webster, Murdin 1972, Nature 235, 37 (independent Cyg X-1)",
             "Miller-Jones et al. 2021, Science 371, 1046 (Cyg X-1 revised mass and distance)",
             "McClintock, Narayan, Steiner 2014, Space Sci. Rev. 183, 295 (BH spin review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-stellar-BH-GW",
@@ -10434,7 +10583,8 @@
             "LIGO/Virgo Collaboration 2020, Phys. Rev. Lett. 125, 101102 (GW190521)",
             "LIGO/Virgo/KAGRA Collaboration 2021, Phys. Rev. X 13, 011048 (GWTC-3)",
             "Abbott et al. 2024, Phys. Rev. X (in press) (GWTC-4 anticipated)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-stellar-BH-mass-gap",
@@ -10454,7 +10604,8 @@
             "Özel et al. 2010, Astrophys. J. 725, 1918 (X-ray-binary BH mass distribution)",
             "LVK Collaboration 2024, Astrophys. J. Lett. 970, L34 (GW230529 mass-gap)",
             "Farr et al. 2011, Astrophys. J. 741, 103 (mass-gap statistical analysis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-IMBH-gap",
@@ -10476,7 +10627,8 @@
             "Farrell et al. 2009, Nature 460, 73 (HLX-1)",
             "Pasham, Strohmayer, Mushotzky 2014, Nature 513, 74 (M82 X-1 IMBH claim)",
             "LIGO/Virgo Collaboration 2020, Phys. Rev. Lett. 125, 101102 (GW190521 as IMBH)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-SMBH-galactic-center",
@@ -10499,7 +10651,8 @@
             "EHT Collaboration 2019, Astrophys. J. Lett. 875, L1 (M87* shadow)",
             "EHT Collaboration 2022, Astrophys. J. Lett. 930, L12 (Sgr A* shadow)",
             "Kormendy, Ho 2013, Annu. Rev. Astron. Astrophys. 51, 511 (SMBH-host scaling review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-SMBH-AGN",
@@ -10521,7 +10674,8 @@
             "Shemmer et al. 2004, Astrophys. J. 614, 547 (TON 618 mass)",
             "Wang et al. 2021, Astrophys. J. Lett. 907, L1 (J0313-1806 quasar at z ≈ 7.64)",
             "Peterson 2014, Space Sci. Rev. 183, 253 (reverberation mapping review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-compact-quark-star",
@@ -10792,7 +10946,8 @@
           "citations": [
             "Bernevig, Hughes, Zhang 2006, Science 314, 1757 (BHZ prediction)",
             "König et al. 2007, Science 318, 766 (transport confirmation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-ti-Bi2Se3-family",
@@ -10810,7 +10965,8 @@
             "Zhang et al. 2009, Nature Phys. 5, 438 (theoretical prediction)",
             "Xia et al. 2009, Nature Phys. 5, 398 (Bi₂Se₃ ARPES)",
             "Hsieh et al. 2009, Nature 460, 1101 (spin-resolved ARPES)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-ti-1Tprime-WTe2-monolayer",
@@ -10828,7 +10984,8 @@
             "Qian et al. 2014, Science 346, 1344 (prediction)",
             "Fei et al. 2017, Nature Phys. 13, 677 (transport)",
             "Wu et al. 2018, Science 359, 76 (edge state mapping)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-ti-bismuthene",
@@ -10844,7 +11001,8 @@
           "description": "Class AII 2D TI with the largest experimentally confirmed bulk gap (~0.8 eV), making it the most thermally robust 2D TI candidate. The Bi honeycomb lattice on SiC realizes the BHZ-type Hamiltonian via SiC substrate effects.",
           "citations": [
             "Reis et al. 2017, Science 357, 287 (bismuthene observation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-ti-SmB6-TKI-candidate",
@@ -10862,7 +11020,8 @@
             "Dzero, Sun, Galitski, Coleman 2010, Phys. Rev. Lett. 104, 106408 (prediction)",
             "Kim et al. 2014, Nature Mater. 13, 466 (surface transport)",
             "Hlawenka et al. 2018, Nature Commun. 9, 517 (alternative interpretation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-tci-SnTe",
@@ -10880,7 +11039,8 @@
             "Fu 2011, Phys. Rev. Lett. 106, 106802 (TCI proposal)",
             "Hsieh, Lin, Liu, Duan, Bansil, Fu 2012, Nature Commun. 3, 982 (SnTe prediction)",
             "Tanaka et al. 2012, Nature Phys. 8, 800 (ARPES confirmation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-tsc-FeTeSe-candidate",
@@ -10898,7 +11058,8 @@
             "Wang et al. 2018, Science 362, 333 (vortex STM)",
             "Zhang et al. 2018, Science 360, 182 (topological surface state)",
             "Machida et al. 2019, Nature Mater. 18, 811 (vortex-dependence)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-tsc-Sr2RuO4-contested",
@@ -10916,7 +11077,8 @@
             "Mackenzie, Maeno 2003, Rev. Mod. Phys. 75, 657 (chiral p-wave proposal)",
             "Pustogow et al. 2019, Nature 574, 72 (NMR Knight shift)",
             "Ghosh, Shekhter, Jerzembeck et al. 2020, Nature Phys. 17, 199 (post-NMR ultrasound)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mzm-InAs-Al-wire-retracted",
@@ -10934,7 +11096,8 @@
             "Zhang et al. 2018, Nature 556, 74 (original claim)",
             "Frolov 2021, Nature 592, 17 (commentary on disorder concerns)",
             "Zhang et al. 2021, Nature 591, 354 (retraction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-weyl-TaAs-family",
@@ -10953,7 +11116,8 @@
             "Huang et al. 2015, Nature Commun. 6, 7373 (TaAs prediction)",
             "Lv et al. 2015, Phys. Rev. X 5, 031013 (TaAs bulk ARPES)",
             "Xu et al. 2015, Science 349, 613 (surface Fermi arcs)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-weyl-magnetic-Co3Sn2S2",
@@ -10971,7 +11135,8 @@
             "Liu et al. 2018, Nature Phys. 14, 1125 (Co₃Sn₂S₂ Weyl prediction)",
             "Morali et al. 2019, Science 365, 1286 (Fermi arc STM)",
             "Liu et al. 2019, Science 365, 1282 (ARPES confirmation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dirac-Cd3As2",
@@ -10989,7 +11154,8 @@
             "Wang, Weng, Wu, Dai, Fang 2013, Phys. Rev. B 88, 125427 (prediction)",
             "Neupane et al. 2014, Nature Commun. 5, 3786 (ARPES)",
             "Liu et al. 2014, Nature Mater. 13, 677 (transport)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-axion-MnBi2Te4-candidate",
@@ -11007,7 +11173,8 @@
             "Otrokov et al. 2019, Nature 576, 416 (prediction and synthesis)",
             "Deng et al. 2020, Science 367, 895 (QAHE in MnBi₂Te₄ flakes)",
             "Liu et al. 2020, Nature Mater. 19, 522 (axion insulator response)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-hoti-bismuth",
@@ -11024,7 +11191,8 @@
           "citations": [
             "Benalcazar, Bernevig, Hughes 2017, Science 357, 61 (HOTI quadrupole/octupole proposal)",
             "Schindler, Wang, Vergniory, Cook, Murani, Sengupta, Kasumov, Deblock, Jeon, Drozdov, Bouchiat, Guéron, Yazdani, Bernevig, Neupert 2018, Nature Phys. 14, 918 (Bi hinge states)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-predicted-fractional-TI",
@@ -11041,7 +11209,8 @@
           "citations": [
             "Maciejko, Qi, Karch, Zhang 2010, Phys. Rev. Lett. 105, 246809 (fractional TI proposal)",
             "Swingle, Barkeshli, McGreevy, Senthil 2011, Phys. Rev. B 83, 195139 (parton construction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-predicted-intrinsic-axion-clean",
@@ -11058,7 +11227,8 @@
           "citations": [
             "Qi, Hughes, Zhang 2008, Phys. Rev. B 78, 195424 (axion electrodynamics in TIs)",
             "Wang, Lian, Zhang 2016, Phys. Rev. B 93, 161115 (intrinsic axion insulator proposal)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-predicted-CI-class-real-material",
@@ -11075,7 +11245,8 @@
           "citations": [
             "Schnyder, Ryu, Furusaki, Ludwig 2008, Phys. Rev. B 78, 195125 (tenfold-way classification table)",
             "Kitaev 2009, AIP Conf. Proc. 1134, 22 (K-theory derivation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-predicted-higher-order-DIII-TSC",
@@ -11092,7 +11263,8 @@
           "citations": [
             "Khalaf 2018, Phys. Rev. B 97, 205136 (HOTSC classification)",
             "Geier, Trifunovic, Hoskam, Brouwer 2018, Phys. Rev. B 97, 205135 (HOTSC bulk-boundary correspondence)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -11281,7 +11453,8 @@
             "Ahmad et al. (SNO Collaboration) 2002, Phys. Rev. Lett. 89, 011301 (SNO direct flavor-flavor confirmation)",
             "Eguchi et al. (KamLAND) 2003, Phys. Rev. Lett. 90, 021802 (reactor confirmation)",
             "Esteban, Gonzalez-Garcia, Maltoni, Schwetz, Zhou 2020, JHEP 09, 178 (NuFIT global fit)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-theta23-atmospheric",
@@ -11299,7 +11472,8 @@
             "Fukuda et al. (Super-K) 1998, Phys. Rev. Lett. 81, 1562 (atmospheric oscillation discovery)",
             "Adamson et al. (MINOS+) 2020, Phys. Rev. Lett. 125, 131802",
             "NOvA Collaboration 2022, Phys. Rev. D 106, 032004"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-theta13-reactor",
@@ -11316,7 +11490,8 @@
           "citations": [
             "An et al. (Daya Bay) 2012, Phys. Rev. Lett. 108, 171803 (discovery)",
             "An et al. (Daya Bay) 2022, Phys. Rev. Lett. 130, 161802 (precision update)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-deltaCP",
@@ -11334,7 +11509,8 @@
             "Abe et al. (T2K) 2020, Nature 580, 339 (CP violation hint)",
             "Acero et al. (NOvA) 2022, Phys. Rev. D 106, 032004",
             "Abi et al. (DUNE Collaboration) 2020, Eur. Phys. J. C 80, 978 (DUNE design)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-Dm21-squared",
@@ -11350,7 +11526,8 @@
           "description": "The smaller of the two independent mass-squared differences. Determined primarily by KamLAND reactor experiment + solar-neutrino fits. Sign is fixed: ν_2 is heavier than ν_1 (by MSW solar matter effects).",
           "citations": [
             "Esteban et al. 2020 / NuFIT 5.3 update (global fits)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-absDm31-squared",
@@ -11368,7 +11545,8 @@
             "Acero et al. (NOvA) 2022, Phys. Rev. D 106, 032004",
             "Abe et al. (T2K) 2023, Phys. Rev. D 107, 072001",
             "NuFIT 5.3 global fits"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-mass-hierarchy",
@@ -11385,7 +11563,8 @@
           "citations": [
             "Capozzi, Lisi, Marrone, Palazzo 2021, Prog. Part. Nucl. Phys. 102, 48 (global fits)",
             "An et al. (JUNO Collaboration) 2016, J. Phys. G 43, 030401 (JUNO design)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-abs-mass-bound-KATRIN",
@@ -11401,7 +11580,8 @@
           "description": "The most direct kinematic bound on the absolute electron-neutrino mass. Independent of the cosmological Σm_ν bound and the 0νββ m_ββ. Listed `bounded-with-open-range` because the true value is presumably ≲ 0.1 eV (from cosmology) and KATRIN is approaching sensitivity by the end of its planned program. Project 8 (atomic-tritium-with-CRES) targets sub-eV sensitivity in the future.",
           "citations": [
             "Aker et al. (KATRIN) 2022, Nature Phys. 18, 160 (m(νe) < 0.8 eV)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-Sum-mass-Planck",
@@ -11419,7 +11599,8 @@
           "citations": [
             "Aghanim et al. (Planck Collaboration) 2020, Astron. Astrophys. 641, A6 (Planck 2018)",
             "ACT + DESI 2024 reports (preliminary)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-Dirac-vs-Majorana",
@@ -11436,7 +11617,8 @@
           "citations": [
             "Mohapatra, Senjanović 1980, Phys. Rev. D 23, 165 (Majorana / see-saw)",
             "Avignone, Elliott, Engel 2008, Rev. Mod. Phys. 80, 481 (0νββ review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-0vbb-search",
@@ -11454,7 +11636,8 @@
             "Abe et al. (KamLAND-Zen) 2024, Phys. Rev. Lett. 132, 211801",
             "Agostini et al. (GERDA) 2020, Phys. Rev. Lett. 125, 252502",
             "Adams et al. (LEGEND) 2023, J. Phys. G 50, 040501"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-Heidelberg-Moscow-claim-FALSIFIED",
@@ -11472,7 +11655,8 @@
             "Klapdor-Kleingrothaus et al. 2001, Mod. Phys. Lett. A 16, 2409 (original claim)",
             "Klapdor-Kleingrothaus, Krivosheina 2006, Mod. Phys. Lett. A 21, 1547 (re-analysis)",
             "Agostini et al. (GERDA) 2020, Phys. Rev. Lett. 125, 252502 (decisive exclusion)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-sterile-eV-LSND-claim-FALSIFIED",
@@ -11491,7 +11675,8 @@
             "Aguilar et al. (LSND) 2001, Phys. Rev. D 64, 112007 (original claim)",
             "Aartsen et al. (IceCube) 2020, Phys. Rev. Lett. 125, 141801 (3+1 exclusion)",
             "Acero et al. (MicroBooNE) 2022, Phys. Rev. Lett. 128, 241801 (LSND parameter-space exclusion)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-sterile-eV-tension",
@@ -11508,7 +11693,8 @@
           "citations": [
             "Barinov et al. (BEST) 2022, Phys. Rev. Lett. 128, 232501 (Gallium anomaly)",
             "Almazán et al. (STEREO) 2023, Nature 613, 257 (reactor-anomaly resolution)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-sterile-keV-WarmDM",
@@ -11526,7 +11712,8 @@
             "Bulbul et al. 2014, Astrophys. J. 789, 13 (3.5 keV line, Perseus)",
             "Boyarsky, Ruchayskiy, Iakubovskyi 2014, Phys. Rev. Lett. 113, 251301 (sterile-ν interpretation)",
             "Dessert, Rodd, Safdi 2020, Science 367, 1465 (constraining 3.5 keV line)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-seesaw-mechanism",
@@ -11545,7 +11732,8 @@
             "Gell-Mann, Ramond, Slansky 1979, Supergravity Workshop Proc.",
             "Yanagida 1979, KEK Workshop Proc.",
             "Mohapatra, Senjanović 1980, Phys. Rev. Lett. 44, 912"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-leptogenesis",
@@ -11562,7 +11750,8 @@
           "citations": [
             "Fukugita, Yanagida 1986, Phys. Lett. B 174, 45",
             "Davidson, Nardi, Nir 2008, Phys. Rep. 466, 105 (leptogenesis review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-nu-SN1987A-neutrinos",
@@ -11581,7 +11770,8 @@
             "Hirata et al. (Kamiokande-II) 1987, Phys. Rev. Lett. 58, 1490",
             "Bionta et al. (IMB) 1987, Phys. Rev. Lett. 58, 1494",
             "Alekseev et al. (Baksan) 1987, JETP Lett. 45, 589"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -11780,7 +11970,8 @@
             "Sengers, Levelt Sengers 1986, Annu. Rev. Phys. Chem. 37, 189 (critical-fluid review)",
             "Wilcox, Estler 1971, Phys. Rev. Lett. 26, 813 (early Xe measurements)",
             "Anisimov 2004, J. Phys. A 37, 2697 (review of fluid critical phenomena)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-Ising-antiferromagnet-FeF2-MnF2",
@@ -11797,7 +11988,8 @@
           "citations": [
             "Hutchings, Schulhof, Guggenheim 1972, Phys. Rev. B 5, 154 (FeF₂ neutron scattering)",
             "Belanger, Yoshizawa 1987, Phys. Rev. B 35, 4823 (MnF₂)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-Ising-binary-fluid-3MP-NE",
@@ -11814,7 +12006,8 @@
           "citations": [
             "Goldburg, Aronson 1986, Physica A 134, 1 (binary-fluid critical phenomena review)",
             "Beysens, Bourgou, Calmettes 1982, Phys. Rev. A 26, 3589 (3MP+NE)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-O2-XY-4He-lambda",
@@ -11832,7 +12025,8 @@
             "Lipa, Nissen, Stricker, Swanson, Chui 2003, Phys. Rev. B 68, 174518 (microgravity satellite)",
             "Chester, Landry, Liu, Poland, Simmons-Duffin, Su, Vichi 2020, Phys. Rev. D 101, 084017 (3D O(2) bootstrap)",
             "Kos, Poland, Simmons-Duffin, Vichi 2016, JHEP 08, 036 (early bootstrap for O(N))"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-O2-XY-planar-ferromagnet",
@@ -11848,7 +12042,8 @@
           "description": "Magnetic-system realization of 3D-O(2)/XY universality. Less precision than 4He λ but provides a system-class cross-check on the universality assignment.",
           "citations": [
             "Collins 1989, Magnetic Critical Scattering (Oxford monograph)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-O3-Heisenberg-Ni-EuO-RbMnF3",
@@ -11866,7 +12061,8 @@
             "Hohenemser, Rosov, Kleinhammes 1989, Hyperfine Interact. 49, 267 (Ni critical exponents)",
             "Salamon 1973, Phys. Rev. B 8, 3354 (RbMnF₃)",
             "Chester, Landry, Liu, Poland, Simmons-Duffin, Su, Vichi 2021, Phys. Rev. D 104, 105013 (3D O(3) bootstrap)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-2D-XY-BKT-4He-film",
@@ -11884,7 +12080,8 @@
             "Kosterlitz, Thouless 1973, J. Phys. C 6, 1181 (BKT prediction)",
             "Bishop, Reppy 1978, Phys. Rev. Lett. 40, 1727 (definitive observation)",
             "Bishop, Reppy 1980, Phys. Rev. B 22, 5171 (extended analysis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-tricritical-He3-He4-mixture",
@@ -11901,7 +12098,8 @@
           "citations": [
             "Riedel, Wegner 1972, Phys. Rev. Lett. 29, 349 (tricritical theory)",
             "Goellner, Behringer, Meyer 1973, J. Low Temp. Phys. 13, 113 (3He-4He measurements)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-SAW-polymer",
@@ -11919,7 +12117,8 @@
             "de Gennes 1979, Scaling Concepts in Polymer Physics (Cornell)",
             "Schäfer, Kappeler 1985, J. Phys. Paris 46, 1853 (polystyrene)",
             "Belohorec, Nickel 1997, Guelph (SAW Monte Carlo to high precision)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-percolation-3D",
@@ -11936,7 +12135,8 @@
           "citations": [
             "Stauffer, Aharony 1994, Introduction to Percolation Theory (2nd ed.)",
             "Lorenz, Ziff 1998, Phys. Rev. E 57, 230 (3D percolation Monte Carlo)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-Lifshitz-modulated-magnets",
@@ -11953,7 +12153,8 @@
           "citations": [
             "Hornreich, Luban, Shtrikman 1975, Phys. Rev. Lett. 35, 1678 (Lifshitz theory)",
             "Becerra, Shapira, Oliveira Jr, Chang 1980, Phys. Rev. Lett. 44, 1692 (MnP candidate)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-O4-massless-QCD-theoretical",
@@ -11970,7 +12171,8 @@
           "citations": [
             "Pisarski, Wilczek 1984, Phys. Rev. D 29, 338 (O(4) prediction)",
             "Ejiri et al. 2009, Phys. Rev. D 80, 094505 (lattice QCD O(4) scaling tests)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-Ising-2D-Onsager",
@@ -11987,7 +12189,8 @@
           "citations": [
             "Onsager 1944, Phys. Rev. 65, 117 (exact solution)",
             "Belavin, Polyakov, Zamolodchikov 1984, Nucl. Phys. B 241, 333 (2D CFT framework)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-O5-higher-no-clean-material",
@@ -12004,7 +12207,8 @@
           "citations": [
             "Chester, Landry, Liu, Poland, Simmons-Duffin, Su, Vichi 2021, Phys. Rev. D 104, 105013 (O(N) bootstrap survey)",
             "Senthil, Vishwanath, Balents, Sachdev, Fisher 2004, Science 303, 1490 (deconfined quantum criticality)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-surface-ordinary",
@@ -12020,7 +12224,8 @@
           "description": "Surface critical phenomena class. At a surface of a bulk-critical system, the order parameter near the surface has its own critical exponents (e.g., β_1 for surface magnetization) that differ from bulk values. Three sub-classes: ordinary (surface less ordered than bulk), special, extraordinary (surface more ordered). Measurements are less precise than bulk-critical and the assignment requires careful surface preparation.",
           "citations": [
             "Diehl 1986, Field-Theoretical Approach to Critical Behavior at Surfaces (Phase Transitions and Critical Phenomena vol. 10)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-surface-extraordinary-no-material",
@@ -12037,7 +12242,8 @@
           "citations": [
             "Diehl 1986 (theory)",
             "Padayasi, Krishnan, Metlitski, Gruzberg, Meineri 2022, SciPost Phys. 12, 190 (surface bootstrap)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-Heisenberg-rare-earth-EuS",
@@ -12053,7 +12259,8 @@
           "description": "Second-system realization of 3D-Heisenberg universality (parallel to cell-crit-O3-Heisenberg-Ni-EuO-RbMnF3). Demonstrates universality between different Heisenberg ferromagnets.",
           "citations": [
             "Als-Nielsen, Holmes, Larsen, Guggenheim 1975, Phys. Rev. B 12, 191 (EuS neutron scattering)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-crit-binary-fluid-isobutyric-water",
@@ -12070,7 +12277,8 @@
           "citations": [
             "Beysens, Bourgou 1979, Phys. Rev. A 19, 2407",
             "Beysens, Bourgou, Calmettes 1982, Phys. Rev. A 26, 3589"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -12269,7 +12477,8 @@
             "Lee, Weinberg 1977, Phys. Rev. Lett. 39, 165 (cosmological neutralino bound, WIMP foundation)",
             "Aalbers et al. (LZ Collaboration) 2024, Phys. Rev. Lett. 132, 041002 (2024 result)",
             "Aprile et al. (XENONnT) 2023, Phys. Rev. Lett. 131, 041003"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-QCD-axion-DFSZ-KSVZ",
@@ -12288,7 +12497,8 @@
             "Weinberg 1978, Phys. Rev. Lett. 40, 223; Wilczek 1978 (axion)",
             "Du et al. (ADMX) 2018, Phys. Rev. Lett. 120, 151301 (G2 DFSZ result)",
             "Bartram et al. (ADMX) 2021, Phys. Rev. Lett. 127, 261803"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-ALP-haloscope",
@@ -12305,7 +12515,8 @@
           "citations": [
             "Arvanitaki, Dimopoulos, Dubovsky, Kaloper, March-Russell 2010, Phys. Rev. D 81, 123530 (string axiverse)",
             "Ehret et al. (ALPS) 2010, Phys. Lett. B 689, 149"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-sterile-nu-keV-warm",
@@ -12325,7 +12536,8 @@
             "Shi, Fuller 1999, Phys. Rev. Lett. 82, 2832 (resonant production)",
             "Bulbul et al. 2014, Astrophys. J. 789, 13 (3.5 keV line)",
             "Dessert, Rodd, Safdi 2020, Science 367, 1465 (constraining 3.5 keV)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-sterile-nu-eV",
@@ -12342,7 +12554,8 @@
           "citations": [
             "Acero et al. (MicroBooNE) 2022, Phys. Rev. Lett. 128, 241801 (LSND parameter-space exclusion)",
             "Aghanim et al. (Planck) 2020 (cosmological mass bound)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-PBH-asteroid-mass-viable",
@@ -12360,7 +12573,8 @@
             "Carr, Kühnel, Sandstad 2016, Phys. Rev. D 94, 083504 (PBH-as-DM review)",
             "Niikura et al. 2019, Nature Astron. 3, 524 (Subaru HSC microlensing bound)",
             "Carr, Kühnel 2020, Annu. Rev. Nucl. Part. Sci. 70, 355"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-PBH-LIGO-mass-excluded",
@@ -12377,7 +12591,8 @@
           "citations": [
             "Carr, Kühnel 2020 (review)",
             "Hütsi, Raidal, Vaskonen 2021, Phys. Rev. D 103, 063510 (LVK merger-rate bounds)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-fuzzy-ultralight",
@@ -12396,7 +12611,8 @@
             "Hu, Barkana, Gruzinov 2000, Phys. Rev. Lett. 85, 1158 (fuzzy DM)",
             "Iršič et al. 2017, Phys. Rev. Lett. 119, 031302 (Lyman-α)",
             "Arvanitaki, Baryakhtar, Huang 2015, Phys. Rev. D 91, 084011 (superradiance)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-self-interacting",
@@ -12415,7 +12631,8 @@
             "Spergel, Steinhardt 2000, Phys. Rev. Lett. 84, 3760 (SIDM motivation)",
             "Markevitch et al. 2004, Astrophys. J. 606, 819 (Bullet Cluster bound)",
             "Tulin, Yu 2018, Phys. Rep. 730, 1 (SIDM review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-asymmetric-DM",
@@ -12433,7 +12650,8 @@
             "Nussinov 1985, Phys. Lett. B 165, 55 (early asymmetric DM)",
             "Petraki, Volkas 2013, Int. J. Mod. Phys. A 28, 1330028 (asymmetric DM review)",
             "Hall, March-Russell, West 2010 (pangenesis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-mirror-DM",
@@ -12450,7 +12668,8 @@
           "citations": [
             "Foot, Lew, Volkas 1991, Phys. Lett. B 272, 67 (mirror DM)",
             "Foot 2014, Int. J. Mod. Phys. A 29, 1430013 (review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-dark-photon-portal",
@@ -12469,7 +12688,8 @@
             "Holdom 1986, Phys. Lett. B 166, 196 (kinetic mixing)",
             "Pospelov 2009, Phys. Rev. D 80, 095002 (dark-photon DM mediator)",
             "Battaglieri et al. 2017, arXiv:1707.04591 (US Cosmic Visions: New Ideas in Dark Matter)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-gravitino-LSP",
@@ -12487,7 +12707,8 @@
           "citations": [
             "Ellis, Nanopoulos, Olive 1984, Phys. Lett. B 147, 99 (gravitino DM)",
             "Steffen 2006, JCAP 09, 001 (gravitino DM review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-MACHO-falsified",
@@ -12505,7 +12726,8 @@
           "citations": [
             "Tisserand et al. (EROS-2) 2007, Astron. Astrophys. 469, 387",
             "Wyrzykowski et al. (OGLE-IV) 2011, Mon. Not. R. Astron. Soc. 416, 2949"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-DAMA-LIBRA-falsified",
@@ -12523,7 +12745,8 @@
             "Bernabei et al. (DAMA/LIBRA) 2018, Universe 4, 116 (latest DAMA result)",
             "Aprile et al. (XENON1T) 2018, Phys. Rev. Lett. 121, 111302 (DAMA exclusion)",
             "Adhikari et al. (ANAIS-112) 2024, arXiv:2404.17348 (no modulation in compatible parameter space)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-CDMS-Si-2010-falsified",
@@ -12540,7 +12763,8 @@
           "citations": [
             "Agnese et al. (CDMS-II) 2013, Phys. Rev. Lett. 111, 251301 (3-event report)",
             "Agnese et al. (SuperCDMS) 2018, Phys. Rev. D 97, 022002 (exclusion)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-predicted-string-axiverse",
@@ -12557,7 +12781,8 @@
           "citations": [
             "Arvanitaki, Dimopoulos, Dubovsky, Kaloper, March-Russell 2010, Phys. Rev. D 81, 123530 (string axiverse)",
             "Hui, Ostriker, Tremaine, Witten 2017, Phys. Rev. D 95, 043541 (axiverse cosmology)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-dm-PBH-supermassive-formation",
@@ -12574,7 +12799,8 @@
           "citations": [
             "Carr, Silk 2018, Mon. Not. R. Astron. Soc. 478, 3756 (PBH-SMBH connection)",
             "Larson et al. (JWST UNCOVER) 2023, Astrophys. J. Lett. 953, L29 (high-z SMBH observation)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -12769,7 +12995,8 @@
           "citations": [
             "Aghanim et al. (Planck Collaboration) 2020, Astron. Astrophys. 641, A6 (Planck 2018 cosmological parameters)",
             "Aiola et al. (ACT) 2020, JCAP 12, 047 (ACT cosmology)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-BAO-sound-horizon-DESI",
@@ -12787,7 +13014,8 @@
             "Alam et al. (BOSS) 2017, Mon. Not. R. Astron. Soc. 470, 2617",
             "Adame et al. (DESI Collaboration) 2024, JCAP 04, 026 (DESI Year-1 BAO + cosmology)",
             "DES Collaboration 2024 supernova cosmology combined analysis"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-H0-CMB-Planck",
@@ -12804,7 +13032,8 @@
           "citations": [
             "Aghanim et al. (Planck) 2020, Astron. Astrophys. 641, A6",
             "Aiola et al. (ACT) 2020 (consistent independent CMB result)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-H0-local-ladder-SH0ES",
@@ -12824,7 +13053,8 @@
             "Riess et al. (SH0ES) 2022, Astrophys. J. Lett. 934, L7",
             "Freedman et al. 2019, Astrophys. J. 882, 34 (TRGB)",
             "Verde, Treu, Riess 2019, Nature Astron. 3, 891 (tension review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-H0-GW-standard-siren",
@@ -12841,7 +13071,8 @@
           "citations": [
             "Abbott et al. (LIGO-Virgo + EM partners) 2017, Nature 551, 85 (GW170817 standard siren)",
             "Schutz 1986, Nature 323, 310 (original standard-siren proposal)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-sigma8-CMB",
@@ -12857,7 +13088,8 @@
           "description": "First half of the σ_8 tension. CMB-derived σ_8 measures structure amplitude extrapolated forward from recombination using ΛCDM growth-of-perturbations. Paired with cell-cosm-sigma8-weak-lensing via multi-experiment-tension.",
           "citations": [
             "Aghanim et al. (Planck) 2020, Astron. Astrophys. 641, A6"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-sigma8-weak-lensing",
@@ -12875,7 +13107,8 @@
             "Asgari et al. (KiDS-1000) 2021, Astron. Astrophys. 645, A104",
             "Abbott et al. (DES Y3) 2022, Phys. Rev. D 105, 023520",
             "Dalal et al. (HSC Y3) 2023, Phys. Rev. D 108, 123519"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-BBN-D-H",
@@ -12892,7 +13125,8 @@
           "citations": [
             "Cooke, Pettini, Steidel 2018, Astrophys. J. 855, 102",
             "Cyburt, Fields, Olive, Yeh 2016, Rev. Mod. Phys. 88, 015004 (BBN review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-BBN-Li7-problem",
@@ -12910,7 +13144,8 @@
           "citations": [
             "Spite, Spite 1982, Astron. Astrophys. 115, 357 (Spite plateau)",
             "Cyburt, Fields, Olive, Yeh 2016, Rev. Mod. Phys. 88, 015004 (review of BBN, including ⁷Li problem)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-primordial-GW-r-bound",
@@ -12928,7 +13163,8 @@
           "citations": [
             "Ade et al. (BICEP/Keck) 2021, Phys. Rev. Lett. 127, 151301 (r < 0.036)",
             "Hazumi et al. (LiteBIRD) 2019, J. Low Temp. Phys. 194, 443 (LiteBIRD design)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-primordial-non-Gaussianity-fNL",
@@ -12945,7 +13181,8 @@
           "citations": [
             "Akrami et al. (Planck) 2020, Astron. Astrophys. 641, A9 (NG constraints)",
             "Maldacena 2003, JHEP 05, 013 (single-field inflation NG bound)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-tau-reio",
@@ -12961,7 +13198,8 @@
           "description": "Recombination/reionization-history parameter. Precisely measured from CMB polarization and consistent with quasar and JWST observations. Stable across recent updates.",
           "citations": [
             "Aghanim et al. (Planck) 2020, Astron. Astrophys. 641, A6"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-curvature-OmegaK",
@@ -12977,7 +13215,8 @@
           "description": "Strong inflation-test prediction confirmed at sub-percent precision. The flatness is one of the cleanest ΛCDM-inflation success stories.",
           "citations": [
             "Aghanim et al. (Planck) 2020, Astron. Astrophys. 641, A6"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-spectral-index-ns",
@@ -12993,7 +13232,8 @@
           "description": "Inflation-test prediction confirmed. The slightly-red spectral index (n_s < 1) is a generic prediction of slow-roll inflation and is now established at high significance.",
           "citations": [
             "Aghanim et al. (Planck) 2020, Astron. Astrophys. 641, A6"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-Sigma-mass-nu",
@@ -13009,7 +13249,8 @@
           "description": "Cell-level overlap with neutrino-sector-phenomenology cell-nu-Sum-mass-Planck. From cosmology perspective, this is a cosmological parameter bound; from neutrino perspective, it constrains the absolute mass scale. Both perspectives apply.",
           "citations": [
             "Aghanim et al. (Planck) 2020 (Σm_ν bound)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-OmegaDM-cosmological",
@@ -13025,7 +13266,8 @@
           "description": "The cosmological constraint on DM abundance. Dark-matter-candidates organizes the candidate space; this cell organizes the abundance observation that any DM candidate must reproduce. Cross-references dark-matter-candidates v25 cells (which collectively must account for this Ω_DM).",
           "citations": [
             "Aghanim et al. (Planck) 2020"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-JWST-highz-galaxies",
@@ -13044,7 +13286,8 @@
             "Labbé et al. 2023, Nature 616, 266",
             "Bunker et al. 2023, Astron. Astrophys. 677, A88 (GN-z11)",
             "Boylan-Kolchin 2023, Nature Astron. 7, 731 (ΛCDM mass-function tension)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-cosm-EDGES-21cm-falsified-claim",
@@ -13062,7 +13305,8 @@
           "citations": [
             "Bowman et al. (EDGES) 2018, Nature 555, 67",
             "Singh et al. (SARAS 3) 2022, Nature Astron. 6, 607 (null result)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -13259,7 +13503,8 @@
           "description": "The discovery event. First direct detection of gravitational waves, first observation of a stellar-mass BBH merger, and first direct evidence for stellar-mass black holes above ~25 M_sun. The detection significance, waveform match to numerical relativity predictions, and consistency with GR confirmed multiple predictions simultaneously.",
           "citations": [
             "Abbott et al. (LIGO Scientific Collaboration + Virgo) 2016, Phys. Rev. Lett. 116, 061102 (discovery paper)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GW170817",
@@ -13278,7 +13523,8 @@
             "Abbott et al. (LVC + many EM collaborations) 2017, Astrophys. J. Lett. 848, L12 (multi-messenger observation summary)",
             "Abbott et al. (LVC) 2017, Phys. Rev. Lett. 119, 161101 (GW170817 discovery)",
             "Abbott et al. (LVC + INTEGRAL/Fermi-GBM) 2017, Astrophys. J. Lett. 848, L13 (GW + GRB coincidence)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GW190521-heavy-BBH",
@@ -13295,7 +13541,8 @@
           "citations": [
             "Abbott et al. (LVC) 2020, Phys. Rev. Lett. 125, 101102 (GW190521 detection)",
             "Abbott et al. (LVC) 2020, Astrophys. J. Lett. 900, L13 (astrophysical implications)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GW190814-mass-gap",
@@ -13311,7 +13558,8 @@
           "description": "Probes the 'lower mass gap' between NSs (capped by TOV mass ~ 2.5 M_sun) and stellar-mass BHs (lower edge typically ~5 M_sun). The 2.6 M_sun secondary sits exactly in the conjectured gap. Distinguishing NS vs BH for the secondary requires additional information (no tidal deformability extracted; no EM counterpart detected). Result: 'mass gap' may not be a sharp gap.",
           "citations": [
             "Abbott et al. (LVC) 2020, Astrophys. J. Lett. 896, L44"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GW230529-NSBH-candidate",
@@ -13327,7 +13575,8 @@
           "description": "Continues GW190814's role of populating the lower mass gap. Adds to the empirical picture that the 3-5 M_sun mass gap is at most a partial gap, not a sharp boundary. O4 run is producing more such events.",
           "citations": [
             "Abac et al. (LVK) 2024, Astrophys. J. Lett. 970, L34"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GWTC3-BBH-population",
@@ -13343,7 +13592,8 @@
           "description": "Population-level cell capturing emergent structure from the GWTC-3 catalog. The 35-M_sun mass-distribution excess is consistent with pulsational-pair-instability theoretical predictions — stellar-collapse forms BHs preferentially below the pair-instability mass scale. The low-spin distribution constrains stellar binary formation channels.",
           "citations": [
             "Abbott et al. (LVC) 2023, Phys. Rev. X 13, 011048 (GWTC-3 population)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-NANOGrav-15yr-nHz",
@@ -13361,7 +13611,8 @@
           "citations": [
             "Agazie et al. (NANOGrav) 2023, Astrophys. J. Lett. 951, L8 (15-year result)",
             "Antoniadis et al. (EPTA + InPTA) 2023, Astron. Astrophys. 678, A50 (independent confirmation)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-LIGO-Hz-stochastic-bound",
@@ -13377,7 +13628,8 @@
           "description": "Strongest constraint on Hz-scale stochastic GW background from astrophysical or cosmological sources. The astrophysical background from unresolved BBH/BNS mergers is below current sensitivity but reachable with O5 + future detectors.",
           "citations": [
             "Abbott et al. (LVC) 2021, Phys. Rev. D 104, 022004"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-continuous-wave-pulsar-Crab",
@@ -13394,7 +13646,8 @@
           "description": "Bounded with upper limit. The LIGO continuous-wave bound on Crab pulsar ellipticity is now below the spin-down-luminosity bound — meaning the Crab is not losing the bulk of its rotational energy via GW emission. Other isolated pulsars with high spin-down rates remain interesting targets.",
           "citations": [
             "Abbott et al. (LVC) 2022, Astrophys. J. 935, 1 (continuous-wave O3 searches)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-supernova-burst-predicted",
@@ -13411,7 +13664,8 @@
           "description": "Mendeleev empty cell. The galactic core-collapse SN rate is ~1-3 per century — statistically zero expected during LIGO O1-O5 operational period (2015-2030). However, when a galactic SN occurs, simultaneous detection of GW + neutrinos (Super-K, IceCube) + EM gives the cleanest single-source multi-messenger event possible. Comparable to GW170817 in transformative potential.",
           "citations": [
             "Andresen, Müller, Müller, Janka 2017, Mon. Not. R. Astron. Soc. 468, 2032 (3D SN GW predictions)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-EMRI-LISA-predicted",
@@ -13428,7 +13682,8 @@
           "citations": [
             "Babak, Gair, Sesana, Barausse, Sopuerta, Berry, Berti, Amaro-Seoane, Petiteau, Klein 2017, Phys. Rev. D 95, 103012 (EMRI science with LISA)",
             "Amaro-Seoane et al. (LISA Consortium) 2022, arXiv:2203.06016"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-LISA-galactic-binaries",
@@ -13444,7 +13699,8 @@
           "description": "Predicted-not-yet-detected. The LISA-band galactic-binary signal is a unique target — many sources contribute to a foreground that limits LISA sensitivity at sub-mHz, while ~10⁴ are individually resolvable. Provides binary-population statistics for the Milky Way compact-binary population.",
           "citations": [
             "Korol et al. 2017, Mon. Not. R. Astron. Soc. 470, 1894 (galactic-binary LISA predictions)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-primordial-GW-stochastic-cosm",
@@ -13461,7 +13717,8 @@
           "description": "Cell-level cross-reference to cosmological-observations cell-cosm-primordial-GW-r-bound — same physical phenomenon, organized in cosmology FC as B-mode bound and here as nHz stochastic detection. Mendeleev empty for the cosmological-origin interpretation of the NANOGrav signal.",
           "citations": [
             "Caprini, Figueroa 2018, Class. Quant. Grav. 35, 163001 (cosmological GW review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-GW-speed-test-170817",
@@ -13478,7 +13735,8 @@
           "citations": [
             "Abbott et al. (LVC + INTEGRAL/Fermi-GBM) 2017, Astrophys. J. Lett. 848, L13",
             "Creminelli, Vernizzi 2017, Phys. Rev. Lett. 119, 251302 (modified-gravity exclusion)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-no-hair-ringdown-tests",
@@ -13495,7 +13753,8 @@
           "citations": [
             "Isi, Giesler, Farr, Scheel, Teukolsky 2019, Phys. Rev. Lett. 123, 111102 (overtone QNM)",
             "Abbott et al. (LVC) 2021, Phys. Rev. D 103, 122002 (Kerr-consistency tests)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-stochastic-GW-CW-from-DM",
@@ -13513,7 +13772,8 @@
           "citations": [
             "Arvanitaki, Baryakhtar, Huang 2015, Phys. Rev. D 91, 084011 (BH superradiance)",
             "Abbott et al. (LVC) 2022, Phys. Rev. D 105, 102001 (BH-superradiance search)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-gwe-multi-messenger-coincidence",
@@ -13530,7 +13790,8 @@
           "description": "First multi-messenger event combining GW with EM counterparts and indirect r-process nucleosynthesis confirmation. Settled multiple open questions in one event: BNS-merger as short-GRB progenitor; kilonova nucleosynthesis source; GW-EM coincidence demonstration. Major Mendeleev cell-completed.",
           "citations": [
             "Abbott et al. (LVC + EM partners) 2017, Astrophys. J. Lett. 848, L12"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -13721,7 +13982,8 @@
           "citations": [
             "Gell-Mann 1964, Phys. Lett. 8, 214 (quark model)",
             "Wilson 1974, Phys. Rev. D 10, 2445 (lattice QCD)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-QGP-high-T",
@@ -13739,7 +14001,8 @@
             "Adams et al. (STAR) 2005, Nucl. Phys. A 757, 102 (RHIC QGP white paper)",
             "Aamodt et al. (ALICE) 2010, Phys. Rev. Lett. 105, 252302 (LHC QGP observation)",
             "Matsui, Satz 1986, Phys. Lett. B 178, 416 (charmonium suppression prediction)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-crossover-Tc",
@@ -13756,7 +14019,8 @@
           "citations": [
             "Bazavov et al. (HotQCD) 2014, Phys. Rev. D 90, 094503",
             "Borsányi et al. (Budapest-Wuppertal) 2010, JHEP 11, 077"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-CFL-asymptotic",
@@ -13774,7 +14038,8 @@
             "Alford, Rajagopal, Wilczek 1999, Nucl. Phys. B 537, 443",
             "Schäfer, Wilczek 1999, Phys. Rev. Lett. 82, 3956 (color-Higgs continuity)",
             "Alford, Schmitt, Rajagopal, Schäfer 2008, Rev. Mod. Phys. 80, 1455 (CSC review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-2SC-intermediate-mu",
@@ -13791,7 +14056,8 @@
           "citations": [
             "Alford, Rajagopal, Wilczek 1998, Phys. Lett. B 422, 247",
             "Alford et al. 2008, Rev. Mod. Phys. 80, 1455 (CSC review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-quarkyonic-McLerran-Pisarski",
@@ -13808,7 +14074,8 @@
           "citations": [
             "McLerran, Pisarski 2007, Nucl. Phys. A 796, 83",
             "Hidaka, McLerran, Pisarski 2008, Nucl. Phys. A 808, 117"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-critical-endpoint-search",
@@ -13827,7 +14094,8 @@
             "Stephanov, Rajagopal, Shuryak 1998, Phys. Rev. Lett. 81, 4816 (critical-endpoint signatures)",
             "Adam et al. (STAR) 2021, Phys. Rev. Lett. 126, 092301 (BES higher-cumulant results)",
             "Bzdak et al. 2020, Phys. Rep. 853, 1 (critical-endpoint review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-color-Higgs-continuity",
@@ -13844,7 +14112,8 @@
           "citations": [
             "Schäfer, Wilczek 1999, Phys. Rev. Lett. 82, 3956",
             "Hatsuda et al. 2006, Phys. Rev. Lett. 97, 122001 (continuity analysis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-asymptotic-free-quark-gas",
@@ -13862,7 +14131,8 @@
             "Gross, Wilczek 1973, Phys. Rev. Lett. 30, 1343 (asymptotic freedom)",
             "Politzer 1973, Phys. Rev. Lett. 30, 1346",
             "Freedman, McLerran 1977, Phys. Rev. D 16, 1169 (high-μ_B EoS)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-hydrodynamic-v2-RHIC",
@@ -13879,7 +14149,8 @@
           "citations": [
             "Ackermann et al. (STAR) 2001, Phys. Rev. Lett. 86, 402 (elliptic flow at RHIC)",
             "Kovtun, Son, Starinets 2005, Phys. Rev. Lett. 94, 111601 (KSS bound from AdS-CFT)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-jet-quenching-RAA",
@@ -13896,7 +14167,8 @@
           "citations": [
             "Adams et al. (STAR) 2003, Phys. Rev. Lett. 91, 172302 (RHIC jet-quenching)",
             "Aamodt et al. (ALICE) 2011, Phys. Lett. B 696, 30 (LHC R_AA)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-charmonium-suppression",
@@ -13914,7 +14186,8 @@
             "Matsui, Satz 1986, Phys. Lett. B 178, 416 (prediction)",
             "Abreu et al. (NA50) 1996, Phys. Lett. B 410, 327 (observation)",
             "Adam et al. (ALICE) 2016, JHEP 05, 179 (LHC regeneration)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-massless-chiral-O4-cross-real-crit",
@@ -13931,7 +14204,8 @@
           "citations": [
             "Pisarski, Wilczek 1984, Phys. Rev. D 29, 338",
             "Ejiri et al. 2009, Phys. Rev. D 80, 094505 (lattice tests)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-NS-interior-cross-compact-astro",
@@ -13949,7 +14223,8 @@
             "Miller et al. (NICER) 2019, Astrophys. J. Lett. 887, L24 (J0030+0451)",
             "Cromartie et al. 2020, Nature Astron. 4, 72 (J0740+6620 mass)",
             "Abbott et al. (LVC) 2018, Phys. Rev. Lett. 121, 161101 (GW170817 tidal)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-sign-problem-lattice",
@@ -13966,7 +14241,8 @@
           "citations": [
             "Aarts 2014, J. Phys. Conf. Ser. 706, 022004 (sign-problem review)",
             "de Forcrand 2010, PoS LAT2009, 010 (lattice at finite density)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-Hagedorn-T",
@@ -13983,7 +14259,8 @@
           "description": "Historical and conceptual cell. Hagedorn temperature is the empirical signature in the hadron-resonance-gas spectrum that the hadronic description fails at high T — pre-dating but matching the deconfinement picture.",
           "citations": [
             "Hagedorn 1965, Nuovo Cimento Suppl. 3, 147"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-strangeness-enhancement",
@@ -14000,7 +14277,8 @@
           "citations": [
             "Rafelski, Müller 1982, Phys. Rev. Lett. 48, 1066 (prediction)",
             "Andersen et al. (ALICE) 2017, Nature Phys. 13, 535 (LHC enhancement)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-qcd-AdS-CFT-eta-over-s",
@@ -14017,7 +14295,8 @@
           "citations": [
             "Kovtun, Son, Starinets 2005, Phys. Rev. Lett. 94, 111601 (KSS bound)",
             "Romatschke, Romatschke 2007, Phys. Rev. Lett. 99, 172301 (η/s extraction)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -14219,7 +14498,8 @@
           "citations": [
             "Mather et al. 1990, Astrophys. J. Lett. 354, L37 (FIRAS spectrum)",
             "Fixsen 2009, Astrophys. J. 707, 916 (precise temperature)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-crab-multiband",
@@ -14236,7 +14516,8 @@
           "citations": [
             "Hester 2008, Annu. Rev. Astron. Astrophys. 46, 127 (Crab review)",
             "Cao et al. (LHAASO) 2021, Nature 594, 33 (Crab PeV)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-AGN-jet-synchrotron",
@@ -14254,7 +14535,8 @@
             "Begelman, Blandford, Rees 1984, Rev. Mod. Phys. 56, 255",
             "Event Horizon Telescope Collaboration 2019, Astrophys. J. Lett. 875, L1 (M87*)",
             "EHT Collaboration 2022, Astrophys. J. Lett. 930, L12 (Sgr A*)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-GRBs-multiband",
@@ -14272,7 +14554,8 @@
             "Mészáros 2006, Rep. Prog. Phys. 69, 2259 (GRB review)",
             "Abbott et al. (LVC + Fermi-GBM + INTEGRAL) 2017, Astrophys. J. Lett. 848, L13",
             "LHAASO Collaboration 2023, Science 380, 1390 (GRB 221009A)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-GW170817-kilonova",
@@ -14289,7 +14572,8 @@
           "citations": [
             "Abbott et al. (LVC + ~70 EM partners) 2017, Astrophys. J. Lett. 848, L12",
             "Kasen, Metzger, Barnes, Quataert, Ramirez-Ruiz 2017, Nature 551, 80 (kilonova theory)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-LHAASO-PeV-gamma",
@@ -14306,7 +14590,8 @@
           "citations": [
             "Cao et al. (LHAASO) 2021, Nature 594, 33 (12 PeV sources)",
             "LHAASO Collaboration 2023, Science 380, 1390 (GRB 221009A 18 TeV)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-IceCube-TXS-multimessenger",
@@ -14323,7 +14608,8 @@
           "citations": [
             "IceCube Collaboration + Fermi-LAT + MAGIC + VERITAS 2018, Science 361, 147",
             "IceCube Collaboration 2018, Science 361, 146 (archival 2014-15 data)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-cosmic-IR-background",
@@ -14340,7 +14626,8 @@
           "citations": [
             "Hauser, Dwek 2001, Annu. Rev. Astron. Astrophys. 39, 249 (CIB review)",
             "Madau, Dickinson 2014, Annu. Rev. Astron. Astrophys. 52, 415 (cosmic SFR + IR)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-cosmic-X-ray-background",
@@ -14357,7 +14644,8 @@
           "citations": [
             "Brandt, Hasinger 2005, Annu. Rev. Astron. Astrophys. 43, 827 (X-ray AGN review)",
             "Civano et al. 2016, Astrophys. J. 819, 62 (Chandra COSMOS legacy)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-extragalactic-gamma-background",
@@ -14373,7 +14661,8 @@
           "description": "Gamma-ray cosmological background. Bounded for any dark-matter-decay contribution; one of the constraints on certain DM scenarios.",
           "citations": [
             "Ackermann et al. (Fermi-LAT) 2015, Astrophys. J. 799, 86 (EGB)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-Cherenkov-atmospheric-VHE",
@@ -14390,7 +14679,8 @@
           "citations": [
             "Aharonian et al. (HESS) 2006, Astrophys. J. 636, 777 (Galactic Plane Survey)",
             "Acharya et al. (CTA Consortium) 2018, arXiv:1709.07997 (CTA science case)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-FEL-coherent-X-ray",
@@ -14407,7 +14697,8 @@
           "citations": [
             "Emma et al. (LCLS) 2010, Nature Photonics 4, 641",
             "Decking et al. (European XFEL) 2020, Nature Photonics 14, 391"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-laser-coherent-visible",
@@ -14424,7 +14715,8 @@
           "citations": [
             "Bloembergen 1996, Nonlinear Optics (4th ed., World Scientific)",
             "Ludlow et al. 2015, Rev. Mod. Phys. 87, 637 (optical clocks)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-Hawking-radiation-empty",
@@ -14443,7 +14735,8 @@
             "Hawking 1974, Nature 248, 30",
             "Hawking 1975, Commun. Math. Phys. 43, 199",
             "Steinhauer 2016, Nature Phys. 12, 959 (analog Hawking in BEC)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-axion-photon-bounds",
@@ -14461,7 +14754,8 @@
           "citations": [
             "Anastassopoulos et al. (CAST) 2017, Nature Phys. 13, 584",
             "Armengaud et al. (IAXO Collaboration) 2019, JCAP 06, 047"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-monopole-EM-empty",
@@ -14481,7 +14775,8 @@
             "'t Hooft 1974, Nucl. Phys. B 79, 276",
             "Polyakov 1974, JETP Lett. 20, 194",
             "Aiello et al. (ANTARES) 2017, Astropart. Phys. 86, 21"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-em-SETI-technosignatures",
@@ -14498,7 +14793,8 @@
           "citations": [
             "Tarter 2001, Annu. Rev. Astron. Astrophys. 39, 511 (SETI review)",
             "Sheikh et al. 2021, Nature Astron. 5, 1153 (Breakthrough Listen)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -14698,7 +14994,8 @@
             "Georgi, Glashow 1974, Phys. Rev. Lett. 32, 438",
             "Buras, Ellis, Gaillard, Nanopoulos 1978, Nucl. Phys. B 135, 66 (refined prediction)",
             "Takenaka et al. (Super-K) 2020, Phys. Rev. D 102, 112011"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-Kplus-nubar-SUSY",
@@ -14716,7 +15013,8 @@
           "citations": [
             "Sakai, Yanagida 1982, Nucl. Phys. B 197, 533 (SUSY-SU(5) proton decay)",
             "Abe et al. (Super-K) 2014, Phys. Rev. D 90, 072005"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-piplus-nubar-bound",
@@ -14732,7 +15030,8 @@
           "description": "Charged-current p → π + neutrino. Generally predicted with branching ratio ~ 1/2 of p → π⁰ e⁺ in GUT scenarios. Bounded but not yet competitive with the canonical channel for falsification.",
           "citations": [
             "Mine et al. (Super-K) 2008, Phys. Rev. D 77, 052006"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-eplus-gamma",
@@ -14748,7 +15047,8 @@
           "description": "Sub-leading channel useful for discriminating between GUT scenarios. The bound is moderate; channel will benefit from Hyper-K + DUNE larger fiducial mass.",
           "citations": [
             "Kobayashi et al. (Super-K) 2005, Phys. Rev. D 72, 052007"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-eta-eplus",
@@ -14764,7 +15064,8 @@
           "description": "Heavier-meson channels. Comparable bounds to canonical channels; useful for SUSY-SU(5) discrimination given the strange-quark coupling pattern.",
           "citations": [
             "Hayato et al. (Super-K) 2008, Phys. Rev. D 79, 112010"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-K0-eplus-or-muplus",
@@ -14780,7 +15081,8 @@
           "description": "K⁰-channel bounds complement p → K⁺ ν̄. SUSY-SU(5) prediction marginally above current bound.",
           "citations": [
             "Sussman et al. (Super-K) 2018, Phys. Rev. D 97, 092013"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-three-lepton",
@@ -14796,7 +15098,8 @@
           "description": "Three-lepton channels predicted in some exotic-BSM scenarios. Bounded but not competitive with leading channels.",
           "citations": [
             "Super-K Collaboration 2014, Phys. Rev. D 90, 072005"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-nbar-oscillation",
@@ -14815,7 +15118,8 @@
             "Mohapatra, Marshak 1980, Phys. Rev. Lett. 44, 1316 (n-n̄ original)",
             "Baldo-Ceolin et al. 1994, Z. Phys. C 63, 409 (ILL bound)",
             "Abe et al. (Super-K) 2015, Phys. Rev. D 91, 072006"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-IMB-historical-bound",
@@ -14833,7 +15137,8 @@
           "citations": [
             "Becker-Szendy et al. (IMB) 1990, Phys. Rev. D 42, 2974",
             "Hirata et al. (Kamiokande-I) 1989, Phys. Lett. B 220, 308"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-Hyper-K-future",
@@ -14851,7 +15156,8 @@
           "citations": [
             "Abe et al. (Hyper-K) 2018, arXiv:1805.04163",
             "Abi et al. (DUNE Collaboration) 2020, JINST 15, T08010"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-DUNE-K-channel-sensitivity",
@@ -14868,7 +15174,8 @@
           "description": "DUNE complements Hyper-K. The two channels (π⁰ e⁺ + K⁺ ν̄) together discriminate among GUT variants by branching ratio. Discovery in K⁺ ν̄ would strongly favor SUSY-SU(5).",
           "citations": [
             "Abi et al. (DUNE) 2020, JINST 15, T08010"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-bound-neutron-decay",
@@ -14884,7 +15191,8 @@
           "description": "Complementary to free-proton modes. Both channels share GUT-mediation physics; combined limits constrain GUT-scale + Higgs-triplet mass.",
           "citations": [
             "Super-K Collaboration 2014, Phys. Rev. D 90, 072005"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-SUSY-SU5-constraint-update",
@@ -14901,7 +15209,8 @@
           "citations": [
             "Lucas, Raby 1996, Phys. Rev. D 54, 2261 (SUSY-GUT constraint)",
             "Hisano, Murayama, Yanagida 1992, Nucl. Phys. B 402, 46"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-flipped-SU5",
@@ -14918,7 +15227,8 @@
           "citations": [
             "Barr 1982, Phys. Lett. B 112, 219",
             "Derendinger, Kim, Nanopoulos 1984, Phys. Lett. B 139, 170"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-Pati-Salam",
@@ -14936,7 +15246,8 @@
           "citations": [
             "Pati, Salam 1974, Phys. Rev. D 10, 275",
             "Senjanovic 1979, Phys. Rev. D 19, 822"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-SO10",
@@ -14953,7 +15264,8 @@
           "citations": [
             "Fritzsch, Minkowski 1975, Ann. Phys. 93, 193",
             "Georgi 1975, AIP Conf. Proc. 23, 575"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-pd-DUNE-atmospheric-bkg",
@@ -14970,7 +15282,8 @@
           "description": "Systematic-physics cell. Atmospheric neutrinos are the irreducible background. Background-rejection efficiency limits the ultimate proton-decay reach.",
           "citations": [
             "Honda et al. 2015, Phys. Rev. D 92, 023004 (atmospheric ν flux model)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -15167,7 +15480,8 @@
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 431, 484 (SU(2) N=2 SQCD)",
             "Argyres, Plesser, Seiberg 1996, Nucl. Phys. B 471, 159 (moduli space)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-SU2Nf4-a-anomaly",
@@ -15184,7 +15498,8 @@
           "citations": [
             "Anselmi, Erlich, Freedman, Johansen 1997, Phys. Rev. D 57, 7570",
             "Hofman, Maldacena 2008, JHEP 05, 012 (a/c bounds)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-AD-H0-Delta",
@@ -15201,7 +15516,8 @@
           "description": "Foundational irrational-scaling-dimension result. AD theories have Δ_u that are rational fractions (6/5, 4/3, 3/2 for H_0, H_1, H_2) but not integer — distinguishing them sharply from Lagrangian SQCDs with Δ_u = 2.",
           "citations": [
             "Argyres, Douglas 1995, Nucl. Phys. B 448, 93"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-AD-H1-Delta",
@@ -15217,7 +15533,8 @@
           "description": "Second member of rank-1 AD series. The dimensions 6/5, 4/3, 3/2 form a recognizable pattern (k+1)/(k+2) for k = 4, 3, 2 — connecting to mathematics of (A_1, A_n) singularities.",
           "citations": [
             "Argyres, Plesser, Seiberg, Witten 1995, Nucl. Phys. B 461, 71"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-MN-E6-Coulomb-Delta",
@@ -15234,7 +15551,8 @@
           "description": "Foundational isolated N=2 SCFT with exceptional flavor symmetry. E_6 MN theory is the simplest non-Lagrangian rank-1 SCFT. Used as building block in class-S constructions (T_N theories).",
           "citations": [
             "Minahan, Nemeschansky 1996, Nucl. Phys. B 482, 142"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-MN-E6-Higgs-Hilbert",
@@ -15251,7 +15569,8 @@
           "description": "Exact Higgs-branch geometry for MN E_6. Minimal nilpotent orbit is the canonical 'small' representation theory object for E_6.",
           "citations": [
             "Beem, Lemos, Liendo, Peelaers, Rastelli, van Rees 2015, Commun. Math. Phys. 336, 1359"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-MN-E7-Delta",
@@ -15267,7 +15586,8 @@
           "description": "Second exceptional MN theory. Δ_u = 4 distinguishes from E_6 (Δ_u = 3) and E_8 (Δ_u = 6).",
           "citations": [
             "Minahan, Nemeschansky 1997, Nucl. Phys. B 489, 24"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-MN-E8-Delta",
@@ -15283,7 +15603,8 @@
           "description": "Third exceptional MN theory. The Δ_u = 3, 4, 6 sequence for E_6/E_7/E_8 reflects the dual Coxeter numbers 12, 18, 30 — pattern Δ_u = h^∨ / (h^∨ - r) for some r-related quantity.",
           "citations": [
             "Minahan, Nemeschansky 1997, Nucl. Phys. B 489, 24"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-Schur-2D-4D",
@@ -15300,7 +15621,8 @@
           "description": "Foundational 2D-4D correspondence. Provides exact computations of 4D Schur indices via 2D chiral-algebra character formulas — one of the most successful exact-result programs for N=2 SCFTs in the past decade.",
           "citations": [
             "Beem, Lemos, Liendo, Peelaers, Rastelli, van Rees 2015, Commun. Math. Phys. 336, 1359"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-AGT-Liouville",
@@ -15318,7 +15640,8 @@
           "citations": [
             "Alday, Gaiotto, Tachikawa 2010, Lett. Math. Phys. 91, 167",
             "Gaiotto 2009, JHEP 12, 034 (N=2 class-S theories)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-class-S-T3-E6",
@@ -15335,7 +15658,8 @@
           "description": "Foundational class-S identification. The geometric realization of MN E_6 as the simplest T_N building block (T_3) provides the systematic origin of exceptional-flavor SCFTs from M-theory.",
           "citations": [
             "Gaiotto 2009, JHEP 12, 034"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-bootstrap-a-c-bound",
@@ -15353,7 +15677,8 @@
           "citations": [
             "Hofman, Maldacena 2008, JHEP 05, 012",
             "Beem, Liendo, Peelaers, Rastelli, van Rees 2014, JHEP 03, 100"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-BPS-spectrum-SU2Nf4",
@@ -15371,7 +15696,8 @@
           "citations": [
             "Seiberg, Witten 1994, Nucl. Phys. B 426, 19 (SW theory)",
             "Denef, Moore 2011, JHEP 11, 129 (wall-crossing review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-localization-S4",
@@ -15388,7 +15714,8 @@
           "description": "Foundational SUSY-localization result. Pestun's localization opened a new computational era for N=2 SUSY observables — exact partition functions, exact Wilson-loop expectation values, etc.",
           "citations": [
             "Pestun 2012, Commun. Math. Phys. 313, 71"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-Nekrasov-instanton",
@@ -15405,7 +15732,8 @@
           "description": "Foundational exact instanton-sum result. Nekrasov's partition function is the most exact non-perturbative result available for N=2 SCFTs.",
           "citations": [
             "Nekrasov 2003, Adv. Theor. Math. Phys. 7, 831"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-n2scft-AD-Schur-Virasoro",
@@ -15423,7 +15751,8 @@
           "citations": [
             "Cordova, Shao 2016, JHEP 01, 040 (AD Schur indices)",
             "Beem, Rastelli 2018, JHEP 08, 114 (chiral-algebra approach)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -15620,7 +15949,8 @@
             "Adler 1969, Phys. Rev. 177, 2426",
             "Bell, Jackiw 1969, Nuovo Cim. A 60, 47",
             "Larin et al. (PrimEx-II) 2014, Phys. Rev. Lett. 113, 011803"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-SM-anomaly-cancellation",
@@ -15638,7 +15968,8 @@
           "citations": [
             "Bouchiat, Iliopoulos, Meyer 1972, Phys. Lett. B 38, 519",
             "Geng, Marshak 1989, Phys. Rev. D 39, 693 (charge quantization)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-tHooft-QCD-chiral-breaking",
@@ -15657,7 +15988,8 @@
           "citations": [
             "'t Hooft 1980, in Recent Developments in Gauge Theories (Plenum)",
             "Frishman, Schwimmer, Banks, Yankielowicz 1981, Nucl. Phys. B 177, 157"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-WZW-eta-prime",
@@ -15676,7 +16008,8 @@
           "citations": [
             "Wess, Zumino 1971, Phys. Lett. B 37, 95",
             "Witten 1979, Nucl. Phys. B 156, 269; Veneziano 1979, Nucl. Phys. B 159, 213"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-Witten-SU2-anomaly",
@@ -15693,7 +16026,8 @@
           "description": "Foundational global anomaly result. Witten SU(2) anomaly is a discrete topological constraint distinct from perturbative anomalies — provides another consistency requirement on SM matter content. Beautiful interplay of topology and consistency.",
           "citations": [
             "Witten 1982, Phys. Lett. B 117, 324"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-3DTI-Z2-FuKaneMele",
@@ -15712,7 +16046,8 @@
           "citations": [
             "Fu, Kane, Mele 2007, Phys. Rev. Lett. 98, 106803",
             "Hsieh et al. 2009, Nature 460, 1101"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-QH-TKNN-Chern",
@@ -15730,7 +16065,8 @@
           "citations": [
             "Thouless, Kohmoto, Nightingale, den Nijs 1982, Phys. Rev. Lett. 49, 405",
             "von Klitzing, Dorda, Pepper 1980, Phys. Rev. Lett. 45, 494"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-Z8-FidkowskiKitaev",
@@ -15748,7 +16084,8 @@
           "citations": [
             "Fidkowski, Kitaev 2010, Phys. Rev. B 81, 134509",
             "Freed, Hopkins 2016, arXiv:1604.06527 (cobordism analysis)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-MZM-Kitaev-chain",
@@ -15768,7 +16105,8 @@
             "Kitaev 2001, Phys.-Usp. 44, 131",
             "Mourik et al. 2012, Science 336, 1003 (ZBCP observation)",
             "Zhang et al. 2018 retraction"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-parity-anomaly-3DTI",
@@ -15786,7 +16124,8 @@
           "citations": [
             "Niemi, Semenoff 1983, Phys. Rev. Lett. 51, 2077",
             "Chang et al. 2013, Science 340, 167 (QAH in magnetically doped TI)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-Haldane-chain",
@@ -15805,7 +16144,8 @@
           "citations": [
             "Haldane 1983, Phys. Rev. Lett. 50, 1153",
             "Affleck, Kennedy, Lieb, Tasaki 1987, Phys. Rev. Lett. 59, 799 (AKLT model)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-strong-CP-problem",
@@ -15824,7 +16164,8 @@
           "citations": [
             "Peccei, Quinn 1977, Phys. Rev. Lett. 38, 1440",
             "Abel et al. 2020, Phys. Rev. Lett. 124, 081803 (neutron EDM)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-CS-level-quantization",
@@ -15841,7 +16182,8 @@
           "description": "Foundational integer-quantization result. CS level quantization is a discrete topological constraint analogous to electric charge quantization in U(1) gauge theory.",
           "citations": [
             "Witten 1989, Commun. Math. Phys. 121, 351"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-ultracold-atom-SSH",
@@ -15859,7 +16201,8 @@
           "citations": [
             "Atala et al. 2013, Nature Phys. 9, 795",
             "Su, Schrieffer, Heeger 1979, Phys. Rev. Lett. 42, 1698 (SSH model)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-cobordism-SPT-classification",
@@ -15877,7 +16220,8 @@
           "citations": [
             "Freed, Hopkins 2016, arXiv:1604.06527",
             "Kapustin 2014, arXiv:1403.1467 (cobordism approach)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-spt-anomaly-inflow-CH",
@@ -15895,7 +16239,8 @@
           "citations": [
             "Callan, Harvey 1985, Nucl. Phys. B 250, 427",
             "Kaplan 1992, Phys. Lett. B 288, 342 (domain-wall fermions)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -16102,7 +16447,8 @@
             "Milgrom 1983, Astrophys. J. 270, 365 (MOND)",
             "Lelli, McGaugh, Schombert 2016, Astron. J. 152, 157 (SPARC)",
             "Clowe et al. 2006, Astrophys. J. Lett. 648, L109 (Bullet Cluster)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-TeVeS-GW170817-falsified",
@@ -16122,7 +16468,8 @@
             "Bekenstein 2004, Phys. Rev. D 70, 083509 (TeVeS)",
             "Abbott et al. (LVC + EM partners) 2017, Astrophys. J. Lett. 848, L13",
             "Boran, Desai, Kahya, Woodard 2018, Phys. Rev. D 97, 041501 (TeVeS GW170817 falsification)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-fR-cosmological-DE",
@@ -16141,7 +16488,8 @@
           "citations": [
             "Hu, Sawicki 2007, Phys. Rev. D 76, 064004",
             "De Felice, Tsujikawa 2010, Living Rev. Rel. 13, 3 (f(R) review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-DGP-cosmological-falsified",
@@ -16160,7 +16508,8 @@
           "citations": [
             "Dvali, Gabadadze, Porrati 2000, Phys. Lett. B 485, 208",
             "Lombriser, Hu, Fang, Seljak 2009, Phys. Rev. D 80, 063536 (DGP cosmology falsification)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-Horndeski-GW170817-restricted",
@@ -16181,7 +16530,8 @@
             "Horndeski 1974, Int. J. Theor. Phys. 10, 363",
             "Lombriser, Lima 2017, Phys. Lett. B 765, 382 (GW170817 → Horndeski)",
             "Creminelli, Vernizzi 2017, Phys. Rev. Lett. 119, 251302"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-dRGT-massive-gravity-bounds",
@@ -16200,7 +16550,8 @@
           "citations": [
             "de Rham, Gabadadze, Tolley 2010, Phys. Rev. Lett. 106, 231101",
             "Abbott et al. (LVC) 2021, Astrophys. J. 932, 49 (graviton dispersion test)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-bigravity-GW170817-falsified",
@@ -16219,7 +16570,8 @@
           "citations": [
             "Hassan, Rosen 2012, JHEP 02, 126",
             "Akrami et al. 2018, JCAP 03, 015 (bigravity cosmology)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-PSR-J0737-3039-GR-test",
@@ -16238,7 +16590,8 @@
           "citations": [
             "Kramer et al. 2021, Phys. Rev. X 11, 041050",
             "Hulse, Taylor 1975, Astrophys. J. Lett. 195, L51 (PSR B1913+16)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-solar-system-PPN-Cassini",
@@ -16255,7 +16608,8 @@
           "description": "Foundational PPN solar-system test. Cassini constrains the simplest scalar-tensor extensions to be extremely near GR, rendering them effectively indistinguishable from GR in solar-system regime.",
           "citations": [
             "Bertotti, Iess, Tortora 2003, Nature 425, 374"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-LIGO-GR-template-tests",
@@ -16272,7 +16626,8 @@
           "description": "Foundational strong-field GR tests via GW waveforms. Population-level analyses (~90 events through GWTC-3) provide cumulative GR consistency tests across mass range, spin, orbital phases.",
           "citations": [
             "Abbott et al. (LVC) 2021, Astrophys. J. 932, 49"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-EHT-shadow-test",
@@ -16291,7 +16646,8 @@
           "citations": [
             "EHT Collaboration 2019, Astrophys. J. Lett. 875, L1",
             "Psaltis et al. 2020, Phys. Rev. Lett. 125, 141104 (EHT test of Kerr-BH)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-chameleon-screening",
@@ -16311,7 +16667,8 @@
           "citations": [
             "Khoury, Weltman 2004, Phys. Rev. Lett. 93, 171104",
             "Hamilton et al. 2015, Science 349, 849 (atom interferometer chameleon)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-Einstein-aether-bounds",
@@ -16330,7 +16687,8 @@
           "citations": [
             "Jacobson, Mattingly 2001, Phys. Rev. D 64, 024028",
             "Gong, Hou, Wang 2018, JCAP 02, 014 (GW170817 Einstein-aether)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-MOND-cluster-lensing",
@@ -16349,7 +16707,8 @@
           "citations": [
             "Clowe et al. 2006, Astrophys. J. Lett. 648, L109 (Bullet Cluster)",
             "Bradač et al. 2008, Astrophys. J. 687, 959 (MACS J0025.4-1222)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-RMOND-GW170817-compatible",
@@ -16367,7 +16726,8 @@
           "description": "Post-GW170817 MOND extension specifically designed to survive graviton-speed bound. Recent (2021) — comprehensive observational testing still in progress.",
           "citations": [
             "Skordis, Złośnik 2021, Phys. Rev. Lett. 127, 161302"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mg-Galileon-screening-bounds",
@@ -16386,7 +16746,8 @@
           "citations": [
             "Nicolis, Rattazzi, Trincherini 2009, Phys. Rev. D 79, 064036",
             "Sakstein, Jain 2017, Phys. Rev. Lett. 119, 251303 (Galileon GW170817)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
@@ -16585,7 +16946,8 @@
           "citations": [
             "Kolmogorov 1941, Dokl. Akad. Nauk SSSR 30, 301",
             "Frisch 1995, Turbulence: The Legacy of A. N. Kolmogorov (Cambridge)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Reynolds-pipe-transition",
@@ -16603,7 +16965,8 @@
           "citations": [
             "Reynolds 1883, Phil. Trans. R. Soc. 174, 935",
             "Avila et al. 2011, Science 333, 192"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-multifractal-intermittency",
@@ -16622,7 +16985,8 @@
           "citations": [
             "Frisch 1995, Turbulence: The Legacy of A. N. Kolmogorov (Cambridge)",
             "She, Lévêque 1994, Phys. Rev. Lett. 72, 336"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-NIF-ignition-2022",
@@ -16641,7 +17005,8 @@
           "citations": [
             "Abu-Shawareb et al. (NIF) 2024, Phys. Rev. Lett. 132, 065102",
             "Lawson 1957, Proc. Phys. Soc. B 70, 6 (Lawson criterion)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-JET-DT-2021",
@@ -16659,7 +17024,8 @@
           "description": "Recent transformative result. JET 2021 DT plasma demonstrates sustained-pulse high-fusion-yield operation, validating ITER's predictions for D-T plasma performance.",
           "citations": [
             "JET Team + EUROfusion 2022, Nat. Phys. (JET DT 2021 results)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-MMS-reconnection",
@@ -16676,7 +17042,8 @@
           "description": "Foundational direct observation of reconnection microphysics. MMS first observation of electron diffusion region (2016) ended decades of inference-based reconnection studies — direct measurement.",
           "citations": [
             "Burch et al. (MMS) 2016, Science 352, aaf2939"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-MRX-laboratory-reconnection",
@@ -16693,7 +17060,8 @@
           "description": "Foundational laboratory reconnection studies. MRX has provided multi-decade characterization of reconnection physics — confirms transition to fast reconnection rates in collisionless regime, validates theoretical Hall-reconnection picture.",
           "citations": [
             "Yamada et al. 2010, Rev. Mod. Phys. 82, 603 (reconnection review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-solar-flare-reconnection",
@@ -16711,7 +17079,8 @@
           "description": "Foundational solar-flare reconnection observational program. Multi-spacecraft confirmation of magnetic-reconnection-driven solar-flare physics across X-ray, EUV, optical imaging modalities. Cell-level overlap with EM-phenomena v29.",
           "citations": [
             "Shibata, Magara 2011, Living Rev. Solar Phys. 8, 6 (solar flare reconnection review)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Parker-Solar-Probe-cascade",
@@ -16730,7 +17099,8 @@
           "citations": [
             "Fox et al. 2016, Space Sci. Rev. 204, 7 (Parker Solar Probe mission)",
             "Bandyopadhyay et al. 2020, Astrophys. J. Suppl. 246, 48"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Jarzynski-equality",
@@ -16749,7 +17119,8 @@
           "citations": [
             "Jarzynski 1997, Phys. Rev. Lett. 78, 2690",
             "Liphardt et al. 2002, Science 296, 1832"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Crooks-fluctuation-theorem",
@@ -16767,7 +17138,8 @@
           "citations": [
             "Crooks 1999, Phys. Rev. E 60, 2721",
             "Collin et al. 2005, Nature 437, 231"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-tokamak-H-mode",
@@ -16785,7 +17157,8 @@
           "description": "Foundational tokamak confinement regime. H-mode discovery enabled the path to fusion-relevant Q values via improved energy confinement; underlies ITER's design assumptions.",
           "citations": [
             "Wagner et al. 1982, Phys. Rev. Lett. 49, 1408"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-ITER-Q10",
@@ -16803,7 +17176,8 @@
           "description": "Major predicted-not-yet-confirmed milestone. ITER will be the first burning plasma experiment (alpha-particle self-heating exceeds external) — tests scaling of magnetic-confinement-fusion to reactor-relevant regime.",
           "citations": [
             "ITER Physics Basis 2007, Nucl. Fusion 47 (six-paper series)"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-jamming-transition",
@@ -16822,7 +17196,8 @@
           "citations": [
             "Liu, Nagel 1998, Nature 396, 21",
             "O'Hern et al. 2003, Phys. Rev. E 68, 011306"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Vicsek-collective-motion",
@@ -16841,7 +17216,8 @@
           "citations": [
             "Vicsek et al. 1995, Phys. Rev. Lett. 75, 1226",
             "Bricard et al. 2013, Nature 503, 95"
-          ]
+          ],
+          "constructive_status": "realized"
         },
         {
           "cell_id": "cell-mc-Rayleigh-Benard-Nu-Ra",
@@ -16860,7 +17236,8 @@
           "citations": [
             "Rayleigh 1916, Phil. Mag. 32, 529",
             "Niemela et al. 2000, Nature 404, 837 (cryogenic helium RBC)"
-          ]
+          ],
+          "constructive_status": "realized"
         }
       ],
       "predictive_yield": [
