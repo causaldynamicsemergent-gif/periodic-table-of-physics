@@ -23,10 +23,10 @@
       "MAP_v19_entry_hadrons.json",
       "MAP_v20_entry_fqh.json"
     ],
-    "_state": "71 nodes / 191 edges / 30 FCs / 102 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 22 cells annotated constructive_status=forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) / 5 ADE-clique cross-classification edges decorated with axis_mapping / 5 closure-constraint self-edges with axis_mapping (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b) / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells (Step 6b empty-binding-set finding)",
+    "_state": "83 nodes / 191 edges / 30 FCs / 102 cross-classification edges / 209 predictions (+ 14 cell-level) / 17 falsified / 0 new schema errors (4 pre-firewall constrains carryover) / 376 cells annotated constructive_status=realized / 22 cells annotated constructive_status=forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) / 5 ADE-clique cross-classification edges decorated with axis_mapping / 5 closure-constraint self-edges with axis_mapping (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b) / 0 Rule 22 warnings / 0 Bucket 3 (conjectured-by-pattern) cells (Step 6b empty-binding-set finding)",
     "_note": "This is a CONSOLIDATED VIEW for convenience. Canonical authoritative source is the union of the source_files. When making additions, author a new file rather than editing this consolidated file.",
-    "version": "v40",
-    "previous_version": "v39",
+    "version": "v41",
+    "previous_version": "v40",
     "changelog": [
       "v22: Added phenomenon-FC topological-insulator-and-superconductor-materials (18 cells, 10 predictions, 4 cross-classification edges). First authoring step under post-2026-05-17 firewall methodology.",
       "v23: Added phenomenon-FC neutrino-sector-phenomenology (18 cells, 10 predictions, 3 cross-classification edges). Second authoring step under post-2026-05-17 firewall methodology.",
@@ -46,7 +46,8 @@
       "v37: Predictive Layer Phase A Step 6 — Bucket 3 (conjectured-by-pattern) inspection of su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Outcome: empty binding set under strict spec reading + Rule 20 — zero cells annotated, no edges modified. Two blockers identified for maintainer review. (a) The SM↔SU(5) cross-classification edge edge-xc-sm-specializes-su5-gut has subtype \"specializes\", which Rule 20 explicitly excludes from the forcing-subtype set {bijection, categorically-equivalent, derives-from}; the spec §7.2 Bucket 3 recommendation (\"forced_by array referring to the SM↔SU(5) cross-classification edge\") therefore cannot be executed without either changing that edge's subtype to derives-from, adding a new derives-from SM↔SU(5) edge alongside the existing specializes edge, or admitting a Phase A+ schema mechanism (closure-constraint kind). This conflict mirrors the documented Bucket 1 / Step 7 conflict already recorded in PREDICTIVE_LAYER_HANDOFF.md. (b) Even if (a) were resolved, the binding set inside su5-gut-rep-content under strict spec reading is empty: the X/Y leptoquarks named as the canonical Bucket 3 population share cell-su5-24-NA with the realized SM gauge bosons (Step 4's strict reading classified that cell realized because realized_examples is non-empty); the five structurally-excluded cells (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) are Bucket 1 candidates not Bucket 3; the monopole and proton-decay populations the handoff named live in electromagnetic-phenomena-across-energy-regimes (cell-em-monopole-EM-empty, already realized via null-search realized_examples) and proton-decay-searches respectively, not in su5-gut-rep-content. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied: splitting cell-su5-24-NA into two cells (one realized SM-bosons, one conjectured-by-pattern X/Y-bosons) to fit the constructive_status field would be motivated by wanting the field to fit, not by physics-content grounds — rejected. No cells, edges, FCs, predictions, content prose, or annotations added or modified. Validator passes: 0 schema errors, 0 rule errors (Rules 19–23 unchanged from Step 5), 0 Rule 22 warnings. Total cells with constructive_status=\"conjectured-by-pattern\" remains 0. The substantive Bucket 3 authoring decision is deferred to a future chat after Step 7's Bucket 1 resolution sets the precedent for handling the Rule 20 / specializes conflict.",
       "v38: Predictive Layer Phase A Step 7 — Bucket 1 (forbidden-by-pattern) backfill of the 17 SM structurally-excluded cells in sm-rep-content per MAP_v16_schema_spec_extension.md §7.2. Resolved the Rule 20 / 'specializes' conflict surfaced in Step 6 by Path 1 of the handoff's documented resolution paths: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set {bijection, categorically-equivalent, derives-from} AND permits axis_mapping per JSON Schema §5.3. The spec §7.2 'specializes' recommendation is superseded by this Path 1 resolution; the recommended subtype for Phase A closure-constraint self-edges is 'derives-from'. (a) Three closure-constraint self-edges added to sm-rep-content, each status=established with axis_mapping declaring the closure on the 'generation' axis: edge-xc-sm-fermion-generation-closure (forces 5 cells: fermion multiplets at generation=N/A); edge-xc-sm-gauge-generation-closure (forces 9 cells: gauge bosons at generation∈{1,2,3}); edge-xc-sm-higgs-generation-closure (forces 3 cells: Higgs at generation∈{1,2,3}). Total: 17 cells forced. Three edges rather than one preserves the three distinct physics mechanisms (fermion-generation replication, gauge-boson multiplicity from dim(G), minimal-Higgs-sector convention) as separately citable structural claims. (b) Each of the 17 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Firewall self-check (META_v21_1 §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion; the v38 annotations make this existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings (Rule 22 only fires on bijection/categorically-equivalent subtypes; the closure-constraint edges are derives-from and so do not trigger Rule 22). Diff shape: 17 cell annotations + 3 new edges + 4 _meta field updates + 1 new changelog entry. Cumulative cells annotated constructive_status: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Step 6b (Bucket 3 revisit on su5-gut-rep-content) inherits this Step 7 resolution: the SM↔SU(5) edge edge-xc-sm-specializes-su5-gut and the proton-decay edge edge-xc-pd-specializes-su5 can be either relabeled to subtype='derives-from' (single-edge path) or kept as 'specializes' with parallel 'derives-from' edges authored alongside (parallel-edge path); whichever lands, Step 6b must apply the resolution consistently and document the choice in its milestone entry.",
       "v39: Predictive Layer Phase A Step 6b — Bucket 3 (conjectured-by-pattern) authoring revisit on su5-gut-rep-content and adjacent FCs (proton-decay-searches, electromagnetic-phenomena-across-energy-regimes) per MAP_v16_schema_spec_extension.md §7.2, with Step 7's Path 1 resolution mechanism in hand. Outcome: empty binding set across all named candidate FCs; no cell annotations changed, no edges modified, no edges relabeled. Three live decisions resolved. (1) The Rule 20 / 'specializes' conflict on edge-xc-sm-specializes-su5-gut and edge-xc-pd-specializes-su5: deferred — no edits to either edge. Both retain their existing subtype='specializes' and existing status (conjectured / established respectively). The Path 1 mechanism is in hand from Step 7 and applies to both edges identically when needed, but because Decisions (2) and (3) below yield zero forced cells, neither edge currently plays a forcing role; the choice between Path 1's relabel sub-path (rewrite existing specializes claim) and parallel-edge sub-path (add derives-from edge alongside) becomes well-defined only when a candidate cell actually requires forcing via one of these edges. Making the choice now would either rewrite or duplicate edge semantics for a no-op. (2) cell-su5-24-NA reclassification: conservative path. The cell remains constructive_status='realized' per Step 4. Step 6's firewall §2.5 rejection of splitting the cell into observed-SM-bosons and predicted-X/Y-leptoquarks halves still applies — the SU(5) 24 adjoint representation is one rep containing both populations, and the physics-content organization is by SU(5) rep, not by observed/unobserved status. Splitting to fit the constructive_status field would be schema-driven, not physics-driven authoring. (3) Application of Path 1 to qualifying cells: empty binding set. Per-FC inspection findings: (i) su5-gut-rep-content has 12 cells — 7 already realized (5̄ and 10 reps by generation: cell-su5-5bar-g1/g2/g3, cell-su5-10-g1/g2/g3, cell-su5-24-NA); the remaining 5 (cell-su5-5bar-NA, cell-su5-10-NA, cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3) all carry content prose 'structurally-excluded' with explicit closure reasons in their descriptions ('Matter rep — replicates over generations; N/A does not apply' / 'Gauge boson rep — does not replicate over generations'), placing them as Bucket 1 candidates analogous to Step 7's sm-rep-content cells, not Bucket 3. (ii) proton-decay-searches has 17 cells; Step 4 classified all 17 as realized because the experimental search activity itself is real (recorded null bounds, falsifications, future-program sensitivities) even when the predicted decay channels are not observed; no Bucket 3 candidates. (iii) electromagnetic-phenomena-across-energy-regimes / cell-em-monopole-EM-empty is realized via null-search realized_examples (MACRO, MoEDAL, IceCube, ANTARES, Auger); the GUT-monopole structural relationship is recorded in the cell's prose but the cell as a whole is observationally a realized-search; no Bucket 3 candidate. Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per inspection: would I author any cell with constructive_status='conjectured-by-pattern' on physics-content grounds alone, given the current cell layout? No — the candidate cells either don't exist as separable cells (X/Y leptoquarks share cell-su5-24-NA with SM gauge bosons), are already realized as search activity (proton decay channels, monopole searches), or are structurally excluded for closure reasons (the 5 ABSENT SU(5) cells, which are Bucket 1 candidates not Bucket 3). No cells, edges, FCs, predictions, content prose, citations, or annotations added or modified. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23), 0 Rule 22 warnings — identical to Step 7 output, confirming no regressions. Total cells with constructive_status='conjectured-by-pattern' remains 0. Cumulative constructive_status distribution unchanged from v38: 376 realized + 17 forbidden-by-pattern + 0 conjectured-by-pattern + 91 field-absent (Bucket 4 indeterminate) = 484 total. Diff shape: 2 lines removed (the v38 _state line and the version/previous_version pair, replaced by their bumped values) + 1 line appended (this v39 changelog entry) + 1 trailing-comma change on the v38 changelog entry — matches Step 6's no-op envelope. Bonus finding queued for follow-up: the 5 ABSENT cells in su5-gut-rep-content are Bucket 1 candidates analogous to Step 7's sm-rep-content work (matter reps replicate over generations; gauge boson rep does not replicate); a follow-up step ('Step 7b — Bucket 1 backfill on su5-gut-rep-content') is queued in PREDICTIVE_LAYER_HANDOFF.md, scoped to mirror Step 7's three closure-constraint self-edges on the analogous SU(5)-rep / generation axes.",
-      "v40: Predictive Layer Phase A Step 7b — Bucket 1 (forbidden-by-pattern) backfill of the 5 SU(5) structurally-excluded cells in su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Direct mechanical reuse of Step 7's authoring pattern, applied to the FC surfaced by Step 6b's inspection. Path 1 mechanism inherited from Step 7: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set and permits axis_mapping per JSON Schema §5.3. (a) Two closure-constraint self-edges added to su5-gut-rep-content, each status=established with axis_mapping declaring closure on the 'generation' axis: edge-xc-su5-matter-generation-closure (forces 2 cells: cell-su5-5bar-NA, cell-su5-10-NA — matter reps 5̄ and 10 replicate over generations); edge-xc-su5-adjoint-generation-closure (forces 3 cells: cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3 — gauge-boson rep 24 (adjoint) does not replicate over generations, multiplicity fixed by dim(SU(5)) = 24). Total: 5 cells forced. Granularity decision: 2 edges rather than 3 (Step 7's count on sm-rep-content). The two distinct physics mechanisms in su5-gut-rep-content are (i) matter-rep replication over generations and (ii) gauge-boson-rep non-replication fixed by dim(SU(5)); there is no Higgs cell in su5-gut-rep-content (the SU(5) classification_axes are su5-rep ∈ {5̄, 10, 24 (adjoint)} and generation ∈ {1, 2, 3, N/A}; SU(5) Higgs sectors are non-minimal-SU(5) content and live outside this FC), so Step 7's third mechanism (minimal-Higgs-sector convention) has no analog here. (b) Each of the 5 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Citations on each edge: Georgi-Glashow 1974 (original SU(5) proposal, foundational for both matter-rep and gauge-rep assignments) + Langacker 1981 Phys. Rep. 72, 185 (canonical GUT review covering the structural claims systematically). Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion ('Matter rep — replicates over generations; N/A does not apply' for the two matter-N/A cells; 'Gauge boson rep — does not replicate over generations' for the three adjoint-with-generation cells); Step 7b annotations make the existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23 — Rule 21 satisfied automatically by the self-edge construction since from = to = su5-gut-rep-content), 0 Rule 22 warnings (the closure-constraint edges are derives-from, not bijection/categorically-equivalent, so Rule 22 does not fire). Cumulative cells annotated constructive_status: 376 realized + 22 forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) + 0 conjectured-by-pattern + 86 field-absent (Bucket 4 indeterminate) = 484 total. Cumulative closure-constraint self-edges: 5 (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b). Diff shape: 5 cell annotations (each adds 6 lines + trailing-comma flip on the previous description field) + 2 new edges (~20 lines each) + 4 _meta field updates + 1 new changelog entry. Step 7b is the direct analog of Step 7 on a different FC; the bucket-by-bucket migration is now complete on the two FCs (sm-rep-content, su5-gut-rep-content) whose cells carry explicit 'structurally-excluded' content prose. Future inspection-style steps may surface analogous Bucket 1 candidates on other FCs (per the Step 6b 'bucket-by-bucket sweep is FC-blind' lesson); those become future Step-Nb-style follow-ups."
+      "v40: Predictive Layer Phase A Step 7b — Bucket 1 (forbidden-by-pattern) backfill of the 5 SU(5) structurally-excluded cells in su5-gut-rep-content per MAP_v16_schema_spec_extension.md §7.2. Direct mechanical reuse of Step 7's authoring pattern, applied to the FC surfaced by Step 6b's inspection. Path 1 mechanism inherited from Step 7: closure-constraint self-edges use subtype 'derives-from', which is in Rule 20's forcing set and permits axis_mapping per JSON Schema §5.3. (a) Two closure-constraint self-edges added to su5-gut-rep-content, each status=established with axis_mapping declaring closure on the 'generation' axis: edge-xc-su5-matter-generation-closure (forces 2 cells: cell-su5-5bar-NA, cell-su5-10-NA — matter reps 5̄ and 10 replicate over generations); edge-xc-su5-adjoint-generation-closure (forces 3 cells: cell-su5-24-g1, cell-su5-24-g2, cell-su5-24-g3 — gauge-boson rep 24 (adjoint) does not replicate over generations, multiplicity fixed by dim(SU(5)) = 24). Total: 5 cells forced. Granularity decision: 2 edges rather than 3 (Step 7's count on sm-rep-content). The two distinct physics mechanisms in su5-gut-rep-content are (i) matter-rep replication over generations and (ii) gauge-boson-rep non-replication fixed by dim(SU(5)); there is no Higgs cell in su5-gut-rep-content (the SU(5) classification_axes are su5-rep ∈ {5̄, 10, 24 (adjoint)} and generation ∈ {1, 2, 3, N/A}; SU(5) Higgs sectors are non-minimal-SU(5) content and live outside this FC), so Step 7's third mechanism (minimal-Higgs-sector convention) has no analog here. (b) Each of the 5 cells receives constructive_status='forbidden-by-pattern' plus forced_by [{kind:'edge', edge_id:<the applicable closure-edge id>}] per spec §3. Citations on each edge: Georgi-Glashow 1974 (original SU(5) proposal, foundational for both matter-rep and gauge-rep assignments) + Langacker 1981 Phys. Rep. 72, 185 (canonical GUT review covering the structural claims systematically). Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per cell: each cell's existing description already records the structural reason for its exclusion ('Matter rep — replicates over generations; N/A does not apply' for the two matter-N/A cells; 'Gauge boson rep — does not replicate over generations' for the three adjoint-with-generation cells); Step 7b annotations make the existing structural claim explicit via the v16 mechanism, independent of any pattern observation in the dataset. Validator passes: 0 schema errors (4 legacy constrains carryovers tolerated), 0 rule errors (Rules 19, 20, 21, 23 — Rule 21 satisfied automatically by the self-edge construction since from = to = su5-gut-rep-content), 0 Rule 22 warnings (the closure-constraint edges are derives-from, not bijection/categorically-equivalent, so Rule 22 does not fire). Cumulative cells annotated constructive_status: 376 realized + 22 forbidden-by-pattern (17 on sm-rep-content from Step 7 + 5 on su5-gut-rep-content from Step 7b) + 0 conjectured-by-pattern + 86 field-absent (Bucket 4 indeterminate) = 484 total. Cumulative closure-constraint self-edges: 5 (3 on sm-rep-content from Step 7 + 2 on su5-gut-rep-content from Step 7b). Diff shape: 5 cell annotations (each adds 6 lines + trailing-comma flip on the previous description field) + 2 new edges (~20 lines each) + 4 _meta field updates + 1 new changelog entry. Step 7b is the direct analog of Step 7 on a different FC; the bucket-by-bucket migration is now complete on the two FCs (sm-rep-content, su5-gut-rep-content) whose cells carry explicit 'structurally-excluded' content prose. Future inspection-style steps may surface analogous Bucket 1 candidates on other FCs (per the Step 6b 'bucket-by-bucket sweep is FC-blind' lesson); those become future Step-Nb-style follow-ups.",
+      "v41: Predictive Layer Phase C Step 0.5 — forward-looking experimental-program inventory pass per PREDICTIVE_LAYER_PHASE_C_HANDOFF.md §Step 0.5 and PREDICTIVE_LAYER_PHASE_C_SCOPE_MEMO.md §6. Added 12 experimental-program nodes covering the experimental surface that subsequent Phase C `resolves` edges will attach to (no `resolves` edges added in this step — those land after the v18 schema in Step 4.4). Nodes added: dune, hyper-k, juno (long-baseline + reactor neutrino sector); gw-ground-network, lisa (gravitational-wave detector network across ground + space bands); cmb-s4 (Stage-4 CMB programme: CMB-S4 + LiteBIRD + Simons Observatory); rubin-lsst, desi (dark-energy / cosmological survey programmes); axion-haloscope-network (ADMX + HAYSTAC + MADMAX + ABRACADABRA + DMRadio); edm-program (next-generation neutron- and electron-EDM searches: n2EDM at PSI, ACME, JILA HfF⁺); muon-g-2-continuation (Fermilab E989 final analysis + J-PARC E34); fcc (FCC-ee and FCC-hh proposed accelerator complex at CERN). Each node carries the v15 §2.2 required-field set (id, type, label, subtype, description, operational_period, citations) plus the informative fields used by the existing 7 experimental-program nodes (full_name, host_institutions, key_publications). `produced_classifications` is intentionally absent on all 12, consistent with scope memo §6's note that forward-looking experiments do not yet `produced` any FC; that field remains the natural locus for `produces-classification` source-end attachments once an experiment's outputs justify authoring or revising an FC. Two subtype values appear in this step that were unused by the existing nodes but are already in the v17 schema's experimental_program_subtype enum: `survey-program` (3 nodes: rubin-lsst, desi, cmb-s4) and `accelerator-program` (1 node: fcc). Firewall self-check (META_v21_1_methodology_firewall.md §2.5) applied per node: each node names an experimental programme that exists or is in declared design / construction independent of any pattern observation in this dataset, and cites a design report, conceptual-design report, or definition study published by the host collaboration. No cells, edges, FCs, predictions, or content prose added or modified to existing entries. The v17 schema accommodates these additions without modification — no schema bump in this step. Diff shape: 12 nodes appended + 3 _meta field updates (version, previous_version, _state nodes-count) + 1 new changelog entry. Cumulative node count: 71 → 83 (12 new experimental-program nodes; experimental-program subtotal 7 → 19). All other cumulative counts unchanged: 191 edges, 30 FCs, 484 cells (376 realized + 22 forbidden-by-pattern + 86 indeterminate; 0 conjectured-by-pattern), 102 cross-classification edges (97 cross-FC + 5 closure-constraint self-edges), 10 edges with axis_mapping populated, 23 if_real_implies resolutions on 14 of 17 carriers / 24 implications total (Phase B), 209 FC-scoped predictions (223 including cell-scoped), 17 falsifications, 22 glossary entries. Step 0.5 lands against the existing v17 schema; the next Phase C step is the v18 schema-spec extension (Step 1) defining `quantitative_scale` and the `resolves` edge type per scope memo §2–§3, with the spec's grounded examples drawn from the experimental-program nodes added in this step."
     ]
   },
   "nodes": [
@@ -18030,6 +18031,334 @@
         "Yamada, Kulsrud, Ji 2010, Rev. Mod. Phys. 82, 603 (magnetic reconnection)",
         "Seifert 2012, Rep. Prog. Phys. 75, 126001 (stochastic thermodynamics review)",
         "Marchetti et al. 2013, Rev. Mod. Phys. 85, 1143 (active matter review)"
+      ]
+    },
+    {
+      "id": "dune",
+      "type": "experimental-program",
+      "label": "DUNE",
+      "full_name": "Deep Underground Neutrino Experiment",
+      "subtype": "experimental-collaboration",
+      "description": "Long-baseline neutrino-oscillation experiment combining a high-intensity neutrino beam from Fermilab's Long-Baseline Neutrino Facility with four 17-kt liquid-argon time-projection chambers at the Sanford Underground Research Facility (SURF) in South Dakota, 1300 km from the source. Primary physics targets: determination of the leptonic CP-violating phase $\\delta_{CP}$, resolution of the neutrino mass ordering, precision $\\theta_{23}$ octant determination, nucleon-decay searches in the SUSY-favoured $p \\to \\bar\\nu K^+$ channel where Hyper-Kamiokande has weaker sensitivity, and supernova-neutrino burst detection. Far-detector construction at SURF is underway; near-detector design is finalized; beam operations projected for the late 2020s.",
+      "operational_period": {
+        "start_year": 2029
+      },
+      "host_institutions": [
+        "Fermi National Accelerator Laboratory (Fermilab)",
+        "Sanford Underground Research Facility (SURF)"
+      ],
+      "key_publications": [
+        "DUNE Collaboration 2020 'Deep Underground Neutrino Experiment (DUNE) Far Detector Technical Design Report Volume I: Introduction to DUNE' arXiv:2002.02967",
+        "DUNE Collaboration 2020 'DUNE Far Detector TDR Volume II: Physics, Strategy, and Operations' arXiv:2002.03005",
+        "Abi et al. (DUNE Collaboration) 2020 'Long-baseline neutrino oscillation physics potential of the DUNE experiment' EPJ C 80:978",
+        "Abi et al. (DUNE Collaboration) 2021 'Prospects for beyond the Standard Model physics searches at DUNE' EPJ C 81:322"
+      ],
+      "citations": [
+        "DUNE Collaboration 2020 'DUNE Far Detector TDR' arXiv:2002.02967 (Vol I), arXiv:2002.03005 (Vol II), arXiv:2002.02980 (Vol III), arXiv:2002.03010 (Vol IV)",
+        "Abi et al. 2020 'Long-baseline neutrino oscillation physics potential of the DUNE experiment' EPJ C 80:978"
+      ]
+    },
+    {
+      "id": "hyper-k",
+      "type": "experimental-program",
+      "label": "Hyper-Kamiokande",
+      "full_name": "Hyper-Kamiokande",
+      "subtype": "experimental-collaboration",
+      "description": "Next-generation 258-kt fiducial water-Cherenkov detector under construction in the Tochibora mine in Kamioka, Japan, with an upgraded J-PARC neutrino beam (1.3 MW) and a 295-km baseline from Tokai. Successor to Super-Kamiokande. Primary physics targets: leptonic CP-violation phase $\\delta_{CP}$, mass-ordering determination via atmospheric neutrinos, proton-decay search in the $p \\to e^+ \\pi^0$ channel (projected partial lifetime sensitivity $\\sim 10^{35}$ yr — the benchmark discriminator for minimal SU(5)-class grand unification), and high-statistics supernova-burst detection. Construction began 2020; first beam projected ~2027.",
+      "operational_period": {
+        "start_year": 2027
+      },
+      "host_institutions": [
+        "Institute for Cosmic Ray Research (ICRR), University of Tokyo",
+        "KEK",
+        "J-PARC"
+      ],
+      "key_publications": [
+        "Hyper-Kamiokande Proto-Collaboration 2018 'Hyper-Kamiokande Design Report' arXiv:1805.04163",
+        "Abe et al. (Hyper-Kamiokande Collaboration) 2018 'Physics potentials with the second Hyper-Kamiokande detector in Korea' PTEP 2018:063C01",
+        "Hyper-Kamiokande Collaboration 2022 'Snowmass Neutrino Frontier: Hyper-Kamiokande Contribution' arXiv:2203.02029"
+      ],
+      "citations": [
+        "Hyper-Kamiokande Proto-Collaboration 2018 'Hyper-Kamiokande Design Report' arXiv:1805.04163",
+        "Abe et al. 2018 'Physics potentials with the second Hyper-Kamiokande detector in Korea' PTEP 2018:063C01"
+      ]
+    },
+    {
+      "id": "juno",
+      "type": "experimental-program",
+      "label": "JUNO",
+      "full_name": "Jiangmen Underground Neutrino Observatory",
+      "subtype": "experimental-collaboration",
+      "description": "20-kt liquid-scintillator detector at 53 km baseline from the Yangjiang and Taishan reactor complexes in Guangdong, China, designed for sub-percent energy resolution on reactor antineutrinos. Primary physics target: resolution of the neutrino mass ordering at $\\gtrsim 3\\sigma$ via the interference of the solar ($\\Delta m^2_{21}$) and atmospheric ($\\Delta m^2_{31}$, $\\Delta m^2_{32}$) oscillation frequencies in the survival probability — a measurement independent of beam-based experiments and matter-effect modelling. Secondary targets: precision $\\sin^2 2\\theta_{12}$, $\\Delta m^2_{21}$, $|\\Delta m^2_{31}|$; geo-neutrino flux; supernova and solar neutrinos; sterile-neutrino searches. Filling completed late 2024; physics operations underway.",
+      "operational_period": {
+        "start_year": 2025,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Institute of High Energy Physics, Chinese Academy of Sciences (IHEP-CAS)"
+      ],
+      "key_publications": [
+        "An et al. (JUNO Collaboration) 2016 'Neutrino Physics with JUNO' J. Phys. G 43:030401",
+        "JUNO Collaboration 2022 'JUNO Physics and Detector' Progress in Particle and Nuclear Physics 123:103927",
+        "JUNO Collaboration 2024 'Real-time monitoring of the Sun's neutrinos with JUNO' Chin. Phys. C 48:043003"
+      ],
+      "citations": [
+        "An et al. 2016 'Neutrino Physics with JUNO' J. Phys. G 43:030401",
+        "JUNO Collaboration 2022 'JUNO Physics and Detector' Prog. Part. Nucl. Phys. 123:103927"
+      ]
+    },
+    {
+      "id": "gw-ground-network",
+      "type": "experimental-program",
+      "label": "LIGO/Virgo/KAGRA + CE/ET",
+      "full_name": "Ground-based gravitational-wave detector network (LIGO + Virgo + KAGRA, Cosmic Explorer, Einstein Telescope)",
+      "subtype": "experimental-collaboration",
+      "description": "International ground-based interferometric gravitational-wave detector network covering the $\\sim 10\\,\\mathrm{Hz}$–$10\\,\\mathrm{kHz}$ band. Current generation (Advanced LIGO at Hanford and Livingston, Advanced Virgo at Cascina, KAGRA in Kamioka) is deployed and accumulating compact-binary detections (>90 confident events through O3, ongoing O4 observation run). Next-generation upgrades — Cosmic Explorer (US, 40 km arms) and Einstein Telescope (Europe, triangular underground 10 km arms) — are in design and planned for the mid-2030s with order-of-magnitude strain-sensitivity improvement. Physics targets: black-hole ringdown spectroscopy (Kerr no-hair / area-theorem tests), neutron-star equation-of-state via tidal deformability, stochastic background searches, multi-messenger transients.",
+      "operational_period": {
+        "start_year": 2015,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "LIGO Laboratory (Caltech / MIT)",
+        "Virgo Collaboration (EGO, INFN, CNRS)",
+        "KAGRA Collaboration (ICRR, University of Tokyo)",
+        "Cosmic Explorer Consortium",
+        "Einstein Telescope Collaboration"
+      ],
+      "key_publications": [
+        "Aasi et al. (LIGO Scientific Collaboration) 2015 'Advanced LIGO' Class. Quantum Grav. 32:074001",
+        "Acernese et al. (Virgo Collaboration) 2015 'Advanced Virgo: a second-generation interferometric gravitational wave detector' Class. Quantum Grav. 32:024001",
+        "Akutsu et al. (KAGRA Collaboration) 2021 'Overview of KAGRA: Detector design and construction history' PTEP 2021:05A101",
+        "Abbott et al. (LIGO/Virgo/KAGRA) 2023 'GWTC-3: Compact Binary Coalescences Observed by LIGO and Virgo During the Second Part of the Third Observing Run' Phys. Rev. X 13:041039",
+        "Reitze et al. 2019 'Cosmic Explorer: The U.S. Contribution to Gravitational-Wave Astronomy beyond LIGO' Bull. Am. Astron. Soc. 51:35 arXiv:1907.04833",
+        "ET Steering Committee 2020 'Einstein Telescope Design Update' ET-0007B-20",
+        "Branchesi et al. 2023 'Science with the Einstein Telescope: a comparison of different designs' JCAP 07:068"
+      ],
+      "citations": [
+        "Aasi et al. 2015 'Advanced LIGO' Class. Quantum Grav. 32:074001",
+        "Acernese et al. 2015 'Advanced Virgo' Class. Quantum Grav. 32:024001",
+        "Akutsu et al. 2021 'Overview of KAGRA' PTEP 2021:05A101",
+        "Reitze et al. 2019 'Cosmic Explorer' arXiv:1907.04833",
+        "Branchesi et al. 2023 'Science with the Einstein Telescope' JCAP 07:068"
+      ]
+    },
+    {
+      "id": "lisa",
+      "type": "experimental-program",
+      "label": "LISA",
+      "full_name": "Laser Interferometer Space Antenna",
+      "subtype": "experimental-collaboration",
+      "description": "Space-based gravitational-wave observatory consisting of three spacecraft in heliocentric orbit forming an equilateral triangle of 2.5-million-km arm length, sensitive to the $\\sim 10^{-4}$–$10^{-1}\\,\\mathrm{Hz}$ band. ESA-led mission with NASA contribution, adopted by ESA in January 2024; launch projected for the mid-2030s. Physics targets inaccessible to ground-based detectors: massive-black-hole mergers ($10^4$–$10^7 M_\\odot$) across cosmic time including high-redshift seed-formation tests, extreme-mass-ratio inspirals (EMRIs) as precision Kerr-geometry probes, stellar-origin BH binaries detected $\\sim\\!10^4$ yr before LIGO-band coalescence, Galactic compact-binary population, and potential stochastic backgrounds from cosmological sources (cosmic strings, first-order phase transitions, primordial gravitational waves from inflation).",
+      "operational_period": {
+        "start_year": 2035
+      },
+      "host_institutions": [
+        "European Space Agency (ESA)",
+        "NASA",
+        "LISA Consortium"
+      ],
+      "key_publications": [
+        "Amaro-Seoane et al. (LISA Consortium) 2017 'Laser Interferometer Space Antenna' arXiv:1702.00786",
+        "Amaro-Seoane et al. 2023 'Astrophysics with the Laser Interferometer Space Antenna' Living Rev. Relativ. 26:2",
+        "LISA Consortium 2024 'LISA Definition Study Report' arXiv:2402.07571 (ESA-SCI(2024)1)",
+        "Auclair et al. (LISA Cosmology Working Group) 2023 'Cosmology with the Laser Interferometer Space Antenna' Living Rev. Relativ. 26:5"
+      ],
+      "citations": [
+        "Amaro-Seoane et al. 2017 'Laser Interferometer Space Antenna' arXiv:1702.00786",
+        "LISA Consortium 2024 'LISA Definition Study Report' arXiv:2402.07571"
+      ]
+    },
+    {
+      "id": "cmb-s4",
+      "type": "experimental-program",
+      "label": "CMB-S4 + LiteBIRD + SO",
+      "full_name": "Stage-4 CMB programme (CMB-S4, LiteBIRD, Simons Observatory)",
+      "subtype": "survey-program",
+      "description": "Coordinated programme of next-generation cosmic-microwave-background experiments designed to measure polarization B-modes at unprecedented sensitivity. Simons Observatory at Cerro Toco (Chile) is in deployment with first light in 2024. CMB-S4 is a ground-based US programme planned for the late 2020s with detector arrays at the South Pole and Cerro Toco; LiteBIRD is a JAXA-led satellite mission targeting a 2032 launch. Combined sensitivity targets: tensor-to-scalar ratio $r$ down to $\\sim 10^{-3}$ (testing the canonical predictions of single-field slow-roll inflation), $N_\\mathrm{eff}$ to ${\\sim}0.03$ (probing relativistic species beyond the SM), $\\sum m_\\nu$ via lensing of the temperature and polarization spectra, primordial non-Gaussianity, and constraints on dark-matter–baryon scattering.",
+      "operational_period": {
+        "start_year": 2024,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Simons Observatory Collaboration",
+        "CMB-S4 Collaboration (US DOE / NSF)",
+        "JAXA",
+        "LiteBIRD Collaboration"
+      ],
+      "key_publications": [
+        "Abazajian et al. (CMB-S4 Collaboration) 2016 'CMB-S4 Science Book, First Edition' arXiv:1610.02743",
+        "Abazajian et al. (CMB-S4 Collaboration) 2022 'Snowmass 2021 CMB-S4 White Paper' arXiv:2203.08024",
+        "Ade et al. (Simons Observatory Collaboration) 2019 'The Simons Observatory: Science goals and forecasts' JCAP 02:056",
+        "Hazumi et al. (LiteBIRD Collaboration) 2022 'LiteBIRD satellite: JAXA's new strategic L-class mission for all-sky surveys of cosmic microwave background polarization' PTEP 2023:042F01"
+      ],
+      "citations": [
+        "Abazajian et al. 2016 'CMB-S4 Science Book' arXiv:1610.02743",
+        "Ade et al. 2019 'Simons Observatory: Science goals and forecasts' JCAP 02:056",
+        "Hazumi et al. 2022 'LiteBIRD satellite' PTEP 2023:042F01"
+      ]
+    },
+    {
+      "id": "rubin-lsst",
+      "type": "experimental-program",
+      "label": "Vera C. Rubin Observatory (LSST)",
+      "full_name": "Vera C. Rubin Observatory — Legacy Survey of Space and Time (LSST)",
+      "subtype": "survey-program",
+      "description": "8.4-m wide-field optical survey telescope at Cerro Pachón, Chile, conducting the 10-year Legacy Survey of Space and Time over $\\sim 18{,}000\\,\\mathrm{deg}^2$ of the southern sky in six bands. First light achieved 2024; survey operations began 2025. Primary cosmological targets: dark-energy equation-of-state ($w_0, w_a$) via weak-lensing tomography, galaxy clustering, photometric supernovae, and cluster abundance; dark-matter substructure via strong-lensing flux-ratio anomalies and stellar streams; transient and variable-source astrophysics; Solar System inventory. Each part of the sky is visited $\\sim\\!825$ times over the survey.",
+      "operational_period": {
+        "start_year": 2025,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Vera C. Rubin Observatory (NSF + DOE)",
+        "AURA",
+        "SLAC National Accelerator Laboratory",
+        "LSST Discovery Alliance"
+      ],
+      "key_publications": [
+        "LSST Science Collaboration 2009 'LSST Science Book, Version 2.0' arXiv:0912.0201",
+        "Ivezić et al. 2019 'LSST: From Science Drivers to Reference Design and Anticipated Data Products' ApJ 873:111",
+        "The LSST Dark Energy Science Collaboration 2018 'The LSST Dark Energy Science Collaboration (DESC) Science Requirements Document' arXiv:1809.01669"
+      ],
+      "citations": [
+        "LSST Science Collaboration 2009 'LSST Science Book, Version 2.0' arXiv:0912.0201",
+        "Ivezić et al. 2019 'LSST: From Science Drivers to Reference Design and Anticipated Data Products' ApJ 873:111"
+      ]
+    },
+    {
+      "id": "desi",
+      "type": "experimental-program",
+      "label": "DESI",
+      "full_name": "Dark Energy Spectroscopic Instrument",
+      "subtype": "survey-program",
+      "description": "5000-fibre multi-object spectrograph on the 4-m Mayall Telescope at Kitt Peak, Arizona, surveying $\\sim 40$ million galaxy and quasar redshifts over a 5-year programme ($\\sim 14{,}000\\,\\mathrm{deg}^2$). Operations began 2021. Primary cosmological targets: baryon-acoustic-oscillation (BAO) standard ruler at sub-percent precision across redshift bins from $z \\sim 0.1$ to $z \\sim 3.5$ (Lyman-$\\alpha$ forest), redshift-space-distortion measurements of growth, and constraints on the dark-energy equation-of-state. The DESI Year-1 BAO release (2024) reports a preference for an evolving equation-of-state $(w_0, w_a)$ over a cosmological constant at ${\\sim}2.6\\sigma$ when combined with CMB and SNIa data — a current empirical tension with $\\Lambda\\mathrm{CDM}$.",
+      "operational_period": {
+        "start_year": 2021,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Kitt Peak National Observatory / NOIRLab",
+        "Lawrence Berkeley National Laboratory (LBNL)"
+      ],
+      "key_publications": [
+        "DESI Collaboration (Levi et al.) 2013 'The DESI Experiment, a whitepaper for Snowmass 2013' arXiv:1308.0847",
+        "DESI Collaboration 2016 'The DESI Experiment Part I: Science, Targeting, and Survey Design' arXiv:1611.00036",
+        "DESI Collaboration 2016 'The DESI Experiment Part II: Instrument Design' arXiv:1611.00037",
+        "Adame et al. (DESI Collaboration) 2024 'DESI 2024 III: Baryon Acoustic Oscillations from Galaxies and Quasars' arXiv:2404.03000",
+        "Adame et al. (DESI Collaboration) 2024 'DESI 2024 VI: Cosmological Constraints from the Measurements of Baryon Acoustic Oscillations' arXiv:2404.03002"
+      ],
+      "citations": [
+        "DESI Collaboration 2016 'The DESI Experiment Part I: Science, Targeting, and Survey Design' arXiv:1611.00036",
+        "Adame et al. 2024 'DESI 2024 VI: Cosmological Constraints from the Measurements of Baryon Acoustic Oscillations' arXiv:2404.03002"
+      ]
+    },
+    {
+      "id": "axion-haloscope-network",
+      "type": "experimental-program",
+      "label": "Axion haloscope network",
+      "full_name": "Axion haloscope network (ADMX, HAYSTAC, MADMAX, ABRACADABRA, DMRadio)",
+      "subtype": "experimental-collaboration",
+      "description": "Programme of cavity- and broadband-haloscope experiments searching for galactic-halo dark-matter axions across the $\\sim\\!\\mathrm{neV}$–$\\mathrm{meV}$ mass band, with sensitivity targets reaching the QCD-axion benchmark couplings (KSVZ and DFSZ predictions). ADMX at the University of Washington operates resonant microwave cavities in the few-$\\mu$eV range and has reached KSVZ/DFSZ sensitivity. HAYSTAC at Yale extends to higher masses via squeezed-state readout. MADMAX (Munich/DESY) uses dielectric haloscopes for the $40$–$400\\,\\mu\\mathrm{eV}$ range. ABRACADABRA at MIT and DMRadio at SLAC pursue broadband lumped-element approaches at masses below $\\sim 1\\,\\mu\\mathrm{eV}$. The programme directly tests the Peccei-Quinn solution to the strong-CP problem and contributes axion-as-dark-matter constraints.",
+      "operational_period": {
+        "start_year": 2018,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "University of Washington (ADMX)",
+        "Yale University (HAYSTAC)",
+        "Max Planck Institute for Physics / DESY (MADMAX)",
+        "MIT (ABRACADABRA)",
+        "SLAC National Accelerator Laboratory (DMRadio)"
+      ],
+      "key_publications": [
+        "Du et al. (ADMX Collaboration) 2018 'A Search for Invisible Axion Dark Matter with the Axion Dark Matter Experiment' Phys. Rev. Lett. 120:151301",
+        "Backes et al. (HAYSTAC Collaboration) 2021 'A quantum-enhanced search for dark matter axions' Nature 590:238",
+        "Brun et al. (MADMAX Working Group) 2019 'A new experimental approach to probe QCD axion dark matter in the mass range above 40 μeV' EPJ C 79:186",
+        "Salemi et al. (ABRACADABRA-10cm) 2021 'Search for Low-Mass Axion Dark Matter with ABRACADABRA-10 cm' Phys. Rev. Lett. 127:081801",
+        "Brouwer et al. (DMRadio Collaboration) 2022 'Projected sensitivity of DMRadio-m3: A search for the QCD axion below 1 μeV' Phys. Rev. D 106:103008"
+      ],
+      "citations": [
+        "Du et al. 2018 'A Search for Invisible Axion Dark Matter with ADMX' PRL 120:151301",
+        "Brun et al. 2019 'A new experimental approach to probe QCD axion dark matter' EPJ C 79:186",
+        "Salemi et al. 2021 'Search for Low-Mass Axion Dark Matter with ABRACADABRA-10 cm' PRL 127:081801"
+      ]
+    },
+    {
+      "id": "edm-program",
+      "type": "experimental-program",
+      "label": "Next-gen EDM searches",
+      "full_name": "Next-generation electric-dipole-moment searches (nEDM/n2EDM at PSI, ACME, HfF⁺ at JILA)",
+      "subtype": "experimental-collaboration",
+      "description": "Programme of next-generation searches for permanent electric dipole moments of the neutron and of electrons (probed via polar paramagnetic molecules), where any nonzero signal would establish T-violation (and via CPT, CP-violation) at levels far beyond CKM-induced predictions. n2EDM at PSI is the successor to the nEDM apparatus and targets neutron-EDM sensitivity below $10^{-27}\\,e\\cdot\\mathrm{cm}$. ACME (Northwestern/Harvard/Yale) has set the leading electron-EDM bound using ThO; ACME-III aims for further reduction. The JILA HfF⁺ experiment (Cornell/JILA) provides an independent and competitive electron-EDM bound using trapped molecular ions. The combined programme bears on the strong-CP problem (via $\\bar\\theta$ constraints from neutron EDM) and the matter-antimatter asymmetry (via new sources of CP violation).",
+      "operational_period": {
+        "start_year": 2015,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Paul Scherrer Institute (PSI)",
+        "Spallation Neutron Source (SNS), Oak Ridge",
+        "Northwestern / Harvard / Yale (ACME)",
+        "JILA / University of Colorado / NIST"
+      ],
+      "key_publications": [
+        "Abel et al. (nEDM Collaboration) 2020 'Measurement of the Permanent Electric Dipole Moment of the Neutron' Phys. Rev. Lett. 124:081803",
+        "Ayres et al. (n2EDM Collaboration) 2021 'The design of the n2EDM experiment' EPJ C 81:512",
+        "Andreev et al. (ACME Collaboration) 2018 'Improved limit on the electric dipole moment of the electron' Nature 562:355",
+        "Roussy et al. 2023 'An improved bound on the electron's electric dipole moment' Science 381:46"
+      ],
+      "citations": [
+        "Abel et al. 2020 'Measurement of the Permanent Electric Dipole Moment of the Neutron' PRL 124:081803",
+        "Andreev et al. 2018 'Improved limit on the electric dipole moment of the electron' Nature 562:355",
+        "Roussy et al. 2023 'An improved bound on the electron's electric dipole moment' Science 381:46"
+      ]
+    },
+    {
+      "id": "muon-g-2-continuation",
+      "type": "experimental-program",
+      "label": "Muon g-2 continuation",
+      "full_name": "Muon g-2 continuation (Fermilab E989 final analysis + J-PARC E34)",
+      "subtype": "experimental-collaboration",
+      "description": "Programme of follow-on measurements of the muon anomalous magnetic moment $a_\\mu = (g_\\mu - 2)/2$ aimed at resolving the muon-g-2 totality-approach. The Fermilab E989 experiment has measured $a_\\mu$ in the storage-ring configuration inherited from BNL E821 across multiple physics runs (Run-1 published 2021, Run-2/3 published 2023, final combined Run-1–6 analysis projected). J-PARC E34 (under construction at the J-PARC Materials and Life Science Experimental Facility) uses an independent technique — a thermal ultra-cold muon source accelerated to 300 MeV and stored in a compact magnetic ring without electric focusing — which eliminates the dominant electric-field-correction systematic of the storage-ring method and is therefore a systematics-independent cross-check. Combined with continued progress on lattice-QCD HVP and on dispersive $e^+e^- \\to$ hadrons inputs, the programme is the empirical path to resolving the current discrepancy between Theory Initiative dispersive HVP and BMW lattice HVP.",
+      "operational_period": {
+        "start_year": 2018,
+        "ongoing": true
+      },
+      "host_institutions": [
+        "Fermi National Accelerator Laboratory (Fermilab)",
+        "J-PARC / KEK"
+      ],
+      "key_publications": [
+        "Abi et al. (Muon g-2 Collaboration) 2021 'Measurement of the Positive Muon Anomalous Magnetic Moment to 0.46 ppm' Phys. Rev. Lett. 126:141801",
+        "Aguillard et al. (Muon g-2 Collaboration) 2023 'Measurement of the Positive Muon Anomalous Magnetic Moment to 0.20 ppm' Phys. Rev. Lett. 131:161802",
+        "Abe et al. (J-PARC E34 Collaboration) 2019 'A new approach for measuring the muon anomalous magnetic moment and electric dipole moment' PTEP 2019:053C02"
+      ],
+      "citations": [
+        "Aguillard et al. 2023 'Measurement of the Positive Muon Anomalous Magnetic Moment to 0.20 ppm' PRL 131:161802",
+        "Abe et al. 2019 'A new approach for measuring the muon anomalous magnetic moment and electric dipole moment' PTEP 2019:053C02"
+      ]
+    },
+    {
+      "id": "fcc",
+      "type": "experimental-program",
+      "label": "FCC",
+      "full_name": "Future Circular Collider (FCC-ee and FCC-hh)",
+      "subtype": "accelerator-program",
+      "description": "Proposed 91-km circular collider complex at CERN, comprising an initial high-luminosity electron-positron stage (FCC-ee, $\\sqrt{s} \\sim 90$–$365\\,\\mathrm{GeV}$) for precision electroweak, Higgs, top, and flavour measurements, followed by a 100-TeV proton-proton stage (FCC-hh) for direct production of physics beyond the Standard Model. Conceptual Design Reports published 2019; mid-term feasibility-study report submitted to CERN Council in 2024; investment decision targeted for 2027–28. Primary physics targets: hierarchy-problem at energy scales well beyond LHC (TeV-decade reach for composite-Higgs, SUSY, and Z' states), Higgs self-coupling $\\lambda_3$ to $\\sim\\!5\\%$, EW precision to $10^{-5}$, flavour-changing neutral currents, and direct searches for dark-matter mediators in the TeV-decade range. Projected first FCC-ee beam in the mid-2040s; FCC-hh follows in the 2070s.",
+      "operational_period": {
+        "start_year": 2045
+      },
+      "host_institutions": [
+        "CERN",
+        "FCC Collaboration"
+      ],
+      "key_publications": [
+        "Abada et al. (FCC Collaboration) 2019 'FCC-ee: The Lepton Collider — Future Circular Collider Conceptual Design Report Volume 2' EPJ ST 228:261",
+        "Abada et al. (FCC Collaboration) 2019 'FCC-hh: The Hadron Collider — Future Circular Collider Conceptual Design Report Volume 3' EPJ ST 228:755",
+        "Abada et al. (FCC Collaboration) 2019 'HE-LHC: The High-Energy Large Hadron Collider — FCC CDR Volume 4' EPJ ST 228:1109",
+        "Mangano et al. 2017 'Physics at a 100 TeV pp collider: Standard Model processes' CERN-2017-003-M arXiv:1607.01831"
+      ],
+      "citations": [
+        "Abada et al. 2019 'FCC-ee Conceptual Design Report' EPJ ST 228:261",
+        "Abada et al. 2019 'FCC-hh Conceptual Design Report' EPJ ST 228:755"
       ]
     }
   ],
