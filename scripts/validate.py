@@ -3,7 +3,7 @@
 validate.py — the data-integrity tripwire for the Periodic Table of Physics repo.
 
 What this does:
-  1. Loads the schema (schema/Map_v17_schema.json).
+  1. Loads the schema (schema/Map_v18_schema.json).
   2. Loads the consolidated dataset (data/Map_v34_consolidated.json).
   3. Validates the dataset against the schema.
   4. Runs the v16 validator-side rules 19-23 (Predictive Layer Phase A) on the
@@ -11,12 +11,14 @@ What this does:
      established bijection / categorically-equivalent edges) is warning-level.
   5. Runs the v17 validator-side rules 24-26 (Predictive Layer Phase B) on the
      loaded data. All three are hard errors. See MAP_v17_schema_spec_extension.md §5.
-  6. Distinguishes three classes of finding:
+  6. Runs the v18 validator-side rules 27-33 (Predictive Layer Phase C) on the
+     loaded data. All seven are hard errors. See MAP_v18_schema_spec_extension.md §6.
+  7. Distinguishes three classes of finding:
        (a) Known legacy errors — 4 pre-firewall 'constrains'-subtype carryovers.
            Tolerated; documented in PROJECT_INFRASTRUCTURE.md §2.
        (b) New errors — any schema error not matching the legacy signature,
-           plus any validator-side rule 19/20/21/23/24/25/26 finding. CI fails
-           on these.
+           plus any validator-side rule 19/20/21/23/24/25/26/27/28/29/30/31/32/33
+           finding. CI fails on these.
        (c) Warnings — validator-side rule 22 findings. Reported but do NOT
            fail CI. Intentionally warning-only so the v15.3 → v16 bump doesn't
            break the tripwire on day one before the Step 5 ADE-clique
@@ -38,7 +40,7 @@ except ImportError:
 
 # --- configuration -----------------------------------------------------------
 
-SCHEMA_PATH = Path("schema/Map_v17_schema.json")
+SCHEMA_PATH = Path("schema/Map_v18_schema.json")
 DATA_PATH = Path("data/Map_v34_consolidated.json")
 
 # Legacy error tolerance: pre-firewall 'constrains' subtype carryover.
@@ -54,6 +56,18 @@ RULE_22_RECOMMENDED_SUBTYPES = {"bijection", "categorically-equivalent"}
 
 # Rule 24 / §3.1 — the two node types that carry if_real_implies.
 IF_REAL_IMPLIES_CARRIER_TYPES = {"open-frontier", "totality-approach"}
+
+# Rule 30 — node types permitted as resolves-edge targets (the cell-id case is
+# handled separately by cross-checking against the cell_ids index).
+RULE_30_RESOLVES_TARGET_NODE_TYPES = {"open-frontier", "totality-approach"}
+
+# Rules 31, 32 — quantitative_scale kind partitions per v18 spec §2.
+# Spec §5.2 lists `coupling` among the kinds requiring units; the note under
+# §5.3 explains the convention (couplings are typically unitless but the units
+# string is permitted to record a normalization choice).
+QS_KINDS_REQUIRING_UNITS = {"energy_scale", "mass", "length", "time", "coupling"}
+QS_KINDS_FORBIDDING_UNITS = {"ratio", "dimensionless", "sigma_deviation"}
+QS_KINDS_FORBIDDING_LOG10 = {"dimensionless", "sigma_deviation"}
 
 
 # --- helpers -----------------------------------------------------------------
@@ -98,7 +112,8 @@ def _build_v17_indices(data: dict, cells_indexed: list) -> tuple[set, dict, list
 
     Returns:
         cell_ids:           set of every cell_id string declared on any cell
-                            (used by Rule 24 to resolve promotes_subtype targets).
+                            (used by Rule 24 to resolve promotes_subtype targets,
+                            and reused by Rule 30 to resolve resolves-edge targets).
         carriers_by_node:   {carrier_id: if_real_implies_list} for v17 carrier
                             nodes (open-frontier and totality-approach). Carriers
                             without an if_real_implies field are omitted.
@@ -131,6 +146,102 @@ def _build_v17_indices(data: dict, cells_indexed: list) -> tuple[set, dict, list
                     carriers_flat.append((carrier_id, e_idx, entry, i_idx, impl))
 
     return cell_ids, carriers_by_node, carriers_flat
+
+
+def _build_v18_indices(data: dict) -> tuple[dict, list]:
+    """Build v18-specific lookup indices.
+
+    Returns:
+        nodes_by_id:  {node_id: node_dict} for every node, of any type. Used by
+                      Rule 29 (resolves edge source must be experimental-program)
+                      and Rule 30 (resolves edge target type-check on the node
+                      branch).
+        qs_entries:   [(context_str, quantitative_scale_dict), ...] — every
+                      quantitative_scale entry discovered in the dataset, paired
+                      with a human-readable JSON-pointer-ish location for error
+                      messages. Used by Rules 31, 32, 33. Surfaces traversed:
+                          - node.quantitative_scale (any node; §5.1 restricts to
+                            carrier types at JSON-Schema level, but the validator
+                            walks all nodes for defense-in-depth)
+                          - cell.quantitative_scale
+                          - prediction.quantitative_scale (both FC-level
+                            predictive_yield[] and cell-level predictions[])
+                          - if_real_implies entry.implications[].quantitative_scale
+                          - edge.quantitative_scale (§5.7 restricts to bears-on)
+                          - resolves edge.sensitivity (a quantitative_scale by $ref)
+                          - resolves edge.predictions_per_program[].predicted_value
+                            (a quantitative_scale by $ref)
+    """
+    nodes_by_id = {
+        n["id"]: n
+        for n in data.get("nodes", [])
+        if isinstance(n, dict) and "id" in n
+    }
+
+    qs_entries: list = []
+
+    def _push(ctx: str, value) -> None:
+        if isinstance(value, dict):
+            qs_entries.append((ctx, value))
+
+    for n in data.get("nodes", []):
+        if not isinstance(n, dict):
+            continue
+        n_id = n.get("id", "?")
+        _push(f"nodes[{n_id}].quantitative_scale", n.get("quantitative_scale"))
+
+        # Cells (only present on formal-classification nodes per the schema,
+        # but the walk is type-agnostic — absent fields are silently skipped).
+        for i, cell in enumerate(n.get("cells") or []):
+            if not isinstance(cell, dict):
+                continue
+            _push(f"nodes[{n_id}].cells[{i}].quantitative_scale", cell.get("quantitative_scale"))
+            for j, pred in enumerate(cell.get("predictions") or []):
+                if isinstance(pred, dict):
+                    _push(
+                        f"nodes[{n_id}].cells[{i}].predictions[{j}].quantitative_scale",
+                        pred.get("quantitative_scale"),
+                    )
+
+        # FC-level predictive_yield.
+        for j, pred in enumerate(n.get("predictive_yield") or []):
+            if isinstance(pred, dict):
+                _push(
+                    f"nodes[{n_id}].predictive_yield[{j}].quantitative_scale",
+                    pred.get("quantitative_scale"),
+                )
+
+        # if_real_implies entry.implications[].
+        for e_idx, entry in enumerate(n.get("if_real_implies") or []):
+            if not isinstance(entry, dict):
+                continue
+            for i_idx, impl in enumerate(entry.get("implications") or []):
+                if isinstance(impl, dict):
+                    _push(
+                        f"nodes[{n_id}].if_real_implies[{e_idx}]"
+                        f".implications[{i_idx}].quantitative_scale",
+                        impl.get("quantitative_scale"),
+                    )
+
+    for e in data.get("edges", []):
+        if not isinstance(e, dict):
+            continue
+        e_id = e.get("id", "?")
+        # bears-on edge-level quantitative_scale (and any non-resolves edge that
+        # accidentally carries one — JSON Schema §5.7 will flag it, but the
+        # validator still applies the kind/units/log10/citation checks).
+        _push(f"edges[{e_id}].quantitative_scale", e.get("quantitative_scale"))
+
+        if e.get("type") == "resolves":
+            _push(f"edges[{e_id}].sensitivity", e.get("sensitivity"))
+            for k, ppp in enumerate(e.get("predictions_per_program") or []):
+                if isinstance(ppp, dict):
+                    _push(
+                        f"edges[{e_id}].predictions_per_program[{k}].predicted_value",
+                        ppp.get("predicted_value"),
+                    )
+
+    return nodes_by_id, qs_entries
 
 
 # --- validator-side rules (v16) ----------------------------------------------
@@ -415,10 +526,216 @@ def check_rule_26_forced_edge_self_edge_restriction(carriers_flat: list) -> list
     return errors
 
 
+# --- validator-side rules (v18) ----------------------------------------------
+
+def check_rule_27_predictions_per_program_non_empty(edges: list) -> list[str]:
+    """Rule 27. For each edge with type='resolves':
+      - if predictions_per_program is an empty array, exclusion_only MUST be
+        present and equal to true;
+      - if predictions_per_program is non-empty, exclusion_only is either
+        absent or false.
+    Operationalizes scope memo §3's 'either non-empty with cited per-program
+    values, or an explicit note that the experiment is exclusion-only with
+    citation.' Failure: hard error."""
+    errors = []
+    for e in edges:
+        if not isinstance(e, dict) or e.get("type") != "resolves":
+            continue
+        e_id = e.get("id", "?")
+        ppp = e.get("predictions_per_program")
+        if not isinstance(ppp, list):
+            # JSON Schema §5.6 catches missing / non-list predictions_per_program.
+            continue
+        eo = e.get("exclusion_only")
+        if len(ppp) == 0:
+            if eo is not True:
+                errors.append(
+                    f"Rule 27: edges[{e_id}] predictions_per_program is empty "
+                    f"but exclusion_only is not true (got exclusion_only={eo!r}). "
+                    f"Empty predictions_per_program requires exclusion_only=true "
+                    f"with citation."
+                )
+        else:
+            if eo is True:
+                errors.append(
+                    f"Rule 27: edges[{e_id}] has non-empty predictions_per_program "
+                    f"({len(ppp)} entries) but exclusion_only=true. The two are "
+                    f"mutually exclusive: predictions_per_program is the "
+                    f"discriminating-prediction surface; exclusion_only marks "
+                    f"experiments that do not discriminate."
+                )
+    return errors
+
+
+def check_rule_28_predictions_per_program_citation_presence(edges: list) -> list[str]:
+    """Rule 28. For each entry in a resolves edge's predictions_per_program[]:
+    the entry's citations array MUST be non-empty, AND the embedded
+    predicted_value's citations array MUST be non-empty. Failure: hard error.
+
+    Both are also enforced by minItems: 1 in the relevant $defs; this rule
+    provides defense-in-depth and produces clearer messages for authors."""
+    errors = []
+    for e in edges:
+        if not isinstance(e, dict) or e.get("type") != "resolves":
+            continue
+        e_id = e.get("id", "?")
+        for k, ppp in enumerate(e.get("predictions_per_program") or []):
+            if not isinstance(ppp, dict):
+                continue  # JSON Schema catches non-object entries
+            ctx = f"edges[{e_id}].predictions_per_program[{k}]"
+            cits = ppp.get("citations")
+            if not isinstance(cits, list) or len(cits) == 0:
+                errors.append(
+                    f"Rule 28: {ctx} has empty/missing citations array; "
+                    f"per-program predictions require ≥1 citation to the "
+                    f"program-internal calculation."
+                )
+            pv = ppp.get("predicted_value")
+            if isinstance(pv, dict):
+                pv_cits = pv.get("citations")
+                if not isinstance(pv_cits, list) or len(pv_cits) == 0:
+                    errors.append(
+                        f"Rule 28: {ctx}.predicted_value has empty/missing "
+                        f"citations array; the predicted numerical value "
+                        f"requires ≥1 citation."
+                    )
+    return errors
+
+
+def check_rule_29_resolves_source_type(edges: list, nodes_by_id: dict) -> list[str]:
+    """Rule 29. For each edge with type='resolves', the node referenced by
+    edge.from MUST have type='experimental-program'. Failure: hard error."""
+    errors = []
+    for e in edges:
+        if not isinstance(e, dict) or e.get("type") != "resolves":
+            continue
+        e_id = e.get("id", "?")
+        src_id = e.get("from")
+        src = nodes_by_id.get(src_id)
+        if src is None:
+            errors.append(
+                f"Rule 29: edges[{e_id}] from={src_id!r} does not resolve to any "
+                f"node in the dataset."
+            )
+        elif src.get("type") != "experimental-program":
+            errors.append(
+                f"Rule 29: edges[{e_id}] from={src_id!r} has type="
+                f"{src.get('type')!r}; resolves edges require source type="
+                f"'experimental-program'."
+            )
+    return errors
+
+
+def check_rule_30_resolves_target_type(
+    edges: list, nodes_by_id: dict, cell_ids: set
+) -> list[str]:
+    """Rule 30. For each edge with type='resolves', edge.to MUST resolve to one
+    of: (a) a cell id in some formal-classification node's cells[] array;
+    (b) an open-frontier node id; (c) a totality-approach node id. Targets
+    resolving to architectures, regime-content nodes, candidate-foundational
+    programs, formal-classification nodes as wholes, or other experimental-
+    program nodes are forbidden. Failure: hard error."""
+    errors = []
+    for e in edges:
+        if not isinstance(e, dict) or e.get("type") != "resolves":
+            continue
+        e_id = e.get("id", "?")
+        tgt = e.get("to")
+        if tgt in cell_ids:
+            continue  # case (a): cell-id target
+        node = nodes_by_id.get(tgt)
+        if node is None:
+            errors.append(
+                f"Rule 30: edges[{e_id}] to={tgt!r} does not resolve to any cell "
+                f"id or node id in the dataset."
+            )
+            continue
+        node_type = node.get("type")
+        if node_type not in RULE_30_RESOLVES_TARGET_NODE_TYPES:
+            errors.append(
+                f"Rule 30: edges[{e_id}] to={tgt!r} resolves to a node of type "
+                f"{node_type!r}; resolves edges target cell ids, open-frontier "
+                f"nodes, or totality-approach nodes only."
+            )
+    return errors
+
+
+def check_rule_31_quantitative_scale_units_conformance(qs_entries: list) -> list[str]:
+    """Rule 31. For each quantitative_scale entry: if kind ∈ {energy_scale,
+    mass, length, time, coupling} then units MUST be present and a non-empty
+    string. If kind ∈ {ratio, dimensionless, sigma_deviation} then units MUST
+    be absent. Failure: hard error.
+
+    Redundant with JSON-Schema §5.2 + §5.3; provides defense-in-depth and
+    clearer per-entry context for authors."""
+    errors = []
+    for ctx, qs in qs_entries:
+        kind = qs.get("kind")
+        if kind in QS_KINDS_REQUIRING_UNITS:
+            if "units" not in qs:
+                errors.append(
+                    f"Rule 31: {ctx} kind={kind!r} requires the units field "
+                    f"to be present (non-empty string)."
+                )
+            else:
+                units = qs.get("units")
+                if not isinstance(units, str) or not units.strip():
+                    errors.append(
+                        f"Rule 31: {ctx} kind={kind!r} requires units to be a "
+                        f"non-empty string; got {units!r}."
+                    )
+        elif kind in QS_KINDS_FORBIDDING_UNITS:
+            if "units" in qs:
+                errors.append(
+                    f"Rule 31: {ctx} kind={kind!r} forbids the units field; "
+                    f"got units={qs.get('units')!r}."
+                )
+    return errors
+
+
+def check_rule_32_quantitative_scale_log10_conformance(qs_entries: list) -> list[str]:
+    """Rule 32. For each quantitative_scale entry: if kind ∈ {dimensionless,
+    sigma_deviation} then log10 MUST be absent. log10 is permitted on the six
+    kinds where order-of-magnitude framing is meaningful (ratio, energy_scale,
+    mass, length, time, coupling). Failure: hard error.
+
+    Redundant with JSON-Schema §5.4; provides defense-in-depth."""
+    errors = []
+    for ctx, qs in qs_entries:
+        kind = qs.get("kind")
+        if kind in QS_KINDS_FORBIDDING_LOG10 and "log10" in qs:
+            errors.append(
+                f"Rule 32: {ctx} kind={kind!r} forbids the log10 field; "
+                f"got log10={qs.get('log10')!r}."
+            )
+    return errors
+
+
+def check_rule_33_quantitative_scale_citation_presence(qs_entries: list) -> list[str]:
+    """Rule 33. For each quantitative_scale entry (on any surface — node, cell,
+    prediction, edge, if_real_implies implication, resolves.sensitivity, or
+    predictions_per_program[].predicted_value), the citations array MUST be
+    non-empty. Failure: hard error.
+
+    Redundant with minItems: 1 in §2's $def; provides defense-in-depth and
+    flags author-supplied entries that omit the field entirely."""
+    errors = []
+    for ctx, qs in qs_entries:
+        cits = qs.get("citations")
+        if not isinstance(cits, list) or len(cits) == 0:
+            errors.append(
+                f"Rule 33: {ctx} has empty/missing citations array; every "
+                f"quantitative_scale entry requires ≥1 citation per the §4 "
+                f"admissibility test."
+            )
+    return errors
+
+
 def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
-    """Run all v16 + v17 validator-side rules. Returns (errors, warnings)."""
+    """Run all v16 + v17 + v18 validator-side rules. Returns (errors, warnings)."""
     edges_by_id, fcs_by_id, cells_indexed = _build_indices(data)
     cell_ids, carriers_by_node, carriers_flat = _build_v17_indices(data, cells_indexed)
+    nodes_by_id, qs_entries = _build_v18_indices(data)
     edges = data.get("edges", [])
 
     errors: list[str] = []
@@ -433,6 +750,14 @@ def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
     ))
     errors.extend(check_rule_25_resolution_uniqueness(carriers_by_node))
     errors.extend(check_rule_26_forced_edge_self_edge_restriction(carriers_flat))
+    # v18 rules
+    errors.extend(check_rule_27_predictions_per_program_non_empty(edges))
+    errors.extend(check_rule_28_predictions_per_program_citation_presence(edges))
+    errors.extend(check_rule_29_resolves_source_type(edges, nodes_by_id))
+    errors.extend(check_rule_30_resolves_target_type(edges, nodes_by_id, cell_ids))
+    errors.extend(check_rule_31_quantitative_scale_units_conformance(qs_entries))
+    errors.extend(check_rule_32_quantitative_scale_log10_conformance(qs_entries))
+    errors.extend(check_rule_33_quantitative_scale_citation_presence(qs_entries))
 
     warnings: list[str] = []
     warnings.extend(check_rule_22_axis_mapping_recommended(edges))
@@ -461,7 +786,7 @@ def main() -> int:
     legacy = [e for e in schema_errors if KNOWN_LEGACY_SIGNATURE in e.message]
     new_schema = [e for e in schema_errors if KNOWN_LEGACY_SIGNATURE not in e.message]
 
-    # 2. Validator-side rules (19, 20, 21, 23, 24, 25, 26 errors; 22 warning)
+    # 2. Validator-side rules (19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 errors; 22 warning)
     rule_errors, rule_warnings = run_validator_side_rules(data)
 
     # Header
@@ -492,7 +817,11 @@ def main() -> int:
             print(f"  ... and {len(new_schema) - 20} more")
 
     # Validator-side rule errors — fail CI
-    print(f"\nValidator-side rule errors (rules 19, 20, 21, 23, 24, 25, 26): {len(rule_errors)}")
+    print(
+        f"\nValidator-side rule errors "
+        f"(rules 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33): "
+        f"{len(rule_errors)}"
+    )
     if rule_errors:
         for i, msg in enumerate(rule_errors[:20], 1):
             print(f"  {i}. {msg}")
