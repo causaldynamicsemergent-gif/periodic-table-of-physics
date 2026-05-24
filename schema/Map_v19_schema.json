@@ -1,0 +1,1322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/map_v19_schema.json",
+  "title": "Physics Map v19 — Entry Data (Periodic Table of Physics layer, Phase C of the Predictive Layer, with bound_direction on quantitative_scale)",
+  "description": "v19 strictly extends v18. The bump is centralized in the quantitative_scale $def: a new optional property bound_direction (four-value enum: lower / upper / two-sided / unspecified) records the directional reading of the recorded value. Permitted only when uncertainty is null or absent; forbidden when uncertainty is non-null (numeric or asymmetric {low, high}). Recommended (warning-level) when uncertainty is null/absent and bound_direction is also absent. v18-conforming entries validate cleanly against v19 with bound_direction absent everywhere — the sub-PR 26 backward-compat regression confirms this. New $def: bound_direction (single string enum, four values). Extended $def: quantitative_scale (one new optional property, one new allOf conditional rule §5.1). New validator-side rules 34-36 (bound_direction forbidden on non-null uncertainty, recommended on uncertainty=null/absent when absent, enum conformance). All v15.3 / v16 / v17 / v18 mechanisms inherit unchanged; the v18 spec's §4 admissibility test continues to govern new quantitative_scale entries and the narrower v19 retrofit self-check (spec §4) governs the bound_direction retrofit-pass populated in sub-PR 28. See MAP_v19_schema_spec_extension.md for the load-bearing spec, PREDICTIVE_LAYER_PHASE_C_v19_SCOPE_MEMO.md for the design source, and PREDICTIVE_LAYER_PHASE_C_HANDOFF.md for the build trajectory.",
+  "type": "object",
+  "required": ["nodes", "edges", "families", "glossary"],
+  "properties": {
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "families": {"type": "array", "items": {"$ref": "#/$defs/family"}},
+    "canvas": {
+      "type": "object",
+      "properties": {"width": {"type": "number"}, "height": {"type": "number"}}
+    },
+    "y_bands": {"type": "object", "additionalProperties": {"type": "number"}},
+    "glossary": {"$ref": "#/$defs/glossary"},
+    "mode": {"type": "string"},
+    "schema_version": {
+      "type": "string",
+      "description": "v15 data may set this to \"15\" or \"15.0\"."
+    }
+  },
+  "$defs": {
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "architecture",
+        "regime-content",
+        "open-frontier",
+        "totality-approach",
+        "formal-classification",
+        "experimental-program"
+      ],
+      "description": "Six node kinds. The first five inherited from v14; experimental-program added in v15."
+    },
+    "stratum": {
+      "oneOf": [
+        {"type": "string"},
+        {"type": "number"}
+      ],
+      "description": "Vertical band placement. See v14 spec §2.2. experimental-program nodes' stratum placement is non-load-bearing in v15."
+    },
+    "empirical_status": {"type": "string"},
+    "structural_reason_category": {
+      "type": "string",
+      "enum": [
+        "organizing-structure-failure",
+        "apparatus-mechanism-failure",
+        "reach-termination",
+        "bridge-failure",
+        "cross-architecture-non-sharing",
+        "solvability-failure",
+        "interpretive-underdetermination"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "enum": ["native", "information-theoretic", "geometric", "category-theoretic"]
+    },
+    "discharge_level": {"type": "string"},
+    "discharge_status": {
+      "oneOf": [
+        {"$ref": "#/$defs/discharge_level"},
+        {
+          "type": "object",
+          "properties": {
+            "local": {"$ref": "#/$defs/discharge_level"},
+            "global": {"$ref": "#/$defs/discharge_level"},
+            "universal": {"$ref": "#/$defs/discharge_level"},
+            "geometry": {"$ref": "#/$defs/discharge_level"},
+            "matter": {"$ref": "#/$defs/discharge_level"},
+            "overall": {"$ref": "#/$defs/discharge_level"},
+            "subclaim_examples": {"type": "object", "additionalProperties": {"$ref": "#/$defs/discharge_level"}}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "candidate_targeting_entry": {
+      "type": "object",
+      "required": ["program", "discharge_status"],
+      "properties": {
+        "program": {"type": "string"},
+        "discharge_status": {"$ref": "#/$defs/discharge_status"},
+        "annotation": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "loose_end": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": {"type": "string"},
+        "structural_reason_category": {"$ref": "#/$defs/structural_reason_category"},
+        "scope": {"type": "string"},
+        "candidate_targeting": {"type": "array", "items": {"$ref": "#/$defs/candidate_targeting_entry"}},
+        "citations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "equation": {
+      "type": "object",
+      "required": ["latex", "description"],
+      "properties": {
+        "latex": {"type": "string"},
+        "description": {"type": "string"},
+        "loose_ends": {"type": "array", "items": {"$ref": "#/$defs/loose_end"}},
+        "citations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "language_block": {
+      "type": "object",
+      "properties": {
+        "language": {"type": "string"},
+        "discharge_status": {"$ref": "#/$defs/discharge_status"},
+        "equations": {"type": "array", "items": {"$ref": "#/$defs/equation"}},
+        "cluster_with": {"type": "array", "items": {"type": "string"}},
+        "citations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "equations_block": {
+      "type": "object",
+      "properties": {
+        "unification_count": {"type": "integer"},
+        "primary_language": {"$ref": "#/$defs/language"},
+        "native": {"$ref": "#/$defs/language_block"},
+        "unifications": {"type": "array", "items": {"$ref": "#/$defs/language_block"}}
+      }
+    },
+    "hosting_claim": {
+      "type": "object",
+      "required": ["target", "discharge_status"],
+      "properties": {
+        "target": {"type": "string"},
+        "discharge_status": {"$ref": "#/$defs/discharge_status"},
+        "scope_description": {"type": "string"},
+        "citations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "axis_kind": {
+      "type": "string",
+      "enum": [
+        "discrete-enum",
+        "dimension",
+        "continuous",
+        "group",
+        "representation",
+        "cobordism-class",
+        "free-text"
+      ]
+    },
+    "axis_spec": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "properties": {
+        "name": {"type": "string"},
+        "kind": {"$ref": "#/$defs/axis_kind"},
+        "values": {"type": "array", "items": {"type": "string"}},
+        "range": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "oneOf": [
+                {"type": "number"},
+                {"type": "string", "enum": ["infty", "-infty"]}
+              ]
+            },
+            "max": {
+              "oneOf": [
+                {"type": "number"},
+                {"type": "string", "enum": ["infty", "-infty"]}
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "parent_group": {"type": "string"},
+        "dimension_ref": {"type": "string"},
+        "symmetry_ref": {"type": "string"},
+        "description": {"type": "string"},
+        "canonical_notation": {"type": "string"},
+        "citation": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"kind": {"enum": ["discrete-enum", "group", "representation", "free-text"]}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["values"]}
+        },
+        {
+          "if": {
+            "properties": {"kind": {"enum": ["dimension", "continuous"]}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["range"]}
+        },
+        {
+          "if": {
+            "properties": {"kind": {"const": "representation"}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["parent_group"]}
+        },
+        {
+          "if": {
+            "properties": {"kind": {"const": "cobordism-class"}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["dimension_ref", "symmetry_ref"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "closure_level": {
+      "type": "string",
+      "enum": ["complete-within-domain", "partial", "conjectural", "contested"]
+    },
+    "closure_status_block": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": {"$ref": "#/$defs/closure_level"},
+        "description": {"type": "string"},
+        "contested_by": {"type": "array", "items": {"type": "string"}, "minItems": 2}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"level": {"const": "contested"}},
+            "required": ["level"]
+          },
+          "then": {"required": ["contested_by"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "prediction_status": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "unconfirmed-not-yet-tested",
+        "unconfirmed-tension",
+        "falsified",
+        "retro-explanatory-only"
+      ]
+    },
+    "prediction": {
+      "type": "object",
+      "required": ["prediction", "status"],
+      "properties": {
+        "prediction": {"type": "string"},
+        "status": {"$ref": "#/$defs/prediction_status"},
+        "confirmation_citation": {"type": "string"},
+        "prediction_citation": {"type": "string"},
+        "cell_ref": {"type": "string"},
+        "description": {"type": "string"},
+        "quantitative_scale": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. Optional structured numerical commitment for the prediction. See MAP_v18_schema_spec_extension.md §2 (prediction carrier surface)."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"enum": ["confirmed", "falsified", "unconfirmed-tension"]}},
+            "required": ["status"]
+          },
+          "then": {"required": ["confirmation_citation"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "contested_nature": {
+      "type": "string",
+      "enum": [
+        "definition-disputed",
+        "domain-disputed",
+        "existence-disputed",
+        "interpretation-disputed"
+      ]
+    },
+    "contested_status": {
+      "type": "object",
+      "required": ["nature", "parties"],
+      "properties": {
+        "nature": {"$ref": "#/$defs/contested_nature"},
+        "parties": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "axis_value_range": {
+      "type": "object",
+      "description": "v15. A range or set of axis values covered by a single cell. See spec §4.",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["all", "every-nth", "enumerated"]},
+        "min": {
+          "oneOf": [
+            {"type": "number"},
+            {"type": "string", "enum": ["infty", "-infty"]}
+          ]
+        },
+        "max": {
+          "oneOf": [
+            {"type": "number"},
+            {"type": "string", "enum": ["infty", "-infty"]}
+          ]
+        },
+        "n": {"type": "integer", "minimum": 2},
+        "offset": {"type": "integer", "minimum": 0},
+        "values": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "number"},
+              {"type": "integer"}
+            ]
+          }
+        },
+        "description": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"kind": {"const": "every-nth"}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["n", "offset"]}
+        },
+        {
+          "if": {
+            "properties": {"kind": {"const": "enumerated"}},
+            "required": ["kind"]
+          },
+          "then": {"required": ["values"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "cell": {
+      "type": "object",
+      "description": "v15: cell may have axis_values, axis_value_ranges, or both (for multi-axis cells where some axes are single-point and others are ranges). Per-axis exclusivity is a validator-side rule (see spec §7 Rule 14). v16: optional constructive_status records whether the cell is realized, conjectured-by-pattern, forbidden-by-pattern, or indeterminate; forced_by points to the edge(s) that produced a conjectured-by-pattern or forbidden-by-pattern verdict (see MAP_v16_schema_spec_extension.md §2-§3).",
+      "required": ["content"],
+      "properties": {
+        "axis_values": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Single-point axis values. v14 form."
+        },
+        "axis_value_ranges": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/axis_value_range"},
+          "description": "v15. Range/set axis-value coverage. Keys are axis names from the node's classification_axes."
+        },
+        "content": {"type": "string"},
+        "cell_id": {"type": "string"},
+        "predictions": {"type": "array", "items": {"$ref": "#/$defs/prediction"}},
+        "realized_examples": {"type": "array", "items": {"type": "string"}},
+        "contested_status": {"$ref": "#/$defs/contested_status"},
+        "citations": {"type": "array", "items": {"type": "string"}},
+        "description": {"type": "string"},
+        "constructive_status": {"$ref": "#/$defs/constructive_status"},
+        "forced_by": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/forced_by_entry"},
+          "minItems": 1,
+          "description": "v16. Array of forcing constraints that produced this cell's constructive_status. Required when constructive_status ∈ {conjectured-by-pattern, forbidden-by-pattern}; forbidden when constructive_status ∈ {realized, indeterminate} or absent."
+        },
+        "quantitative_scale": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. Optional structured numerical commitment for the cell. See MAP_v18_schema_spec_extension.md §2 (cell carrier surface)."
+        }
+      },
+      "anyOf": [
+        {"required": ["axis_values"]},
+        {"required": ["axis_value_ranges"]}
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "_comment": "v16 §5.1 — forced_by required when constructive_status forces it",
+          "if": {
+            "properties": {
+              "constructive_status": {"enum": ["conjectured-by-pattern", "forbidden-by-pattern"]}
+            },
+            "required": ["constructive_status"]
+          },
+          "then": {"required": ["forced_by"]}
+        },
+        {
+          "_comment": "v16 §5.2 — forced_by forbidden unless a forcing constructive_status is set",
+          "if": {
+            "anyOf": [
+              {"not": {"required": ["constructive_status"]}},
+              {
+                "properties": {"constructive_status": {"enum": ["realized", "indeterminate"]}},
+                "required": ["constructive_status"]
+              }
+            ]
+          },
+          "then": {"properties": {"forced_by": false}}
+        }
+      ]
+    },
+    "experimental_program_subtype": {
+      "type": "string",
+      "enum": [
+        "data-curation-collaboration",
+        "experimental-collaboration",
+        "accelerator-program",
+        "survey-program"
+      ],
+      "description": "v15. Subtype enum for experimental-program nodes. See spec §2.2."
+    },
+    "operational_period": {
+      "type": "object",
+      "description": "v15. When the program operated. See spec §2.3.",
+      "properties": {
+        "start_year": {"type": "integer"},
+        "start_date": {"type": "string", "format": "date"},
+        "end_year": {"type": "integer"},
+        "end_date": {"type": "string", "format": "date"},
+        "ongoing": {"type": "boolean", "const": true}
+      },
+      "anyOf": [
+        {"required": ["start_year"]},
+        {"required": ["start_date"]}
+      ],
+      "additionalProperties": false
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "label"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"$ref": "#/$defs/node_type"},
+        "subtype": {
+          "description": "Free-form string for most node types; constrained to experimental_program_subtype enum when type = experimental-program. See spec §2.5 Rule 9 (validator-side).",
+          "anyOf": [
+            {"type": "string"},
+            {"$ref": "#/$defs/experimental_program_subtype"}
+          ]
+        },
+        "stratum": {"$ref": "#/$defs/stratum"},
+        "label": {"type": "string"},
+        "full_name": {"type": "string"},
+        "empirical_status": {"$ref": "#/$defs/empirical_status"},
+        "description": {"type": "string"},
+        "structural_reason_category": {"$ref": "#/$defs/structural_reason_category"},
+        "secondary_structural_reason_category": {"$ref": "#/$defs/structural_reason_category"},
+        "structural_reason_secondary": {"$ref": "#/$defs/structural_reason_category"},
+        "structural_reason_subtype": {"type": "string"},
+        "sr_categories": {"type": "array", "items": {"$ref": "#/$defs/structural_reason_category"}},
+        "scope": {"type": "string"},
+        "sustaining_target": {"type": "string"},
+        "closure_condition": {"type": "string"},
+        "internal_structure": {"type": "string"},
+        "hosted_regimes": {"type": "array", "items": {"type": "string"}},
+        "hosting_architectures": {"type": "array", "items": {"type": "string"}},
+        "hosting_claims": {"type": "array", "items": {"$ref": "#/$defs/hosting_claim"}},
+        "empirical_content": {"type": "string"},
+        "equations": {"$ref": "#/$defs/equations_block"},
+        "architecture_level_edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {"to": {"type": "string"}, "description": {"type": "string"}}
+          }
+        },
+        "regime_content_loci": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {"to": {"type": "string"}, "description": {"type": "string"}}
+          }
+        },
+        "candidate_targeting": {"type": "array", "items": {"$ref": "#/$defs/candidate_targeting_entry"}},
+        "citations": {"type": "array", "items": {"type": "string"}},
+        "related_entries": {"type": "array", "items": {"type": "string"}},
+        "placement_rationale": {"type": "string"},
+        "primary_language": {"$ref": "#/$defs/language"},
+        "languages_present": {"type": "array", "items": {"$ref": "#/$defs/language"}},
+        "cf_subtype": {"type": "string"},
+        "bridges": {"type": "array"},
+        "classification_axes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/axis_spec"}},
+        "cells": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/cell"}},
+        "closure_status": {"$ref": "#/$defs/closure_status_block"},
+        "domain_of_applicability": {"type": "string"},
+        "predictive_yield": {"type": "array", "items": {"$ref": "#/$defs/prediction"}},
+        "operational_period": {"$ref": "#/$defs/operational_period"},
+        "host_institutions": {"type": "array", "items": {"type": "string"}},
+        "key_publications": {"type": "array", "items": {"type": "string"}},
+        "produced_classifications": {"type": "array", "items": {"type": "string"}},
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "_source_pass": {"type": "integer"},
+        "if_real_implies": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/if_real_implies_entry"},
+          "minItems": 1,
+          "description": "v17. Array of conditional structural claims, each grouped by a named resolution. Each entry records what would follow structurally if a literature-stated resolution of this carrier node's open question turned out to be right. Carrier-node types: open-frontier, totality-approach. Subject to the Phase B admissibility test in MAP_v17_schema_spec_extension.md §4."
+        },
+        "quantitative_scale": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. Optional structured numerical commitment for the carrier node. Permitted only on open-frontier and totality-approach nodes (validator + JSON-Schema rule §5.1). Records frontier-scale quantitative content (e.g., hierarchy ratio, neutrino mass bound, muon g-2 sigma deviation). See MAP_v18_schema_spec_extension.md §2 (node carrier surface)."
+        }
+      },
+      "allOf": [
+        {
+          "_comment": "v14 §8 Rule 3 — required-on-formal-classification",
+          "if": {
+            "properties": {"type": {"const": "formal-classification"}},
+            "required": ["type"]
+          },
+          "then": {
+            "required": [
+              "id",
+              "type",
+              "label",
+              "classification_axes",
+              "cells",
+              "closure_status",
+              "domain_of_applicability",
+              "citations"
+            ]
+          }
+        },
+        {
+          "_comment": "v14 §8 Rule 1 — forbidden-on-formal-classification",
+          "if": {
+            "properties": {"type": {"const": "formal-classification"}},
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "structural_reason_category": false,
+              "secondary_structural_reason_category": false,
+              "structural_reason_secondary": false,
+              "structural_reason_subtype": false,
+              "sr_categories": false,
+              "closure_condition": false,
+              "candidate_targeting": false,
+              "hosting_claims": false,
+              "hosted_regimes": false,
+              "hosting_architectures": false,
+              "equations": false,
+              "operational_period": false,
+              "host_institutions": false,
+              "key_publications": false,
+              "produced_classifications": false
+            }
+          }
+        },
+        {
+          "_comment": "v14 §8 Rule 2 — forbidden-on-non-formal-classification (now relaxed to allow experimental-program-specific fields elsewhere)",
+          "if": {
+            "not": {
+              "anyOf": [
+                {
+                  "properties": {"type": {"const": "formal-classification"}},
+                  "required": ["type"]
+                }
+              ]
+            }
+          },
+          "then": {
+            "properties": {
+              "classification_axes": false,
+              "cells": false,
+              "closure_status": false,
+              "domain_of_applicability": false,
+              "predictive_yield": false
+            }
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 7 — experimental-program required fields",
+          "if": {
+            "properties": {"type": {"const": "experimental-program"}},
+            "required": ["type"]
+          },
+          "then": {
+            "required": [
+              "id",
+              "type",
+              "label",
+              "subtype",
+              "description",
+              "operational_period",
+              "citations"
+            ]
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 8 — experimental-program forbidden fields",
+          "if": {
+            "properties": {"type": {"const": "experimental-program"}},
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "structural_reason_category": false,
+              "secondary_structural_reason_category": false,
+              "structural_reason_secondary": false,
+              "structural_reason_subtype": false,
+              "sr_categories": false,
+              "closure_condition": false,
+              "closure_status": false,
+              "classification_axes": false,
+              "cells": false,
+              "domain_of_applicability": false,
+              "predictive_yield": false,
+              "candidate_targeting": false,
+              "hosting_claims": false,
+              "hosted_regimes": false,
+              "hosting_architectures": false,
+              "equations": false,
+              "internal_structure": false
+            }
+          }
+        },
+        {
+          "_comment": "v15 §7 Rule 9 — experimental-program-only fields forbidden on other types",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "experimental-program"}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {
+              "operational_period": false,
+              "host_institutions": false,
+              "key_publications": false,
+              "produced_classifications": false
+            }
+          }
+        },
+        {
+          "_comment": "v17 §3.1 — if_real_implies restricted to open-frontier and totality-approach carriers",
+          "if": {
+            "not": {
+              "properties": {"type": {"enum": ["open-frontier", "totality-approach"]}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {"if_real_implies": false}
+          }
+        },
+        {
+          "_comment": "v18 §5.1 — top-level quantitative_scale restricted to open-frontier and totality-approach",
+          "if": {
+            "not": {
+              "properties": {"type": {"enum": ["open-frontier", "totality-approach"]}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {"quantitative_scale": false}
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "edge_type": {
+      "type": "string",
+      "enum": [
+        "candidate-hosting",
+        "candidate-targeting",
+        "emergence",
+        "cross-architecture-emergence",
+        "open-frontier-architecture-edge",
+        "open-frontier-content-edge",
+        "multi-architecture-interference-edge",
+        "bears-on",
+        "uses-classification",
+        "produces-classification",
+        "cross-classification",
+        "resolves"
+      ]
+    },
+    "bears_on_nature": {
+      "type": "string",
+      "enum": ["constrains", "partially-solves", "structural-only"]
+    },
+    "cross_classification_subtype": {
+      "type": "string",
+      "enum": [
+        "bijection",
+        "derives-from",
+        "categorically-equivalent",
+        "specializes",
+        "composition"
+      ],
+      "description": "v15. Subtype for cross-classification edges. See spec §3.2."
+    },
+    "cross_classification_status": {
+      "type": "string",
+      "enum": ["established", "partial", "conjectured", "aspired", "contested", "impossible"],
+      "description": "v15.3. Status of a cross-classification edge. See MAP_v15_3_schema_spec_extension.md §2. Default `established` when absent."
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "type", "from", "to"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"$ref": "#/$defs/edge_type"},
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "bidirectional": {"type": "boolean"},
+        "description": {"type": "string"},
+        "discharge_status": {"$ref": "#/$defs/discharge_status"},
+        "discharge_annotation": {"type": "string"},
+        "visual_style": {"type": "string"},
+        "citations": {"type": "array", "items": {"type": "string"}},
+        "nature": {"$ref": "#/$defs/bears_on_nature"},
+        "cell_refs": {"type": "array", "items": {"type": "string"}},
+        "subtype": {"$ref": "#/$defs/cross_classification_subtype"},
+        "status": {
+          "$ref": "#/$defs/cross_classification_status",
+          "description": "v15.3. Status of a cross-classification edge. Default `established` when absent."
+        },
+        "targeted_by": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "v15.3. Array of node ids (typically architecture nodes at stratum 2b) for programs working toward establishing this connection. Required when status='aspired'."
+        },
+        "parties": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 2,
+          "description": "v15.3. Citations to the parties in a contested connection. Required when status='contested' (≥ 2 entries)."
+        },
+        "no_go_citations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "v15.3. Citations to no-go theorems ruling out the connection. Required when status='impossible' (≥ 1 entry)."
+        },
+        "_source_pass": {"type": "integer"},
+        "axis_mapping": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/axis_mapping_entry"},
+          "minItems": 1,
+          "description": "v16. Explicit axis-by-axis correspondence between source and target classifications. Required on cross-classification edges with subtype ∈ {bijection, categorically-equivalent} in status 'established' (validator-side rule 22, warning level). Optional on 'derives-from' edges (only structure-preserving cases). Forbidden on 'specializes' and 'composition' subtypes (rule 5.3) and on non-cross-classification edges (rule 5.4). See MAP_v16_schema_spec_extension.md §4."
+        },
+        "quantitative_scale": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. Optional structured numerical commitment for the edge. Permitted only on bears-on edges (JSON-Schema rule §5.7). Records edge-level scale bands (e.g., the energy range over which an FC's structural constraint applies to a frontier). resolves edges record sensitivity via the dedicated `sensitivity` field instead. See MAP_v18_schema_spec_extension.md §2 (edge carrier surface) and §3.5."
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. The experiment's documented sensitivity to the observable being measured. Cited from the experimental program's design report, proposal, or published projection. Required on resolves edges (§5.6); forbidden on non-resolves edges (§5.5). See MAP_v18_schema_spec_extension.md §3."
+        },
+        "timeline": {
+          "$ref": "#/$defs/resolves_timeline",
+          "description": "v18. Operational-state enum for resolves edges. Required on resolves edges (§5.6); forbidden on non-resolves edges (§5.5). See MAP_v18_schema_spec_extension.md §3."
+        },
+        "predictions_per_program": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/resolves_predictions_per_program_entry"},
+          "description": "v18. Per-program predictions for the experimental observable. Each entry pairs a candidate program with its predicted value, description, and cited derivation. Required on resolves edges (§5.6); forbidden on non-resolves edges (§5.5). Empty array permitted only when exclusion_only is true (validator-side rule 27). See MAP_v18_schema_spec_extension.md §3."
+        },
+        "exclusion_only": {
+          "type": "boolean",
+          "description": "v18. When true, the experiment is documented as exclusion-only — it narrows the candidate space without producing discriminating per-program predictions. Permits predictions_per_program to be empty. Forbidden on non-resolves edges (§5.5). See MAP_v18_schema_spec_extension.md §3 and validator-side rule 27."
+        }
+      },
+      "allOf": [
+        {
+          "_comment": "nature is bears-on-only (unchanged from v14)",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "bears-on"}},
+              "required": ["type"]
+            }
+          },
+          "then": {"properties": {"nature": false}}
+        },
+        {
+          "_comment": "v15 §7 Rule 13 — cell_refs valid on bears-on, uses-classification, produces-classification, cross-classification",
+          "if": {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "bears-on",
+                    "uses-classification",
+                    "produces-classification",
+                    "cross-classification"
+                  ]
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          "then": {"properties": {"cell_refs": false}}
+        },
+        {
+          "_comment": "v15 §7 Rule 11 — subtype required for cross-classification edges",
+          "if": {
+            "properties": {"type": {"const": "cross-classification"}},
+            "required": ["type"]
+          },
+          "then": {"required": ["subtype"]}
+        },
+        {
+          "_comment": "v15 — subtype field is cross-classification-only",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "cross-classification"}},
+              "required": ["type"]
+            }
+          },
+          "then": {"properties": {"subtype": false}}
+        },
+        {
+          "_comment": "v15.3 — status/targeted_by/parties/no_go_citations are cross-classification-only",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "cross-classification"}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {
+              "status": false,
+              "targeted_by": false,
+              "parties": false,
+              "no_go_citations": false
+            }
+          }
+        },
+        {
+          "_comment": "v15.3 §4 Rule 16 — aspired requires targeted_by ≥ 1",
+          "if": {
+            "properties": {"type": {"const": "cross-classification"}, "status": {"const": "aspired"}},
+            "required": ["type", "status"]
+          },
+          "then": {
+            "required": ["targeted_by"],
+            "properties": {"targeted_by": {"minItems": 1}}
+          }
+        },
+        {
+          "_comment": "v15.3 §4 Rule 17 — contested requires parties ≥ 2",
+          "if": {
+            "properties": {"type": {"const": "cross-classification"}, "status": {"const": "contested"}},
+            "required": ["type", "status"]
+          },
+          "then": {"required": ["parties"]}
+        },
+        {
+          "_comment": "v15.3 §4 Rule 18 — impossible requires no_go_citations ≥ 1",
+          "if": {
+            "properties": {"type": {"const": "cross-classification"}, "status": {"const": "impossible"}},
+            "required": ["type", "status"]
+          },
+          "then": {"required": ["no_go_citations"]}
+        },
+        {
+          "_comment": "v16 §5.3 — axis_mapping forbidden on specializes/composition subtypes",
+          "if": {
+            "properties": {
+              "type": {"const": "cross-classification"},
+              "subtype": {"enum": ["specializes", "composition"]}
+            },
+            "required": ["type", "subtype"]
+          },
+          "then": {"properties": {"axis_mapping": false}}
+        },
+        {
+          "_comment": "v16 §5.4 — axis_mapping is cross-classification-only",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "cross-classification"}},
+              "required": ["type"]
+            }
+          },
+          "then": {"properties": {"axis_mapping": false}}
+        },
+        {
+          "_comment": "v18 §5.5 — sensitivity, timeline, predictions_per_program, exclusion_only forbidden on non-resolves edges",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "resolves"}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {
+              "sensitivity": false,
+              "timeline": false,
+              "predictions_per_program": false,
+              "exclusion_only": false
+            }
+          }
+        },
+        {
+          "_comment": "v18 §5.6 — resolves edges require sensitivity, timeline, and predictions_per_program",
+          "if": {
+            "properties": {"type": {"const": "resolves"}},
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["sensitivity", "timeline", "predictions_per_program"]
+          }
+        },
+        {
+          "_comment": "v18 §5.7 — edge-level quantitative_scale restricted to bears-on (resolves uses sensitivity instead)",
+          "if": {
+            "not": {
+              "properties": {"type": {"const": "bears-on"}},
+              "required": ["type"]
+            }
+          },
+          "then": {
+            "properties": {"quantitative_scale": false}
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "family": {
+      "type": "object",
+      "required": ["id", "label", "instances"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "instances": {"type": "array", "items": {"type": "string"}},
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "width": {"type": "number"},
+        "height": {"type": "number"}
+      }
+    },
+    "glossary": {
+      "type": "object",
+      "required": ["entries"],
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": {"type": "string"},
+              "label": {"type": "string"},
+              "order": {"type": "integer"}
+            }
+          }
+        },
+        "entries": {"type": "array", "items": {"$ref": "#/$defs/glossary_entry"}}
+      }
+    },
+    "glossary_entry": {
+      "type": "object",
+      "required": ["term", "category", "definition"],
+      "properties": {
+        "term": {"type": "string"},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "category": {"type": "string"},
+        "definition": {"type": "string"},
+        "why_it_matters": {"type": "string"},
+        "example": {"type": "string"},
+        "related": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "constructive_status": {
+      "type": "string",
+      "enum": ["realized", "conjectured-by-pattern", "forbidden-by-pattern", "indeterminate"],
+      "description": "v16. Constructive status of the cell — does this cell exist as a realized instance (realized), is it required by a structure-preserving edge but not yet realized (conjectured-by-pattern), is it excluded by a structure-preserving edge or closure constraint (forbidden-by-pattern), or does the pattern not force a verdict (indeterminate)? Distinct from empirical prediction_status. See MAP_v16_schema_spec_extension.md §2."
+    },
+    "forced_by_entry": {
+      "type": "object",
+      "required": ["kind", "edge_id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["edge"],
+          "description": "v16. Discriminator for the type of forcing constraint. Phase A: only 'edge' is supported. Reserved values for future: 'closure_constraint'."
+        },
+        "edge_id": {
+          "type": "string",
+          "description": "v16. Id of the edge that forces this cell. Must reference an existing edge with subtype in {bijection, categorically-equivalent, derives-from} and from/to including this cell's host classification."
+        },
+        "description": {
+          "type": "string",
+          "description": "v16. Optional one-line gloss of what the forcing edge specifically forces about this cell."
+        }
+      },
+      "additionalProperties": false
+    },
+    "axis_mapping_entry": {
+      "type": "object",
+      "required": ["from_axis", "to_axis"],
+      "properties": {
+        "from_axis": {
+          "type": "string",
+          "description": "v16. Axis name on the source classification. Must appear in the source FC's classification_axes (validator-side rule 23)."
+        },
+        "to_axis": {
+          "type": "string",
+          "description": "v16. Axis name on the target classification. Must appear in the target FC's classification_axes (validator-side rule 23)."
+        },
+        "correspondence": {
+          "type": "string",
+          "description": "v16. The transformation relating from_axis to to_axis. 'identity' for direct correspondence; otherwise a named transformation (e.g., 'McKay correspondence', 'dual', 'duality-twist'). Free text — interpretation is the edge author's substantive claim, not validator-checked."
+        },
+        "description": {"type": "string", "description": "v16. One-line gloss of the mapping."}
+      },
+      "additionalProperties": false
+    },
+    "if_real_implies_entry": {
+      "type": "object",
+      "description": "v17. Single resolution-grouped entry in a carrier node's if_real_implies array. Records the antecedent (a literature-stated resolution of the carrier's open question) and its structural implications. Subject to the §4 admissibility test in MAP_v17_schema_spec_extension.md.",
+      "required": ["resolution", "condition", "condition_citations", "implications"],
+      "properties": {
+        "resolution": {
+          "type": "string",
+          "description": "v17. Short identifier for the resolution being conditioned on (e.g., 'susy-at-tev', 'koide-as-discrete-flavor-signal', 'muon-g2-bsm-loop'). Unique within the carrier's if_real_implies array (validator-side rule 25). Not a global id; carriers may reuse identifiers locally."
+        },
+        "condition": {
+          "type": "string",
+          "description": "v17. One-line statement of the if-real antecedent — the literature position whose realization is being conditioned on."
+        },
+        "condition_citations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "v17. Publications where the resolution is stated as a literature position. Required non-empty per the §4 admissibility test part (1). At least one citation must name a paper a working subfield specialist would recognize as taking the position."
+        },
+        "implications": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/if_real_implies_implication"},
+          "minItems": 1,
+          "description": "v17. Structural consequences of the resolution, each independently citation-supported."
+        }
+      },
+      "additionalProperties": false
+    },
+    "if_real_implies_implication": {
+      "type": "object",
+      "description": "v17. Single structural consequence within an if_real_implies entry. The shape of `target` depends on `kind` — see §3.2-§3.4 conditional rules below and §5 validator rules in MAP_v17_schema_spec_extension.md.",
+      "required": ["kind", "description", "derivation_citations"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["new_cell", "new_axis", "forced_edge", "promotes_subtype", "new_FC"],
+          "description": "v17. Discriminator for the kind of structural consequence. See MAP_v17_schema_spec_extension.md §2 for semantics."
+        },
+        "target": {
+          "description": "v17. Target of the structural consequence. Shape depends on kind — see §3 conditional rules. Null when kind = new_FC; string (FC id, edge id, or cell id) for new_cell / new_axis / promotes_subtype; structured {from, to, subtype} triple for forced_edge.",
+          "oneOf": [
+            {"type": "string"},
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["from", "to", "subtype"],
+              "properties": {
+                "from": {"type": "string"},
+                "to": {"type": "string"},
+                "subtype": {
+                  "type": "string",
+                  "enum": ["bijection", "categorically-equivalent", "derives-from", "specializes", "composition"]
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "v17. One-line gloss of the structural change implied. Names the cell/axis/edge/subtype-promotion/FC and what about it the resolution forces."
+        },
+        "derivation_citations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "v17. Publications where the antecedent → consequent step is performed. Required non-empty per the §4 admissibility test part (2). Citations should name the paper(s) where the derivation from the resolution to this specific structural consequence is recorded — not merely the resolution's introduction (those are in condition_citations)."
+        },
+        "quantitative_scale": {
+          "$ref": "#/$defs/quantitative_scale",
+          "description": "v18. Optional structured numerical commitment for the implication when the conditional consequence is quantitative (e.g., SUSY-stabilization scale ~1 TeV implied by the susy-at-tev resolution). See MAP_v18_schema_spec_extension.md §2 (if_real_implies_implication carrier surface) and example §7.8."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "_comment": "v17 §3.2 — new_FC implies null target (the new FC is authored downstream, not here)",
+          "if": {
+            "properties": {"kind": {"const": "new_FC"}},
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {"target": {"type": "null"}}
+          }
+        },
+        {
+          "_comment": "v17 §3.3 — new_cell / new_axis / promotes_subtype reference a single existing entity by id",
+          "if": {
+            "properties": {"kind": {"enum": ["new_cell", "new_axis", "promotes_subtype"]}},
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["target"],
+            "properties": {
+              "target": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        {
+          "_comment": "v17 §3.4 — forced_edge target is the structured {from, to, subtype} triple",
+          "if": {
+            "properties": {"kind": {"const": "forced_edge"}},
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["target"],
+            "properties": {
+              "target": {
+                "type": "object",
+                "required": ["from", "to", "subtype"],
+                "properties": {
+                  "from": {"type": "string", "minLength": 1},
+                  "to": {"type": "string", "minLength": 1},
+                  "subtype": {
+                    "type": "string",
+                    "enum": ["bijection", "categorically-equivalent", "derives-from", "specializes", "composition"]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "quantitative_scale_kind": {
+      "type": "string",
+      "enum": [
+        "energy_scale",
+        "mass",
+        "length",
+        "time",
+        "ratio",
+        "coupling",
+        "dimensionless",
+        "sigma_deviation"
+      ],
+      "description": "v18. Discriminator for the kind of quantitative quantity recorded. energy_scale = characteristic energy or scale-of-failure (units required, typically GeV/TeV/eV). mass = particle/hadronic mass (units required). length = characteristic length/correlation length (units required). time = lifetime/timescale (units required). ratio = dimensionless ratio of two scales (units forbidden; log10 natural). coupling = dimensionless coupling strength (units permitted by convention §5.2 to record normalization). dimensionless = any other dimensionless quantity (units forbidden). sigma_deviation = measurement-vs-prediction discrepancy in standard deviations (units forbidden; log10 forbidden). See MAP_v18_schema_spec_extension.md §2 for full semantics."
+    },
+    "quantitative_scale_uncertainty": {
+      "oneOf": [
+        {"type": "number"},
+        {
+          "type": "object",
+          "required": ["low", "high"],
+          "properties": {
+            "low": {"type": "number"},
+            "high": {"type": "number"}
+          },
+          "additionalProperties": false
+        },
+        {"type": "null"}
+      ],
+      "description": "v18. Uncertainty on the recorded value. A single number is interpreted as symmetric ±uncertainty in the parent's units; an object specifies asymmetric {low, high} bounds at 68% CL by convention (low and high are positive deltas); null records that no uncertainty is given (distinct from uncertainty = 0). The schema does not enforce a CL convention; entries cite their source's convention via the parent quantitative_scale's citations field."
+    },
+    "bound_direction": {
+      "type": "string",
+      "enum": ["lower", "upper", "two-sided", "unspecified"],
+      "description": "v19. Direction discriminator for the quantitative claim recorded in the enclosing quantitative_scale. 'lower' = value is a lower bound (e.g., proton lifetime τ > value at 90% CL, observational lifetime floors, sensitivity floors). 'upper' = value is an upper bound (e.g., |θ_QCD| < 10⁻¹⁰, Σm_ν < 0.12 eV, coupling-strength ceilings, sigma_deviation tension severities per the 'at least Nσ' reading). 'two-sided' = value is an exact-value commitment reported without one-sided directionality (e.g., S_BH coefficient 0.25 from Bekenstein-Hawking, K41 turbulence exponent −5/3, Koide Q ≈ 2/3, chiral scale Λ_χ ≈ 1 GeV, group-order encodings like |Ω^{Pin+}_4| = 16). 'unspecified' = direction genuinely ambiguous from the cited source — the documented firewall escape hatch (v19 spec §4) when the prose is ambiguous, an order-of-magnitude estimate without one-sided/two-sided framing, or citations split between readings. Permitted only when the enclosing quantitative_scale.uncertainty is null or absent (Rule 34 / §5.1); recommended in that case (Rule 35). See MAP_v19_schema_spec_extension.md §1 for full enum semantics and §4 for the binding retrofit self-check."
+    },
+    "quantitative_scale": {
+      "type": "object",
+      "description": "v18. Structured numerical commitment. Permitted on five carrier surfaces (open-frontier / totality-approach nodes via §5.1; cells; predictions; bears-on edges via §5.7; if_real_implies_implication objects). Subject to the §4 admissibility test in MAP_v18_schema_spec_extension.md: every value is a literature value (citations non-empty; minItems: 1). See spec §2 for kind semantics, §5.2-§5.4 for units/log10 conditionals, and §4 for the binding admissibility test. v19: gains optional bound_direction property (see §3.1 + §5.1 of MAP_v19_schema_spec_extension.md). bound_direction is forbidden when uncertainty is non-null (Rule 34 / v19 spec §5.1); recommended when uncertainty is null or absent and bound_direction is also absent (Rule 35); must be one of {lower, upper, two-sided, unspecified} (Rule 36).",
+      "required": ["kind", "value", "citations"],
+      "properties": {
+        "kind": {"$ref": "#/$defs/quantitative_scale_kind"},
+        "value": {
+          "type": "number",
+          "description": "v18. The numerical value. Interpreted as the quantity itself when log10 is absent or false; interpreted as the base-10 logarithm of the underlying quantity when log10 is true (see §2 log10 semantics)."
+        },
+        "units": {
+          "type": "string",
+          "description": "v18. Units of the value. Required for dimensional kinds energy_scale / mass / length / time / coupling per §5.2; forbidden for strictly-dimensionless kinds ratio / dimensionless / sigma_deviation per §5.3. Typical strings: GeV, TeV, MeV, eV for energies/masses; m, fm, Mpc, kpc for lengths; s, yr for times; GeV^-1 or dimensionless for couplings."
+        },
+        "uncertainty": {"$ref": "#/$defs/quantitative_scale_uncertainty"},
+        "log10": {
+          "type": "boolean",
+          "description": "v18. When true, value is the base-10 logarithm of the underlying quantity (used for order-of-magnitude claims, e.g., value: 17, log10: true records 10^17). Permitted on the six kinds where meaningful (ratio, energy_scale, mass, length, time, coupling); forbidden on dimensionless and sigma_deviation per §5.4."
+        },
+        "bound_direction": {"$ref": "#/$defs/bound_direction"},
+        "citations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "v18. Publications sourcing the numerical value. Required non-empty per the §4 admissibility test part (1). At least one citation must name a measurement, calculation, or canonical reference that states the value (or names it to the order of magnitude when log10: true)."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "_comment": "v18 §5.2 — units required for energy_scale / mass / length / time / coupling",
+          "if": {
+            "properties": {
+              "kind": {"enum": ["energy_scale", "mass", "length", "time", "coupling"]}
+            },
+            "required": ["kind"]
+          },
+          "then": {"required": ["units"]}
+        },
+        {
+          "_comment": "v18 §5.3 — units forbidden for ratio / dimensionless / sigma_deviation",
+          "if": {
+            "properties": {
+              "kind": {"enum": ["ratio", "dimensionless", "sigma_deviation"]}
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {"units": false}
+          }
+        },
+        {
+          "_comment": "v18 §5.4 — log10 forbidden for dimensionless and sigma_deviation (the two kinds where it is not meaningful)",
+          "if": {
+            "properties": {
+              "kind": {"enum": ["dimensionless", "sigma_deviation"]}
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {"log10": false}
+          }
+        },
+        {
+          "_comment": "v19 §5.1 — bound_direction forbidden on entries with non-null uncertainty (numeric or asymmetric); enforces the binary semantic that an entry either records a directional bound (uncertainty=null/absent + bound_direction) or a two-sided measurement (numeric/asymmetric uncertainty). The if-clause tests non-null-ness on the uncertainty field; entries with uncertainty absent do not match the if-clause and the then-clause restriction does not apply, so bound_direction is permitted both when uncertainty=null is explicit and when the field is absent (spec §5.1 edge-case discussion). Conformance pattern: if/then with properties+required+not/required, matching the v18 §5.2–§5.4 allOf chain on this $def.",
+          "if": {
+            "properties": {
+              "uncertainty": {"not": {"type": "null"}}
+            },
+            "required": ["uncertainty"]
+          },
+          "then": {
+            "not": {"required": ["bound_direction"]}
+          }
+        }
+      ]
+    },
+    "resolves_timeline": {
+      "type": "string",
+      "enum": [
+        "deployed",
+        "running",
+        "planned-by-2030",
+        "planned-by-2035",
+        "planned-by-2040",
+        "proposed"
+      ],
+      "description": "v18. Operational-state enum for resolves edges. deployed = already taking data; running = currently operating with scheduled runs ahead; planned-by-YYYY = funded/approved with first physics expected by the named year (three year-buckets at half-decade granularity); proposed = concept stage, not yet funded."
+    },
+    "resolves_predictions_per_program_entry": {
+      "type": "object",
+      "description": "v18. Single entry in a resolves edge's predictions_per_program[] array. Pairs a candidate program (named by id or by a candidate_targeting program string already in use on the carrier) with its program-internal predicted value for the experimental observable. Subject to §4 admissibility test part (2): the predicted_value's citation, and the entry's own citations, both name the program-internal calculation.",
+      "required": ["program", "predicted_value", "description", "citations"],
+      "properties": {
+        "program": {
+          "type": "string",
+          "description": "v18. id of the candidate-foundational program, architecture, totality-approach, or candidate-resolution being characterized. Need not be a node id — may be a candidate_targeting program string already used elsewhere on the carrier (e.g., 'WIMP candidates (SUSY neutralinos, generic weak-scale)' as it appears in dark-matter's candidate_targeting)."
+        },
+        "predicted_value": {"$ref": "#/$defs/quantitative_scale"},
+        "description": {
+          "type": "string",
+          "description": "v18. One-line gloss of what the program predicts for the experimental observable."
+        },
+        "citations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1,
+          "description": "v18. Publications where the per-program prediction is calculated. Required non-empty per the §4 admissibility test part (2). Citations should name the program-internal paper where the prediction is derived — not merely the program's introduction."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "_validator_side_rules": {
+    "_comment": "Rules requiring cross-record lookup, validator-implemented.",
+    "rule_4_bears_on_source_type": "For every edge with type='bears-on', the node referenced by edge.from MUST have type='formal-classification'.",
+    "rule_5_bears_on_target_type": "For every edge with type='bears-on', the node referenced by edge.to MUST have type ∈ {'open-frontier', 'totality-approach'}.",
+    "rule_6_classification_edge_targets": "For every edge with type ∈ {'uses-classification', 'produces-classification'}, the node referenced by edge.to MUST have type='formal-classification'.",
+    "rule_10_cross_classification_endpoints": "For every edge with type='cross-classification', both edge.from and edge.to MUST resolve to formal-classification nodes.",
+    "rule_12_produces_classification_source": "For every edge with type='produces-classification', the node referenced by edge.from MUST have type ∈ {'experimental-program', 'architecture', 'open-frontier'}.",
+    "rule_14_axis_value_exclusivity": "For every cell on a formal-classification node, each axis in classification_axes appears in EXACTLY ONE of cell.axis_values or cell.axis_value_ranges (not both, not neither).",
+    "rule_9_experimental_program_subtype": "When type='experimental-program', the subtype field MUST be one of the experimental_program_subtype enum values.",
+    "axis_ref_resolution": "Inherited from v14.",
+    "cell_axis_keys_match": "Inherited from v14, extended: axis names from cell.axis_values and cell.axis_value_ranges (taken together) MUST match the node's classification_axes.",
+    "rule_19_forced_by_edge_resolution": "v16. For every cell with forced_by present, every forced_by[].edge_id MUST match the id of some edge in the edges array. Failure level: error.",
+    "rule_20_forced_by_applicable_subtype": "v16. For every forced_by[].edge_id, the referenced edge MUST have type='cross-classification' and subtype ∈ {bijection, categorically-equivalent, derives-from}. The 'specializes' and 'composition' subtypes do not force cells. Failure level: error.",
+    "rule_21_forced_by_host_classification": "v16. For every forced_by[].edge_id on a cell hosted by formal-classification node F, the referenced edge's from or to MUST equal F.id. Failure level: error.",
+    "rule_22_axis_mapping_recommended_when_established": "v16. For every cross-classification edge with subtype ∈ {bijection, categorically-equivalent} and status='established' (or status absent, since established is the default), axis_mapping SHOULD be present. Failure level: warning (not error). Intentionally warning-level so the v15.3 → v16 schema bump does not break the CI tripwire on day one before the ADE-clique authoring sweep runs (see spec §6 and §7.3 step 3).",
+    "rule_23_axis_mapping_axis_resolution": "v16. For every axis_mapping[] entry on an edge from F1 to F2, axis_mapping[].from_axis MUST appear as the 'name' of some entry in F1.classification_axes; axis_mapping[].to_axis MUST appear similarly in F2.classification_axes. Failure level: error.",
+    "rule_24_if_real_implies_target_resolution": "v17. For each if_real_implies[].implications[] entry: (a) when kind ∈ {new_cell, new_axis}, target MUST be a string equal to the id of some formal-classification node in the dataset; (b) when kind = forced_edge, target.from and target.to MUST each be strings equal to the id of some formal-classification node; (c) when kind = promotes_subtype, target MUST be a string equal to either the id of some existing edge OR the id of some existing cell (validator resolves against both lookup tables); (d) when kind = new_FC, target MUST be null (redundant with JSON-Schema rule §3.2; defense-in-depth). Failure level: error.",
+    "rule_25_if_real_implies_resolution_uniqueness": "v17. Within a single carrier node's if_real_implies array, two entries with the same `resolution` value are forbidden. Uniqueness is enforced only within a single carrier's array — the same `resolution` value may appear on different carriers. Failure level: error.",
+    "rule_26_forced_edge_self_edge_restriction": "v17. For each if_real_implies[].implications[] entry with kind=forced_edge: when target.from = target.to, target.subtype MUST equal 'specializes' (matching the closure-constraint self-edge convention introduced in v16 Step 4 authoring for SM structurally-excluded cells); for any other subtype, target.from and target.to MUST be distinct FC ids. Failure level: error.",
+    "rule_27_predictions_per_program_non_empty_unless_exclusion_only": "v18. For each edge with type='resolves': if predictions_per_program is an empty array, then exclusion_only MUST be present and equal to true. If predictions_per_program is non-empty, exclusion_only is either absent or false. This operationalizes scope memo §3's 'predictions_per_program either non-empty with cited per-program values, or an explicit note that the experiment is exclusion-only with citation.' Failure level: error.",
+    "rule_28_predictions_per_program_citation_presence": "v18. For each entry in resolves edge's predictions_per_program[]: the entry's citations array MUST be non-empty, AND the embedded predicted_value's citations array MUST be non-empty. (Both are enforced by minItems: 1 in the relevant $defs; this validator rule provides defense-in-depth.) Failure level: error.",
+    "rule_29_resolves_source_type": "v18. For each edge with type='resolves', the node referenced by edge.from MUST have type='experimental-program'. Failure level: error.",
+    "rule_30_resolves_target_type": "v18. For each edge with type='resolves', the id referenced by edge.to MUST resolve to either (a) a cell id in some formal-classification node's cells[] array, or (b) an open-frontier node id, or (c) a totality-approach node id. Targets resolving to architectures, regime-content nodes, candidate-foundational programs, formal-classification nodes as wholes, or other experimental-program nodes are forbidden. Failure level: error.",
+    "rule_31_quantitative_scale_units_conformance": "v18. For each quantitative_scale entry (on any surface — node, cell, prediction, edge, if_real_implies_implication, resolves.sensitivity, or predictions_per_program[].predicted_value): if kind ∈ {energy_scale, mass, length, time, coupling} then units MUST be present and a non-empty string. If kind ∈ {ratio, dimensionless, sigma_deviation} then units MUST be absent. (Redundant with JSON-Schema §5.2 + §5.3; provides defense-in-depth.) Failure level: error.",
+    "rule_32_quantitative_scale_log10_conformance": "v18. For each quantitative_scale entry: if kind ∈ {dimensionless, sigma_deviation} then log10 MUST be absent. (Redundant with JSON-Schema §5.4; provides defense-in-depth.) Failure level: error.",
+    "rule_33_quantitative_scale_citation_presence": "v18. For each quantitative_scale entry (on any surface, including nested inside resolves edges and predictions_per_program entries), the citations array MUST be non-empty. (Already enforced by minItems: 1 in §2's $def; validator provides defense-in-depth.) Failure level: error.",
+    "rule_34_bound_direction_forbidden_on_non_null_uncertainty": "v19. For each quantitative_scale entry on any of the five v18 carrier surfaces (open-frontier / totality-approach nodes, cells, predictions, bears-on edges, if_real_implies_implication objects), if uncertainty is present and not null (i.e., a number or asymmetric {low, high} object) and bound_direction is also present, emit a hard error. (Redundant with the §5.1 JSON-Schema conditional rule in the quantitative_scale $def's allOf array; the validator-side check provides defense-in-depth, matching the v18 Rules 31-33 precedent of cross-checking JSON-Schema-enforced rules at validator runtime.) Error message text: 'quantitative_scale at <path> has both non-null uncertainty and bound_direction; the two fields are mutually exclusive (v19 spec §5.1)'. Failure level: error.",
+    "rule_35_bound_direction_recommended_on_uncertainty_null": "v19. For each quantitative_scale entry on any of the five v18 carrier surfaces, if uncertainty is null or absent AND bound_direction is absent, emit a warning. Mirrors the v16 Rule 22 axis_mapping warning precedent — warning-level so the v18 → v19 transition validates the existing 134 uncertainty=null entries cleanly on day one, with the warning population shrinking to ≲5 as sub-PR 28 lands. Rule 35 fires only when bound_direction is ABSENT; entries explicitly marked 'unspecified' do NOT trip the warning (they are the documented firewall escape hatch from v19 spec §4, and a deliberate 'unspecified' assignment should not be indistinguishable from a missed retrofit). Warning message text: 'quantitative_scale at <path> has uncertainty=null (or absent) but no bound_direction; consider populating per v19 spec §1 (use \"unspecified\" if direction is genuinely ambiguous from the cited source)'. Failure level: warning (does not fail CI).",
+    "rule_36_bound_direction_enum_conformance": "v19. For each quantitative_scale entry, if bound_direction is present and not in the set {'lower', 'upper', 'two-sided', 'unspecified'}, emit a hard error. (Redundant with the enum constraint in the §2 bound_direction $def; the validator-side check provides defense-in-depth, matching the v18 Rule 31 unit-conformance precedent of cross-checking schema-enforced enums at validator runtime.) Error message text: 'quantitative_scale at <path> has bound_direction \"<value>\" not in {\"lower\", \"upper\", \"two-sided\", \"unspecified\"} (v19 spec §1)'. Failure level: error."
+  }
+}
