@@ -3,7 +3,7 @@
 validate.py — the data-integrity tripwire for the Periodic Table of Physics repo.
 
 What this does:
-  1. Loads the schema (schema/Map_v18_schema.json).
+  1. Loads the schema (schema/Map_v19_schema.json).
   2. Loads the consolidated dataset (data/Map_v34_consolidated.json).
   3. Validates the dataset against the schema.
   4. Runs the v16 validator-side rules 19-23 (Predictive Layer Phase A) on the
@@ -13,19 +13,27 @@ What this does:
      loaded data. All three are hard errors. See MAP_v17_schema_spec_extension.md §5.
   6. Runs the v18 validator-side rules 27-33 (Predictive Layer Phase C) on the
      loaded data. All seven are hard errors. See MAP_v18_schema_spec_extension.md §6.
-  7. Distinguishes three classes of finding:
+  7. Runs the v19 validator-side rules 34-36 (Predictive Layer Phase C, v19
+     bound_direction surface) on the loaded data. Rules 34 and 36 are hard
+     errors; rule 35 (bound_direction recommended on uncertainty=null entries)
+     is warning-level, mirroring the v16 Rule 22 precedent. See
+     MAP_v19_schema_spec_extension.md §6.
+  8. Distinguishes three classes of finding:
        (a) Known legacy errors — 4 pre-firewall 'constrains'-subtype carryovers.
            Tolerated; documented in PROJECT_INFRASTRUCTURE.md §2.
        (b) New errors — any schema error not matching the legacy signature,
-           plus any validator-side rule 19/20/21/23/24/25/26/27/28/29/30/31/32/33
+           plus any validator-side rule 19/20/21/23/24/25/26/27/28/29/30/31/32/33/34/36
            finding. CI fails on these.
-       (c) Warnings — validator-side rule 22 findings. Reported but do NOT
-           fail CI. Intentionally warning-only so the v15.3 → v16 bump doesn't
-           break the tripwire on day one before the Step 5 ADE-clique
-           authoring sweep populates axis_mapping on the relevant edges.
+       (c) Warnings — validator-side rule 22 and rule 35 findings. Reported
+           but do NOT fail CI. Rule 22 stays warning-level so the v15.3 → v16
+           bump didn't break the tripwire before the ADE-clique authoring
+           sweep populated axis_mapping. Rule 35 stays warning-level so the
+           v18 → v19 transition validates the existing 134 uncertainty=null
+           qs entries cleanly on day one; the warning population shrinks to
+           ≲5 as sub-PR 28's retrofit-pass lands bound_direction on each.
 
-If anything other than the 4 legacy 'constrains' errors or rule-22 warnings
-appears, this script exits with code 1 and GitHub will flag the commit.
+If anything other than the 4 legacy 'constrains' errors or rule-22/rule-35
+warnings appears, this script exits with code 1 and GitHub will flag the commit.
 """
 
 import json
@@ -40,7 +48,7 @@ except ImportError:
 
 # --- configuration -----------------------------------------------------------
 
-SCHEMA_PATH = Path("schema/Map_v18_schema.json")
+SCHEMA_PATH = Path("schema/Map_v19_schema.json")
 DATA_PATH = Path("data/Map_v34_consolidated.json")
 
 # Legacy error tolerance: pre-firewall 'constrains' subtype carryover.
@@ -68,6 +76,11 @@ RULE_30_RESOLVES_TARGET_NODE_TYPES = {"open-frontier", "totality-approach"}
 QS_KINDS_REQUIRING_UNITS = {"energy_scale", "mass", "length", "time", "coupling"}
 QS_KINDS_FORBIDDING_UNITS = {"ratio", "dimensionless", "sigma_deviation"}
 QS_KINDS_FORBIDDING_LOG10 = {"dimensionless", "sigma_deviation"}
+
+# Rule 36 — permitted bound_direction values per v19 spec §1 enum.
+# The four-value vocabulary; "unspecified" is the documented firewall escape
+# hatch from v19 spec §4 (kept distinct from absence; see Rule 35 refinement).
+BOUND_DIRECTION_VALUES = {"lower", "upper", "two-sided", "unspecified"}
 
 
 # --- helpers -----------------------------------------------------------------
@@ -731,8 +744,101 @@ def check_rule_33_quantitative_scale_citation_presence(qs_entries: list) -> list
     return errors
 
 
+# --- validator-side rules (v19) ----------------------------------------------
+#
+# Rules 34, 35, 36 extend Phase C to the v19 `bound_direction` surface. All
+# three operate on the same qs_entries list produced by _build_v18_indices —
+# the seven carrier reference points the v19 spec §6 enumerates (open-frontier
+# / totality-approach node-level, cell-level, prediction-level on both
+# predictive_yield[] and predictions[], bears-on edge-level, if_real_implies
+# implication-level, resolves edge sensitivity, resolves edge
+# predictions_per_program[].predicted_value) are all already in qs_entries via
+# the $ref propagation the v18 indices walk. Factoring a separate
+# walk_qs_entries helper would duplicate _build_v18_indices's work; the
+# minimal additive change is to add three checks alongside Rules 31/32/33 that
+# accept qs_entries as their single argument. Recorded as the implementation
+# choice for the disposition-principle inline-comment trail.
+
+def check_rule_34_bound_direction_forbidden_on_non_null_uncertainty(
+    qs_entries: list,
+) -> list[str]:
+    """Rule 34. For each quantitative_scale entry: if `uncertainty` is present
+    and not None (i.e., a number or asymmetric {low, high} object) and
+    `bound_direction` is also present, emit a hard error. Failure: hard error.
+
+    Redundant with JSON-Schema §5.1's `if/then` conditional; provides
+    defense-in-depth and clearer per-entry context, matching the v18 Rules
+    31-33 precedent of cross-checking schema-enforced rules at validator
+    runtime. See MAP_v19_schema_spec_extension.md §6 Rule 34."""
+    errors = []
+    for ctx, qs in qs_entries:
+        unc = qs.get("uncertainty")
+        unc_present_non_null = ("uncertainty" in qs) and (unc is not None)
+        if unc_present_non_null and "bound_direction" in qs:
+            errors.append(
+                f"Rule 34: quantitative_scale at {ctx} has both non-null "
+                f"uncertainty and bound_direction; the two fields are "
+                f"mutually exclusive (v19 spec §5.1)."
+            )
+    return errors
+
+
+def check_rule_35_bound_direction_recommended_on_uncertainty_null(
+    qs_entries: list,
+) -> list[str]:
+    """Rule 35. For each quantitative_scale entry: if `uncertainty` is null or
+    absent AND `bound_direction` is absent (i.e., the key is not in the qs
+    dict), emit a warning. Entries with `bound_direction == "unspecified"` do
+    NOT trip the warning — they are the documented firewall escape hatch from
+    spec §4, keeping the post-retrofit signal-to-noise high. Failure: WARNING
+    (does not fail CI).
+
+    Warning-only so the v18 → v19 transition validates the existing 134
+    uncertainty=null entries on day one. The warning population shrinks to ≲5
+    as sub-PR 28's retrofit-pass populates bound_direction on each. Mirrors
+    the v16 Rule 22 axis_mapping precedent. See
+    MAP_v19_schema_spec_extension.md §6 Rule 35."""
+    warnings = []
+    for ctx, qs in qs_entries:
+        unc = qs.get("uncertainty")
+        unc_null_or_absent = ("uncertainty" not in qs) or (unc is None)
+        bd_absent = "bound_direction" not in qs
+        if unc_null_or_absent and bd_absent:
+            warnings.append(
+                f"Rule 35: quantitative_scale at {ctx} has uncertainty=null "
+                f"(or absent) but no bound_direction; consider populating "
+                f"per v19 spec §1 (use \"unspecified\" if direction is "
+                f"genuinely ambiguous from the cited source)."
+            )
+    return warnings
+
+
+def check_rule_36_bound_direction_enum_conformance(qs_entries: list) -> list[str]:
+    """Rule 36. For each quantitative_scale entry: if `bound_direction` is
+    present and not in the four-value set {"lower", "upper", "two-sided",
+    "unspecified"}, emit a hard error. Failure: hard error.
+
+    Redundant with the `enum` constraint in the §2 `$def`; provides
+    defense-in-depth, matching the v18 Rule 31 unit-conformance precedent of
+    cross-checking schema-enforced enums at validator runtime. See
+    MAP_v19_schema_spec_extension.md §6 Rule 36."""
+    errors = []
+    for ctx, qs in qs_entries:
+        if "bound_direction" not in qs:
+            continue
+        bd = qs.get("bound_direction")
+        if bd not in BOUND_DIRECTION_VALUES:
+            errors.append(
+                f"Rule 36: quantitative_scale at {ctx} has bound_direction "
+                f"{bd!r} not in "
+                f"{{\"lower\", \"upper\", \"two-sided\", \"unspecified\"}} "
+                f"(v19 spec §1)."
+            )
+    return errors
+
+
 def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
-    """Run all v16 + v17 + v18 validator-side rules. Returns (errors, warnings)."""
+    """Run all v16 + v17 + v18 + v19 validator-side rules. Returns (errors, warnings)."""
     edges_by_id, fcs_by_id, cells_indexed = _build_indices(data)
     cell_ids, carriers_by_node, carriers_flat = _build_v17_indices(data, cells_indexed)
     nodes_by_id, qs_entries = _build_v18_indices(data)
@@ -758,9 +864,13 @@ def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
     errors.extend(check_rule_31_quantitative_scale_units_conformance(qs_entries))
     errors.extend(check_rule_32_quantitative_scale_log10_conformance(qs_entries))
     errors.extend(check_rule_33_quantitative_scale_citation_presence(qs_entries))
+    # v19 rules
+    errors.extend(check_rule_34_bound_direction_forbidden_on_non_null_uncertainty(qs_entries))
+    errors.extend(check_rule_36_bound_direction_enum_conformance(qs_entries))
 
     warnings: list[str] = []
     warnings.extend(check_rule_22_axis_mapping_recommended(edges))
+    warnings.extend(check_rule_35_bound_direction_recommended_on_uncertainty_null(qs_entries))
 
     return errors, warnings
 
@@ -786,7 +896,9 @@ def main() -> int:
     legacy = [e for e in schema_errors if KNOWN_LEGACY_SIGNATURE in e.message]
     new_schema = [e for e in schema_errors if KNOWN_LEGACY_SIGNATURE not in e.message]
 
-    # 2. Validator-side rules (19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 errors; 22 warning)
+    # 2. Validator-side rules
+    #    Errors:   19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36
+    #    Warnings: 22, 35
     rule_errors, rule_warnings = run_validator_side_rules(data)
 
     # Header
@@ -819,7 +931,7 @@ def main() -> int:
     # Validator-side rule errors — fail CI
     print(
         f"\nValidator-side rule errors "
-        f"(rules 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33): "
+        f"(rules 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36): "
         f"{len(rule_errors)}"
     )
     if rule_errors:
@@ -829,7 +941,11 @@ def main() -> int:
             print(f"  ... and {len(rule_errors) - 20} more")
 
     # Validator-side rule warnings — do NOT fail CI
-    print(f"\nValidator-side warnings (rule 22, axis_mapping recommended): {len(rule_warnings)}")
+    print(
+        f"\nValidator-side warnings "
+        f"(rule 22 axis_mapping recommended; rule 35 bound_direction recommended): "
+        f"{len(rule_warnings)}"
+    )
     if rule_warnings:
         for i, msg in enumerate(rule_warnings[:20], 1):
             print(f"  {i}. {msg}")
