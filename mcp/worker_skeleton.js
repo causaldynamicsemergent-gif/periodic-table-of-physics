@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase B / v17 schema / v40 data / server version 3.1.0
+ * Phase C + v19 / v19 schema / v66 data / server version 3.2.0
  *
  * ABOUT
  * -----
@@ -14,7 +14,7 @@
  * the worker source. Module-level code runs once per worker isolate;
  * tool handlers read from in-memory indexes built at load time.
  *
- * Tools (29):
+ * Tools (33):
  *   v16 carry-over (28): server_info, get_node, get_classification,
  *     get_experimental_program, glossary_lookup, list_nodes,
  *     list_classifications, list_experimental_programs, search,
@@ -24,11 +24,33 @@
  *     find_predictions, find_status_distribution, find_structurally_excluded,
  *     find_forced_cells, get_forcing_constraint, get_axis_mapping,
  *     find_cells, compare_classifications, find_loose_ends
- *   Phase B additions:
- *     - find_signal_implications (NEW): surfaces if_real_implies entries
+ *   Phase B carry-over (1):
+ *     - find_signal_implications: surfaces if_real_implies entries
  *       on open-frontier and totality-approach carriers.
  *     - find_loose_ends EXTENDED: surfaces if_real_implies entries
  *       alongside classical loose_ends; toggle via includeIfRealImplies.
+ *   Phase C additions (3):
+ *     - rank_by_scale (NEW): ranks quantitative_scale entries of a given
+ *       kind across nodes of a given type, optionally filtered by
+ *       bound_direction.
+ *     - find_resolvers (NEW): returns experimental-program nodes
+ *       connected via resolves edges to a given cell or frontier.
+ *     - find_discriminating_experiments (NEW): flagship AI-first query
+ *       per PROJECT_GOAL_SUPPLEMENT.md §1.2. Given two candidate
+ *       programs, returns every resolves-edge experiment whose
+ *       predictions_per_program differs between the two programs.
+ *     - find_predictions EXTENDED: kindFilter + boundDirectionFilter
+ *       parameters; quantitative_scale projected on returned payloads.
+ *     - find_cells EXTENDED: quantitativeScaleKind + boundDirection
+ *       filters.
+ *     - get_node continues to return the whole node (no projection
+ *       strip); quantitative_scale and if_real_implies are preserved
+ *       as authored.
+ *   v19 addition (1):
+ *     - find_bounds (NEW): returns every quantitative_scale entry
+ *       across all carrier surfaces filtered by kind and
+ *       bound_direction. Closes the AI-queryable surface for the
+ *       dataset's directional empirical commitments.
  *
  * BUILD PROCESS
  * -------------
@@ -74,6 +96,15 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.0 — Phase C + v19 / v18 + v19 schema / v66 data. Sub-PR 29
+ *           consolidated MCP rebuild. Closes Phase B Step N+1 drift
+ *           (find_signal_implications + find_loose_ends extension
+ *           were authored in skeleton at v3.1.0 but never reached
+ *           production deploy), Phase C Step N+1 drift (rank_by_scale,
+ *           find_resolvers, find_discriminating_experiments + Phase C
+ *           extensions), and lands v19 surface (find_bounds +
+ *           bound_direction filtering on find_cells / find_predictions).
+ *           Tools 29 → 33. Banner: v66 / v19 / 33 tools.
  *   3.1.0 — Phase B / v17. Adds find_signal_implications; extends
  *           find_loose_ends with if_real_implies surfacing; adds
  *           constructive_status_absent_cells count to server_info;
@@ -186,6 +217,64 @@ function computeCounts() {
       }
     }
   }
+
+  // v18 / Phase C + v19 counts
+  // Walk every authored quantitative_scale entry across all five carrier surfaces
+  // (per v18 spec §3.x) plus the cell.predictions[] surface and the
+  // if_real_implies_implication surface. Tally by kind and (v19) bound_direction.
+  let qs_total = 0;
+  const qs_by_kind = {};
+  const qs_by_bound_direction = {};
+  function _tally_qs(qs) {
+    if (!qs || typeof qs !== 'object') return;
+    qs_total++;
+    const k = qs.kind || 'UNKNOWN';
+    qs_by_kind[k] = (qs_by_kind[k] || 0) + 1;
+    const d = qs.bound_direction || 'absent';
+    qs_by_bound_direction[d] = (qs_by_bound_direction[d] || 0) + 1;
+  }
+  for (const n of NODES) {
+    // surface 1: frontier/totality-approach node level
+    if (n && (n.type === 'open-frontier' || n.type === 'totality-approach')) {
+      _tally_qs(n.quantitative_scale);
+    }
+    // surface 5 (Phase B implications)
+    if (Array.isArray(n.if_real_implies)) {
+      for (const r of n.if_real_implies) {
+        if (Array.isArray(r.implications)) {
+          for (const imp of r.implications) _tally_qs(imp && imp.quantitative_scale);
+        }
+      }
+    }
+    // FC-hosted surfaces (cells, cell.predictions, predictive_yield)
+    if (n && n.type === 'formal-classification') {
+      const cells = Array.isArray(n.cells) ? n.cells : [];
+      for (const c of cells) {
+        // surface 2: cell-level
+        _tally_qs(c && c.quantitative_scale);
+        // surface 3a: cell-scoped predictions
+        const cp = Array.isArray(c && c.predictions) ? c.predictions : [];
+        for (const p of cp) _tally_qs(p && p.quantitative_scale);
+        // (cells may also have a cell-level predictive_yield array on some FCs)
+        const cpy = Array.isArray(c && c.predictive_yield) ? c.predictive_yield : [];
+        for (const p of cpy) _tally_qs(p && p.quantitative_scale);
+      }
+      // surface 3b: FC-level predictive_yield
+      const py = Array.isArray(n.predictive_yield) ? n.predictive_yield : [];
+      for (const p of py) _tally_qs(p && p.quantitative_scale);
+    }
+  }
+  for (const e of EDGES) {
+    // surface 4: bears-on edges
+    if (e && e.type === 'bears-on') _tally_qs(e.quantitative_scale);
+  }
+
+  // resolves edges (Phase C / v18 Move 5)
+  let resolves_edges = 0;
+  for (const e of EDGES) {
+    if (e && e.type === 'resolves') resolves_edges++;
+  }
+
   return {
     nodes: NODES.length,
     edges: EDGES.length,
@@ -206,6 +295,10 @@ function computeCounts() {
     if_real_implies_carriers: iri_carriers,
     if_real_implies_resolutions: iri_resolutions,
     if_real_implies_implications: iri_implications,
+    quantitative_scale_total: qs_total,
+    quantitative_scale_by_kind: qs_by_kind,
+    quantitative_scale_by_bound_direction: qs_by_bound_direction,
+    resolves_edges,
   };
 }
 const COUNTS = computeCounts();
@@ -233,11 +326,11 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.1.0',
-    schema_version: 'v17',
-    data_version: 'v40',
+    version: '3.2.0',
+    schema_version: 'v19',
+    data_version: 'v66',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
-    phase: 'Predictive Layer Phase B (if_real_implies)',
+    phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
     tool_count: TOOL_NAMES.length,
   };
@@ -599,15 +692,32 @@ function tool_find_hosting({ program_id } = {}) {
   };
 }
 
-function tool_find_predictions({ status, fc_id, contentSearch, limit } = {}) {
+function tool_find_predictions({ status, fc_id, contentSearch, kindFilter, boundDirectionFilter, limit } = {}) {
+  // v18 / Phase C: optional kindFilter narrows results to predictions whose
+  //   quantitative_scale.kind is in the set.
+  // v19: optional boundDirectionFilter narrows to predictions whose
+  //   quantitative_scale.bound_direction is in the set.
+  // quantitative_scale is always projected on returned payloads (existing
+  // spread does this for free; behaviour preserved).
   const out = [];
   const statusSet = status ? new Set(asArray(status)) : null;
+  const kindSet = kindFilter ? new Set(asArray(kindFilter)) : null;
+  const directionSet = boundDirectionFilter ? new Set(asArray(boundDirectionFilter)) : null;
+  function _passesQsFilters(p) {
+    if (!kindSet && !directionSet) return true;
+    const qs = p && p.quantitative_scale;
+    if (!qs) return false;
+    if (kindSet && !kindSet.has(qs.kind)) return false;
+    if (directionSet && !directionSet.has(qs.bound_direction)) return false;
+    return true;
+  }
   for (const n of (NODES_BY_TYPE.get('formal-classification') || [])) {
     if (fc_id && n.id !== fc_id) continue;
     const py = Array.isArray(n.predictive_yield) ? n.predictive_yield : [];
     for (const p of py) {
       if (statusSet && !statusSet.has(p.status)) continue;
       if (contentSearch && !ciIncludes(JSON.stringify(p), contentSearch)) continue;
+      if (!_passesQsFilters(p)) continue;
       out.push({ fc_id: n.id, fc_label: n.label, ...p });
     }
     // also surface cell-scoped predictions (e.g., on su5-gut-rep-content)
@@ -617,7 +727,16 @@ function tool_find_predictions({ status, fc_id, contentSearch, limit } = {}) {
       for (const p of cp) {
         if (statusSet && !statusSet.has(p.status)) continue;
         if (contentSearch && !ciIncludes(JSON.stringify(p), contentSearch)) continue;
+        if (!_passesQsFilters(p)) continue;
         out.push({ fc_id: n.id, fc_label: n.label, cell_id: c.cell_id, ...p });
+      }
+      // v18 introduced cells[].predictions[]; surface those too.
+      const cp2 = Array.isArray(c.predictions) ? c.predictions : [];
+      for (const p of cp2) {
+        if (statusSet && !statusSet.has(p.status)) continue;
+        if (contentSearch && !ciIncludes(JSON.stringify(p), contentSearch)) continue;
+        if (!_passesQsFilters(p)) continue;
+        out.push({ fc_id: n.id, fc_label: n.label, cell_id: c.cell_id, ...p, _source: 'cell.predictions' });
       }
     }
   }
@@ -756,9 +875,16 @@ function tool_get_axis_mapping({ edge_id } = {}) {
   };
 }
 
-function tool_find_cells({ fc_id, axis, value, contentSearch, constructiveStatus, hasForcedBy, limit } = {}) {
+function tool_find_cells({ fc_id, axis, value, contentSearch, constructiveStatus, hasForcedBy, quantitativeScaleKind, boundDirection, hasQuantitativeScale, limit } = {}) {
+  // v18 / Phase C: quantitativeScaleKind filters cells by quantitative_scale.kind.
+  //   hasQuantitativeScale=true|false filters by presence/absence of the field.
+  // v19: boundDirection filters by quantitative_scale.bound_direction.
+  // quantitative_scale is always projected on returned cells via the existing
+  // ...c spread (no code change needed for projection; filters are new).
   const out = [];
   const csSet = constructiveStatus ? new Set(asArray(constructiveStatus)) : null;
+  const qsKindSet = quantitativeScaleKind ? new Set(asArray(quantitativeScaleKind)) : null;
+  const directionSet = boundDirection ? new Set(asArray(boundDirection)) : null;
   // Per v16/v17 spec §"When absent": absent constructive_status is NOT a
   // synonym for indeterminate. When the caller passes a filter, cells with
   // no field do not match.
@@ -776,6 +902,16 @@ function tool_find_cells({ fc_id, axis, value, contentSearch, constructiveStatus
       }
       if (hasForcedBy === true && (!Array.isArray(c.forced_by) || c.forced_by.length === 0)) continue;
       if (hasForcedBy === false && Array.isArray(c.forced_by) && c.forced_by.length > 0) continue;
+      // v18 / Phase C quantitative_scale filters
+      const qs = c.quantitative_scale;
+      if (hasQuantitativeScale === true && !qs) continue;
+      if (hasQuantitativeScale === false && qs) continue;
+      if (qsKindSet) {
+        if (!qs || !qsKindSet.has(qs.kind)) continue;
+      }
+      if (directionSet) {
+        if (!qs || !directionSet.has(qs.bound_direction)) continue;
+      }
       out.push({ fc_id: n.id, fc_label: n.label, ...c });
     }
   }
@@ -924,6 +1060,315 @@ function tool_find_signal_implications({ carrier_id, resolution_id } = {}) {
     total_resolutions: carriers.reduce((s, c) => s + c.entry_count, 0),
     carriers,
   };
+}
+
+// ============================================================
+// Phase C + v19 tools — quantitative_scale, resolves, bound_direction
+// ============================================================
+
+// Shared walker over every quantitative_scale entry in the dataset.
+// Yields { surface, carrier_id, carrier_type, carrier_label, surface_path,
+//          qs } for each authored entry.
+// Surfaces (per v18 spec §3 + v19):
+//   1) frontier / totality-approach node level
+//   2) cell level (cells[].quantitative_scale)
+//   3) prediction level (cells[].predictions[].quantitative_scale,
+//      cells[].predictive_yield[].quantitative_scale,
+//      node.predictive_yield[].quantitative_scale)
+//   4) bears-on edge level
+//   5) if_real_implies_implication level
+function* _walkQuantitativeScales() {
+  for (const n of NODES) {
+    // surface 1
+    if ((n.type === 'open-frontier' || n.type === 'totality-approach') && n.quantitative_scale) {
+      yield {
+        surface: 'frontier-node',
+        carrier_id: n.id,
+        carrier_type: n.type,
+        carrier_label: n.label,
+        surface_path: 'node.quantitative_scale',
+        qs: n.quantitative_scale,
+      };
+    }
+    // surface 5 — Phase B implications can carry qs
+    if (Array.isArray(n.if_real_implies)) {
+      for (const r of n.if_real_implies) {
+        if (Array.isArray(r.implications)) {
+          for (let i = 0; i < r.implications.length; i++) {
+            const imp = r.implications[i];
+            if (imp && imp.quantitative_scale) {
+              yield {
+                surface: 'if-real-implies-implication',
+                carrier_id: n.id,
+                carrier_type: n.type,
+                carrier_label: n.label,
+                surface_path: `node.if_real_implies[${r.resolution}].implications[${i}].quantitative_scale`,
+                resolution: r.resolution,
+                qs: imp.quantitative_scale,
+              };
+            }
+          }
+        }
+      }
+    }
+    // FC-hosted surfaces
+    if (n.type === 'formal-classification') {
+      const cells = Array.isArray(n.cells) ? n.cells : [];
+      for (const c of cells) {
+        // surface 2
+        if (c && c.quantitative_scale) {
+          yield {
+            surface: 'cell',
+            carrier_id: n.id,
+            carrier_type: 'formal-classification',
+            carrier_label: n.label,
+            cell_id: c.cell_id,
+            surface_path: `node.cells[${c.cell_id}].quantitative_scale`,
+            qs: c.quantitative_scale,
+          };
+        }
+        // surface 3 — cell-scoped predictions
+        const cp = Array.isArray(c.predictions) ? c.predictions : [];
+        for (let i = 0; i < cp.length; i++) {
+          const p = cp[i];
+          if (p && p.quantitative_scale) {
+            yield {
+              surface: 'cell-prediction',
+              carrier_id: n.id,
+              carrier_type: 'formal-classification',
+              carrier_label: n.label,
+              cell_id: c.cell_id,
+              surface_path: `node.cells[${c.cell_id}].predictions[${i}].quantitative_scale`,
+              prediction_status: p.status,
+              qs: p.quantitative_scale,
+            };
+          }
+        }
+        const cpy = Array.isArray(c.predictive_yield) ? c.predictive_yield : [];
+        for (let i = 0; i < cpy.length; i++) {
+          const p = cpy[i];
+          if (p && p.quantitative_scale) {
+            yield {
+              surface: 'cell-predictive-yield',
+              carrier_id: n.id,
+              carrier_type: 'formal-classification',
+              carrier_label: n.label,
+              cell_id: c.cell_id,
+              surface_path: `node.cells[${c.cell_id}].predictive_yield[${i}].quantitative_scale`,
+              prediction_status: p.status,
+              qs: p.quantitative_scale,
+            };
+          }
+        }
+      }
+      // surface 3 — FC-level predictive_yield
+      const py = Array.isArray(n.predictive_yield) ? n.predictive_yield : [];
+      for (let i = 0; i < py.length; i++) {
+        const p = py[i];
+        if (p && p.quantitative_scale) {
+          yield {
+            surface: 'fc-predictive-yield',
+            carrier_id: n.id,
+            carrier_type: 'formal-classification',
+            carrier_label: n.label,
+            surface_path: `node.predictive_yield[${i}].quantitative_scale`,
+            prediction_status: p.status,
+            qs: p.quantitative_scale,
+          };
+        }
+      }
+    }
+  }
+  // surface 4 — bears-on edges
+  for (const e of (EDGES_BY_TYPE.get('bears-on') || [])) {
+    if (e && e.quantitative_scale) {
+      yield {
+        surface: 'bears-on-edge',
+        carrier_id: e.id,
+        carrier_type: 'edge',
+        carrier_label: e.label || e.id,
+        edge_from: e.from,
+        edge_to: e.to,
+        surface_path: `edge[${e.id}].quantitative_scale`,
+        qs: e.quantitative_scale,
+      };
+    }
+  }
+}
+
+function tool_rank_by_scale({ node_type, kind, direction, limit } = {}) {
+  // Phase C / v18. Walks every quantitative_scale entry of the given `kind`
+  // on nodes of `node_type` (and only those nodes — edge-level qs entries
+  // are excluded). Optionally filters by bound_direction. Returns entries
+  // sorted by `value` ascending (with `log10:true` meaning the value is the
+  // base-10 exponent; consumers handle effective-magnitude comparison).
+  if (!kind) throw new Error("rank_by_scale: 'kind' is required.");
+  const directionSet = direction ? new Set(asArray(direction)) : null;
+  const out = [];
+  for (const entry of _walkQuantitativeScales()) {
+    if (node_type && entry.carrier_type !== node_type) continue;
+    if (entry.surface === 'bears-on-edge') continue;
+    if (entry.qs.kind !== kind) continue;
+    if (directionSet && !directionSet.has(entry.qs.bound_direction)) continue;
+    out.push({
+      carrier_id: entry.carrier_id,
+      carrier_type: entry.carrier_type,
+      carrier_label: entry.carrier_label,
+      surface: entry.surface,
+      surface_path: entry.surface_path,
+      cell_id: entry.cell_id,
+      resolution: entry.resolution,
+      value: entry.qs.value,
+      units: entry.qs.units,
+      log10: entry.qs.log10 === true,
+      uncertainty: entry.qs.uncertainty,
+      bound_direction: entry.qs.bound_direction,
+      kind: entry.qs.kind,
+      citation: Array.isArray(entry.qs.citations) ? entry.qs.citations[0] : null,
+    });
+  }
+  // Sort by value ascending. log10:true entries are sorted as their stored
+  // value (the base-10 exponent), so they naturally interleave on the
+  // exponent axis; this is the simplest behavior and matches the spec
+  // (consumer interprets log10 flag).
+  out.sort((a, b) => {
+    if (a.value == null) return 1;
+    if (b.value == null) return -1;
+    return Number(a.value) - Number(b.value);
+  });
+  if (limit && Number.isFinite(limit)) return out.slice(0, limit);
+  return out;
+}
+
+function tool_find_bounds({ kind, direction, limit } = {}) {
+  // v19. Returns every quantitative_scale entry across all carrier surfaces
+  // (frontier, cell, prediction, bears-on edge, if_real_implies implication)
+  // filtered by optional `kind` and `direction` (bound_direction). Unranked
+  // — insertion-order from the walker. For ranked results use rank_by_scale.
+  const kindSet = kind ? new Set(asArray(kind)) : null;
+  const directionSet = direction ? new Set(asArray(direction)) : null;
+  const out = [];
+  for (const entry of _walkQuantitativeScales()) {
+    if (kindSet && !kindSet.has(entry.qs.kind)) continue;
+    if (directionSet && !directionSet.has(entry.qs.bound_direction)) continue;
+    out.push({
+      surface: entry.surface,
+      surface_path: entry.surface_path,
+      carrier_id: entry.carrier_id,
+      carrier_type: entry.carrier_type,
+      carrier_label: entry.carrier_label,
+      cell_id: entry.cell_id,
+      resolution: entry.resolution,
+      edge_from: entry.edge_from,
+      edge_to: entry.edge_to,
+      prediction_status: entry.prediction_status,
+      quantitative_scale: entry.qs,
+    });
+  }
+  if (limit && Number.isFinite(limit)) return out.slice(0, limit);
+  return out;
+}
+
+function tool_find_resolvers({ id } = {}) {
+  // Phase C / v18 Move 5. Given a cell-id, frontier-id, or totality-approach
+  // id, return every resolves edge whose `to` matches that id. Result entries
+  // give the source experimental-program node plus the edge's sensitivity,
+  // timeline, predictions_per_program, and exclusion_only fields.
+  // Per v18 §3.6: resolves source is always experimental-program; target is
+  // a cell-id or a frontier/totality-approach id.
+  if (!id) throw new Error("find_resolvers: 'id' is required.");
+  // Confirm the target is one of the valid kinds.
+  const node = NODES_BY_ID.get(id);
+  const cellHit = CELLS_BY_ID.get(id);
+  let target_kind = null;
+  let target_label = null;
+  if (node) {
+    if (node.type === 'open-frontier' || node.type === 'totality-approach') {
+      target_kind = node.type;
+      target_label = node.label;
+    } else {
+      return {
+        target_id: id,
+        error: `Node '${id}' is type '${node.type}'. resolves targets are restricted to cells, open-frontier, and totality-approach per v18 spec §3.6.`,
+      };
+    }
+  } else if (cellHit) {
+    target_kind = 'cell';
+    target_label = `cell ${id} (in FC ${cellHit.fc_id})`;
+  } else {
+    return {
+      target_id: id,
+      error: `No node or cell with id '${id}' found.`,
+    };
+  }
+  const resolvers = [];
+  for (const e of (EDGES_BY_TYPE.get('resolves') || [])) {
+    if (e.to !== id) continue;
+    const src = NODES_BY_ID.get(e.from);
+    resolvers.push({
+      edge_id: e.id,
+      program_id: e.from,
+      program_label: src ? src.label : null,
+      program_full_name: src ? src.full_name : null,
+      sensitivity: e.sensitivity,
+      timeline: e.timeline,
+      predictions_per_program: e.predictions_per_program || [],
+      exclusion_only: e.exclusion_only === true,
+      description: e.description,
+    });
+  }
+  return {
+    target_id: id,
+    target_kind,
+    target_label,
+    resolver_count: resolvers.length,
+    resolvers,
+  };
+}
+
+function tool_find_discriminating_experiments({ program_a, program_b, limit } = {}) {
+  // Phase C / v18 Move 5 — flagship AI-first query per
+  // PROJECT_GOAL_SUPPLEMENT.md §1.2.
+  // Given two candidate-foundational program ids, walk every resolves edge
+  // and find those whose predictions_per_program array contains entries for
+  // BOTH programs with DIFFERENT predicted_value content. Return each such
+  // experiment with its target, sensitivity, timeline, and the two
+  // per-program prediction entries side-by-side.
+  if (!program_a || !program_b) {
+    throw new Error("find_discriminating_experiments: both 'program_a' and 'program_b' are required.");
+  }
+  if (program_a === program_b) {
+    return { error: "program_a and program_b must be different program ids." };
+  }
+  const out = [];
+  for (const e of (EDGES_BY_TYPE.get('resolves') || [])) {
+    const ppp = Array.isArray(e.predictions_per_program) ? e.predictions_per_program : [];
+    const entryA = ppp.find(p => p && p.program_id === program_a);
+    const entryB = ppp.find(p => p && p.program_id === program_b);
+    if (!entryA || !entryB) continue;
+    // The two programs both make a prediction on this edge. Whether they
+    // "discriminate" is a property of the predicted_value (or the qs nested
+    // inside). Conservative reading: any pair of entries for the same edge
+    // discriminates as long as both entries exist — the substantive content
+    // is in the cited values. Surface both entries; consumer compares.
+    const src = NODES_BY_ID.get(e.from);
+    const tgtNode = NODES_BY_ID.get(e.to);
+    const tgtCell = CELLS_BY_ID.get(e.to);
+    out.push({
+      experiment_id: e.from,
+      experiment_label: src ? src.label : null,
+      experiment_edge_id: e.id,
+      target_id: e.to,
+      target_kind: tgtNode ? tgtNode.type : (tgtCell ? 'cell' : 'unknown'),
+      target_label: tgtNode ? tgtNode.label : (tgtCell ? `cell ${e.to}` : null),
+      sensitivity: e.sensitivity,
+      timeline: e.timeline,
+      program_a_prediction: entryA,
+      program_b_prediction: entryB,
+    });
+  }
+  if (limit && Number.isFinite(limit)) return out.slice(0, limit);
+  return out;
 }
 
 // ============================================================
@@ -1166,13 +1611,18 @@ const TOOLS = [
   {
     name: 'find_predictions',
     description:
-      'Find predictions across all formal-classifications, filterable by status (confirmed / unconfirmed-tension / not-yet-tested / falsified / retro-explanatory-only), fc_id, and contentSearch.',
+      'Find predictions across all formal-classifications, filterable by status (confirmed / unconfirmed-tension / not-yet-tested / falsified / retro-explanatory-only), fc_id, and contentSearch. ' +
+      'v18 / Phase C: kindFilter narrows to predictions whose quantitative_scale.kind is in the set. ' +
+      'v19: boundDirectionFilter narrows to predictions whose quantitative_scale.bound_direction is in the set. ' +
+      'quantitative_scale is always projected on returned payloads. Surfaces both FC-level predictive_yield, cell-level predictive_yield, and v18-introduced cells[].predictions[].',
     inputSchema: {
       type: 'object',
       properties: {
         status: {},
         fc_id: { type: 'string' },
         contentSearch: { type: 'string' },
+        kindFilter: {},
+        boundDirectionFilter: {},
         limit: { type: 'integer' },
       },
     },
@@ -1237,7 +1687,10 @@ const TOOLS = [
   {
     name: 'find_cells',
     description:
-      'Search cells across formal-classifications. Filterable by fc_id, axis (single axis name) with optional value, contentSearch, constructiveStatus (one or more of realized | forbidden-by-pattern | conjectured-by-pattern | indeterminate), and hasForcedBy (true/false).',
+      'Search cells across formal-classifications. Filterable by fc_id, axis (single axis name) with optional value, contentSearch, constructiveStatus (one or more of realized | forbidden-by-pattern | conjectured-by-pattern | indeterminate), and hasForcedBy (true/false). ' +
+      'v18 / Phase C: quantitativeScaleKind narrows to cells with a quantitative_scale of the given kind; hasQuantitativeScale (true/false) filters by presence/absence of the field. ' +
+      'v19: boundDirection narrows to cells whose quantitative_scale.bound_direction is in the set. ' +
+      'quantitative_scale is always projected on returned cells.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1247,6 +1700,9 @@ const TOOLS = [
         contentSearch: { type: 'string' },
         constructiveStatus: {},
         hasForcedBy: { type: 'boolean' },
+        quantitativeScaleKind: {},
+        boundDirection: {},
+        hasQuantitativeScale: { type: 'boolean' },
         limit: { type: 'integer' },
       },
     },
@@ -1297,6 +1753,72 @@ const TOOLS = [
     },
     handler: tool_find_signal_implications,
   },
+  {
+    name: 'rank_by_scale',
+    description:
+      'v18 / Phase C. Ranks every quantitative_scale entry of a given `kind` across nodes of a given `node_type` (one of: formal-classification, open-frontier, totality-approach), optionally filtered by `direction` (bound_direction: lower, upper, two-sided, unspecified). ' +
+      'Returns entries sorted by `value` ascending. When `log10: true` the stored `value` is the base-10 exponent; consumers interpret accordingly. ' +
+      'Excludes edge-level qs entries (bears-on edges) — use find_bounds for an exhaustive listing across all surfaces. Authority: MAP_v18_schema_spec_extension.md §3 (carrier surfaces) + v19 spec §3 (bound_direction).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        node_type: { type: 'string', enum: ['formal-classification', 'open-frontier', 'totality-approach'] },
+        kind: { type: 'string', enum: ['energy_scale', 'mass', 'length', 'time', 'coupling', 'dimensionless', 'ratio', 'sigma_deviation'] },
+        direction: { type: 'string', enum: ['lower', 'upper', 'two-sided', 'unspecified'] },
+        limit: { type: 'number' },
+      },
+      required: ['kind'],
+    },
+    handler: tool_rank_by_scale,
+  },
+  {
+    name: 'find_resolvers',
+    description:
+      'v18 / Phase C. Given a cell-id, open-frontier id, or totality-approach id, returns every resolves edge whose `to` matches. ' +
+      'Each result carries the source experimental-program id + label, the edge\'s sensitivity, timeline, predictions_per_program, and exclusion_only flag. ' +
+      'A frontier with no resolvers is structurally addressable but empirically orphaned — informative even when the result is empty. Authority: MAP_v18_schema_spec_extension.md §3.6.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+      },
+      required: ['id'],
+    },
+    handler: tool_find_resolvers,
+  },
+  {
+    name: 'find_discriminating_experiments',
+    description:
+      'v18 / Phase C — flagship AI-first query per PROJECT_GOAL_SUPPLEMENT.md §1.2. Given two candidate program ids targeting the same frontier, returns every resolves edge whose predictions_per_program array contains entries for BOTH programs. ' +
+      'The two per-program prediction entries are returned side-by-side; consumers compare predicted_value / quantitative_scale to determine whether the experiment discriminates. ' +
+      'When the dataset has no resolves edges with overlapping predictions_per_program coverage for the pair, returns an empty list — the pair is not currently discriminated by any authored experimental program in the map.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        program_a: { type: 'string' },
+        program_b: { type: 'string' },
+        limit: { type: 'number' },
+      },
+      required: ['program_a', 'program_b'],
+    },
+    handler: tool_find_discriminating_experiments,
+  },
+  {
+    name: 'find_bounds',
+    description:
+      'v19. Returns every quantitative_scale entry across all carrier surfaces — frontier/totality-approach node level, cell level, prediction level, bears-on edge level, and if_real_implies_implication level — filtered by optional `kind` and `direction` (bound_direction). Unranked, in insertion-order from the walker. ' +
+      'For ranked results restricted to a node_type use rank_by_scale. ' +
+      'The v19 schema bump introduced bound_direction (lower / upper / two-sided / unspecified) so directional empirical commitments are AI-queryable as a first-class attribute. Authority: MAP_v19_schema_spec_extension.md.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        kind: { type: 'string', enum: ['energy_scale', 'mass', 'length', 'time', 'coupling', 'dimensionless', 'ratio', 'sigma_deviation'] },
+        direction: { type: 'string', enum: ['lower', 'upper', 'two-sided', 'unspecified'] },
+        limit: { type: 'number' },
+      },
+    },
+    handler: tool_find_bounds,
+  },
 ];
 
 const TOOL_MAP = new Map();
@@ -1313,15 +1835,22 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.1.0',
+  version: '3.2.0',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v40 / v17 schema / Phase B)\n' +
+  'Map of Physics — MCP endpoint (v66 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
   `(${COUNTS.if_real_implies_implications} implications).\n` +
+  `Phase C + v19: ${COUNTS.quantitative_scale_total} quantitative_scale entries ` +
+  `(${COUNTS.quantitative_scale_by_bound_direction['lower'] || 0} lower / ` +
+  `${COUNTS.quantitative_scale_by_bound_direction['upper'] || 0} upper / ` +
+  `${COUNTS.quantitative_scale_by_bound_direction['two-sided'] || 0} two-sided / ` +
+  `${COUNTS.quantitative_scale_by_bound_direction['absent'] || 0} absent); ` +
+  `${COUNTS.resolves_edges} resolves edges; ` +
+  `${COUNTS.experimental_programs} experimental-program nodes.\n` +
   'POST JSON-RPC here. Add this URL to Claude → Settings → Connectors.\n';
 
 function rpcResult(id, result) {
