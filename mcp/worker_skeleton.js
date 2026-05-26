@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v93 data / server version 3.2.2
+ * Phase C + v19 / v19 schema / v95 data / server version 3.2.3
  *
  * ABOUT
  * -----
@@ -96,6 +96,25 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.3 — Data refresh v93 → v95. Lands sub-PRs 57 + 58 in one deploy:
+ *
+ *           (a) Sub-PR 57 (fcc): 4 resolves edges from the FCC experimental-
+ *               program node into Higgs-coupling, electroweak-precision,
+ *               and BSM-direct-search targets, closing Step 4.4 (all 12
+ *               forward-looking experimental programs now have at least one
+ *               resolves edge). resolves_edges 34 → 38.
+ *
+ *           (b) Sub-PR 58 (Step 4.5): 12 quantitative_scale entries on
+ *               if_real_implies implications across 12 of 14 carriers,
+ *               closing the last open Phase C authoring sweep. Phase C
+ *               Steps 4.1, 4.2, 4.3, 4.4, 4.5 all now complete.
+ *               quantitative_scale_total 276 → 288.
+ *
+ *           No schema change. No tool surface change. Counts recompute
+ *           from data at startup. Tool count unchanged (33).
+ *           Banner: v95 / v19 / 33 tools / 38 resolves edges /
+ *                   288 quantitative_scale entries.
+ *
  *   3.2.2 — Data refresh v66 → v93 + find_discriminating_experiments fix +
  *           find_resolvers enhancement. Single deployable that closes two
  *           gaps simultaneously:
@@ -367,9 +386,9 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.2',
+    version: '3.2.3',
     schema_version: 'v19',
-    data_version: 'v93',
+    data_version: 'v95',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
@@ -1456,7 +1475,7 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v19), data version (v93), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v19), data version (v95), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
       'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
@@ -1913,11 +1932,11 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.2',
+  version: '3.2.3',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v93 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v95 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
