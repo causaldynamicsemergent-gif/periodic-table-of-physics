@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v66 data / server version 3.2.0
+ * Phase C + v19 / v19 schema / v93 data / server version 3.2.2
  *
  * ABOUT
  * -----
@@ -96,6 +96,47 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.2 — Data refresh v66 → v93 + find_discriminating_experiments fix +
+ *           find_resolvers enhancement. Single deployable that closes two
+ *           gaps simultaneously:
+ *
+ *           (a) Deployed-data drift. Brings the deployed worker from v66 →
+ *               v93 (27 versions behind). Lands the cumulative output of
+ *               sub-PRs 30–56: 34 resolves edges from the Step 4.4 sweep
+ *               (sub-PRs 46–56), ~45 additional quantitative_scale entries
+ *               from the Step 4.2 continuation post-v19 (sub-PRs 30–45 incl.
+ *               the ADE-clique sweep arc, the first cross-FC parallel-anchor
+ *               pair, and the first cross-FC derives-from edge between
+ *               dark-matter-candidates and neutrino-sector-phenomenology),
+ *               and the sub-PR 55 muon-g-2 carrier refresh against post-2025
+ *               literature. find_resolvers becomes non-empty for the first
+ *               time on all 34 Step-4.4-authored targets.
+ *
+ *           (b) find_discriminating_experiments was structurally broken
+ *               against the actual Step 4.4 data convention. The v18 tool
+ *               implementation read predictions_per_program[].program_id;
+ *               the spec (§3.5) specifies the field name `program` and the
+ *               data uses `program` consistently across all 10 PPP-populated
+ *               edges. With program_id, every call returned empty; the bug
+ *               was hidden by resolves_edges = 0 in the deployed worker.
+ *               Fixed here: tool reads .program, and matching is
+ *               case-insensitive substring on that field. This reconciles
+ *               the identifier-style parameter naming with the freetext
+ *               theoretical-program convention authoring adopted (e.g.,
+ *               "Minimal non-SUSY (Georgi-Glashow) SU(5)", "ΛCDM (Einstein
+ *               cosmological constant, w = −1 exactly)"). The §6.4
+ *               acceptance test — the flagship Phase C AI-first query —
+ *               now passes for the first time across multiple physics
+ *               subdomains (proton decay, NS EOS, IMBH formation, SMBH
+ *               growth, muon g-2 SM-side, dark energy).
+ *
+ *           find_resolvers also now returns a top-level competing_programs
+ *           array summarizing distinct program names across the target's
+ *           resolvers' predictions_per_program, making the discriminating-
+ *           experiments query discoverable from find_resolvers output.
+ *
+ *           No data change. No schema change. Tool count unchanged (33).
+ *           Banner: v93 / v19 / 33 tools / 34 resolves edges.
  *   3.2.0 — Phase C + v19 / v18 + v19 schema / v66 data. Sub-PR 29
  *           consolidated MCP rebuild. Closes Phase B Step N+1 drift
  *           (find_signal_implications + find_loose_ends extension
@@ -326,9 +367,9 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.0',
+    version: '3.2.2',
     schema_version: 'v19',
-    data_version: 'v66',
+    data_version: 'v93',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
@@ -1317,40 +1358,76 @@ function tool_find_resolvers({ id } = {}) {
       description: e.description,
     });
   }
+  // Denormalized summary of distinct theoretical-program names appearing in
+  // any resolvers' predictions_per_program. Makes the
+  // find_discriminating_experiments query discoverable: an AI agent
+  // calling find_resolvers on a target can see the competing-program set
+  // without scanning each resolver's PPP array.
+  const competing_programs = [];
+  const seen = new Set();
+  for (const r of resolvers) {
+    for (const entry of (r.predictions_per_program || [])) {
+      if (entry && typeof entry.program === 'string' && !seen.has(entry.program)) {
+        seen.add(entry.program);
+        competing_programs.push(entry.program);
+      }
+    }
+  }
   return {
     target_id: id,
     target_kind,
     target_label,
     resolver_count: resolvers.length,
+    competing_programs,
     resolvers,
   };
 }
 
 function tool_find_discriminating_experiments({ program_a, program_b, limit } = {}) {
   // Phase C / v18 Move 5 — flagship AI-first query per
-  // PROJECT_GOAL_SUPPLEMENT.md §1.2.
-  // Given two candidate-foundational program ids, walk every resolves edge
-  // and find those whose predictions_per_program array contains entries for
-  // BOTH programs with DIFFERENT predicted_value content. Return each such
-  // experiment with its target, sensitivity, timeline, and the two
-  // per-program prediction entries side-by-side.
+  // PROJECT_GOAL_PREDICTIVE_LAYER.md §3.5 + §6.4.
+  // Given two candidate-foundational program identifiers (architectures,
+  // totality-approaches, or — per the freetext-program-name convention
+  // adopted during Step 4.4 authoring — substring fragments of the program
+  // names stored in predictions_per_program[].program), walk every resolves
+  // edge and find those whose predictions_per_program contains at least one
+  // entry matching program_a AND at least one (distinct) entry matching
+  // program_b.
+  //
+  // Matching is case-insensitive substring match on the `program` field of
+  // each predictions_per_program entry. The spec (§3.5) specifies the field
+  // name `program` carrying an architecture / totality-approach identifier;
+  // Step 4.4 authoring populated the field with prose program names
+  // ("Minimal non-SUSY (Georgi-Glashow) SU(5)", "ΛCDM (Einstein cosmological
+  // constant, w = −1 exactly)", etc.) which carry the discriminating physics
+  // content the test in §6.4 depends on. Substring matching reconciles the
+  // tool's identifier-style parameter naming with the freetext data
+  // convention without requiring a data sweep.
+  //
+  // Returns each matching edge with its target, sensitivity, timeline, and
+  // the two matched predictions_per_program entries side-by-side. The
+  // discriminating content is in the predicted_value field of each entry.
   if (!program_a || !program_b) {
     throw new Error("find_discriminating_experiments: both 'program_a' and 'program_b' are required.");
   }
-  if (program_a === program_b) {
-    return { error: "program_a and program_b must be different program ids." };
+  const a_needle = String(program_a).toLowerCase().trim();
+  const b_needle = String(program_b).toLowerCase().trim();
+  if (!a_needle || !b_needle) {
+    return { error: "program_a and program_b must be non-empty strings." };
   }
+  if (a_needle === b_needle) {
+    return { error: "program_a and program_b must be different." };
+  }
+  const matchProgram = (entry, needle) => {
+    if (!entry || typeof entry.program !== 'string') return false;
+    return entry.program.toLowerCase().includes(needle);
+  };
   const out = [];
   for (const e of (EDGES_BY_TYPE.get('resolves') || [])) {
     const ppp = Array.isArray(e.predictions_per_program) ? e.predictions_per_program : [];
-    const entryA = ppp.find(p => p && p.program_id === program_a);
-    const entryB = ppp.find(p => p && p.program_id === program_b);
+    const entryA = ppp.find(p => matchProgram(p, a_needle));
+    const entryB = ppp.find(p => matchProgram(p, b_needle) && p !== entryA);
     if (!entryA || !entryB) continue;
-    // The two programs both make a prediction on this edge. Whether they
-    // "discriminate" is a property of the predicted_value (or the qs nested
-    // inside). Conservative reading: any pair of entries for the same edge
-    // discriminates as long as both entries exist — the substantive content
-    // is in the cited values. Surface both entries; consumer compares.
     const src = NODES_BY_ID.get(e.from);
     const tgtNode = NODES_BY_ID.get(e.to);
     const tgtCell = CELLS_BY_ID.get(e.to);
@@ -1379,10 +1456,11 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v17), data version (v40), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v19), data version (v93), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
-      'and Phase B counts (if_real_implies carriers, resolutions, implications).',
+      'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
+      'and Phase C counts (quantitative_scale entries by kind and bound_direction, resolves edges).',
     inputSchema: { type: 'object', properties: {} },
     handler: tool_server_info,
   },
@@ -1835,11 +1913,11 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.0',
+  version: '3.2.2',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v66 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v93 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
