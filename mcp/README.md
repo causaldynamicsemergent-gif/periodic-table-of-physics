@@ -9,8 +9,8 @@ source code is version-controlled."
 ## Live deployment
 
 - **URL:** `https://map-of-physics.eddie-8e5.workers.dev`
-- **Currently serving:** v40 data / v17 schema / Phase B / server version 3.1.0
-- **Tool count:** 29
+- **Currently serving:** v93 data / v19 schema / Phase C + v19 / server version 3.2.2
+- **Tool count:** 33
 
 To check the deployment is healthy, GET the URL. The banner should match this
 file's `worker.js` header.
