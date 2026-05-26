@@ -101,6 +101,12 @@
   background: var(--paper-3);
   color: var(--ink-mute);
 }
+.dx-program-period.dx-program-planned {
+  font-style: italic;
+  color: var(--ink-mute);
+  background: transparent;
+  border-style: dashed;
+}
 
 /* ===== Section count ===== */
 .dx-section-ct {

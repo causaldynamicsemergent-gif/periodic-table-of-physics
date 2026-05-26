@@ -257,8 +257,8 @@ function augmentDataset(raw) {
   }
 
   // ----- Discourse layer (Update B) -----
-  // The 41 non-FC nodes (11 architectures, 11 open-frontiers, 6 totality-approaches,
-  // 6 regime-content, 7 experimental-programs) plus the ~89 discourse-layer edges
+  // The 53 non-FC nodes (11 architectures, 11 open-frontiers, 6 totality-approaches,
+  // 6 regime-content, 19 experimental-programs) plus the ~89 discourse-layer edges
   // that connect them — every edge type other than cross-classification.
   const DISCOURSE_EDGE_TYPES = [
     'candidate-hosting', 'candidate-targeting', 'emergence',

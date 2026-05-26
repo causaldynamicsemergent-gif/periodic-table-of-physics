@@ -438,14 +438,50 @@ function renderRegimeContentCard(node) {
 // =============================================================
 //   Experimental-program card
 // =============================================================
+//
+// Format an operational_period object into a physicist-natural span string.
+// Returns { text, planned } where `planned` is true when the program hasn't
+// started yet (start_year > current year, no `ongoing`, no `end_year`); the
+// caller can apply a muted style class in that case.
+//
+// Cases (drawn from the three shapes in v34):
+//   { start_year: 1981, end_year: 1990 }    → '1981–1990'      (completed)
+//   { start_year: 1974, end_year: 1974 }    → '1974'           (single-year)
+//   { start_year: 2008, ongoing: true }     → '2008–present'   (running)
+//   { start_year: 2029 }                    → 'expected from 2029' (planned)
+//   { start_year: 2015 }                    → '2015–'          (defensive)
+function formatOperationalPeriod(op) {
+  if (!op || op.start_year == null) return { text: '', planned: false };
+  const start = op.start_year;
+  if (op.end_year != null) {
+    return {
+      text: start === op.end_year ? String(start) : `${start}\u2013${op.end_year}`,
+      planned: false,
+    };
+  }
+  if (op.ongoing === true) {
+    return { text: `${start}\u2013present`, planned: false };
+  }
+  const currentYear = new Date().getFullYear();
+  if (start > currentYear) {
+    return { text: `expected from ${start}`, planned: true };
+  }
+  return { text: `${start}\u2013`, planned: false };
+}
+
 function renderProgramCard(node) {
   const grouped = groupDiscourseEdges(node.id);
   const subtypePill = node.subtype
     ? `<span class="dx-pill dx-program-subtype">${esc(PROGRAM_SUBTYPE_LABELS[node.subtype] || node.subtype)}</span>`
     : '';
-  const periodPill = node.operational_period
-    ? `<span class="dx-pill dx-program-period">${esc(node.operational_period)}</span>`
-    : '';
+  let periodPill = '';
+  if (node.operational_period) {
+    const { text, planned } = formatOperationalPeriod(node.operational_period);
+    if (text) {
+      const planClass = planned ? ' dx-program-planned' : '';
+      periodPill = `<span class="dx-pill dx-program-period${planClass}">${esc(text)}</span>`;
+    }
+  }
 
   const head = renderDiscourseCardHead(node, [subtypePill, periodPill]);
   const desc = node.description
@@ -682,7 +718,7 @@ function renderSidebarBrowsePrograms() {
   inner.innerHTML = `
     <div class="sidebar-section">
       <h3>Experimental programs <span class="dx-section-ct">· ${list.length}</span></h3>
-      <div class="sec-sub">Collaborations, accelerator programs, surveys, and data-curation efforts that established the empirical content of the FCs.</div>
+      <div class="sec-sub">Collaborations, accelerator programs, surveys, and data-curation efforts. Completed programs established the empirical content of the formal classifications; current and planned programs target open frontiers.</div>
       ${groupsHtml || '<div class="dx-edge-empty">No experimental programs in this dataset.</div>'}
     </div>
   `;
