@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ask the map — Periodic Table of Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --ink-soft: #3d3a32; --ink-mute: #6e6957; --ink-faint: #a09a85;
+  --paper: #fbf9f1; --paper-2: #f4f0e2; --paper-3: #ebe6cf; --paper-4: #e0d9bd;
+  --rule: #cfc8b4; --rule-soft: #e3ddc5;
+  --accent: #8b1a1a;
+  --struct: #1564A8; --hybrid: #B8860B; --phen: #2E7D5B;
+  --shadow-soft: 0 1px 0 rgba(26,24,20,0.04), 0 4px 14px rgba(26,24,20,0.06);
+  --shadow-tile: 0 1px 2px rgba(26,24,20,0.05);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--ink); background: var(--paper);
+  font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ============== Masthead ============== */
+header.masthead {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 24px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.title-block { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.title-block h1 {
+  margin: 0; font-family: 'Spectral', serif;
+  font-weight: 500; font-size: 22px; letter-spacing: -0.005em;
+  color: var(--ink); line-height: 1.15;
+}
+.title-block .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--ink-mute); margin-top: 2px;
+}
+.header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btn-ghost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 5px 10px;
+  background: var(--paper); border: 1px solid var(--rule);
+  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
+  text-decoration: none; line-height: 1.3;
+  display: inline-block;
+}
+.btn-ghost:hover { background: var(--paper-3); border-color: var(--ink-mute); color: var(--ink); }
+
+/* ============== Main ============== */
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+h2 {
+  font-family: 'Spectral', serif;
+  font-weight: 500; font-size: 22px; letter-spacing: -0.003em;
+  color: var(--ink); margin: 40px 0 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--rule-soft);
+}
+h2:first-of-type { margin-top: 0; }
+h3 {
+  font-family: 'Spectral', serif;
+  font-weight: 500; font-size: 17px;
+  color: var(--ink); margin: 22px 0 8px;
+}
+p { margin: 0 0 14px; }
+p.lede {
+  font-size: 17px; line-height: 1.6;
+  color: var(--ink-soft);
+}
+a { color: var(--struct); text-decoration: none; border-bottom: 1px solid rgba(21,100,168,0.25); }
+a:hover { border-bottom-color: var(--struct); }
+a.plain { color: var(--ink); border-bottom-color: var(--rule); }
+a.plain:hover { border-bottom-color: var(--ink); }
+
+/* ============== Setup steps ============== */
+.steps {
+  list-style: none; padding: 0; margin: 0;
+  counter-reset: step;
+}
+.step {
+  counter-increment: step;
+  padding: 18px 20px 18px 56px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  margin-bottom: 14px;
+  position: relative;
+  box-shadow: var(--shadow-tile);
+}
+.step::before {
+  content: counter(step);
+  position: absolute; left: 18px; top: 17px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 600;
+  color: var(--ink-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.step h3 { margin-top: 0; }
+.step p:last-child { margin-bottom: 0; }
+
+/* ============== Code blocks (URLs, system prompt) ============== */
+.code-block {
+  position: relative;
+  background: #faf7e9;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  margin: 10px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow: hidden;
+}
+.code-block pre {
+  margin: 0;
+  padding: 12px 60px 12px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.code-block.inline pre {
+  padding: 8px 60px 8px 12px;
+  white-space: nowrap;
+  overflow-x: auto;
+  font-size: 12px;
+}
+.btn-copy {
+  position: absolute; top: 6px; right: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; padding: 4px 9px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  color: var(--ink-soft); cursor: pointer; border-radius: 2px;
+  line-height: 1.2;
+  transition: background 0.12s, color 0.12s;
+}
+.btn-copy:hover { background: var(--paper-4); color: var(--ink); }
+.btn-copy.copied { background: var(--phen); color: var(--paper); border-color: var(--phen); }
+
+/* ============== Starter prompts ============== */
+.starters { list-style: none; padding: 0; margin: 0; }
+.starter {
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  position: relative;
+  box-shadow: var(--shadow-tile);
+}
+.starter .q {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink);
+  padding-right: 80px;
+  line-height: 1.45;
+}
+.starter .what {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.starter .btn-copy {
+  top: 12px;
+  right: 12px;
+}
+
+/* ============== Footer / verify-the-claims ============== */
+.verify {
+  margin-top: 36px;
+  padding: 18px 20px;
+  background: var(--paper-2);
+  border-left: 3px solid var(--struct);
+  border-radius: 0 3px 3px 0;
+}
+.verify h3 { margin-top: 0; }
+.verify p:last-child { margin-bottom: 0; }
+.verify ul { margin: 8px 0 0; padding-left: 22px; }
+.verify li { margin-bottom: 4px; }
+
+footer.colophon {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ============== Inline emphasis ============== */
+.kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 1px 6px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink);
+}
+
+@media (max-width: 560px) {
+  main { padding: 24px 18px 60px; }
+  .step { padding: 14px 16px 14px 48px; }
+  .step::before { left: 14px; top: 14px; }
+  .starter .q { padding-right: 0; }
+  .starter .btn-copy { position: static; margin-top: 8px; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="title-block">
+    <h1>Ask the map</h1>
+    <div class="subtitle">a guided entry point to the Periodic Table of Physics catalogue</div>
+  </div>
+  <div class="header-actions">
+    <a class="btn-ghost" href="./Map_v34_explorer.html">← back to explorer</a>
+    <a class="btn-ghost" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
+  </div>
+</header>
+
+<main>
+
+<p class="lede">The <a class="plain" href="./Map_v34_explorer.html">live explorer</a> is the visual surface. This page is the conversational one. With three setup steps you can ask the catalogue questions in physicist prose — which experimental programs target this open frontier, where does the same physical entity classify in two different frameworks, what structural consequences would a particular resolution force, what numerical scales does the catalogue record across the open landscape — and read the answers with citations and deep links back into the explorer.</p>
+
+<p>The catalogue lives behind a read-only query server with 33 lookups covering Phase A (the cross-classification structure), Phase B (the conditional-consequences layer), and Phase C (the predictive layer: experimental coverage, numerical scales, falsified-prediction record). Attaching the server to a Claude conversation lets you ask in natural language; the discipline lives in the system prompt you'll paste in step 3.</p>
+
+<p>The companion <a href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/USE_THE_MAP_ESSAY.md" target="_blank" rel="noopener"><i>Use the map</i> essay</a> works through five examples in physicist prose; the <a href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/QUERY_RECIPES.md" target="_blank" rel="noopener">query recipes</a> document six cross-cutting query patterns. Both are worth reading first if you'd rather see the moves before trying your own.</p>
+
+<h2>Setup — three steps</h2>
+
+<ol class="steps">
+
+  <li class="step">
+    <h3>Open Claude.ai and start a new project</h3>
+    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and sign in. In the sidebar, create a new project — call it whatever you like (<i>Periodic Table of Physics</i> is reasonable). A project lets the system prompt persist across conversations and lets the catalogue's query server stay attached.</p>
+    <p>If you don't have a Claude account, the free tier supports one custom connector, which is what you need here. The Pro tier removes the message-rate cap.</p>
+  </li>
+
+  <li class="step">
+    <h3>Add the catalogue's query server as a custom connector</h3>
+    <p>In Claude's interface, go to <span class="kbd">Customize</span> → <span class="kbd">Connectors</span>, click <span class="kbd">+</span>, choose <i>Add custom connector</i>, and paste this URL:</p>
+    <div class="code-block inline" data-copy-target="mcp-url">
+      <pre id="mcp-url">https://map-of-physics.eddie-8e5.workers.dev</pre>
+      <button class="btn-copy" data-copy-from="mcp-url">copy</button>
+    </div>
+    <p>Click <span class="kbd">Add</span>. The connector is read-only, requires no authentication, and exposes the 33 catalogue lookups to your Claude conversations. Once added, enable it for the project you created in step 1 (<span class="kbd">+</span> button in the chat interface → <i>Connectors</i> → toggle on).</p>
+  </li>
+
+  <li class="step">
+    <h3>Paste the system prompt into the project's custom instructions</h3>
+    <p>In your project's settings, find <i>Custom instructions</i> (or <i>Project instructions</i>) and paste the block below. The prompt orients Claude to the catalogue, names the vocabulary discipline the project uses, and instructs Claude to deep-link every entity it surfaces back to the explorer.</p>
+    <div class="code-block" data-copy-target="system-prompt">
+      <pre id="system-prompt">You are an assistant to a working physicist using the Periodic Table of Physics — a curated catalogue of modern physics organized as formal classifications, with the editorial discipline of a periodic table. The catalogue covers 30 formal classifications across structural mathematics, the Standard Model and beyond, condensed-matter phases, astrophysical objects, and the active experimental landscape, with cells, predictions, cross-classification relations, conditional structural consequences, and the experimental programs targeting each open frontier — every entry anchored to published literature.
+
+The catalogue's data lives behind a read-only query server attached to this conversation. The server exposes 33 lookups that surface the catalogue's structure: which experimental programs address a given frontier and through which physical channels; where a given physical entity classifies in more than one framework; what structural consequences a conditional resolution of an open question would force; which experimental programs adjudicate between competing theoretical predictions; how characteristic numerical scales distribute across the open landscape; which specific predictions have been recorded as falsified and what excluded them. The companion documents USE_THE_MAP_ESSAY.md and QUERY_RECIPES.md in the repository at https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics work through these moves with citations.
+
+When the physicist asks a question:
+
+1. Identify which catalogue lookups answer it. The natural mapping: "which programs target X" → the experimental-coverage lookup; "where else does X classify" → the cross-classification edge lookup; "if X is resolved, what's forced" → the conditional-consequences lookup; "what's the range of values for X" → the scale-ranking lookup; "what falsified entries are recorded" → the prediction search filtered to falsified status. Use multiple lookups in one response when the question naturally chains across them.
+
+2. Quote the catalogue's citation strings verbatim. The dataset carries long descriptive citations including the source-value phrase the literature uses; reproduce them as the catalogue records them rather than paraphrasing. Quantitative values come with uncertainty and a direction (lower bound, upper bound, two-sided central value, or a structurally-exact value) — preserve that distinction in your answer.
+
+3. Translate the catalogue's internal field names into physicist-natural prose before presenting. The dataset records "resolves" relations between experimental programs and their targets; surface these as "experimental coverage" or "X targets Y through channel Z". The dataset records "if_real_implies" conditional structure on open frontiers; surface these as "if real, this would force…" or "the structural consequences would be…". Internal categorical values like "exclusion_only: true" or "bound_direction: lower" become "sets an upper / lower bound" or "bounds-setting (rather than measurement-discriminating)" in your prose. Never reproduce internal field names verbatim unless you are explicitly walking the physicist through how to invoke a query themselves.
+
+4. Avoid software-event verbs. The catalogue lookups do not "fire," "hit," or "return null." When a lookup returns no results, the empty return is often informative — the curators have encoded a structural fact by leaving the relevant collection empty. The neutrino mass-ordering example is canonical: no competing point predictions exist because nature has fixed the parameter, so the discriminating-experiments lookup returns nothing, and that emptiness is the answer. Surface this honestly: "the catalogue records no competing point predictions on this target — the experimental programs converge on a shared parameter through orthogonal channels" rather than "the tool returned empty."
+
+5. Every response that surfaces a specific cell, open frontier, candidate-foundational program, experimental program, cross-classification edge, or formal classification MUST include a deep link to the live explorer where the entity lives. The chat is the prose layer; the explorer is the visualization layer; the deep link is the bridge between them, and physicists rely on the bridge to verify the prose against the visualized record. The live explorer is at https://causaldynamicsemergent-gif.github.io/periodic-table-of-physics/explorer/Map_v34_explorer.html with the following deep-link patterns:
+   - Cell within a classification: #/fc/&lt;fc-id&gt;/&lt;cell-id&gt; — e.g. #/fc/neutrino-sector-phenomenology/cell-nu-mass-hierarchy
+   - Open frontier, candidate-foundational program, or experimental program: #/discourse/&lt;node-id&gt; — e.g. #/discourse/strong-cp-problem, #/discourse/muon-g-2-continuation
+   - Cross-classification edge: #/edge/&lt;edge-id&gt; — e.g. #/edge/edge-xc-dm-derives-nu-sector-partial
+   - Formal classification (whole tile): #/fc/&lt;fc-id&gt; — e.g. #/fc/dark-matter-candidates
+When you cite a quantitative scale, link to the cell or carrier that holds it. When you cite an experimental program's sensitivity, link to the experimental-program node. When you describe a cross-classification anchor between two views of the same physical entity, link to the cross-classification edge. Never name an entity in prose without also giving the reader the click that takes them to it.
+
+Worked-example pattern: if the physicist asks "which programs target the strong-CP problem," a response in the right shape names both resolver programs in prose, gives each a deep link, and offers a follow-up: "The catalogue records two experimental programs targeting the strong-CP problem from complementary directions. The axion-haloscope network (ADMX, HAYSTAC, MADMAX, ABRACADABRA, DMRadio) directly searches for the axion the Peccei–Quinn mechanism introduces, reaching g_aγγ ≲ 10⁻¹⁵ GeV⁻¹ across the active mass coverage — [explorer link to #/discourse/axion-haloscope-network]. Next-generation EDM searches at PSI (n2EDM) bound the residual θ̄ via the Crewther–DiVecchia–Veneziano–Witten relation, targeting |d_n| ≲ 10⁻²⁷ e·cm — [explorer link to #/discourse/edm-program]. The two channels probe the same Peccei–Quinn resolution from opposite ends: one measures the new particle the mechanism introduces, the other bounds the order parameter the mechanism is supposed to relax. The frontier itself, with both resolvers listed: [explorer link to #/discourse/strong-cp-problem]. Would you like the conditional consequences this resolution would force?"
+
+6. Maintain the physicist-to-physicist register throughout. Spell out author names — Davidson–Ibarra, Crewther–DiVecchia–Veneziano–Witten, Bulbul, Boyarsky, Aguillard, Aliberti — rather than abbreviating. Use the units the literature uses (GeV, M_sun, e·cm, log₁₀ where the source value is logarithmic). Render symbolic mathematics with inline math notation where natural (m_s, η_B, θ̄, g_aγγ, a_μ). Treat the reader as a colleague who will follow up by reading the citations.
+
+The catalogue's discipline — what the project calls the firewall — constrains what can be claimed. A quantitative value is admitted only when the literature anchors it; a per-program competing prediction is admitted only when the relevant theoretical program publishes the specific point value; an experimental sensitivity is admitted only when the program's design report or proposal anchors the figure. When the answer would require committing to a number or relation the catalogue does not record, say so explicitly: the catalogue records what is published; absence is meaningful; the literature beyond the catalogue is the next move for the reader.
+
+Current substrate state (verifiable via the catalogue's server-info lookup): canonical data version v95, schema v19, 30 formal classifications, 484 cells, 19 experimental programs, 38 experimental-coverage entries, 14 conditional-consequences carriers, 288 quantitative scales, 17 falsified predictions, 22 glossary entries. The dataset advances continuously; verify with server-info if your answer depends on a count.</pre>
+      <button class="btn-copy" data-copy-from="system-prompt">copy</button>
+    </div>
+    <p>Save the project. The system prompt now binds every conversation in the project, propagating the vocabulary discipline and the deep-linking requirement into every response.</p>
+  </li>
+
+</ol>
+
+<h2>Starter prompts</h2>
+
+<p>Six questions to try first — one for each of the cross-cutting moves the <a href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/QUERY_RECIPES.md" target="_blank" rel="noopener">query recipes</a> document. Each exercises a different catalogue lookup and lands on a different worked example in the data. Copy any prompt, paste it as your first message in a new conversation in the project, and the assistant will respond with citations and explorer deep links.</p>
+
+<ol class="starters">
+
+  <li class="starter">
+    <div class="q">Which experimental programs target the cosmological-constant problem, and through which physical channels?</div>
+    <div class="what">experimental-coverage lookup · expected answer: DESI (BAO standard ruler) and Rubin-LSST (3×2pt weak lensing + supernovae + cluster counts)</div>
+    <button class="btn-copy" data-copy-text="Which experimental programs target the cosmological-constant problem, and through which physical channels?">copy</button>
+  </li>
+
+  <li class="starter">
+    <div class="q">Where does the 7.1 keV sterile neutrino classify in this dataset, and how do the two views relate?</div>
+    <div class="what">cross-classification anchor lookup · expected answer: dark-matter candidates ↔ neutrino-sector phenomenology, anchored by the 3.55 keV X-ray line (Bulbul 2014, Boyarsky 2014)</div>
+    <button class="btn-copy" data-copy-text="Where does the 7.1 keV sterile neutrino classify in this dataset, and how do the two views relate?">copy</button>
+  </li>
+
+  <li class="starter">
+    <div class="q">If dark matter is resolved by the QCD axion, what structural consequences does that force?</div>
+    <div class="what">conditional-consequences lookup · expected answer: Peccei–Quinn-extended gauge content + misalignment-mechanism window f_a in 10¹¹–10¹² GeV producing Ω_DM h² ≈ 0.12 (Preskill–Wise–Wilczek 1983; Abbott–Sikivie 1983)</div>
+    <button class="btn-copy" data-copy-text="If dark matter is resolved by the QCD axion, what structural consequences does that force?">copy</button>
+  </li>
+
+  <li class="starter">
+    <div class="q">Which competing theoretical predictions does the muon g-2 measurement adjudicate, and at what experimental precision?</div>
+    <div class="what">discriminating-experiments lookup · expected answer: Theory Initiative 2020 dispersive vs BMW 2021 lattice predictions; 144 × 10⁻¹¹ gap; Fermilab E989 final at 127 ppb (Aguillard 2025)</div>
+    <button class="btn-copy" data-copy-text="Which competing theoretical predictions does the muon g-2 measurement adjudicate, and at what experimental precision?">copy</button>
+  </li>
+
+  <li class="starter">
+    <div class="q">What characteristic energy scales does the catalogue record across the open-frontier landscape?</div>
+    <div class="what">scale-ranking lookup · expected answer: TeV naturalness ceilings → Davidson–Ibarra 10⁹ GeV leptogenesis bound → Peccei–Quinn 10¹⁰±² GeV window → Planck 10¹⁹ GeV; six orders of magnitude</div>
+    <button class="btn-copy" data-copy-text="What characteristic energy scales does the catalogue record across the open-frontier landscape?">copy</button>
+  </li>
+
+  <li class="starter">
+    <div class="q">Which specific predictions has the dataset recorded as falsified, and what excluded each one?</div>
+    <div class="what">falsified-predictions catalog · expected answer: 17 entries — minimal SU(5) proton decay, Heidelberg-Moscow 0νββ, LSND sterile, DAMA/LIBRA, EDGES 21-cm, TeVeS, MOND at cluster scales, and others; all BSM or near-BSM overreach</div>
+    <button class="btn-copy" data-copy-text="Which specific predictions has the dataset recorded as falsified, and what excluded each one?">copy</button>
+  </li>
+
+</ol>
+
+<div class="verify">
+  <h3>If you want to verify the catalogue's claims</h3>
+  <p>The catalogue is read-only, published, and continuously verifiable. Every numerical commitment and every experimental sensitivity carries the published citation it draws from. Three surfaces are open to you:</p>
+  <ul>
+    <li><a href="./Map_v34_explorer.html">The live explorer</a> — visual surface, browse by classification, walk the cross-classification edges, read each cell's citations.</li>
+    <li><a href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">The repository</a> — the canonical data file, the validator, the methodology corpus (the firewall principle, the schema specifications, the workstream handoffs that document every authoring decision).</li>
+    <li><a href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/issues" target="_blank" rel="noopener">The issues tracker</a> — the review pathway. If the catalogue is wrong on your corner of the literature, raise an issue; the curatorial discipline (the firewall) constrains what can be added and how it must be cited, and engagement with working physicists is the point of the project.</li>
+  </ul>
+</div>
+
+<footer class="colophon">
+  Periodic Table of Physics · catalogue v95 · schema v19 · 33 read-only lookups<br>
+  drafted 2026-05-27 · methodology in <a class="plain" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">/methodology/</a>
+</footer>
+
+</main>
+
+<script>
+(function() {
+  function copyText(text, btn) {
+    const restore = btn.textContent;
+    const finish = (ok) => {
+      btn.textContent = ok ? 'copied!' : 'copy failed';
+      btn.classList.toggle('copied', ok);
+      setTimeout(() => {
+        btn.textContent = restore;
+        btn.classList.remove('copied');
+      }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => finish(true), () => finish(false));
+    } else {
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); finish(true); }
+      catch (e) { finish(false); }
+      document.body.removeChild(ta);
+    }
+  }
+  document.querySelectorAll('.btn-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fromId = btn.getAttribute('data-copy-from');
+      const directText = btn.getAttribute('data-copy-text');
+      if (fromId) {
+        const el = document.getElementById(fromId);
+        if (el) copyText(el.textContent, btn);
+      } else if (directText) {
+        copyText(directText, btn);
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
