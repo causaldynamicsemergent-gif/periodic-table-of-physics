@@ -1,0 +1,195 @@
+/* =============================================================
+   update-e5.css — Sub-PR E5: tile / discourse-node decoration
+
+   The signal layer for Phase B + C content coverage. Three
+   surfaces get small chips / pills that indicate which content
+   the node carries without showing the content itself (the
+   content lives in sidebar sections shipped by E2 / E3 / E4):
+
+     1.  FC tile chips — `.tile-chips` row between the in-tile
+         cell-viz mini-grid and the yield bar. Two chip variants:
+         `.tile-chip-scale` (any cell or prediction in this FC
+         carries a documented quantitative bound or scale) and
+         `.tile-chip-targeted` (any cell in this FC is targeted
+         by an experimental program documented in the map). 24
+         of 30 tiles in v95 show ≥1 chip; the other 6 stay clean.
+
+     2.  Discourse-card head pills — `.dx-pill.dx-pill-cov` and
+         its four kind-variants: implies / scale / targeted /
+         resolves. Appended to the existing structural pill row
+         (stratum / status / subtype / period). Color-muted so
+         the structural pills retain visual priority.
+
+     3.  Browse-list inline chips — `.dx-browse-cov` and its
+         three kind-variants: resolves / implies / targeted.
+         Sit between the node label and the existing edge-count
+         pill on the Browse list rows for programs / frontiers /
+         totality-approaches. Architectures, regime-content, and
+         formal-classification rows are unchanged.
+
+   Vocabulary discipline (`PHYSICIST_FACING_VOCABULARY.md` §6):
+   no `quantitative_scale` / `if_real_implies` / `resolves` /
+   `predictions_per_program` / `exclusion_only` appear in any
+   chip text or tooltip. The chips use "scale" / "targeted" /
+   "if real, implies" / "characteristic scale" / "targeted by" /
+   "resolves N targets" / "if real" — physicist-natural labels
+   that read as availability signals, not schema field names.
+
+   Color palette follows the project tokens defined in
+   Map_v34_explorer.html's :root block. Coverage chips use muted
+   neutral tones (var(--ink-mute), var(--paper-2), var(--rule))
+   so they read as ambient signal rather than primary content,
+   with subtle kind-specific tinting on the discourse-card pills
+   only (one shade per kind, matching the project palette: green
+   for implies, blue for scale, gold for targeted, accent-red
+   for resolves). The browse-list inline chips and FC tile chips
+   stay neutral to avoid visual noise on dense lists / the map.
+   ============================================================= */
+
+
+/* ===== 1. FC tile chip row ===== */
+
+/* The row container — flex with small gap, top-margin nudge
+   away from the cell-viz mini-grid above, bottom-margin nudge
+   toward the yield bar below. Hidden entirely when the tile
+   has no chips (renderTile emits nothing in that case). */
+.tile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 2px 0 3px;
+  min-height: 11px;
+}
+
+.tile-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  padding: 1px 4px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+
+/* Subtle kind-specific hue on the left border so the two chip
+   types are distinguishable at a glance without becoming loud.
+   Hue is the same family used for the matching discourse-pill. */
+.tile-chip-scale {
+  border-left: 2px solid var(--struct);
+}
+.tile-chip-targeted {
+  border-left: 2px solid var(--hybrid);
+}
+
+/* Dim chips when the tile itself is dim (spotlight mask out). */
+.pt-tile.dim .tile-chip {
+  opacity: 0.5;
+}
+
+/* On hover, lift the chip into full ink for legibility. */
+.pt-tile:hover .tile-chip {
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+
+
+/* ===== 2. Discourse-card head coverage pills ===== */
+
+/* The coverage-pill variant of .dx-pill. The base .dx-pill class
+   (defined in update-b.css) already gives the inline-flex chrome,
+   font, padding, border. .dx-pill-cov overrides color / weight to
+   read as ambient signal rather than structural fact. */
+.dx-pill.dx-pill-cov {
+  font-weight: 400;
+  color: var(--ink-mute);
+  background: var(--paper-2);
+  border-color: var(--rule);
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+/* Kind-specific tints — match the project palette one-to-one so
+   the colors mean the same thing across the explorer:
+     implies   → green (var(--phen)), the "if real" / phenomenon family
+     scale     → blue  (var(--struct)), the structural-fact family
+     targeted  → gold  (var(--hybrid)), the experimental-program family
+     resolves  → red   (var(--accent)), the program-side action family */
+.dx-pill-cov-implies {
+  color: var(--phen);
+  border-color: rgba(46, 125, 91, 0.35);
+  background: rgba(46, 125, 91, 0.06);
+}
+.dx-pill-cov-scale {
+  color: var(--struct);
+  border-color: rgba(21, 100, 168, 0.35);
+  background: rgba(21, 100, 168, 0.06);
+}
+.dx-pill-cov-targeted {
+  color: var(--hybrid);
+  border-color: rgba(184, 134, 11, 0.35);
+  background: rgba(184, 134, 11, 0.06);
+}
+.dx-pill-cov-resolves {
+  color: var(--accent);
+  border-color: rgba(139, 26, 26, 0.35);
+  background: rgba(139, 26, 26, 0.06);
+  font-weight: 500;
+}
+
+
+/* ===== 3. Browse-list inline coverage chips ===== */
+
+/* Sit between .dx-browse-name (flex:1) and the existing
+   .dx-browse-ct edge-count pill. Smaller than the head pills
+   and neutral-toned because the Browse-list rows are dense
+   and color noise would distract from the catalogue function. */
+.dx-browse-cov {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink-mute);
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+/* Same kind-color hint as the head pills, applied as a tiny
+   left-border accent so the row stays compact. */
+.dx-browse-cov-resolves {
+  border-left: 2px solid var(--accent);
+  color: var(--accent);
+}
+.dx-browse-cov-implies {
+  border-left: 2px solid var(--phen);
+  color: var(--phen);
+}
+.dx-browse-cov-targeted {
+  border-left: 2px solid var(--hybrid);
+  color: var(--hybrid);
+}
+
+/* Hover state on the Browse-list row lifts the cov chip into
+   the row's ink color. */
+.dx-browse-item:hover .dx-browse-cov {
+  background: var(--paper);
+}
+
+
+/* ===== Responsive: shrink chip font on narrower viewports ===== */
+@media (max-width: 540px) {
+  .tile-chip {
+    font-size: 7.5px;
+    padding: 1px 3px;
+  }
+  .dx-browse-cov {
+    font-size: 8.5px;
+    padding: 1px 4px;
+  }
+}

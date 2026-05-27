@@ -104,6 +104,46 @@ function tileCellBreakdown(fc) {
 }
 
 // =============================================================
+//   Sub-PR E5 — per-FC Phase B/C coverage rollup
+//
+//   Returns { qsCount, targetedCount } for use by renderTile's
+//   chip row. qsCount sums cell-direct + cell-prediction +
+//   FC-prediction qs entries (the "scale" chip signals presence
+//   of any documented numerical commitment in this classification;
+//   the count gives a sense of density). targetedCount counts
+//   distinct cells in this FC that are the `to` end of a Phase C
+//   resolves edge (i.e. an experimental program addresses this
+//   cell). The chip row only renders when at least one is > 0,
+//   so most rendered tiles remain visually clean.
+//
+//   Cheap enough to compute per-render (30 FCs × ~20-cell walks).
+//   Indexes consulted: DATA.resolves_by_target (built in
+//   explorer-data.js); fc.cells / fc.predictions on the FC itself.
+// =============================================================
+function fcCoverage(fc) {
+  var qsCount = 0;
+  var targetedCells = 0;
+  var cells = (fc && fc.cells) || [];
+  var byTarget = (typeof DATA !== 'undefined' && DATA && DATA.resolves_by_target) || {};
+  for (var i = 0; i < cells.length; i++) {
+    var c = cells[i];
+    if (c && c.quantitative_scale) qsCount++;
+    var cPreds = (c && c.predictions) || [];
+    for (var j = 0; j < cPreds.length; j++) {
+      if (cPreds[j] && cPreds[j].quantitative_scale) qsCount++;
+    }
+    if (c && c.cell_id && byTarget[c.cell_id] && byTarget[c.cell_id].length) {
+      targetedCells++;
+    }
+  }
+  var fcPreds = (fc && fc.predictions) || [];
+  for (var k = 0; k < fcPreds.length; k++) {
+    if (fcPreds[k] && fcPreds[k].quantitative_scale) qsCount++;
+  }
+  return { qsCount: qsCount, targetedCount: targetedCells };
+}
+
+// =============================================================
 //   Periodic table render (Level 1; persistent)
 // =============================================================
 function renderMap() {
@@ -269,6 +309,40 @@ function renderTile(fc) {
   var badgeHtml = (typeof renderDiscourseEdgeBadge === 'function')
     ? renderDiscourseEdgeBadge(fc) : '';
 
+  // Sub-PR E5 — Phase B/C coverage chip row. A compact row sits
+  // between the cell-viz mini-grid and the yield bar. The "scale"
+  // chip signals that at least one cell or prediction in this
+  // classification carries a documented quantitative bound or
+  // scale; the "targeted" chip signals that at least one cell is
+  // the `to` end of a Phase C resolves edge (an experimental
+  // program addresses it). The row is omitted entirely when both
+  // counts are zero — 6 of the 30 FCs in v95 have no Phase B/C
+  // coverage and stay visually clean. Vocabulary discipline: the
+  // chip text uses physicist-natural labels ("scale", "targeted"),
+  // not the schema field names.
+  var cov = fcCoverage(fc);
+  var covChipsHtml = '';
+  if (cov.qsCount > 0 || cov.targetedCount > 0) {
+    var chips = [];
+    if (cov.qsCount > 0) {
+      chips.push('<span class="tile-chip tile-chip-scale" title="'
+        + esc(cov.qsCount + ' cell' + (cov.qsCount === 1 ? '' : 's')
+              + ' or prediction' + (cov.qsCount === 1 ? '' : 's')
+              + ' in this classification carry a documented quantitative bound or scale.')
+        + '">scale '
+        + cov.qsCount + '</span>');
+    }
+    if (cov.targetedCount > 0) {
+      chips.push('<span class="tile-chip tile-chip-targeted" title="'
+        + esc(cov.targetedCount + ' cell' + (cov.targetedCount === 1 ? '' : 's')
+              + ' in this classification ' + (cov.targetedCount === 1 ? 'is' : 'are')
+              + ' targeted by experimental programs documented in the map.')
+        + '">targeted '
+        + cov.targetedCount + '</span>');
+    }
+    covChipsHtml = '<div class="tile-chips" aria-hidden="true">' + chips.join('') + '</div>';
+  }
+
   return `
     <div class="pt-tile ${fc.category}${dim?' dim':''}${spot?' spot':''}${selected?' selected':''}${phenOn?' phen-on':''}${phenOffWhileActive?' phen-off-and-active':''}${discourseHighlight?' discourse-highlight':''}" data-fc="${esc(fc.id)}" tabindex="0" aria-label="${esc(fc.label)}"${phenStyle?' style="'+phenStyle+'"':''}>
       ${badgeHtml}
@@ -279,6 +353,7 @@ function renderTile(fc) {
       <div class="tile-symbol">${esc(fc.symbol)}</div>
       <div class="tile-name">${esc(fc.short_label || fc.label)}</div>
       ${miniGridHtml}
+      ${covChipsHtml}
       <div class="tile-yield">${y.html || '<span style="background:var(--paper-3);width:100%"></span>'}</div>
       <div class="tile-yield-meta${y.total===0?' empty':''}">${y.total ? `<span>${y.total}</span><span style="color:var(--ink-faint)">${fc.closure_level==='complete-within-domain'?'■':fc.closure_level==='partial'?'◐':'□'}</span>` : 'no preds'}</div>
     </div>

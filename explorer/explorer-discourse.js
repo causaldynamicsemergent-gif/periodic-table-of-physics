@@ -243,6 +243,86 @@ function renderEdgeSection(title, edgeList, opts) {
 }
 
 // =============================================================
+//   Sub-PR E5 — per-discourse-node Phase B/C coverage rollup
+//
+//   Returns { hasImplies, hasQS, targetedCount, resolvesCount }
+//   for use by the card-head pill row and the Browse-list item
+//   row. hasImplies / hasQS are presence-only signals; the actual
+//   content lives in the card sections shipped by E3 / E4.
+//   targetedCount = number of resolves edges pointing AT this
+//   node (cells / frontiers / totality-approaches can be on the
+//   receiving side). resolvesCount = number of resolves edges
+//   ORIGINATING at this node (only the 12 forward-looking
+//   experimental programs in v95 carry any).
+//
+//   Cheap to compute on-demand; no new data index needed. Indexes
+//   consulted: DATA.resolves_by_target, DATA.resolves_by_program
+//   (both built in explorer-data.js for sub-PR E2).
+// =============================================================
+function discourseNodeCoverage(node) {
+  if (!node || !node.id) {
+    return { hasImplies: false, hasQS: false, targetedCount: 0, resolvesCount: 0 };
+  }
+  var byTarget  = (typeof DATA !== 'undefined' && DATA && DATA.resolves_by_target)  || {};
+  var byProgram = (typeof DATA !== 'undefined' && DATA && DATA.resolves_by_program) || {};
+  return {
+    hasImplies:    !!(node.if_real_implies && node.if_real_implies.length),
+    hasQS:         !!node.quantitative_scale,
+    targetedCount: (byTarget[node.id]  || []).length,
+    resolvesCount: (byProgram[node.id] || []).length,
+  };
+}
+
+// Sub-PR E5 — build the coverage-pill list for a discourse-card
+// head. Returns an array of HTML strings (possibly empty) suitable
+// for concatenation with the structural pills (stratum / status /
+// subtype / period) already passed to renderDiscourseCardHead.
+// Vocabulary discipline: chip text is physicist-natural ("if real,
+// implies N", "characteristic scale", "targeted by N", "resolves N
+// targets"); no schema field names anywhere.
+function coveragePillsForCard(node) {
+  var cov = discourseNodeCoverage(node);
+  var pills = [];
+  if (cov.hasImplies) {
+    var implN = (node.if_real_implies || []).length;
+    pills.push(
+      '<span class="dx-pill dx-pill-cov dx-pill-cov-implies" '
+      + 'title="This node carries ' + implN + ' documented conditional structural consequence'
+      + (implN === 1 ? '' : 's') + ' — see the &lsquo;If real, implies…&rsquo; section below.">'
+      + 'if real, implies ' + implN + '</span>'
+    );
+  }
+  if (cov.hasQS) {
+    pills.push(
+      '<span class="dx-pill dx-pill-cov dx-pill-cov-scale" '
+      + 'title="This node carries a headline quantitative bound or scale — see the &lsquo;Characteristic scale&rsquo; section below.">'
+      + 'characteristic scale</span>'
+    );
+  }
+  if (cov.targetedCount > 0) {
+    pills.push(
+      '<span class="dx-pill dx-pill-cov dx-pill-cov-targeted" '
+      + 'title="' + cov.targetedCount + ' experimental program'
+      + (cov.targetedCount === 1 ? '' : 's')
+      + ' in the map target' + (cov.targetedCount === 1 ? 's' : '') + ' this node.">'
+      + 'targeted by ' + cov.targetedCount + '</span>'
+    );
+  }
+  if (cov.resolvesCount > 0) {
+    pills.push(
+      '<span class="dx-pill dx-pill-cov dx-pill-cov-resolves" '
+      + 'title="This program targets ' + cov.resolvesCount + ' cell'
+      + (cov.resolvesCount === 1 ? '' : 's') + ', frontier'
+      + (cov.resolvesCount === 1 ? '' : 's') + ', or totality approach'
+      + (cov.resolvesCount === 1 ? '' : 'es') + ' — see the &lsquo;Resolves&rsquo; section below.">'
+      + 'resolves ' + cov.resolvesCount + ' target'
+      + (cov.resolvesCount === 1 ? '' : 's') + '</span>'
+    );
+  }
+  return pills;
+}
+
+// =============================================================
 //   Detail-card chrome (breadcrumb + header) shared across all 5 types
 // =============================================================
 function renderDiscourseCardHead(node, extraPills) {
@@ -332,7 +412,12 @@ function renderFrontierCard(node) {
     ? `<span class="dx-pill dx-stratum-other">Stratum ${esc(String(node.stratum))}</span>`
     : '';
 
-  const head = renderDiscourseCardHead(node, [srPill, stratumPill]);
+  // Sub-PR E5 — Phase B/C coverage pills. Appended to the structural
+  // pills (srPill, stratumPill) so the head row reads structural ↦
+  // coverage. Pills are availability signals; the content they point
+  // to (if_real_implies tree, carrier qs callout, "Targeted by"
+  // section) already lives further down the card.
+  const head = renderDiscourseCardHead(node, [srPill, stratumPill].concat(coveragePillsForCard(node)));
   const desc = node.description
     ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
     : '';
@@ -404,7 +489,12 @@ function renderTotalityCard(node) {
     ? `<span class="dx-pill dx-stratum-other">Stratum ${esc(String(node.stratum))}</span>`
     : '';
 
-  const head = renderDiscourseCardHead(node, [statusPill, stratumPill]);
+  // Sub-PR E5 — Phase B/C coverage pills. Same shape as
+  // renderFrontierCard: the existing structural pills sit first,
+  // the coverage pills follow. 5 of 6 totality-approaches in v95
+  // carry if_real_implies; all 6 carry quantitative_scale; muon-g-2
+  // is the only one currently targeted by a resolves edge.
+  const head = renderDiscourseCardHead(node, [statusPill, stratumPill].concat(coveragePillsForCard(node)));
   const desc = node.description
     ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
     : '';
@@ -539,7 +629,12 @@ function renderProgramCard(node) {
     }
   }
 
-  const head = renderDiscourseCardHead(node, [subtypePill, periodPill]);
+  // Sub-PR E5 — Phase B/C coverage pill. Only the resolves pill
+  // is meaningful on a program card (programs are the source side
+  // of resolves edges, not the receiving side). 12 of 19 programs
+  // in v95 carry ≥1 resolves edge; the other 7 are historical and
+  // remain pill-less.
+  const head = renderDiscourseCardHead(node, [subtypePill, periodPill].concat(coveragePillsForCard(node)));
   const desc = node.description
     ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
     : '';
@@ -792,10 +887,38 @@ function renderBrowseItem(n) {
   const icon = DISCOURSE_TYPE_ICONS[n.type] || '·';
   // Try to summarize the node in one line — count incident edges
   const incidentCt = ((DATA.discourse_edges_by_node && DATA.discourse_edges_by_node[n.id]) || []).length;
+
+  // Sub-PR E5 — inline Phase B/C coverage chips on Browse-list rows.
+  // The Browse menu is the second-most-scanned surface after the map
+  // itself; visible coverage signals here let a physicist tell at a
+  // glance which programs own resolves edges (the 12 forward-looking
+  // vs the 7 historical), which frontiers / totality-approaches carry
+  // documented conditional consequences and / or are targeted, etc.
+  // Architectures, regime-content, and formal-classification rows
+  // carry no Phase B/C surfaces of their own and stay unchanged.
+  let covHtml = '';
+  if (n.type === 'experimental-program' || n.type === 'open-frontier' || n.type === 'totality-approach') {
+    const cov = (typeof discourseNodeCoverage === 'function')
+      ? discourseNodeCoverage(n)
+      : { hasImplies: false, hasQS: false, targetedCount: 0, resolvesCount: 0 };
+    const chips = [];
+    if (n.type === 'experimental-program' && cov.resolvesCount > 0) {
+      chips.push(`<span class="dx-browse-cov dx-browse-cov-resolves" title="targets ${cov.resolvesCount} cell${cov.resolvesCount === 1 ? '' : 's'}, frontier${cov.resolvesCount === 1 ? '' : 's'}, or totality approach${cov.resolvesCount === 1 ? '' : 'es'}">resolves ${cov.resolvesCount}</span>`);
+    }
+    if ((n.type === 'open-frontier' || n.type === 'totality-approach') && cov.hasImplies) {
+      chips.push(`<span class="dx-browse-cov dx-browse-cov-implies" title="carries documented conditional structural consequences">if real</span>`);
+    }
+    if ((n.type === 'open-frontier' || n.type === 'totality-approach') && cov.targetedCount > 0) {
+      chips.push(`<span class="dx-browse-cov dx-browse-cov-targeted" title="targeted by ${cov.targetedCount} experimental program${cov.targetedCount === 1 ? '' : 's'}">targeted ${cov.targetedCount}</span>`);
+    }
+    if (chips.length) covHtml = chips.join('');
+  }
+
   return `
     <div class="dx-browse-item" data-disc-jump="${esc(n.id)}" role="button" tabindex="0">
       <span class="dx-browse-icon">${esc(icon)}</span>
       <span class="dx-browse-name">${esc(n.label)}</span>
+      ${covHtml}
       <span class="dx-browse-ct" title="incident edges">${incidentCt}e</span>
     </div>
   `;
