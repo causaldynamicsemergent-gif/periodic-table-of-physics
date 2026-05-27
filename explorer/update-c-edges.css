@@ -237,3 +237,158 @@
   position: absolute; left: 4px;
   color: var(--ink-mute);
 }
+
+/* =============================================================
+   Sub-PR E2 — Phase C resolves edges (Step 4.4)
+
+   The "Resolves" section on experimental-program cards and the
+   "Targeted by" section on cell, open-frontier, and totality-approach
+   cards both use the same row chrome below. Each row carries: head
+   (arrow + target/program pill + timeline pill + optional bounds-setting
+   pill), sensitivity line ("Reach: …"), description prose, and an
+   optional competing-predictions block.
+
+   Visual register: closer to .dc-edge clickable blocks than to the
+   simpler .dx-edge-row used by the discourse-edge sections, since
+   each resolves row carries substantially more information. No click
+   surface on the row itself — pills inside are independently clickable.
+   ============================================================= */
+.dc-resolves-list {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-top: 6px;
+}
+.dc-resolves-row {
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--rule);
+  background: var(--paper);
+  padding: 10px 12px;
+  border-radius: 2px;
+}
+.dc-resolves-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-bottom: 6px;
+}
+.dc-resolves-arrow {
+  font-size: 16px; color: var(--ink-mute);
+  margin-right: 2px;
+}
+.dc-resolves-sensitivity {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 14px; line-height: 1.55;
+  color: var(--ink);
+  margin: 4px 0 2px;
+}
+.dc-resolves-prefix {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-right: 6px;
+}
+.dc-resolves-bd {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  color: var(--ink-soft);
+  margin-right: 2px;
+}
+.dc-resolves-units {
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-left: 2px;
+}
+.dc-resolves-citations {
+  margin: 4px 0 6px;
+}
+.dc-resolves-citation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  padding: 1px 0 1px 10px;
+  position: relative;
+}
+.dc-resolves-citation::before {
+  content: '·';
+  position: absolute; left: 2px;
+  color: var(--ink-mute);
+}
+.dc-resolves-desc {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 13.5px; line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 6px 0 4px;
+}
+.dc-resolves-desc p {
+  margin: 0 0 6px;
+}
+.dc-resolves-desc p:last-child {
+  margin-bottom: 0;
+}
+
+/* Competing-predictions block — appears under resolves rows whose
+   predictions_per_program is populated (13 of 38 edges at v95). */
+.dc-resolves-ppp {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--paper-2);
+  border-left: 2px solid var(--rule);
+  border-radius: 2px;
+}
+.dc-resolves-ppp-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.dc-resolves-ppp-row {
+  padding: 4px 0;
+  border-top: 1px dashed var(--rule-soft);
+}
+.dc-resolves-ppp-row:first-of-type {
+  border-top: none;
+}
+.dc-resolves-ppp-program {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+.dc-resolves-ppp-value {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 13px;
+  color: var(--ink);
+  margin: 2px 0;
+}
+.dc-resolves-ppp-desc {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* Pills used in the resolves-row head — timeline + bounds-setting.
+   Match the chrome of the existing dx-pill family so the row reads
+   as a unit. */
+.dx-pill.dx-timeline-pill {
+  background: var(--paper-2);
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+.dx-pill.dx-bound-pill {
+  background: var(--paper);
+  color: var(--ink-mute);
+  border: 1px dashed var(--ink-mute);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  font-style: italic;
+}

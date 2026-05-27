@@ -798,11 +798,32 @@ function renderSidebarCell(fc, cell) {
         ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
       </div>`).join('')}</div></div>` : ''}
 
+    ${(typeof renderTargetedByTarget === 'function') ? renderTargetedByTarget(cell.cell_id) : ''}
+
     ${cell.citations && cell.citations.length ? `<div class="sidebar-section"><h3>Citations</h3><div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--ink-soft)">${cell.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
   `;
 
   inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
   inner.querySelector('[data-back-to-fc]').addEventListener('click', () => renderSidebarFC(fc));
+
+  // Sub-PR E2 — wire the resolves-renderer's deep-link pills inside the
+  // cell sidebar. The pills use the same data attributes the discourse
+  // module wires up ([data-fc-cell-jump], [data-disc-jump]); we replicate
+  // the handlers here because renderSidebarCell doesn't go through
+  // wireDiscourseCardLinks.
+  inner.querySelectorAll('[data-fc-cell-jump]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const [fcId, cellId] = el.dataset.fcCellJump.split('|');
+      selectCell(fcId, cellId);
+    });
+  });
+  inner.querySelectorAll('[data-disc-jump]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      selectDiscourseNode(el.dataset.discJump);
+    });
+  });
 }
 
 // =============================================================

@@ -334,6 +334,53 @@ function augmentDataset(raw) {
     }
   }
 
+  // =============================================================
+  //   Phase C — resolves edges (Step 4.4)
+  //
+  //   38 edges in v95 connect 12 forward-looking experimental-program
+  //   nodes to the cells, open frontiers, and totality-approach nodes
+  //   they address. Resolves edges have a distinct shape (sensitivity,
+  //   timeline, predictions_per_program, exclusion_only) and do NOT
+  //   flow through the generic discourse-edge machinery — they get
+  //   their own indexes here and their own rendering module
+  //   (explorer-resolves.js).
+  //
+  //   Three indexes:
+  //     resolves_by_program[programId]  → array of edges from that program
+  //     resolves_by_target[targetId]    → array of edges to that target
+  //                                       (cell id, frontier id, or totality-approach id)
+  //     resolves_by_id[edgeId]          → single-edge lookup
+  //
+  //   Plus a supporting cell_id_to_fc_id map used by the resolves
+  //   renderer to deep-link cell-target pills back to the cell's
+  //   owning formal classification (cell ids are globally unique;
+  //   one entry per cell, all 484 cells covered).
+  // =============================================================
+  const resolves_by_program = {};
+  const resolves_by_target  = {};
+  const resolves_by_id      = {};
+  for (const e of edges) {
+    if (e.type !== 'resolves') continue;
+    const from = e.from || e.source;
+    const to   = e.to   || e.target;
+    if (!from || !to) continue;
+    if (!resolves_by_program[from]) resolves_by_program[from] = [];
+    if (!resolves_by_target[to])    resolves_by_target[to]    = [];
+    resolves_by_program[from].push(e);
+    resolves_by_target[to].push(e);
+    if (e.id) resolves_by_id[e.id] = e;
+  }
+
+  // cell_id → fc_id reverse-lookup, used by the resolves renderer to
+  // deep-link cell-target pills back into the cell card (which expects
+  // (fcId, cellId) per the [data-fc-cell-jump] convention).
+  const cell_id_to_fc_id = {};
+  for (const fc of fcs) {
+    for (const c of (fc.cells || [])) {
+      if (c.cell_id) cell_id_to_fc_id[c.cell_id] = fc.id;
+    }
+  }
+
   // Falsifications list
   const falsifications = [];
   for (const fc of fcs) {
@@ -383,6 +430,11 @@ function augmentDataset(raw) {
     discourse_edges_by_type,
     fcs_connected_to_discourse,
     discourse_edges_by_fc_pair,
+    // Phase C — resolves edges (Step 4.4)
+    resolves_by_program,
+    resolves_by_target,
+    resolves_by_id,
+    cell_id_to_fc_id,
     _meta: {
       dataset_version: raw.dataset_version || raw.schema_version || 'v34',
       generated_at: new Date().toISOString(),
@@ -395,6 +447,7 @@ function augmentDataset(raw) {
         phen_phen_edges: phen_phen_edges.length,
         discourse_nodes: discourse_nodes.length,
         discourse_edges: Object.values(discourse_edges_by_type).reduce((a, b) => a + b.length, 0),
+        resolves_edges: Object.values(resolves_by_id).length,
       },
     },
   };

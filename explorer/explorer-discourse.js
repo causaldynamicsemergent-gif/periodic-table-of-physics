@@ -340,6 +340,11 @@ function renderFrontierCard(node) {
     renderEdgeSection('Programs targeting this frontier',
       ge(grouped, 'candidate-targeting/in'),
       { intro: 'Candidate-foundational programs that aim to discharge this frontier.', hideWhenEmpty: true }),
+    // Sub-PR E2 — Phase C resolves edges. The "Targeted by" section is
+    // empty when no experimental program documents reach for this
+    // frontier; the resolves renderer returns '' in that case.
+    (typeof renderTargetedByTarget === 'function')
+      ? renderTargetedByTarget(node.id) : '',
     renderEdgeSection('Empirical loci',
       ge(grouped, 'open-frontier-content-edge/out')
         .concat(ge(grouped, 'open-frontier-content-edge/in')),
@@ -384,6 +389,10 @@ function renderTotalityCard(node) {
       ge(grouped, 'multi-architecture-interference-edge/out')
         .concat(ge(grouped, 'multi-architecture-interference-edge/in')),
       { intro: 'Architectures whose joint application matters for this totality.', hideWhenEmpty: true }),
+    // Sub-PR E2 — Phase C resolves edges targeting this totality-approach.
+    // muon-g-2 is the canonical first instance (sub-PR 53).
+    (typeof renderTargetedByTarget === 'function')
+      ? renderTargetedByTarget(node.id) : '',
     renderEdgeSection('Classifications that bear on this totality',
       ge(grouped, 'bears-on/in'),
       { intro: 'Formal classifications constraining or partially-solving the totality.', hideWhenEmpty: true }),
@@ -499,6 +508,13 @@ function renderProgramCard(node) {
     renderEdgeSection('Produces classifications',
       ge(grouped, 'produces-classification/out'),
       { intro: 'Formal classifications this program established empirically. Cell-ref pills below each edge link to the specific cells the program confirmed.', hideWhenEmpty: true }),
+    // Sub-PR E2 — Phase C resolves edges (Step 4.4). The 12 forward-looking
+    // programs each carry 1–4 resolves edges to the cells, frontiers, and
+    // totality-approach nodes they address. Section is empty for the 7
+    // historical programs and the absent-render is hidden automatically
+    // by the resolves renderer (it returns '' when no edges exist).
+    (typeof renderResolvesFromProgram === 'function')
+      ? renderResolvesFromProgram(node.id) : '',
   ].join('');
 
   // Key publications — for programs the citations are typically formatted differently
