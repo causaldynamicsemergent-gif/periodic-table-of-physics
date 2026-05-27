@@ -1,7 +1,7 @@
 # Project next steps — operational queue
 
-**Date:** 2026-05-26
-**Status:** Initial draft. This document is the project-level operational queue. Every session reads it at start; every session updates it at close.
+**Date:** 2026-05-26 (initial draft); amended 2026-05-27 (E1 closure + file-delivery norm).
+**Status:** Active. This document is the project-level operational queue. Every session reads it at start; every session updates it at close.
 **Purpose:** Hold the operational state of all open workstreams so any fresh session can determine what action is currently eligible without consulting prior conversation history. Provide prompt templates so each session can generate the closing prompt that opens the next session.
 **Position:** Lives in `/methodology/`. Attached to every fresh chat via project files. Companion to `META_v21_1_methodology_firewall.md`, the workstream-specific handoffs (`PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`, `EXPLORER_PHASE_BC_HANDOFF.md`, `TRACK_4_USE_SIDE_ARTIFACTS.md`, `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md`), and the project goal documents.
 
@@ -9,9 +9,9 @@
 
 ## 0. Highest-priority eligible action right now
 
-**Sub-PR 57 (fcc resolves edges) — closes Step 4.4 of Phase C.**
+**Sub-PR E2 (render the 38 resolves edges) — workstream 2.2.**
 
-Prompt template at §5.1. The maintainer pastes the prompt from the *prior session's* closing block into a fresh chat; the fresh chat executes the work specified in §5.1 against the live substrate, updates this document and the relevant workstream handoff, and produces a closing prompt for the next session before terminating.
+Prompt template at §5.6. Phase C closed at v95. Sub-PR E1 closed 2026-05-27 as a verification-only zero-diff sub-PR — the surfacing-side renderer for the 12 new experimental-program nodes was completed in step with the data-side PRs that landed them, and the work was discovered to be already discharged on inspection. E2 is the first surfacing sub-PR with a substantive code diff: it adds the "Resolves" section to the experimental-program card and the "Targeted by" section to the cell / frontier / totality-approach sidebar view, surfacing the 38 resolves edges that connect the 12 forward-looking experimental programs to their physics targets.
 
 ---
 
@@ -19,16 +19,16 @@ Prompt template at §5.1. The maintainer pastes the prompt from the *prior sessi
 
 The project runs as a chain of sessions, each producing one deliverable and the prompt that opens the next session.
 
-The maintainer is a non-physicist coordinator. The chain holds without requiring maintainer memory or judgment about what state the project is in. The discipline is:
+The maintainer is a non-physicist, non-developer coordinator. The chain holds without requiring maintainer memory or judgment about what state the project is in. The discipline is:
 
 1. **Each session reads this document at start.** Identifies which workstream the pasted prompt is from, confirms the action is still eligible (substrate conditions may have changed since the prior session), runs any state-verification ritual the workstream handoff specifies.
 2. **Each session executes one deliverable.** Substrate authoring (sub-PR), methodology authoring (scope memo, handoff update), discharge update, or other single coherent unit of work.
-3. **Each session updates this document and the relevant workstream handoff.** Reflects what just shipped. Removes the just-completed action from §3 if applicable. Promotes any newly-eligible actions from §4 to §3.
+3. **Each session updates this document and the relevant workstream handoff** — *as complete files, not patches.* See §6 norm #1.
 4. **Each session produces the closing prompt before terminating.** Self-contained instruction block in a clearly-marked code block, ready for copy-paste into the next chat. The closing prompt is mandatory; a session is not done until it has produced one.
 
 The maintainer copies the closing prompt, opens a fresh chat in the project, pastes the prompt as the opening message. Project files attach automatically. The chain continues.
 
-**Failure mode to guard against:** a session ships a deliverable but doesn't update this document or doesn't produce a closing prompt. The next session then either misidentifies the project's state (drift) or has no instruction (chain break). The discipline that prevents this is: *the deliverable is not the substrate change; the deliverable is the substrate change PLUS the document updates PLUS the closing prompt.* All three must be visible before a session terminates.
+**Failure mode to guard against:** a session ships a deliverable but doesn't update this document or doesn't produce a closing prompt, or delivers updates as patches the maintainer has to splice. The next session then either misidentifies the project's state (drift), has no instruction (chain break), or the maintainer slows the chain manually applying edits. The discipline that prevents this is: *the deliverable is the substrate change PLUS the document updates as complete files PLUS the closing prompt.* All three must be visible before a session terminates.
 
 ---
 
@@ -36,33 +36,31 @@ The maintainer copies the closing prompt, opens a fresh chat in the project, pas
 
 Four workstreams are currently in motion. Each has a workstream-internal handoff document that holds the detail; this document holds the cross-workstream view.
 
-### 2.1 Phase C closure (Predictive Layer)
+### 2.1 Phase C closure (Predictive Layer) — CLOSED
 
-*Handoff:* `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`.
+*Handoff:* `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` (marked closed at v95; preserved for reference).
 
-*State:* Sub-PRs 1-56 shipped. Step 4.4 (resolves edges) has one remaining sub-PR (57, fcc — the last unattached forward-looking experimental-program node). Step 4.5 (quantitative_scale on if_real_implies implications) has not started. After both ship, a consolidated worker rebuild brings the deployed MCP current.
+*State:* All five Phase C authoring steps shipped (4.1, 4.2, 4.3, 4.4, 4.5). Sub-PR 57 (fcc, Step 4.4 closure) shipped 2026-05-26 as v94. Step 4.5 (quantitative_scale on 12 if_real_implies implications) shipped 2026-05-26 as v95. Consolidated MCP worker rebuilt and verified via `server_info` (data v95, schema v19, 33 tools, 38 resolves edges, 288 quantitative_scale entries). Worker rebuilds are Cloudflare deployment operations verified via `server_info` rather than via `_meta.changelog` entries — the changelog tracks substrate authoring, not deployment.
 
-*Eligible action:* Sub-PR 57.
+*Eligible action:* None remaining.
 
-*Closure condition:* Step 4.4 closed (sub-PR 57 shipped) + Step 4.5 closed + worker rebuild verified via `server_info` returning current data version.
+*Closure condition:* Met 2026-05-26.
 
 ### 2.2 Explorer Phase B+C surfacing
 
 *Handoff:* `EXPLORER_PHASE_BC_HANDOFF.md`.
 
-*State:* Eight sub-PRs (E1-E8) sequenced. None shipped yet. Update C closed previously; the new sub-PRs render Phase B + Phase C content that the dataset has accumulated but the explorer doesn't yet display.
+*State:* Eight sub-PRs (E1-E8) sequenced. E1 closed 2026-05-27 as a verification-only zero-diff sub-PR. E2 through E5 are all eligible (their trigger conditions — Phase C closure and worker rebuild — are met). Update C closed previously; the active sub-PRs render Phase B + Phase C content that the dataset has accumulated but the explorer doesn't yet display.
 
-*Eligible action:* Sub-PR E1 (render the 12 forward-looking experimental-program nodes in the existing discourse layer). Independent of Phase C closure — can proceed in parallel with workstream 2.1.
-
-*Note:* Sub-PRs E3 and E4 are designed against content Step 4.5 produces. They become eligible once Step 4.5 ships.
+*Eligible action:* Sub-PR E2 (render resolves edges). E4, E3, E5 follow in the handoff's recommended sequencing.
 
 *Closure condition:* Sub-PRs E1-E5 shipped (E6-E8 are discretionary polish, not required for closure).
 
 ### 2.3 Cross-FC pattern layer (the reading layer)
 
-*Scope memo:* `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` (v4 committed in this session).
+*Scope memo:* `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md`.
 
-*State:* Scope memo committed. Six provisional modes identified. First authoring sub-PR is *not* currently eligible — substrate triggers haven't fired. See scope memo §10.1 for the trigger conditions.
+*State:* Scope memo committed. Six provisional modes identified. First authoring sub-PR is *not* currently eligible — Phase C closure is one of the trigger conditions (now met), but schema v20 authoring, four-FCs-stable check, and validator clean status still gate. See scope memo §10.1 for the trigger conditions.
 
 *Eligible action:* None currently. Watch for triggers.
 
@@ -74,7 +72,7 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 *State:* Four artifacts named (essay, query recipes, chat entry point, example sessions). The chat entry point (§1.3) is mostly independent of explorer surfacing and can be drafted now. The other three depend on the explorer's final shape.
 
-*Eligible action:* Track 4 §1.3 (chat entry point). Lower priority than workstreams 2.1 and 2.2 but available for sessions wanting to make independent progress.
+*Eligible action:* Track 4 §1.3 (chat entry point). Lower priority than workstream 2.2 but available for sessions wanting to make independent progress.
 
 *Closure condition:* All four artifacts shipped, with the explorer surfacing closed so the artifacts can point at real explorer surfaces.
 
@@ -82,11 +80,15 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 ## 3. Currently eligible actions (priority-ordered)
 
-1. **Sub-PR 57 (fcc resolves edges)** — workstream 2.1. Highest priority because closes Step 4.4, which gates Step 4.5, which gates the explorer sub-PRs E3/E4. Template at §5.1.
+1. **Sub-PR E2 (render resolves edges)** — workstream 2.2. Highest priority: first user-facing rendering of Phase C content. Adds a "Resolves" section to the experimental-program card and a "Targeted by" section to the cell / frontier / totality-approach sidebar view. Template at §5.6.
 
-2. **Sub-PR E1 (12 experimental-program nodes in explorer)** — workstream 2.2. Independent of Phase C closure. Can be parallel work if the maintainer wants two threads in motion. Template at §5.3.
+2. **Sub-PR E4 (reusable quantitative_scale callout component)** — workstream 2.2. Eligible. `EXPLORER_PHASE_BC_HANDOFF.md` §3 recommends E4 before E3 so the qs component is available for E3's implication-level entries. Template TBD (draft at E2 close).
 
-3. **Track 4 §1.3 (chat entry point)** — workstream 2.4. Independent, lower physics-content demand. Suitable for sessions where the maintainer wants to advance the project without substrate authoring. Template at §5.4.
+3. **Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards)** — workstream 2.2. Eligible since Step 4.5 shipped (implication-level quantitative_scale content exists). Template TBD (draft at E4 close).
+
+4. **Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage)** — workstream 2.2. Eligible. Handoff recommends after E1-E4 since those are the surfaces being decorated. Template TBD (draft at E3 close).
+
+5. **Track 4 §1.3 (chat entry point)** — workstream 2.4. Independent of explorer surfacing, lower physics-content demand. Suitable for sessions where the maintainer wants to advance the project without explorer authoring. Template at §5.4.
 
 The default next session executes (1) unless the maintainer chooses otherwise.
 
@@ -96,19 +98,19 @@ The default next session executes (1) unless the maintainer chooses otherwise.
 
 The following actions are *not* currently eligible. Each is listed with the trigger condition that would unblock it.
 
-**Step 4.5 (if_real_implies quantitative_scale on the 12 quantitative implications).** Blocked on sub-PR 57 closing. When sub-PR 57 ships, Step 4.5 becomes eligible and the handoff §3 promotes it to the next-queued item.
+**Sub-PRs E6 (rank_by_scale overview panel) and E7 (find_discriminating_experiments view).** Discretionary net-new views beyond explorer Phase B+C surfacing closure. Eligible after E1-E5 ship if the maintainer chooses to extend the explorer further.
 
-**Sub-PR E2 onwards (explorer surfacing for resolves edges, if_real_implies trees, quantitative_scale, decoration).** E2 (resolves edges) blocks on Phase C worker rebuild (so MCP queries return current data). E3 and E4 additionally block on Step 4.5 (which produces implication-level quantitative_scale content). E5-E8 block on E1-E4 having shipped.
+**Sub-PR E8 (explorer banner + About panel refresh).** Lightweight one-file touch; can ship alongside any earlier sub-PR as a stowaway or as a standalone closing step.
 
-**Cross-FC pattern layer first authoring sub-PR (anomaly-content virtual-FC, Mode D).** Blocked on the trigger conditions in `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.1: Phase C closed, schema v20 authored (Route 2 support), four involved FCs stable, validator clean. When all true, the first Mode D sub-PR becomes eligible.
+**Cross-FC pattern layer first authoring sub-PR (Mode D, anomaly-content virtual-FC).** Phase C closure trigger now met; remaining trigger conditions per `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.1 — schema v20 authored, four involved FCs stable, validator clean — still gate eligibility.
 
-**Cross-FC layer first Mode E sub-PR.** Blocked on `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.2 triggers. Substantially downstream — not eligible for at least several months.
+**Cross-FC layer first Mode E sub-PR.** Blocked on `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.2 triggers. Substantially downstream.
 
 **Cross-FC layer first Mode F sub-PR.** Blocked on `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.3 triggers. Years out.
 
 **Track 4 essay (§1.1), query recipes (§1.2), example sessions (§1.4).** Blocked on the explorer Phase B+C surfacing closing (sub-PRs E1-E5 shipped). The artifacts need to point at real explorer surfaces.
 
-**Track 1 / 1' explorer surfacing of v16+ fields, Track 5 housekeeping.** Per `TRACKS_AFTER_PHASE_A.md`, deferred until Phase C closes.
+**Track 1 / 1' explorer surfacing of v16+ fields, Track 5 housekeeping.** Per `TRACKS_AFTER_PHASE_A.md`, the Phase C closure gate is now met; deprioritised below the Phase B+C surfacing pass.
 
 ---
 
@@ -116,7 +118,9 @@ The following actions are *not* currently eligible. Each is listed with the trig
 
 Each template produces a self-contained instruction block. The session generating the closing prompt selects the template that matches the next-eligible action and instantiates it with current state.
 
-### 5.1 Sub-PR 57 (fcc resolves edges)
+**All templates assume the deliverable ships as complete files** (per §6 norm #1). The closing prompt that the next session pastes must contain that instruction explicitly so the next session does the same.
+
+### 5.1 Sub-PR 57 (fcc resolves edges) — DISCHARGED 2026-05-26 as v94
 
 ```
 Pick up Step 4.4 sub-PR 57 from `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` §3: fcc resolves edges. This closes the last unattached forward-looking experimental-program node from sub-PR 0.5 and closes Step 4.4.
@@ -146,7 +150,7 @@ Then proceed:
 The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` does not bind authoring work (per its §7) — schema field names and methodology vocabulary are appropriate in sub-PR commit messages and changelog entries.
 ```
 
-### 5.2 Step 4.5 (if_real_implies quantitative_scale)
+### 5.2 Step 4.5 (if_real_implies quantitative_scale) — DISCHARGED 2026-05-26 as v95
 
 ```
 Pick up Step 4.5 from `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` §3: quantitative_scale on the if_real_implies implications. This closes Phase C.
@@ -172,7 +176,7 @@ Then proceed:
 8. Before closing, produce the next closing prompt for the worker rebuild using the template in `PROJECT_NEXT_STEPS.md` §5.5.
 ```
 
-### 5.3 Sub-PR E1 (12 experimental-program nodes in explorer)
+### 5.3 Sub-PR E1 (12 experimental-program nodes in explorer) — DISCHARGED 2026-05-27 (verification-only)
 
 ```
 Pick up sub-PR E1 from `EXPLORER_PHASE_BC_HANDOFF.md` §3: render the 12 forward-looking experimental-program nodes in the existing discourse layer.
@@ -215,18 +219,18 @@ Then proceed:
 
 3. Propose the hosting mechanism. Three candidates: (a) Anthropic project-link the explorer button opens; (b) a custom landing page on GitHub Pages that hosts the chat interface; (c) a static page that explains how to set up the chat manually. Maintainer chooses.
 
-4. Wait for maintainer confirmation on hosting, then author the deliverable: either the project link, the landing page HTML, or the setup-instructions page.
+4. Wait for maintainer confirmation on hosting, then author the deliverable: either the project link, the landing page HTML, or the setup-instructions page. **Deliver as complete files via the present_files tool, not as patches.**
 
-5. Update `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.3 to mark the artifact shipped.
+5. Update `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.3 to mark the artifact shipped. **Deliver the full updated file**, not a §-level patch.
 
-6. Update `PROJECT_NEXT_STEPS.md` §3 (remove Track 4 §1.3), keep other Track 4 artifacts in §4 pending explorer surfacing.
+6. Update `PROJECT_NEXT_STEPS.md` §3 (remove Track 4 §1.3), keep other Track 4 artifacts in §4 pending explorer surfacing. **Deliver the full updated file.**
 
 7. Before closing, produce the next closing prompt for whichever workstream is the maintainer's preference per §3.
 
 The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` binds this artifact (per its §6). Physicist-facing prose throughout.
 ```
 
-### 5.5 Worker rebuild (after Phase C closes)
+### 5.5 Worker rebuild (after Phase C closes) — DISCHARGED 2026-05-26 (verified via server_info)
 
 ```
 The Phase C consolidated worker rebuild. Phase C is closed (Step 4.4 + Step 4.5 both shipped). The deployed MCP worker on Cloudflare needs to be rebuilt against the canonical data file.
@@ -250,7 +254,55 @@ Then proceed:
 
 ### 5.6 Sub-PR E2 (resolves edges in explorer)
 
-[Template to be drafted by the session that ships sub-PR E1, since the precise shape depends on E1's choices. The template body is appended to this document when E1 ships.]
+```
+Pick up sub-PR E2 from `EXPLORER_PHASE_BC_HANDOFF.md` §3: render the 38 resolves edges. This is the first user-facing rendering of Phase C content in the explorer.
+
+Run §0 state-verification first: call `server_info` on the MCP (expected: data_version v95, schema_version v19, resolves_edges 38, tool_count 33). Fetch `data/Map_v34_consolidated.json` `_meta.version` via raw CDN at https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json and confirm it matches. Note any drift.
+
+DELIVERY DISCIPLINE (critical — read before authoring anything):
+The maintainer is non-developer and uploads files via GitHub web UI by erase-and-replace. EVERY deliverable in this session — explorer code files, methodology document updates, anything that ends up in the repo — ships as a COMPLETE FILE via the present_files tool. Do NOT produce "replace §3 with this" patches, do NOT produce per-line diff blocks for the maintainer to splice in. The maintainer downloads the full file and drops it in place. This norm is documented in `PROJECT_NEXT_STEPS.md` §6 norm #1; violating it slows the project significantly.
+
+Then proceed:
+
+1. Read the current explorer architecture. Fetch from raw GitHub:
+   - `explorer/explorer-discourse.js` — study `renderProgramCard` (around line 472). The "Resolves" section sequences inside this card, after "Produces classifications" and before "Key publications".
+   - `explorer/explorer-sidebar.js` — find where cells render their sidebar card; the cell card is where "Targeted by" attaches for cell targets.
+   - `explorer/explorer-discourse.js` again — find `renderFrontierCard` and `renderTotalityCard`; "Targeted by" also attaches to frontier and totality-approach cards (resolves edges target all three node types).
+   - `explorer/explorer-data.js` — note that `DISCOURSE_EDGE_TYPES` (around line 263) does NOT include 'resolves'. Either extend that list or build a separate `resolves_by_program` / `resolves_by_target` index alongside the other discourse indexes.
+
+2. Choose module layout. Per `EXPLORER_HANDOFF.md`'s "one new logical surface = one new module" precedent, propose creating an eighth JS file `explorer/explorer-resolves.js` that exports `renderResolvesFromProgram(programId)` (called from the program card) and `renderTargetedByTarget(targetId)` (called from the cell / frontier / totality-approach cards). Indexes live in `explorer-data.js` with the other discourse indexes.
+
+3. Decide qs (sensitivity field) rendering. E4 will ship the reusable quantitative_scale callout component; E2 ships before E4 in the recommended sequencing. Two options:
+   (a) Minimal inline rendering in E2 — value + units + bound-direction symbol (≳ / ≲ / = / ~) + first citation as a short line. E4 absorbs and refactors when it ships.
+   (b) Stub a small `explorer-qs.js` module with the minimum surface E2 needs; E4 extends.
+   Propose one and wait for maintainer choice. Default recommendation: (a), since E4 sequences after E2 partly to enable this absorption.
+
+4. Decide predictions_per_program layout. 5 of 38 resolves edges carry populated competing-prediction lists (sub-PR 53 muon-g-2-continuation; sub-PR 56 rubin-lsst cc-frontier; sub-PR 57 fcc Higgs self-coupling + WIMP thermal mass + m_W precision). Two options:
+   (a) Inline list of competing predictions under the edge — most informative, takes most space.
+   (b) Collapsible under a "Competing predictions" toggle — less space, one extra click.
+   Maintainer chooses based on density tolerance.
+
+5. Decide exclusion_only visual signal. When the edge sets a bound rather than measures a value, the UI needs a cue. Suggested: a small pill ("Bounds-setting" or "Sets a bound") or rely on the bound-direction symbol (≳ or ≲) next to the sensitivity value. Avoid raw "exclusion_only: true" text per `PHYSICIST_FACING_VOCABULARY.md`.
+
+6. Apply the vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` to all UI prose:
+   - Section header: "Resolves" on the program card; "Targeted by" on the cell / frontier / totality-approach card.
+   - exclusion_only true → "Bounds-setting" or "Sets an upper / lower bound" (matching bound_direction).
+   - exclusion_only false → "Measurement-discriminating", or render the value with its uncertainty without a separate label.
+   - bound_direction symbols → ≳ (lower) / ≲ (upper) / = or central-value (two-sided) / ~ (unspecified).
+   - predictions_per_program → "Competing predictions", each entry labeled by its theoretical program (e.g., "BMW lattice HVP", "Aliberti dispersive HVP").
+
+7. Propose the diff (which files change, what each section looks like at the markup level, what data-layer indexes are built). Wait for maintainer confirmation before authoring.
+
+8. Once authored, present ALL updated files via the present_files tool — complete files only, no patches. Files to be presented: every modified explorer JS module, any new module created, both updated handoff documents, and the updated PROJECT_NEXT_STEPS.md. Maintainer downloads each and erase-and-replaces in the repo via GitHub web UI.
+
+9. Update `EXPLORER_PHASE_BC_HANDOFF.md` §1 — gap-table rows for "resolves edges" flip to "Yes (since sub-PR E2)". Update §3 sub-PR E2 description with closure note recording the design choices made. Deliver as a complete file.
+
+10. Update `PROJECT_NEXT_STEPS.md` §0 (E4 becomes highest priority), §3 (remove E2 from eligible, promote E4 to position 1). Deliver as a complete file.
+
+11. Before closing, draft the §5.7 template for sub-PR E4 (qs callout component) in `PROJECT_NEXT_STEPS.md` (the complete file delivered in step 10 should already include this) and produce the closing prompt for E4 in a clearly-marked code block in the chat.
+
+The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` *does* bind explorer UI prose (per its §6). Every label, tooltip, section heading, and inline text uses physicist-natural vocabulary, not schema field names. Software jargon ("array", "field", "tool fires") is excluded entirely.
+```
 
 ### 5.7 First cross-FC sub-PR (anomaly-content virtual-FC, when triggers fire)
 
@@ -262,18 +314,20 @@ Then proceed:
 
 The discipline that keeps this document load-bearing:
 
-1. **Every session updates this document at close.** Sections §3 (currently eligible) and §4 (pending) are the ones that change session-to-session. The session moves completed actions out of §3, promotes newly-eligible actions from §4 to §3, adds new pending actions to §4 if the deliverable surfaced any.
+1. **Deliverables ship as complete files, not patches.** The maintainer is non-developer and uploads files via GitHub web UI by erase-and-replace. Every methodology document update, every explorer code change, every data PR ships as one or more *complete files* presented via the `present_files` tool. The maintainer downloads each and replaces the corresponding file in the repo. "Replace §3 with this" patches, per-line diff blocks, and "splice this in here" instructions are forbidden; they require manual splicing that slows the project significantly and introduces splice errors. This norm applies to every workstream and every template in §5.
 
-2. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.6 and §5.7 are placeholders that get filled in when their actions become eligible.
+2. **Every session updates this document at close.** Sections §3 (currently eligible) and §4 (pending) are the ones that change session-to-session. The session moves completed actions out of §3, promotes newly-eligible actions from §4 to §3, adds new pending actions to §4 if the deliverable surfaced any.
 
-3. **The closing prompt is non-optional.** Every session terminates with a clearly-marked closing prompt in a code block, derived from the relevant §5 template, instantiated with current state. A session that hasn't produced a closing prompt isn't done.
+3. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.7 (and later) are placeholders that get filled in when their actions become eligible. Discharged templates (§5.1, §5.2, §5.3, §5.5 as of 2026-05-27) are retained with a DISCHARGED header so future sessions can read them as historical reference for analogous operations.
 
-4. **State-verification at session start is non-optional.** The first action of every session is reading this document and running the workstream handoff's state-verification ritual. Drift between this document and the live system is caught here and corrected (either the document updates or the maintainer is alerted to the inconsistency).
+4. **The closing prompt is non-optional.** Every session terminates with a clearly-marked closing prompt in a code block, derived from the relevant §5 template, instantiated with current state. A session that hasn't produced a closing prompt isn't done.
 
-5. **This document never holds substrate state directly.** All substrate state lives in the canonical data file (`_meta.changelog`), the live MCP, and the live explorer. This document holds *operational* state: which actions are eligible, what their triggers are, what their prompts look like. The substrate state is queried fresh; the operational state is read from here.
+5. **State-verification at session start is non-optional.** The first action of every session is reading this document and running the workstream handoff's state-verification ritual. Drift between this document and the live system is caught here and corrected (either the document updates or the maintainer is alerted to the inconsistency).
 
-6. **The maintainer is the only one who reads §0 routinely.** §0 holds the single answer to "what's next." A maintainer who wants to know what to do reads §0; the session that opens with the pasted prompt doesn't need §0 because the prompt already specifies the action.
+6. **This document never holds substrate state directly.** All substrate state lives in the canonical data file (`_meta.changelog`), the live MCP, and the live explorer. This document holds *operational* state: which actions are eligible, what their triggers are, what their prompts look like. The substrate state is queried fresh; the operational state is read from here.
+
+7. **The maintainer is the only one who reads §0 routinely.** §0 holds the single answer to "what's next." A maintainer who wants to know what to do reads §0; the session that opens with the pasted prompt doesn't need §0 because the prompt already specifies the action.
 
 ---
 
-*End of PROJECT_NEXT_STEPS.md initial draft, 2026-05-26. Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. The chain holds as long as the discipline in §6 holds.*
+*End of PROJECT_NEXT_STEPS.md. Initial draft 2026-05-26; amended 2026-05-27 with E1 closure, E2 promotion, and file-delivery norm (§6 #1). Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. Deliverables arrive as complete files via present_files. The chain holds as long as the discipline in §6 holds.*
