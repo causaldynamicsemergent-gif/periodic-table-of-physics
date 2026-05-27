@@ -203,6 +203,13 @@ function renderEdgeRow(e, opts) {
     naturePill = `<span class="dx-nature-pill dx-nature-${esc(e.nature)}">${esc(e.nature)}</span>`;
   }
   const dsHtml = renderDischargeStatus(e.discharge_status);
+  // Sub-PR E4 — render quantitative_scale inline on edges that carry it.
+  // Bears-on edges are the canonical case (the v19 spec allows qs on
+  // this surface). Zero entries at v95; the renderer is ready for the
+  // surface when authoring lands.
+  const qsLine = (e.quantitative_scale && typeof renderQS === 'function')
+    ? `<div class="dx-edge-qs">${renderQS(e.quantitative_scale, {})}</div>`
+    : '';
   return `
     <div class="dx-edge-row">
       <div class="dx-edge-head">
@@ -211,6 +218,7 @@ function renderEdgeRow(e, opts) {
         ${naturePill}
       </div>
       ${e.description ? `<div class="dx-edge-desc">${esc(e.description)}</div>` : ''}
+      ${qsLine}
       ${dsHtml ? `<div class="dx-edge-discharge">${dsHtml}</div>` : ''}
       ${cellPills}
     </div>
@@ -329,6 +337,15 @@ function renderFrontierCard(node) {
     ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
     : '';
 
+  // Sub-PR E4 — carrier qs callout. The 7 open-frontier carriers
+  // currently with quantitative_scale (qg-frontier 10^19 GeV,
+  // cc-frontier 10^120, hierarchy-problem 10^17, etc.) get their
+  // headline numerical commitment rendered as a prominent block
+  // immediately after the About section.
+  const carrierQS = (node.quantitative_scale && typeof renderQSCallout === 'function')
+    ? renderQSCallout(node.quantitative_scale, { heading: 'Characteristic scale' })
+    : '';
+
   const sections = [
     renderEdgeSection('Architectures that fail to span this frontier',
       ge(grouped, 'open-frontier-architecture-edge/out')
@@ -361,7 +378,7 @@ function renderFrontierCard(node) {
     ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
     : '';
 
-  return head + desc + sections + citations;
+  return head + desc + carrierQS + sections + citations;
 }
 
 // =============================================================
@@ -379,6 +396,16 @@ function renderTotalityCard(node) {
   const head = renderDiscourseCardHead(node, [statusPill, stratumPill]);
   const desc = node.description
     ? `<div class="sidebar-section"><h3>About</h3><div class="dc-desc">${formatPara(node.description)}</div></div>`
+    : '';
+
+  // Sub-PR E4 — carrier qs callout. Each of the 6 totality-approach
+  // nodes carries a quantitative_scale entry: bh-thermodynamics 1/4
+  // (Bekenstein-Hawking coefficient), cosmological-models 5σ (Hubble
+  // tension upper bound), turbulence -1.667 (Kolmogorov exponent), etc.
+  // The headline numerical commitment renders as a prominent block
+  // immediately after the About section.
+  const carrierQS = (node.quantitative_scale && typeof renderQSCallout === 'function')
+    ? renderQSCallout(node.quantitative_scale, { heading: 'Characteristic scale' })
     : '';
 
   const sections = [
@@ -405,7 +432,7 @@ function renderTotalityCard(node) {
     ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
     : '';
 
-  return head + desc + sections + citations;
+  return head + desc + carrierQS + sections + citations;
 }
 
 // =============================================================

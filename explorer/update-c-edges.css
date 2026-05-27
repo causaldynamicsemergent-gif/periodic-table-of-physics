@@ -278,23 +278,11 @@
   color: var(--ink);
   margin: 4px 0 2px;
 }
-.dc-resolves-prefix {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  color: var(--ink-mute);
-  text-transform: uppercase; letter-spacing: 0.06em;
-  margin-right: 6px;
-}
-.dc-resolves-bd {
-  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  color: var(--ink-soft);
-  margin-right: 2px;
-}
-.dc-resolves-units {
-  color: var(--ink-soft);
-  font-style: italic;
-  margin-left: 2px;
-}
+/* Atomic inline pieces formerly here (dc-resolves-prefix, -bd, -units)
+   have been retired in sub-PR E4 — the same three rules live as
+   qs-prefix / qs-bd / qs-units in update-e4.css and are shared across
+   every quantitative_scale surface (cell-direct, prediction-level,
+   carrier, bears-on, plus this resolves-sensitivity wrapper). */
 .dc-resolves-citations {
   margin: 4px 0 6px;
 }

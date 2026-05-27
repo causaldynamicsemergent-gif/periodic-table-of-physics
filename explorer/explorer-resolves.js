@@ -1,8 +1,9 @@
 // =============================================================
 //   explorer-resolves.js
 //
-//   Sub-PR E2 — renders the 38 Phase C `resolves` edges (Step 4.4)
-//   linking experimental programs to the cells, open frontiers, or
+//   Sub-PR E2 (initial) + sub-PR E4 (refactor):
+//   Renders the 38 Phase C `resolves` edges (Step 4.4) linking
+//   experimental programs to the cells, open frontiers, or
 //   totality-approach nodes they address.
 //
 //   Two surfaces are exposed:
@@ -23,17 +24,18 @@
 //   Indexes consumed: DATA.resolves_by_program, DATA.resolves_by_target,
 //   DATA.cell_id_to_fc_id — all built in explorer-data.js.
 //
+//   Sub-PR E4 — the minimal-inline formatQS that this module shipped
+//   in E2 has been absorbed into explorer-qs.js as the reusable
+//   component renderQS. This module is now a consumer: the sensitivity
+//   line and the competing-predictions predicted_value cells both call
+//   renderQS directly. The change is class-name + semantics only;
+//   visual treatment is preserved. See explorer-qs.js for the contract.
+//
 //   Vocabulary discipline (PHYSICIST_FACING_VOCABULARY.md §3, §4):
 //   no schema field names appear in UI text. "Bounds-setting" instead
 //   of "exclusion_only", "Competing predictions" instead of
 //   "predictions_per_program", physicist-natural symbols (≳ ≲ =) for
 //   bound directions, "Reach:" prefix on sensitivity lines.
-//
-//   The local formatQS helper is intentionally minimal; sub-PR E4 will
-//   ship the reusable quantitative_scale callout component and absorb
-//   this implementation. Field semantics (Rule 34: bd absent when
-//   uncertainty non-null; log10 with sigma_deviation kind; etc.) match
-//   the v19 schema spec.
 // =============================================================
 
 // =============================================================
@@ -46,118 +48,14 @@ const TIMELINE_LABELS = {
   'proposed':         'proposed',
 };
 
-// Bound-direction symbol shown inline next to the value when
-// uncertainty is null (Rule 34). When uncertainty is non-null the
-// "± σ" notation carries the direction implicitly and the symbol is
-// suppressed.
-const BD_SYMBOL = {
-  'lower':       '≳',
-  'upper':       '≲',
-  'two-sided':   '=',
-  'unspecified': '~',
-};
-
-// =============================================================
-//   Local quantitative_scale formatter
-//
-//   Minimal-inline rendering of one qs record. Sub-PR E4 will ship
-//   a reusable callout component and absorb this; the contract here
-//   is "produce one HTML line displaying value + units + uncertainty
-//   + (when applicable) bound-direction symbol, with KaTeX for
-//   exponent rendering".
-//
-//   Inputs:
-//     qs    = { kind, value, [log10], [units], uncertainty, [bound_direction] }
-//     opts  = { prefix?: 'Reach: ' | '' }
-//
-//   Outputs: HTML string (escaped); empty string when qs missing.
-// =============================================================
-function formatQS(qs, opts) {
-  if (!qs) return '';
-  opts = opts || {};
-  const kind = qs.kind || '';
-  const value = qs.value;
-  const log10 = !!qs.log10;
-  const units = qs.units || '';
-  const unc = qs.uncertainty;
-  const bd  = qs.bound_direction;
-
-  // Build the value-display fragment.
-  // sigma_deviation: render as "Nσ" with no separate units.
-  // dimensionless: no units fragment.
-  // ratio: dimensionless; no units fragment unless author supplied one.
-  // Everything else: value + space + units.
-  // log10 case: render as 10^{value} (KaTeX inline).
-  let valueHtml;
-  if (kind === 'sigma_deviation') {
-    valueHtml = `${esc(String(value))}σ`;
-  } else if (log10) {
-    // KaTeX inline render. Asymmetric uncertainty on a log10 exponent
-    // renders as 10^{value^{+high}_{-low}} (the uncertainty IS on the
-    // exponent — the source-value-phrase convention in the dataset).
-    let exponent;
-    if (unc && typeof unc === 'object' && 'low' in unc && 'high' in unc) {
-      exponent = `${value}^{+${unc.high}}_{-${unc.low}}`;
-    } else if (typeof unc === 'number') {
-      exponent = `${value} \\pm ${unc}`;
-    } else {
-      exponent = String(value);
-    }
-    const tex = `10^{${exponent}}`;
-    if (typeof window !== 'undefined' && window.katex) {
-      try {
-        valueHtml = window.katex.renderToString(tex, { throwOnError: false });
-      } catch (_e) {
-        valueHtml = `<code>${esc(tex)}</code>`;
-      }
-    } else {
-      valueHtml = `<code>${esc(tex)}</code>`;
-    }
-  } else {
-    // Plain numeric value, possibly with ± σ or +high/-low.
-    let s = String(value);
-    if (unc != null && typeof unc !== 'object') {
-      s += ` ± ${unc}`;
-    } else if (unc && typeof unc === 'object' && 'low' in unc && 'high' in unc) {
-      // Render as KaTeX so the asymmetric uncertainty is typographically
-      // clean. Otherwise fall back to text.
-      const tex = `${value}^{+${unc.high}}_{-${unc.low}}`;
-      if (typeof window !== 'undefined' && window.katex) {
-        try {
-          s = window.katex.renderToString(tex, { throwOnError: false });
-        } catch (_e) {
-          s = esc(tex);
-        }
-      } else {
-        s = esc(tex);
-      }
-      valueHtml = s; // already escaped or rendered
-    }
-    if (valueHtml === undefined) {
-      valueHtml = esc(s);
-    }
-  }
-
-  // Bound-direction symbol leads the value, but only when uncertainty
-  // is null (Rule 34) and the symbol carries meaning. The "two-sided"
-  // case suppresses the symbol — the value alone reads as exact.
-  let bdPrefix = '';
-  if (unc == null && bd && bd !== 'two-sided' && BD_SYMBOL[bd]) {
-    bdPrefix = `<span class="dc-resolves-bd">${BD_SYMBOL[bd]}</span> `;
-  }
-
-  // Units fragment.
-  let unitsHtml = '';
-  if (units && kind !== 'sigma_deviation' && kind !== 'dimensionless') {
-    unitsHtml = ` <span class="dc-resolves-units">${esc(units)}</span>`;
-  }
-
-  const prefix = opts.prefix ? `<span class="dc-resolves-prefix">${esc(opts.prefix)}</span>` : '';
-  return `${prefix}${bdPrefix}${valueHtml}${unitsHtml}`;
-}
-
 // =============================================================
 //   Citation list (collapsible-feeling, just a small block)
+//
+//   Resolves-specific wrapper around the qs-citation rendering.
+//   Kept here because the resolves row's container CSS hooks on
+//   .dc-resolves-citations / .dc-resolves-citation (row layout
+//   chrome, not qs-atom). The actual citation rendering style is
+//   unified across surfaces in update-e4.css.
 // =============================================================
 function renderResolvesCitations(citations) {
   if (!citations || !citations.length) return '';
@@ -169,8 +67,10 @@ function renderResolvesCitations(citations) {
 // =============================================================
 //   Competing-predictions block (predictions_per_program)
 //
-//   Inline list (sub-PR E2 default — option (a) from the proposal).
+//   Inline list (E2 default — option (a) from the proposal).
 //   Each row: program label · value display · description.
+//   The predicted_value field is itself a quantitative_scale record,
+//   so it goes through renderQS like every other qs surface.
 // =============================================================
 function renderCompetingPredictions(ppp) {
   if (!ppp || !ppp.length) return '';
@@ -180,7 +80,7 @@ function renderCompetingPredictions(ppp) {
       ${ppp.map(p => `
         <div class="dc-resolves-ppp-row">
           <div class="dc-resolves-ppp-program">${esc(p.program || '')}</div>
-          ${p.predicted_value ? `<div class="dc-resolves-ppp-value">${formatQS(p.predicted_value, {})}</div>` : ''}
+          ${p.predicted_value ? `<div class="dc-resolves-ppp-value">${renderQS(p.predicted_value, {})}</div>` : ''}
           ${p.description ? `<div class="dc-resolves-ppp-desc">${esc(p.description)}</div>` : ''}
         </div>
       `).join('')}
@@ -254,17 +154,16 @@ function renderResolvesRow(edge, side) {
     ? `<span class="dx-pill dx-bound-pill" title="This program sets a bound rather than measuring a value">Bounds-setting</span>`
     : '';
 
-  // Sensitivity line — "Reach:" prefix + value display + first citation.
-  // The first citation is shown inline; the rest collapse under the row.
-  // (Most sensitivity records carry 1–2 citations; the long form is rare.)
+  // Sensitivity line — "Reach:" prefix + value display via renderQS.
+  // The first citation list is shown via renderResolvesCitations (which
+  // hooks on the resolves-row container chrome).
   let sensitivityBlock = '';
   if (edge.sensitivity) {
-    const sense = edge.sensitivity;
     sensitivityBlock = `
       <div class="dc-resolves-sensitivity">
-        ${formatQS(sense, { prefix: 'Reach: ' })}
+        ${renderQS(edge.sensitivity, { prefix: 'Reach: ' })}
       </div>
-      ${renderResolvesCitations(sense.citations)}
+      ${renderResolvesCitations(edge.sensitivity.citations)}
     `;
   }
 

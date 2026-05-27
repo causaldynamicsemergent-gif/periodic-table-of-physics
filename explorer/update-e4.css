@@ -1,0 +1,185 @@
+/* =============================================================
+   update-e4.css — sub-PR E4
+   Reusable quantitative_scale callout component.
+
+   Two layers:
+     (1) qs-prefix / qs-bd / qs-units — atomic inline pieces used by
+         renderQS on every dense surface (cell-direct, prediction-level,
+         resolves sensitivity + competing-prediction values, bears-on
+         edges). Visual treatment is the same as the old
+         dc-resolves-prefix / -bd / -units rules in update-c-edges.css
+         (which sub-PR E4 retires; see that file's diff for what was
+         removed). The class names switched from surface-specific
+         (dc-resolves-*) to generic (qs-*) once the same atom started
+         appearing across five surfaces.
+
+     (2) qs-callout / qs-callout-value / qs-callout-citations — the
+         block form used only on the carrier surface (renderFrontierCard
+         and renderTotalityCard in explorer-discourse.js). Larger value
+         typography, bordered card, citations expanded inline.
+
+   Companion atoms:
+     • qs-citations / qs-citation — citation list rendered by
+       renderQSCitations. Used by the callout block form and inline by
+       the cell-direct surface (cell-qs-inline) in compact mode.
+     • cell-qs-inline — wrapper inside the cell-card Description section.
+     • dc-pred-qs — small chip below pred-text in both renderSidebarCell
+       cell-preds and renderSidebarFC FC-preds.
+     • dx-edge-qs — wrapper around the renderQS output on a discourse
+       edge row (zero entries at v95; ready for the bears-on surface).
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   (1) Atomic inline pieces — qs-prefix / qs-bd / qs-units.
+   Identical visual treatment to the retired dc-resolves-prefix /
+   -bd / -units rules, ported to generic class names.
+   ------------------------------------------------------------- */
+.qs-prefix {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 6px;
+}
+
+.qs-bd {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  color: var(--ink-soft);
+  margin-right: 2px;
+}
+
+.qs-units {
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-left: 2px;
+}
+
+
+/* -------------------------------------------------------------
+   Citation list — used in two modes.
+   The default (.qs-citations) renders each citation on its own line,
+   like the carrier-callout form below uses.
+   The compact mode (.qs-citations-compact) tightens spacing for the
+   cell-direct inline surface.
+   ------------------------------------------------------------- */
+.qs-citations {
+  margin: 4px 0 4px;
+}
+
+.qs-citation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  padding: 1px 0 1px 10px;
+  position: relative;
+}
+
+.qs-citation::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: var(--ink-mute);
+}
+
+.qs-citations-compact {
+  margin: 2px 0 2px;
+}
+
+.qs-citations-compact .qs-citation {
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+
+/* -------------------------------------------------------------
+   (2) Carrier callout block — qs-callout.
+   Used only on open-frontier and totality-approach discourse cards.
+   The carrier's headline numerical commitment (Planck scale, 10^120,
+   the Bekenstein-Hawking 1/4 entropy coefficient, the Kolmogorov
+   -5/3 exponent, etc.) gets a prominent bordered card with the value
+   rendered in larger Crimson Pro and the citations expanded.
+   ------------------------------------------------------------- */
+.qs-callout {
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--rule);
+  background: var(--paper);
+  padding: 12px 14px;
+  border-radius: 2px;
+}
+
+.qs-callout-value {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+/* KaTeX-rendered fragments inside the callout value land at the
+   surrounding font-size; nudge slightly down so the typography
+   doesn't dominate the section. */
+.qs-callout-value .katex {
+  font-size: 16px;
+}
+
+
+/* -------------------------------------------------------------
+   Cell-direct surface — cell-qs-inline.
+   Sits inside the cell-card Description sidebar-section, immediately
+   under the description prose. The value is a property of the cell
+   itself (not relational); inline placement keeps the cell card
+   compact and the value adjacent to the prose it grounds.
+   ------------------------------------------------------------- */
+.cell-qs-inline {
+  margin-top: 8px;
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.cell-qs-inline .katex {
+  font-size: 13px;
+}
+
+
+/* -------------------------------------------------------------
+   Prediction-level surface — dc-pred-qs.
+   Small chip rendered between .pred-text and the .pred-meta citation
+   lines inside each .dc-pred block. Used by both renderSidebarCell
+   cell-preds and renderSidebarFC FC-preds.
+   ------------------------------------------------------------- */
+.dc-pred-qs {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 4px 0 2px;
+}
+
+.dc-pred-qs .katex {
+  font-size: 12px;
+}
+
+
+/* -------------------------------------------------------------
+   Discourse-edge surface — dx-edge-qs.
+   Inline qs rendering inside a discourse-layer edge row (the bears-on
+   surface is the canonical case; zero entries at v95). When an edge
+   gets a quantitative_scale entry, the value renders below the edge
+   description prose.
+   ------------------------------------------------------------- */
+.dx-edge-qs {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 4px 0 2px;
+}
+
+.dx-edge-qs .katex {
+  font-size: 12px;
+}

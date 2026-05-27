@@ -594,6 +594,7 @@ function renderSidebarFC(fc) {
     <div class="dc-pred ${p.status || ''}">
       <div class="pred-status ${p.status || ''}">${esc(STATUS_LABEL[p.status] || p.status || 'unknown')}${p.cell_ref ? ` · ${esc(p.cell_ref)}` : ''}</div>
       <div class="pred-text">${esc(p.prediction || '')}</div>
+      ${(p.quantitative_scale && typeof renderQS === 'function') ? `<div class="dc-pred-qs">${renderQS(p.quantitative_scale, {})}</div>` : ''}
       ${p.prediction_citation ? `<div class="pred-meta">predicted: ${esc(p.prediction_citation)}</div>` : ''}
       ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
     </div>
@@ -786,7 +787,7 @@ function renderSidebarCell(fc, cell) {
       </div>
     </div>
 
-    ${cell.description ? `<div class="sidebar-section"><h3>Description</h3><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">${esc(cell.description)}</div></div>` : ''}
+    ${(cell.description || cell.quantitative_scale) ? `<div class="sidebar-section"><h3>Description</h3>${cell.description ? `<div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">${esc(cell.description)}</div>` : ''}${(cell.quantitative_scale && typeof renderQS === 'function') ? `<div class="cell-qs-inline">${renderQS(cell.quantitative_scale, {})}${(typeof renderQSCitations === 'function') ? renderQSCitations(cell.quantitative_scale.citations, { compact: true }) : ''}</div>` : ''}</div>` : ''}
 
     ${(cell.realized_examples && cell.realized_examples.length) ? `<div class="sidebar-section"><h3>Realized examples</h3><ul style="font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin:0;padding-left:18px">${cell.realized_examples.map(e => `<li style="margin-bottom:3px">${esc(e)}</li>`).join('')}</ul></div>` : ''}
 
@@ -794,6 +795,7 @@ function renderSidebarCell(fc, cell) {
       <div class="dc-pred ${p.status || ''}">
         <div class="pred-status ${p.status || ''}">${esc(STATUS_LABEL[p.status] || p.status || 'unknown')}</div>
         <div class="pred-text">${esc(p.prediction || '')}</div>
+        ${(p.quantitative_scale && typeof renderQS === 'function') ? `<div class="dc-pred-qs">${renderQS(p.quantitative_scale, {})}</div>` : ''}
         ${p.prediction_citation ? `<div class="pred-meta">predicted: ${esc(p.prediction_citation)}</div>` : ''}
         ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
       </div>`).join('')}</div></div>` : ''}
