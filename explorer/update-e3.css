@@ -1,0 +1,267 @@
+/* =============================================================
+   update-e3.css — sub-PR E3
+   if_real_implies trees on the 14 carrier nodes.
+
+   Three nesting levels:
+     (1) sidebar-section "If real, implies…" — the heading +
+         intro the renderIfRealImpliesSection top frame already
+         emits via the existing .sidebar-section / .sec-sub /
+         .dx-section-ct chrome from update-b.css. This file
+         doesn't touch those; it adds the inner structure only.
+
+     (2) .dc-implies-resolution — one block per resolution. Has
+         the italic condition prose at top, the
+         condition_citations list beneath, then the implication
+         rows. Most carriers have a single resolution; five have
+         2-4 (qg-frontier 3, bh-info-paradox 2, hierarchy-problem
+         2, dark-matter 3, topological-phases-classification 4).
+         When N > 1 the resolutions are separated by a subtle
+         horizontal rule.
+
+     (3) .dc-implies-imp — one block per implication. Has the
+         kind-label pill + target rendering on the head line,
+         then the description prose, then the optional
+         quantitative_scale block (12 of 24 implications), then
+         the derivation_citations list.
+
+   Kind-label colors map to the project palette:
+     • new_FC            → --struct (blue)    most common kind
+     • new_axis          → --struct-soft      adds axis to FC
+     • forced_edge       → --hybrid (gold)    forces FC relation
+     • promotes_subtype  → --phen (green)     promotes cell
+     • new_cell          → --accent (red)     defensive only
+
+   No schema field names appear in UI text (PHYSICIST_FACING_
+   VOCABULARY.md §3, §4, §6). The kind enum values render via
+   IMPLIES_KIND_LABELS as physicist-natural phrases ("Forces
+   new formal classification", "Forces relation", etc.); the
+   resolution-slug field is omitted entirely.
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   Top-level list inside the "If real, implies…" sidebar-section
+   ------------------------------------------------------------- */
+.dc-implies-list {
+  margin-top: 6px;
+}
+
+/* -------------------------------------------------------------
+   Resolution group — one per resolution in the carrier's
+   if_real_implies array. Multiple resolutions on one carrier
+   get a subtle horizontal divider between them.
+   ------------------------------------------------------------- */
+.dc-implies-resolution {
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.dc-implies-resolution:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.dc-implies-resolution + .dc-implies-resolution {
+  border-top: 1px dashed var(--rule);
+}
+
+/* Italic "If <condition prose>" — the physicist-facing handle for
+   each resolution. The opening "If " is part of the prose via the
+   conventional condition-field convention in v95 data; we add a
+   small italic-pill prefix that visually signals "this is the
+   conditional clause". */
+.dc-implies-condition {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+/* Condition + derivation citation lists. Same chrome as
+   .dc-resolves-citations to keep the two Phase B+C surfaces
+   visually consistent. */
+.dc-implies-citations {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding-left: 10px;
+  border-left: 2px solid var(--rule-soft);
+}
+
+.dc-implies-citation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  line-height: 1.45;
+  padding: 1px 0;
+}
+
+/* -------------------------------------------------------------
+   Implication row — the inner block, one per implication.
+   ------------------------------------------------------------- */
+.dc-implies-imp-list {
+  margin-top: 8px;
+}
+
+.dc-implies-imp {
+  margin-top: 8px;
+  padding: 9px 11px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+
+.dc-implies-imp:first-child {
+  margin-top: 0;
+}
+
+.dc-implies-imp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------
+   Kind label pill — the physicist-facing phrase rendered from
+   IMPLIES_KIND_LABELS. One color per kind from the project
+   palette so a glance distinguishes the four (five with
+   new_cell) families.
+   ------------------------------------------------------------- */
+.dc-implies-kind {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.dc-implies-kind-new-FC {
+  background: var(--struct-tint);
+  color: var(--struct);
+}
+
+.dc-implies-kind-new-axis {
+  background: var(--struct-tint);
+  color: var(--struct);
+  /* subtle differentiation from new_FC: italic */
+  font-style: italic;
+}
+
+.dc-implies-kind-forced-edge {
+  background: var(--hybrid-tint);
+  color: var(--hybrid);
+}
+
+.dc-implies-kind-promotes-subtype {
+  background: var(--phen-tint);
+  color: var(--phen);
+}
+
+.dc-implies-kind-new-cell {
+  background: rgba(139, 26, 26, 0.08);
+  color: var(--accent);
+}
+
+/* -------------------------------------------------------------
+   forced_edge target triplet — from-pill → [subtype] → to-pill.
+   The subtype string is rendered verbatim ("derives-from",
+   "specializes") in light pill styling; these are project
+   edge-type names the reader already sees in the cross-
+   classification edge list elsewhere.
+   ------------------------------------------------------------- */
+.dc-implies-edge-triplet {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.dc-implies-edge-subtype {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  background: var(--paper);
+  padding: 1px 5px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.dc-implies-edge-subtype::before { content: '['; color: var(--ink-faint); }
+.dc-implies-edge-subtype::after  { content: ']'; color: var(--ink-faint); }
+
+/* -------------------------------------------------------------
+   Description prose. Crimson Pro per the project body font;
+   formatPara handles inline math via KaTeX.
+   ------------------------------------------------------------- */
+.dc-implies-desc {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.55;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.dc-implies-desc p {
+  margin: 0;
+  padding: 0;
+}
+
+.dc-implies-desc p + p {
+  margin-top: 6px;
+}
+
+/* -------------------------------------------------------------
+   quantitative_scale block — the renderQS atom from
+   explorer-qs.js wrapped in this surface's chrome. Visual
+   weight similar to the .dc-resolves-sensitivity treatment
+   so the two Phase C numerical surfaces stay consistent.
+   ------------------------------------------------------------- */
+.dc-implies-qs {
+  margin-top: 8px;
+  margin-bottom: 6px;
+  padding: 7px 10px;
+  background: var(--paper);
+  border-left: 3px solid var(--struct);
+  border-radius: 2px;
+}
+
+.dc-implies-qs-value {
+  font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* The qs-citations inside the qs block use the compact mode
+   from renderQSCitations (smaller font, tighter spacing).
+   update-e4.css already styles .qs-citations-compact; no rule
+   needed here. */
+
+
+/* -------------------------------------------------------------
+   Responsive — at narrow widths the head line wraps. The
+   flex-wrap + gap on .dc-implies-imp-head already handles
+   this; the edge-triplet stays on its own line when the row
+   is tight.
+   ------------------------------------------------------------- */
+@media (max-width: 540px) {
+  .dc-implies-imp {
+    padding: 8px 9px;
+  }
+  .dc-implies-condition {
+    font-size: 14px;
+  }
+  .dc-implies-desc {
+    font-size: 13.5px;
+  }
+}

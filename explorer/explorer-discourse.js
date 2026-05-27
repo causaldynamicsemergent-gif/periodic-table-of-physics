@@ -346,6 +346,17 @@ function renderFrontierCard(node) {
     ? renderQSCallout(node.quantitative_scale, { heading: 'Characteristic scale' })
     : '';
 
+  // Sub-PR E3 — if_real_implies tree. The 9 open-frontier carriers
+  // (qg-frontier, cc-frontier, bh-info-paradox, hierarchy-problem,
+  // strong-cp-problem, flavor-puzzle, measurement-problem,
+  // matter-antimatter-asymmetry, dark-matter) plus topological-
+  // phases-classification get their resolutions + implications
+  // rendered as a two-level tree immediately after the carrier qs.
+  // Section returns '' when the node carries no if_real_implies.
+  const carrierImplies = (typeof renderIfRealImpliesSection === 'function')
+    ? renderIfRealImpliesSection(node)
+    : '';
+
   const sections = [
     renderEdgeSection('Architectures that fail to span this frontier',
       ge(grouped, 'open-frontier-architecture-edge/out')
@@ -378,7 +389,7 @@ function renderFrontierCard(node) {
     ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
     : '';
 
-  return head + desc + carrierQS + sections + citations;
+  return head + desc + carrierQS + carrierImplies + sections + citations;
 }
 
 // =============================================================
@@ -408,6 +419,15 @@ function renderTotalityCard(node) {
     ? renderQSCallout(node.quantitative_scale, { heading: 'Characteristic scale' })
     : '';
 
+  // Sub-PR E3 — if_real_implies tree. The 4 totality-approach carriers
+  // (turbulence, koide-formula, muon-g-2, chpt) get their resolutions
+  // + implications rendered as a two-level tree immediately after the
+  // carrier qs. Section returns '' when the node carries no
+  // if_real_implies.
+  const carrierImplies = (typeof renderIfRealImpliesSection === 'function')
+    ? renderIfRealImpliesSection(node)
+    : '';
+
   const sections = [
     renderEdgeSection('Regime-content contributing here',
       ge(grouped, 'cross-architecture-emergence/in'),
@@ -432,7 +452,7 @@ function renderTotalityCard(node) {
     ? `<div class="sidebar-section"><h3>Key citations</h3><div class="dx-citation-list">${node.citations.map(c => `<div>${esc(c)}</div>`).join('')}</div></div>`
     : '';
 
-  return head + desc + carrierQS + sections + citations;
+  return head + desc + carrierQS + carrierImplies + sections + citations;
 }
 
 // =============================================================
