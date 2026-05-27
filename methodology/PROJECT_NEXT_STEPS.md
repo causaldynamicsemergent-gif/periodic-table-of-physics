@@ -1,6 +1,6 @@
 # Project next steps — operational queue
 
-**Date:** 2026-05-26 (initial draft); amended 2026-05-27 (E1 closure + file-delivery norm); amended 2026-05-27 (E2 closure, E4 promotion).
+**Date:** 2026-05-26 (initial draft); amended 2026-05-27 (E1 closure + file-delivery norm); amended 2026-05-27 (E2 closure, E4 promotion); amended 2026-05-27 (E4 closure, E3 promotion, §5.8 E3 template body drafted).
 **Status:** Active. This document is the project-level operational queue. Every session reads it at start; every session updates it at close.
 **Purpose:** Hold the operational state of all open workstreams so any fresh session can determine what action is currently eligible without consulting prior conversation history. Provide prompt templates so each session can generate the closing prompt that opens the next session.
 **Position:** Lives in `/methodology/`. Attached to every fresh chat via project files. Companion to `META_v21_1_methodology_firewall.md`, the workstream-specific handoffs (`PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`, `EXPLORER_PHASE_BC_HANDOFF.md`, `TRACK_4_USE_SIDE_ARTIFACTS.md`, `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md`), and the project goal documents.
@@ -9,9 +9,9 @@
 
 ## 0. Highest-priority eligible action right now
 
-**Sub-PR E4 (reusable quantitative_scale callout component) — workstream 2.2.**
+**Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards) — workstream 2.2.**
 
-Prompt template at §5.7. Sub-PR E2 closed 2026-05-27 (the 38 Phase C resolves edges now render as a "Resolves" section on each experimental-program card and as a "Targeted by" section on each cell / frontier / totality-approach card they address; a minimal-inline `formatQS` helper inside `explorer-resolves.js` carries the sensitivity rendering). E4 builds the reusable quantitative_scale callout component and replaces the minimal-inline form with it, then places the same component on the remaining qs surfaces: cell-direct (≈185 entries), prediction-level (≈78 entries on cell.predictions[] and FC.predictive_yield[]), frontier / totality-approach card sections (≈13 entries), bears-on edge surface (<5 entries). The if_real_implies implication surface (12 entries) lights up when E3 ships and uses the component E4 builds.
+Prompt template at §5.8. Sub-PR E4 closed 2026-05-27 (the reusable quantitative_scale callout component now lives in a new ninth JS module `explorer-qs.js` with companion stylesheet `update-e4.css`; the minimal-inline `formatQS` that E2 carried inside `explorer-resolves.js` has been absorbed; 276 of 288 quantitative_scale entries render across the four dense surfaces — cell-direct (215 entries inside each cell card's Description section), prediction-level (48 entries as chips below pred-text in both FC and cell predictions blocks), resolves sensitivity + competing-prediction values (the E2 surfaces, now consuming the same component), bears-on edges (0 entries at v95, renderer ready) — plus the carrier-card prominent block (13 entries on the 7 frontier + 6 totality-approach carriers with the heading "Characteristic scale"). The remaining 12 quantitative_scale entries — the implication-level ones — light up when E3 ships and consume the same `renderQS` component E4 built. E3 is the last sub-PR before the Phase B + C surfacing pass closes; the if_real_implies trees on the 14 carrier nodes are the final piece of curated content the explorer doesn't yet render.
 
 ---
 
@@ -50,9 +50,9 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 *Handoff:* `EXPLORER_PHASE_BC_HANDOFF.md`.
 
-*State:* Eight sub-PRs (E1-E8) sequenced. E1 closed 2026-05-27 as a verification-only zero-diff sub-PR. E2 closed 2026-05-27 as a substantive code sub-PR — the 38 Phase C resolves edges now render across the program / cell / frontier / totality-approach cards via a new `explorer-resolves.js` module. E3 through E5 are all eligible (their trigger conditions — Phase C closure, worker rebuild, and now E2's resolves indexing — are met). Update C closed previously; the active sub-PRs render Phase B + remaining Phase C content (if_real_implies trees, the cumulative quantitative_scale callouts on the other surfaces) that the dataset has accumulated but the explorer doesn't yet display.
+*State:* Eight sub-PRs (E1-E8) sequenced. E1 closed 2026-05-27 as a verification-only zero-diff sub-PR. E2 closed 2026-05-27 as a substantive code sub-PR — the 38 Phase C resolves edges now render across the program / cell / frontier / totality-approach cards via a new `explorer-resolves.js` module. E4 closed 2026-05-27 as a substantive code sub-PR — the reusable quantitative_scale callout component now lives in a new `explorer-qs.js` module + `update-e4.css` stylesheet; 276 of 288 qs entries render across the four dense surfaces plus the carrier-card prominent block; the E2 sensitivity surface migrated from its minimal-inline `formatQS` to the new component. E3 is the highest priority and last sub-PR before the surfacing pass closes (E5 is decoration on top of E3's surfaces). Update C closed previously; the active sub-PRs render Phase B + remaining Phase C content (the if_real_implies trees plus the 12 implication-level qs entries that hang off them) that the dataset has accumulated but the explorer doesn't yet display.
 
-*Eligible action:* Sub-PR E4 (reusable quantitative_scale callout component). E3, E5 follow in the handoff's recommended sequencing.
+*Eligible action:* Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards). E5 follows in the handoff's recommended sequencing.
 
 *Closure condition:* Sub-PRs E1-E5 shipped (E6-E8 are discretionary polish, not required for closure).
 
@@ -80,13 +80,11 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 ## 3. Currently eligible actions (priority-ordered)
 
-1. **Sub-PR E4 (reusable quantitative_scale callout component)** — workstream 2.2. Highest priority: replaces the minimal-inline `formatQS` shipped in E2 with a reusable component and places it on the remaining qs surfaces (cell-direct, prediction-level, frontier / totality-approach card sections, bears-on edge surface). The component is then ready for E3's if_real_implies implications to consume. Template at §5.7.
+1. **Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards)** — workstream 2.2. Highest priority: the last sub-PR before the explorer Phase B + C surfacing pass closes. Renders the Phase B content (14 carrier nodes × 23 resolutions × 24 implications) as a new "If real, implies…" section in the discourse card for each carrier. Consumes the `renderQS` component shipped in E4 to render the 12 implication-level quantitative_scale entries inline alongside their implications. Template at §5.8.
 
-2. **Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards)** — workstream 2.2. Eligible since Step 4.5 shipped (implication-level quantitative_scale content exists) and since E4's qs component will be available. Template TBD (draft at E4 close).
+2. **Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage)** — workstream 2.2. Eligible. Handoff recommends after E1-E3 since those are the surfaces being decorated; once E3 closes, every Phase B + C content category is rendered somewhere in the sidebar, and the decoration sub-PR adds the visual indicators that tell physicists "this tile / discourse-node carries Phase B / C content worth opening." Template TBD (draft at E3 close).
 
-3. **Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage)** — workstream 2.2. Eligible. Handoff recommends after E1-E4 since those are the surfaces being decorated. Template TBD (draft at E3 close).
-
-4. **Track 4 §1.3 (chat entry point)** — workstream 2.4. Independent of explorer surfacing, lower physics-content demand. Suitable for sessions where the maintainer wants to advance the project without explorer authoring. Template at §5.4.
+3. **Track 4 §1.3 (chat entry point)** — workstream 2.4. Independent of explorer surfacing, lower physics-content demand. Suitable for sessions where the maintainer wants to advance the project without explorer authoring. Template at §5.4.
 
 The default next session executes (1) unless the maintainer chooses otherwise.
 
@@ -280,73 +278,107 @@ The 38 Phase C resolves edges now render in the explorer:
 
 **Known follow-up surfaced and queued:** description-prose schema-name leaks (17 of 38 resolves descriptions contain "exclusion_only", 28 contain "bound_direction", 13 contain "predictions_per_program") — data-side rewrite, queued for the post-E5 vocabulary audit per `PHYSICIST_FACING_VOCABULARY.md` §9. Recorded in `EXPLORER_PHASE_BC_HANDOFF.md` §3 E2 closure block.
 
-### 5.7 Sub-PR E4 (reusable quantitative_scale callout component in explorer)
+### 5.7 Sub-PR E4 (reusable quantitative_scale callout component in explorer) — DISCHARGED 2026-05-27
+
+The reusable quantitative_scale callout component is in. The minimal-inline `formatQS` that E2 shipped inside `explorer-resolves.js` has been absorbed into a new ninth JS module `explorer-qs.js` and is now consumed by every dense qs surface plus a new prominent block form for the carrier surface. 276 of 288 quantitative_scale entries render. The remaining 12 (implication-level) light up when E3 ships.
+
+**Surfaces now rendering quantitative_scale:**
+
+- **Cell-direct (215 entries)** — inside each cell card's Description section, immediately below the description prose. Inline form via `renderQS`; citations rendered in compact mode via `renderQSCitations`. The Description section now also renders when a cell carries qs but no description prose (the rare case).
+- **Prediction-level (48 entries: 35 FC + 13 cell)** — chip below `pred-text` in every `.dc-pred` block, in both `renderSidebarCell` cell-preds and `renderSidebarFC` FC-preds. Inline form via `renderQS`.
+- **Resolves sensitivity + competing-prediction values (the E2 surfaces)** — migrated from the local `formatQS` helper in `explorer-resolves.js` to `renderQS` from the new module. Visual treatment preserved; class names migrated from `dc-resolves-prefix`/`-bd`/`-units` to generic `qs-prefix`/`-bd`/`-units`.
+- **Bears-on edges (0 entries at v95, renderer ready)** — `renderEdgeRow` now calls `renderQS` when an edge carries `quantitative_scale`. The bears-on surface gains a wired call-site even though no entries exist today.
+- **Frontier / totality-approach carriers (13 entries)** — new "Characteristic scale" sidebar section on each carrier card, between the About description and the rest of the card's sections. Block form via `renderQSCallout` with Crimson Pro 17px headline, bordered card, citations expanded. The 7 open-frontier carriers (qg-frontier 10¹⁹ GeV, cc-frontier 10¹²⁰, hierarchy-problem 10¹⁷ GeV, etc.) and the 6 totality-approach carriers (bh-thermodynamics 1/4, cosmological-models 5σ Hubble tension, turbulence -1.667 Kolmogorov exponent, etc.) all light up.
+
+**Files shipped:**
+
+- NEW `explorer/explorer-qs.js` (~200 lines) — exports `renderQS(qs, opts)`, `renderQSCallout(qs, opts)`, `renderQSCitations(citations, opts)`. Internal helper `renderTexInline(tex)` (KaTeX with graceful fallback). Two upgrades over E2's formatQS: (a) `units === "dimensionless"` suppressed regardless of `kind` (fixes the SU5 α_GUT case where `kind=coupling` carried `units="dimensionless"`); (b) class names generic.
+- NEW `explorer/update-e4.css` (~165 lines) — generic `.qs-prefix`/`.qs-bd`/`.qs-units` atoms, citation chrome `.qs-citations`/`.qs-citation` with compact-mode variant, carrier-callout block `.qs-callout`/`.qs-callout-value`, per-surface wrappers `.cell-qs-inline`/`.dc-pred-qs`/`.dx-edge-qs`.
+- `explorer/explorer-resolves.js` — local `formatQS` and `BD_SYMBOL` constant removed; two call-sites now invoke `renderQS` directly. Net -50 lines.
+- `explorer/explorer-sidebar.js` — three insertions: Description section now renders cell-direct qs inline (with compact citations); cell-pred loop emits `dc-pred-qs` chip; FC-pred loop emits the same. Net +2 lines (1428 → 1430).
+- `explorer/explorer-discourse.js` — three insertions: `renderEdgeRow` renders `dx-edge-qs` line when edge carries qs; `renderFrontierCard` and `renderTotalityCard` insert `renderQSCallout` between desc and sections. Net +17 lines (1033 → 1060).
+- `explorer/update-c-edges.css` — three rules retired (`.dc-resolves-prefix`, `.dc-resolves-bd`, `.dc-resolves-units`); the atoms live in `update-e4.css` under generic names. Net -12 lines (394 → 382).
+- `explorer/Map_v34_explorer.html` — `<link rel="stylesheet" href="update-e4.css">` after `update-c-typography.css`; `<script src="explorer-qs.js"></script>` between `explorer-data.js` and `explorer-map.js`. Net +3 lines (1396 → 1399).
+- `methodology/EXPLORER_PHASE_BC_HANDOFF.md` — §0 baseline updated to fourteen-file build; §1 gap-table flips four rows to "Yes (since sub-PR E4)" with corrected counts (215 not ~185, 48 not ~78, 13 not ~13, 0 not <5); §1 render list extended with the qs callout; §3 sub-PR E4 description replaced with closure block; §3 sequencing constraints updated (E4 cadence arrow struck, E3 next); §6 file lists extended with `explorer-qs.js` + `update-e4.css`; closing line annotated.
+- `methodology/PROJECT_NEXT_STEPS.md` — this file: §0 advanced to E3, §2.2 state updated, §3 reordered (E3 to priority 1), §5.7 marked DISCHARGED with closure block, §5.8 (E3) template body drafted, cross-FC placeholder bumped to §5.9.
+
+**Decisions taken** (per the authoring chat's design proposal):
+- (1) New ninth JS file `explorer-qs.js`; resolves becomes a consumer.
+- (2) API shape — `renderQS` inline + `renderQSCallout` block + `renderQSCitations` helper.
+- (3) Chrome — inline form (a) on the four dense surfaces; block form (c) on carrier surface. Cell-direct placement inside the Description section, not as its own section.
+- (4) Carrier section heading: "Characteristic scale".
+- (5) Old `dc-resolves-prefix`/`-bd`/`-units` rules removed in this PR (clean migration).
+
+**Verified** (vm-context smoke test): nine canonical field combinations rendered correctly (qg-frontier `Reach: 10^{19} GeV` via KaTeX with no bd symbol, cc-frontier `10^{120}` alone, cosmological-models `≲ 5σ`, su5 α_GUT `0.04` alone — the dimensionless-units upgrade case, cell-A-d2 `1 e²/h`, top-quark m_t `177^{+21}_{-22} GeV` via KaTeX with no bd per Rule 34, su5 proton-decay τ `≳ 2.4e+34 yr`, turbulence `-1.667`, bh-thermodynamics `0.25`); `renderQSCallout` produces full sidebar-section with heading + bordered card + citations; null/undefined/`{}` all return empty string; all 4 modified JS files + 1 new JS file pass `node --check`.
+
+**Known follow-up surfaced and queued:** scientific-notation values like `2.4e+34` render as the raw JS `String(value)` output rather than via KaTeX `2.4 × 10^{34}`. Cosmetic; flagged as Track 5 housekeeping. Authors of future qs entries can opt into log10 encoding to get the clean rendering.
+
+### 5.8 Sub-PR E3 (render if_real_implies trees on frontier / totality-approach cards)
 
 ```
-Pick up sub-PR E4 from `EXPLORER_PHASE_BC_HANDOFF.md` §3: build the reusable quantitative_scale callout component and place it on the remaining qs surfaces. This consolidates the minimal-inline `formatQS` helper shipped inside `explorer-resolves.js` (sub-PR E2) into a reusable module that other surfaces can consume.
+Pick up sub-PR E3 from `EXPLORER_PHASE_BC_HANDOFF.md` §3: render the if_real_implies trees on the 14 carrier nodes. This is the last sub-PR before the explorer Phase B + C surfacing pass closes (E5 is decoration on top of E3's surfaces).
 
-Run §0 state-verification first: call `server_info` on the MCP (expected: data_version v95, schema_version v19, quantitative_scale_total 288, tool_count 33). Fetch `data/Map_v34_consolidated.json` `_meta.version` via raw CDN at https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json and confirm it matches. If the live system has drifted further (counts higher than 288), the session catching the drift updates the handoff at the end of its work.
+Run §0 state-verification first: call `server_info` on the MCP (expected: data_version v95, schema_version v19, if_real_implies_carriers 14, if_real_implies_resolutions 23, if_real_implies_implications 24, quantitative_scale_total 288, tool_count 33). Fetch `data/Map_v34_consolidated.json` `_meta.version` via raw CDN at https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json and confirm it matches. If the live system has drifted further (counts higher), the session catching the drift updates the handoff at the end of its work.
 
 DELIVERY DISCIPLINE (critical — read before authoring anything):
 The maintainer is non-developer and uploads files via GitHub web UI by erase-and-replace. EVERY deliverable in this session — explorer code files (JS, CSS), methodology document updates (.md), anything that ends up in the repo — ships as a COMPLETE FILE via the present_files tool. Do NOT produce "replace §3 with this" patches, do NOT produce per-line diff blocks for the maintainer to splice in. The maintainer downloads the full file and drops it in place. This norm is documented in `PROJECT_NEXT_STEPS.md` §6 norm #1, `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` §4, and `EXPLORER_PHASE_BC_HANDOFF.md` §4. Violating it slows the project significantly.
 
 Then proceed:
 
-1. Read the current explorer architecture and the minimal-inline `formatQS` that E2 shipped:
-   - `explorer/explorer-resolves.js` — `formatQS(qs, opts)` near the top of the file. Read this carefully; it is the contract E4 must preserve (and extend). Handles: kind enum {energy_scale, mass, length, time, coupling, dimensionless, ratio, sigma_deviation}; log10 exponent rendering via KaTeX; uncertainty in scalar / {low, high} / null forms; bound_direction symbol (≳ / ≲ / = / ~) leading the value when uncertainty is null (Rule 34); units string appended after the value; sigma_deviation rendered as "Nσ"; the "Reach:" prefix option.
-   - `explorer/explorer-sidebar.js` — `renderSidebarCell` (around line 762). One of the call-sites for cell-direct qs. Also `renderSidebarFC` for prediction-level qs that hangs off `fc.predictions[]`.
-   - `explorer/explorer-discourse.js` — `renderFrontierCard` (around line 318), `renderTotalityCard` (around line 365). Frontier and totality-approach card sections need qs rendering for entries on the carrier itself (~13 entries total on the frontier / totality-approach surface).
+1. Read the current explorer architecture and the surfaces E4 left behind, since E3 builds on them:
+   - `explorer/explorer-qs.js` — the reusable qs component shipped by sub-PR E4. Three public functions: `renderQS(qs, opts)` (inline form), `renderQSCallout(qs, opts)` (block form), `renderQSCitations(citations, opts)` (citations list). E3's implication rows will consume `renderQS` for the 12 implication-level qs entries.
+   - `explorer/explorer-discourse.js` — `renderFrontierCard` (~line 285) and `renderTotalityCard` (~line 387). Both have the same structural shape after E4: `head + desc + carrierQS + sections + citations`. E3 adds a new section ("If real, implies…") between `carrierQS` and `sections` for the 14 carrier nodes.
+   - `explorer/explorer-data.js` — the discourse-by-id index. The 14 carrier nodes are reachable through it. Verify whether `if_real_implies` is already indexed (likely lifted onto `node` via `augmentDataset`); if not, add an `if_real_implies_by_carrier` index analogous to E2's `resolves_by_program`.
+   - MCP tool `find_signal_implications` returns the full implication tree for any carrier. Use it during the design phase to inspect real shapes.
 
-2. AUDIT BEFORE ASSUMING OPEN. Per `EXPLORER_PHASE_BC_HANDOFF.md` §4, sub-PR E4 work may already partly exist — check whether any cell / prediction / frontier card already pulls a quantitative_scale field through to the DOM. If yes, the diff is smaller than expected; if no, full E4 work is needed.
+2. AUDIT BEFORE ASSUMING OPEN. Per `EXPLORER_PHASE_BC_HANDOFF.md` §4, sub-PR E3 work may already partly exist — check whether `renderFrontierCard` or `renderTotalityCard` already pulls if_real_implies through to the DOM. If yes, the diff is smaller than expected; if no, full E3 work is needed.
 
-3. Inspect the qs distribution to confirm scope. Quantitative_scale entries by surface (per server_info / MCP queries):
-   - Cell-direct: ~185 entries on cells[i].quantitative_scale across many FCs
-   - Prediction-level: ~78 entries on cells[i].predictions[j].quantitative_scale and FC.predictive_yield[].quantitative_scale
-   - Frontier / totality-approach: ~13 entries on the carrier nodes themselves
-   - Bears-on edges: <5 entries
-   - if_real_implies implications: 12 entries (these light up when E3 ships; E4 must support them but doesn't need to wire them yet)
-   - The sensitivity surface (~38 entries on resolves edges) is already rendered via the minimal-inline form shipped in E2; E4 absorbs and refactors.
-   Total: 288 entries across all surfaces.
+3. Inspect the if_real_implies distribution to confirm scope. Per server_info:
+   - 14 carriers: open-frontier (qg-frontier, cc-frontier, bh-info-paradox, hierarchy-problem, strong-cp-problem, flavor-puzzle, measurement-problem, matter-antimatter-asymmetry, dark-matter) and totality-approach (turbulence, koide-formula, muon-g-2, chpt, topological-phases-classification). Verify the carrier list via `list_nodes` or `find_signal_implications`.
+   - 23 resolutions total — each carrier has 1+ resolutions; each resolution has fields: `condition` (prose), `condition_citations` (array of citation strings), `implications` (array of 1+ implication objects).
+   - 24 implications total — each implication has: `kind` (one of {new_cell, new_axis, forced_edge, promotes_subtype, new_FC}), `target` (id-string or descriptive-string or {from, to, subtype} triple for forced_edge), `description` (prose), `derivation_citations` (array), optional `quantitative_scale` (12 of 24 implications carry it; the Davidson-Ibarra M₁ ≳ 10⁹ GeV bound on leptogenesis is the canonical case).
 
-4. Module layout — propose creating a new ninth JS file `explorer/explorer-qs.js` that exports `renderQSCallout(qs, opts)`. Indexes (if needed — most qs entries are read directly off the node / cell / edge they hang off) live in `explorer-data.js`. Migrate `formatQS` out of `explorer-resolves.js` into the new module; `explorer-resolves.js` becomes a consumer.
+4. Module layout — propose either extending `explorer-discourse.js` with the renderer, or creating a new tenth JS module `explorer/explorer-implies.js` per the "one new logical surface = one new module" precedent established by E2 (resolves) and E4 (qs). Default recommendation: new module, exporting `renderIfRealImpliesSection(node)` that returns a complete `<div class="sidebar-section">` for the node. The discourse module gains two thin call-sites (`renderFrontierCard` and `renderTotalityCard`) plus a typeof-function guard for graceful degradation.
 
-5. Decide callout chrome — propose one of:
-   (a) Single-line: prefix + value + units + bound symbol + citations collapsed in a small "·N citations" link
-   (b) Two-line: prefix + value + units on line 1; bound symbol + uncertainty on line 2; citations collapsed
-   (c) Full callout block: bordered card with prefix / value / uncertainty / citations list
-   Default recommendation: (a) for cell-direct and prediction-level (high-density surfaces where space is at a premium), (c) for frontier / totality-approach (low-density, high-prominence surface where the qs entry IS the carrier's headline numerical commitment). Confirm with maintainer before authoring.
+5. Decide row chrome — propose one of:
+   (a) Flat list: each implication is a single row with kind label + target pill + description + qs callout + derivation_citations. Resolutions are visually grouped only by section-divider lines and an italic "If <condition>" sub-header above the implication block.
+   (b) Two-level tree: each resolution is a collapsible group ("If <condition>", citations on a small expander) containing N implication rows. Default-collapsed for carriers with many resolutions, default-expanded for the carriers with one or two.
+   (c) Compact-then-detail: a short summary list at the top ("If X, then 3 implications; if Y, then 2 implications") with each item expanding to the full tree.
+   Default recommendation: (b) — the resolution → implications hierarchy is load-bearing (every resolution names a different scenario the carrier might resolve into); flattening loses it.
 
-6. Decide what happens when log10=true + asymmetric uncertainty (the QCD-axion DM-window canonical case: log10 GeV = 11.5 with low=0.5, high=0.5). KaTeX renders `10^{11.5^{+0.5}_{-0.5}}` cleanly; E2's formatQS already does this for the resolves sensitivity surface. Confirm the rendering is correct on the QCD-axion case and the muon-g-2 case (where the value is dimensionless and the uncertainty is asymmetric in absolute units).
+6. Decide kind-specific target rendering. The five `kind` values have different target-shapes:
+   - `new_cell`: target is `{fc_id, content, axis_values}` — render as an FC-id pill + content snippet. Clickable to the new cell if/when it gets authored.
+   - `new_axis`: target is `{fc_id, axis_name, [values]}` — render as an FC-id pill + axis-name pill. Non-clickable (the axis doesn't exist yet).
+   - `forced_edge`: target is `{from, to, subtype}` — render as a small edge triplet (from-pill → subtype-label → to-pill) or as three pills on a row. Clickable to source and target nodes.
+   - `promotes_subtype`: target is a cell-id (`fc/cell_id` format). Render as a cell pill; clickable, walks to the cell.
+   - `new_FC`: target is a descriptive string (e.g., "Anomaly-content virtual FC"). Render as italic prose.
+   Confirm the field shapes against real data via `find_signal_implications` before authoring.
 
-7. Decide whether the qs callout is clickable. Two options:
-   (a) Static — qs is presentation only, citations don't link out.
-   (b) Citations clickable as DOI / arXiv links — requires extracting URLs from citation prose, which is fragile.
-   Default recommendation: (a) for E4; the citation prose contains the source-value phrase per the §4 admissibility test and is meant to be read in full, not clicked through.
+7. Decide whether the section is default-expanded or default-collapsed on the carrier card. Default recommendation: expanded — the whole point of the carrier card is the if_real_implies content; hiding it behind a click defeats the surfacing.
 
-8. Apply the vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` to all UI prose:
-   - No "quantitative_scale" in any label or tooltip.
-   - "kind" → no UI surface; the value + units fragment tells the physicist what kind it is.
-   - "bound_direction" → no UI surface; symbol leads the value.
-   - "log10: true" → no UI surface; the value is rendered as 10^val.
-   - Asymmetric uncertainty `{low, high}` → KaTeX-rendered as `value^{+high}_{-low}`.
-   - The carrier surface needs a leading phrase: probably "Characteristic scale: …" or "Numerical commitment: …" or just no prefix when the value is the carrier's headline. Propose one.
+8. Apply the vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md`:
+   - No "if_real_implies" anywhere in UI text. Section heading: "If real, implies…" or similar physicist-natural phrasing.
+   - No "resolution" as a label (the schema term, not a UI word). Use "If <condition prose>" as each group's header instead.
+   - No "implication" as a label. Use kind labels directly ("Forces edge…", "Promotes subtype…", "Forces new FC…").
+   - No "kind", "target", "derivation_citations" as labels — the value alone in its row position tells the physicist what role it plays.
+   - `quantitative_scale` rendering is handled by `renderQS` from sub-PR E4 — pass through; the component already applies the vocabulary discipline.
 
-9. Propose the diff (which files change, what the callout looks like at the markup level, what data-layer fetches are added or unchanged). Wait for maintainer confirmation before authoring.
+9. Propose the diff (which files change, what the markup looks like at each level — section header, per-resolution group, per-implication row, qs callout placement). Wait for maintainer confirmation before authoring.
 
-10. Once authored, present ALL updated files via the present_files tool — complete files only, no patches. Files to be presented include: every modified explorer JS module, the new module `explorer-qs.js`, the modified `explorer-resolves.js` (which now consumes the qs component instead of carrying it locally), CSS additions, the HTML script-tag insert, the updated `EXPLORER_PHASE_BC_HANDOFF.md`, and the updated `PROJECT_NEXT_STEPS.md`.
+10. Once authored, present ALL updated files via the present_files tool — complete files only, no patches. Files to be presented include: the new module (or the extended `explorer-discourse.js` if going that route), the modified `explorer-discourse.js` with the two call-sites, the modified `explorer-data.js` if new indexes are needed, CSS additions (likely `update-e3.css` or appended to `update-e4.css`), the modified `Map_v34_explorer.html`, the updated `EXPLORER_PHASE_BC_HANDOFF.md`, and the updated `PROJECT_NEXT_STEPS.md`.
 
-11. Update `EXPLORER_PHASE_BC_HANDOFF.md` §1 — gap-table rows for the four qs surfaces (cell-direct, prediction-level, frontier / totality-approach, bears-on) flip to "Yes (since sub-PR E4)". The if_real_implies implication qs row stays "No" until E3 ships. §3 sub-PR E4 description gets a closure note. §3 cadence arrow advances to E3. Deliver as a complete file.
+11. Update `EXPLORER_PHASE_BC_HANDOFF.md` §1 — gap-table rows for the three if_real_implies surfaces (carriers, resolutions, implications) flip to "Yes (since sub-PR E3)"; the implication-level qs row flips to "Yes (rendered via renderQS from E4)"; the total qs render-count moves from 276/288 to 288/288. §3 sub-PR E3 description gets a full closure block analogous to E2 and E4's. §3 cadence arrow advances to E5. §6 file list extended with the new module (if any). Deliver as a complete file.
 
-12. Update `PROJECT_NEXT_STEPS.md` §0 (E3 becomes highest priority), §3 (remove E4 from eligible, promote E3 to position 1), §5.7 marked DISCHARGED, §5.8 (E3) template body drafted directly into the file you deliver. Deliver as a complete file.
+12. Update `PROJECT_NEXT_STEPS.md` §0 (E5 becomes highest priority), §2.2 state updated, §3 (remove E3 from eligible, promote E5 to position 1), §5.8 marked DISCHARGED with a closure block (mirror the shape of §5.7 E4 DISCHARGED block), §5.X (next slot) E5 template body drafted directly into the file. Deliver as a complete file.
 
-13. Before closing, produce the closing prompt for E3 in a clearly-marked code block in the chat, mirroring this prompt's shape (state verification, delivery discipline reminder at top, step-by-step instructions).
+13. Before closing, produce the closing prompt for E5 in a clearly-marked code block in the chat, mirroring this prompt's shape (state verification, delivery discipline reminder at top, step-by-step instructions for E5's tile / discourse-node decoration sub-PR).
 
 The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` *does* bind explorer UI prose (per its §6). Every label, tooltip, section heading, and inline text uses physicist-natural vocabulary, not schema field names.
 ```
 
-### 5.8 First cross-FC sub-PR (anomaly-content virtual-FC, when triggers fire)
+### 5.9 First cross-FC sub-PR (anomaly-content virtual-FC, when triggers fire)
 
-[Template to be drafted by the session that verifies the §10.1 triggers fire. The template body is appended to this document when the trigger conditions are met.]
+[Template to be drafted by the session that verifies the §10.1 triggers fire. The template body is appended to this document when the trigger conditions are met. Bumped from §5.8 to §5.9 on 2026-05-27 when the E3 template was drafted at §5.8 per the E4 closure session.]
 
 ---
 
@@ -358,7 +390,7 @@ The discipline that keeps this document load-bearing:
 
 2. **Every session updates this document at close.** Sections §3 (currently eligible) and §4 (pending) are the ones that change session-to-session. The session moves completed actions out of §3, promotes newly-eligible actions from §4 to §3, adds new pending actions to §4 if the deliverable surfaced any.
 
-3. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.8 (and later) are placeholders that get filled in when their actions become eligible. Discharged templates (§5.1, §5.2, §5.3, §5.5, §5.6 as of 2026-05-27) are retained with a DISCHARGED header so future sessions can read them as historical reference for analogous operations.
+3. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.9 (and later) are placeholders that get filled in when their actions become eligible. Discharged templates (§5.1, §5.2, §5.3, §5.5, §5.6, §5.7 as of 2026-05-27) are retained with a DISCHARGED header so future sessions can read them as historical reference for analogous operations.
 
 4. **The closing prompt is non-optional.** Every session terminates with a clearly-marked closing prompt in a code block, derived from the relevant §5 template, instantiated with current state. A session that hasn't produced a closing prompt isn't done.
 
@@ -370,4 +402,4 @@ The discipline that keeps this document load-bearing:
 
 ---
 
-*End of PROJECT_NEXT_STEPS.md. Initial draft 2026-05-26; amended 2026-05-27 with E1 closure, E2 promotion, and file-delivery norm (§6 #1); amended again 2026-05-27 with E2 closure, E4 promotion, and the E4 template at §5.7. Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. Deliverables arrive as complete files via present_files. The chain holds as long as the discipline in §6 holds.*
+*End of PROJECT_NEXT_STEPS.md. Initial draft 2026-05-26; amended 2026-05-27 with E1 closure, E2 promotion, and file-delivery norm (§6 #1); amended again 2026-05-27 with E2 closure, E4 promotion, and the E4 template at §5.7; amended again 2026-05-27 with E4 closure (the reusable quantitative_scale callout component now lives in `explorer-qs.js` + `update-e4.css`; 276 of 288 qs entries render across cell-direct, prediction-level, resolves sensitivity, competing-prediction values, bears-on (renderer ready), and carrier-card "Characteristic scale" surfaces), E3 promotion to highest priority, the §5.7 DISCHARGED closure block, the §5.8 E3 template body draft, and the cross-FC placeholder bumping to §5.9. Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. Deliverables arrive as complete files via present_files. The chain holds as long as the discipline in §6 holds.*
