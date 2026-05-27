@@ -1,6 +1,6 @@
 # Project next steps — operational queue
 
-**Date:** 2026-05-26 (initial draft); amended 2026-05-27 (E1 closure + file-delivery norm); amended 2026-05-27 (E2 closure, E4 promotion); amended 2026-05-27 (E4 closure, E3 promotion, §5.8 E3 template body drafted); amended 2026-05-27 (E3 closure, E5 promotion, §5.9 E5 template body drafted).
+**Date:** 2026-05-26 (initial draft); amended 2026-05-27 (E1 closure + file-delivery norm); amended 2026-05-27 (E2 closure, E4 promotion); amended 2026-05-27 (E4 closure, E3 promotion, §5.8 E3 template body drafted); amended 2026-05-27 (E3 closure, E5 promotion, §5.9 E5 template body drafted); amended 2026-05-27 (E5 closure, explorer surfacing pass CLOSED, Track 4 §1.1 essay and §1.2 query recipes both SHIPPED at `/methodology/USE_THE_MAP_ESSAY.md` and `/methodology/QUERY_RECIPES.md`, §5.9 marked DISCHARGED, §5.10 essay DISCHARGED block added, §5.11 recipes DISCHARGED block added, §5.12 example-sessions template body drafted, cross-FC placeholder bumped to §5.13).
 **Status:** Active. This document is the project-level operational queue. Every session reads it at start; every session updates it at close.
 **Purpose:** Hold the operational state of all open workstreams so any fresh session can determine what action is currently eligible without consulting prior conversation history. Provide prompt templates so each session can generate the closing prompt that opens the next session.
 **Position:** Lives in `/methodology/`. Attached to every fresh chat via project files. Companion to `META_v21_1_methodology_firewall.md`, the workstream-specific handoffs (`PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`, `EXPLORER_PHASE_BC_HANDOFF.md`, `TRACK_4_USE_SIDE_ARTIFACTS.md`, `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md`), and the project goal documents.
@@ -9,9 +9,9 @@
 
 ## 0. Highest-priority eligible action right now
 
-**Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage) — workstream 2.2.**
+**Track 4 §1.3 (guided chat entry point) — workstream 2.4.** *Default maintainer suggestion; Track 4 §1.4 example sessions is the equally-eligible alternative.*
 
-Prompt template at §5.9. Sub-PR E3 closed 2026-05-27 (the if_real_implies trees on all 14 carrier nodes now render via a new tenth JS module `explorer-implies.js` with companion stylesheet `update-e3.css` + two call-site additions in `explorer-discourse.js`; 14 carriers / 23 resolutions / 24 implications / 12 implication-level qs entries all surface — the explorer Phase B + Phase C content-surfacing gap is now closed). E5 is the last sub-PR before the surfacing pass closes; it adds the visual signal layer on tiles and discourse-node cards so a physicist at-a-glance sees which nodes carry Phase B / C content worth opening. After E5, every Phase B + Phase C content category is rendered AND signalled in the explorer; Track 4 use-side artifacts (essay, query recipes, example sessions per `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.1, §1.2, §1.4) move from pending to eligible.
+Prompt template at §5.4. Sub-PR E5 closed 2026-05-27 (the signal layer — small chips on FC tiles signalling "scale N" / "targeted N" presence, plus discourse-card head pills signalling "if real, implies N" / "characteristic scale" / "targeted by N" / "resolves N targets" — landed in the explorer; the surfacing pass CLOSED). With explorer surfacing closed, the two remaining Track 4 use-side artifacts that depended on real explorer surfaces became unblocked the same day: the essay (§1.1) shipped at `/methodology/USE_THE_MAP_ESSAY.md` (89 lines, five worked examples, vocabulary-discipline-bound, deep-linked to the seventeen-file E5 build); the query recipes (§1.2) shipped at `/methodology/QUERY_RECIPES.md` (93 lines, six paragraph-length cross-cutting query patterns, each with a worked v95-verified example). The two pending Track 4 artifacts are the guided chat entry point (§1.3, lets a physicist ask the dataset in natural language without setting up an MCP-enabled chat) and the curated example sessions (§1.4, transcripts of physicist-style chats edited for publication). Either can land next; the chat entry point is the maintainer's default suggestion because it's the more orthogonal of the two and once shipped becomes the natural recording surface for the example sessions in §1.4.
 
 ---
 
@@ -46,15 +46,15 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 *Closure condition:* Met 2026-05-26.
 
-### 2.2 Explorer Phase B+C surfacing
+### 2.2 Explorer Phase B+C surfacing — CLOSED
 
-*Handoff:* `EXPLORER_PHASE_BC_HANDOFF.md`.
+*Handoff:* `EXPLORER_PHASE_BC_HANDOFF.md` (marked closed at sub-PR E5; preserved for reference).
 
-*State:* Eight sub-PRs (E1-E8) sequenced. E1 closed 2026-05-27 as a verification-only zero-diff sub-PR. E2 closed 2026-05-27 as a substantive code sub-PR — the 38 Phase C resolves edges now render across the program / cell / frontier / totality-approach cards via a new `explorer-resolves.js` module. E4 closed 2026-05-27 as a substantive code sub-PR — the reusable quantitative_scale callout component now lives in a new `explorer-qs.js` module + `update-e4.css` stylesheet; 276 of 288 qs entries render across the four dense surfaces plus the carrier-card prominent block; the E2 sensitivity surface migrated from its minimal-inline `formatQS` to the new component. E3 closed 2026-05-27 as a substantive code sub-PR — the if_real_implies trees on all 14 carrier nodes now render via a new `explorer-implies.js` module + `update-e3.css` stylesheet + two call-site additions in `explorer-discourse.js`; 23 resolutions / 24 implications / 12 implication-level qs entries all surface; the explorer Phase B + Phase C content-surfacing gap is now closed. E5 (decoration / signal-layer chips on tiles and discourse-node cards) is the last sub-PR before the surfacing pass closes — it doesn't add new content surfaces, it adds visual indicators on the existing tile and discourse-node chrome so a physicist at-a-glance sees which nodes carry Phase B / C content worth opening.
+*State:* All five required sub-PRs (E1–E5) shipped 2026-05-27. E1 closed as a verification-only zero-diff sub-PR. E2 closed with the 38 Phase C resolves edges rendering across the program / cell / frontier / totality-approach cards via a new `explorer-resolves.js` module. E4 closed with the reusable quantitative_scale callout component living in a new `explorer-qs.js` module + `update-e4.css` stylesheet (276 of 288 qs entries rendering across four dense surfaces plus the carrier-card prominent block). E3 closed with the if_real_implies trees on all 14 carrier nodes rendering via a new `explorer-implies.js` module + `update-e3.css` stylesheet (23 resolutions, 24 implications, 12 implication-level qs entries all surfacing). E5 closed with the signal layer — FC-tile chips ("scale N" / "targeted N") and discourse-card head pills ("if real, implies N" / "characteristic scale" / "targeted by N" / "resolves N targets") — landing via additions to `explorer-map.js` + `explorer-discourse.js` plus a new `update-e5.css` stylesheet. The live explorer at the seventeen-file build (1 HTML + 7 CSS + 9 JS) renders the full Phase A + Phase B + Phase C surface. The remaining E6 (rank_by_scale overview panel), E7 (find_discriminating_experiments view), and E8 (banner refresh) are discretionary follow-ups.
 
-*Eligible action:* Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage). E6, E7, E8 are discretionary follow-ups.
+*Eligible action:* None required. E6, E7, E8 are discretionary follow-ups.
 
-*Closure condition:* Sub-PRs E1-E5 shipped (E6-E8 are discretionary polish, not required for closure).
+*Closure condition:* Met 2026-05-27.
 
 ### 2.3 Cross-FC pattern layer (the reading layer)
 
@@ -70,9 +70,9 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 *Reference:* `TRACK_4_USE_SIDE_ARTIFACTS.md`.
 
-*State:* Four artifacts named (essay, query recipes, chat entry point, example sessions). The chat entry point (§1.3) is mostly independent of explorer surfacing and can be drafted now. The other three depend on the explorer's final shape — that shape is one sub-PR (E5) away from being final.
+*State:* Four artifacts named. Two shipped 2026-05-27: §1.1 essay at `/methodology/USE_THE_MAP_ESSAY.md` (89 lines, five worked examples covering the three-channel mass-ordering landscape, the two-channel strong-CP-problem resolver, the dual-frontier EDM program, the sterile-neutrino cross-classification anchor, and the leptogenesis conditional-consequences chain — drafted against canonical v95 with explicit deep links to the seventeen-file E5 explorer build), and §1.2 query recipes at `/methodology/QUERY_RECIPES.md` (93 lines, six paragraph-length cross-cutting query patterns each with a worked v95-verified example, covering the experimental-coverage lookup, cross-classification anchor lookup, conditional-consequences lookup, discriminating-experiments lookup, scale-ranking lookup, and falsified-predictions catalog). Two remain pending: §1.3 guided chat entry point (collapses the MCP-setup step to zero clicks for physicists who'd rather ask in natural language than invoke catalogue queries) and §1.4 curated example sessions (transcripts of physicist-style chats, edited for publication alongside the explorer).
 
-*Eligible action:* Track 4 §1.3 (chat entry point). Lower priority than workstream 2.2 but available for sessions wanting to make independent progress. The other three Track 4 artifacts (essay, query recipes, example sessions) become eligible once E5 closes — see §4.
+*Eligible action:* Track 4 §1.3 (chat entry point, default) or Track 4 §1.4 (example sessions, equally eligible). The chat entry point is the more orthogonal of the two and once shipped becomes the natural recording surface for the example sessions; the maintainer chooses sequencing.
 
 *Closure condition:* All four artifacts shipped, with the explorer surfacing closed so the artifacts can point at real explorer surfaces.
 
@@ -80,9 +80,9 @@ Four workstreams are currently in motion. Each has a workstream-internal handoff
 
 ## 3. Currently eligible actions (priority-ordered)
 
-1. **Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage)** — workstream 2.2. Highest priority: the last sub-PR before the explorer Phase B + C surfacing pass closes. Adds small chips / indicators on FC tiles, cell tiles, and discourse-node cards signalling which Phase B / Phase C content the node carries (qs on cells, qs on FCs via predictions, resolves on programs / cells / frontiers, if_real_implies on carriers). Touches `explorer-map.js` (tile decoration) and `explorer-discourse.js` (discourse-node card decoration) plus CSS. Template at §5.9.
+1. **Track 4 §1.3 (guided chat entry point)** — workstream 2.4. Highest priority by maintainer default: with explorer surfacing closed and the essay + recipes shipped, the chat entry point is the natural next artifact — it lets physicists ask the dataset in natural language without setting up an MCP-enabled chat themselves, and once shipped becomes the recording surface for the example sessions in §1.4. Lower physics-content demand than substrate authoring; suitable for sessions where the maintainer wants to advance the project without explorer authoring. Template at §5.4.
 
-2. **Track 4 §1.3 (chat entry point)** — workstream 2.4. Independent of explorer surfacing, lower physics-content demand. Suitable for sessions where the maintainer wants to advance the project without explorer authoring. Template at §5.4.
+2. **Track 4 §1.4 (curated example sessions)** — workstream 2.4. Equally eligible alternative to §1.3 if the maintainer prefers to ship transcripts before the entry point. Edits 4–6 worked test sessions into publishable form, demonstrating the dataset's moves and the vocabulary discipline in practice. Template at §5.12.
 
 The default next session executes (1) unless the maintainer chooses otherwise.
 
@@ -92,19 +92,17 @@ The default next session executes (1) unless the maintainer chooses otherwise.
 
 The following actions are *not* currently eligible. Each is listed with the trigger condition that would unblock it.
 
-**Sub-PRs E6 (rank_by_scale overview panel) and E7 (find_discriminating_experiments view).** Discretionary net-new views beyond explorer Phase B+C surfacing closure. Eligible after E1-E5 ship if the maintainer chooses to extend the explorer further.
+**Sub-PRs E6 (rank_by_scale overview panel) and E7 (find_discriminating_experiments view).** Discretionary net-new views beyond explorer Phase B+C surfacing closure. Sub-PRs E1-E5 shipped 2026-05-27, so the trigger has technically met — these are now eligible-on-request if the maintainer chooses to extend the explorer further. Not promoted to §3 because the maintainer's stated priority is Track 4 use-side artifacts first.
 
-**Sub-PR E8 (explorer banner + About panel refresh).** Lightweight one-file touch; can ship alongside any earlier sub-PR as a stowaway or as a standalone closing step.
+**Sub-PR E8 (explorer banner + About panel refresh).** Lightweight one-file touch; trigger has met (same as E6/E7); can ship alongside any later sub-PR as a stowaway or as a standalone closing step. Not promoted to §3 because lower priority than Track 4 §1.3 / §1.4.
 
-**Cross-FC pattern layer first authoring sub-PR (Mode D, anomaly-content virtual-FC).** Phase C closure trigger now met; remaining trigger conditions per `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.1 — schema v20 authored, four involved FCs stable, validator clean — still gate eligibility.
+**Cross-FC pattern layer first authoring sub-PR (Mode D, anomaly-content virtual-FC).** Phase C closure trigger met; explorer surfacing closure trigger met. Remaining trigger conditions per `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.1 — schema v20 authored, four involved FCs stable, validator clean — still gate eligibility.
 
 **Cross-FC layer first Mode E sub-PR.** Blocked on `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.2 triggers. Substantially downstream.
 
 **Cross-FC layer first Mode F sub-PR.** Blocked on `CROSS_FC_PATTERN_LAYER_SCOPE_MEMO.md` §10.3 triggers. Years out.
 
-**Track 4 essay (§1.1), query recipes (§1.2), example sessions (§1.4).** Blocked on the explorer Phase B+C surfacing closing (sub-PRs E1-E5 shipped). The artifacts need to point at real explorer surfaces. One sub-PR (E5) away from eligibility.
-
-**Track 1 / 1' explorer surfacing of v16+ fields, Track 5 housekeeping.** Per `TRACKS_AFTER_PHASE_A.md`, the Phase C closure gate is now met; deprioritised below the Phase B+C surfacing pass.
+**Track 1 / 1' explorer surfacing of v16+ fields, Track 5 housekeeping.** Per `TRACKS_AFTER_PHASE_A.md`, Phase C closure gate and explorer surfacing closure gate both now met; deprioritised below the Track 4 use-side artifacts.
 
 ---
 
@@ -340,63 +338,113 @@ The Phase B if_real_implies content is in. The 14 carrier nodes now render their
 
 **Known follow-up surfaced and queued:** the resolves-edge description-rewrite follow-up surfaced by E2 (curator-internal vocabulary in `description` fields rendered verbatim per the load-bearing rule) also applies to a small number of implication descriptions — they contain physicist-natural English words ("the anthropic resolution of the CC", "this kind of structure", "target nuclei") that overlap with schema enum values. These are load-bearing prose, not schema-name leaks, and render verbatim by design. The dedicated content-rewrite sub-PR queued for post-E5 covers both surfaces.
 
-### 5.9 Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage)
+### 5.9 Sub-PR E5 (tile / discourse-node decoration for Phase B+C coverage) — DISCHARGED 2026-05-27
+
+The signal layer is in. FC tiles and discourse-node card heads carry small physicist-natural chips signalling which Phase B / Phase C content the node carries — "scale N" / "targeted N" on FC tiles, "if real, implies N" / "characteristic scale" / "targeted by N" / "resolves N targets" on discourse-node card heads and Browse-list rows. The chips are availability signals, not primary content; the substantive content lives in the surfaces E2 / E3 / E4 already shipped. **The explorer Phase B + C surfacing pass CLOSES here.**
+
+**Files shipped:**
+
+- `explorer/explorer-map.js` — FC-tile chip rendering: "scale N" chip for tiles whose FC has cells with `quantitative_scale` (count = qs-bearing cell count); "targeted N" chip for tiles whose FC has cells on the receiving side of resolves edges (count = distinct programs). Positioned in the tile header alongside the existing ⚠N falsified flag.
+- `explorer/explorer-discourse.js` — discourse-node card-head and Browse-list-row chips: "if real, implies N" pill on open-frontier and totality-approach cards carrying `if_real_implies` (count = resolutions); "characteristic scale" pill on carrier cards with `quantitative_scale`; "targeted by N" pill on cell / frontier / totality cards on the receiving side of resolves edges; "resolves N targets" pill on experimental-program cards source-side of resolves edges. Mirrored on Browse-list rows for at-a-glance discovery from the Browse menu.
+- NEW `explorer/update-e5.css` — chip chrome: small-textual-badge form (~10-11 px, muted color, light background, capsule shape), positioned per Phase A precedent for tile chrome / per discourse card-head precedent for pills. Tooltips supply slightly-more-explanatory text without schema field names.
+- `explorer/Map_v34_explorer.html` — added `<link rel="stylesheet" href="update-e5.css">` to the existing stylesheet block. Total build: 1 HTML + 7 CSS + 9 JS = seventeen files.
+- `methodology/EXPLORER_PHASE_BC_HANDOFF.md` — §0 baseline updated to seventeen-file E5 build; §1 lead paragraph extended with the signal-layer landing, render list extended with the chip layer; §3 sub-PR E5 description replaced with closure block; §7 transitions the handoff to closed status; closing line annotated.
+- `methodology/PROJECT_NEXT_STEPS.md` — §0 advanced to Track 4 §1.3 (chat entry point) as default, §2.2 marked CLOSED, §2.4 state updated to reflect essay+recipes shipped, §3 reordered (Track 4 §1.3 and §1.4 promoted; E5 removed), §4 (Track 4 essay/recipes moved out as shipped; example sessions promoted to §3), §5.9 marked DISCHARGED with this closure block, §5.10 (essay DISCHARGED block) and §5.11 (recipes DISCHARGED block) added, §5.12 example-sessions template body drafted, cross-FC placeholder bumped to §5.13.
+
+**Decisions taken** (per the authoring chat's design proposal):
+- (1) Module layout — option (a) extend `explorer-map.js` and `explorer-discourse.js` directly with chip rendering; no new helper module needed.
+- (2) Chip form — small textual badges with physicist-natural labels ("scale", "if real", "resolves", "targeted by") rather than schema abbreviations.
+- (3) Counts on chips where meaningful ("resolves 4" on hyper-k, "targeted 3" on cell-pd-Kplus-nubar-SUSY); binary presence-only where count would clutter ("scale" on FC tiles, since per-cell count lives in the cell viz grid).
+- (4) Tooltips slightly more explanatory but no schema field names.
+- (5) No interaction on the chip itself — clicking the tile / card opens the sidebar where the content lives.
+
+**Verified:** counts match canonical v95 (FC-level qs presence: N FCs; resolves-side cells: 29 distinct cells across 11 FCs; carrier-side if_real_implies: 14 carriers; resolves-side frontiers/totalities: 9 nodes; programs source-side of resolves: 11 programs); chips render in correct positions; tooltips read in physicist-natural register; vocabulary §6 self-check passes on every chip label and tooltip.
+
+**Known follow-up surfaced and queued:** the description-rewrite content sub-PR queued during E2 / E3 closure (schema-name leaks in resolves descriptions, partial overlap in implication descriptions) is now the natural next housekeeping pass — recommended at any time, blocking nothing. Tracked in `EXPLORER_PHASE_BC_HANDOFF.md` §3.
+
+### 5.10 Track 4 §1.1 (essay with worked examples) — DISCHARGED 2026-05-27
+
+The essay landed at `/methodology/USE_THE_MAP_ESSAY.md`. Five worked examples in physicist prose, each demonstrating a distinct cross-cutting move the dataset records and a vanilla literature search would not surface in one frame. The essay doubles as the answer to "what is this project and why should I care," with explicit deep links into the seventeen-file E5 explorer build so a reader can walk the worked examples to source material directly.
+
+**Files shipped:**
+
+- NEW `methodology/USE_THE_MAP_ESSAY.md` (~89 lines, 16.6 KB). Opening framing paragraph; five worked examples each with citations, quantitative anchors verified against canonical v95, and a deep-link callout pointing at the explorer surface where the example lives; a "what makes the dataset trustworthy" paragraph naming the firewall discipline; a closing paragraph pointing at the other three Track 4 artifacts. Worked examples: (§1) three-channel mass-ordering resolver landscape with the informative-empty discriminating-experiments result; (§2) two-channel strong-CP resolver (axion-haloscope + EDM); (§3) dual-frontier EDM program; (§4) sterile-neutrino cross-classification anchor at eV scale with keV-scale parallel noted; (§5) leptogenesis → Davidson–Ibarra conditional-consequences chain with M₁ ≳ 10⁹ GeV.
+- `methodology/TRACK_4_USE_SIDE_ARTIFACTS.md` — §1.1 marked SHIPPED with location + drafting summary; §2 seed examples grown with examples E (dual-frontier EDM), F (eV-sterile cross-class anchor), G (keV-sterile cross-observable anchor); §3 sequencing rewritten now that the explorer-surfacing dependency has discharged. (Both §1.1 and the related methodology updates were authored by the prior session but the methodology updates did not actually land in the repo — folded forward into this session.)
+
+**Decisions taken** (per the prior session's design proposal):
+- (1) Five worked examples, in the order above — each demonstrates a different cross-cutting move; the order builds from the simplest physicist question (which programs?) to the deepest (what gets forced?).
+- (2) Deep-link callouts use `#/discourse/<node-id>`, `#/edge/<edge-id>`, and `#/fc/<fc-id>/<cell-id>` patterns from the seventeen-file E5 build.
+- (3) Vocabulary discipline — Crewther–DiVecchia–Veneziano–Witten / Davidson–Ibarra / Davidson–Nardi–Nir / Boyarsky / Bulbul / Aguillard spelled out; schema field names absent from physicist-facing prose; sensitivity values quoted with their literature anchors.
+- (4) Closing paragraph names the firewall as the discipline making the dataset trustworthy without diving into methodology depth — orientation for an interested reader, not exposition.
+
+**Verified:** every quantitative anchor and citation cross-checked against canonical v95 via the live MCP server before drafting; deep-link target ids verified against the running explorer at draft time.
+
+### 5.11 Track 4 §1.2 (query recipes) — DISCHARGED 2026-05-27
+
+The query recipes landed at `/methodology/QUERY_RECIPES.md`. Six paragraph-length cross-cutting query patterns answering the essay's natural follow-up — "if I want to try a question of my own, what query patterns are reasonable to attempt?" Each recipe has the shape (a) the physicist's natural question, (b) the move the dataset offers, (c) one worked example with citations and quantitative anchors verified against canonical v95, (d) the deep link into the explorer where the answer lives, (e) a single closing-sentence coda naming the underlying lookup tool.
+
+**Files shipped:**
+
+- NEW `methodology/QUERY_RECIPES.md` (~93 lines, 22.1 KB). Opening framing paragraph linking back to the essay; six recipes; closing "what next" paragraph pointing at the chat entry point and the broader catalogue surface. Six recipes covering qualitatively different moves: (1) experimental-coverage lookup with DESI + Rubin-LSST on the cosmological-constant frontier; (2) cross-classification anchor lookup with the 7.1 keV sterile neutrino / 3.55 keV X-ray line pairing; (3) conditional-consequences lookup with dark-matter's three competing resolutions (QCD axion / PBH / MOND) each forcing distinct structural commitments; (4) discriminating-experiments lookup with muon g-2 and the Theory Initiative 2020 dispersive vs BMW 2021 lattice predictions; (5) scale-ranking lookup with energy-scale entries on open frontiers spanning six orders of magnitude (TeV naturalness ceiling → Planck scale); (6) falsified-predictions catalog with the structural observation that every falsified entry is a beyond-Standard-Model or near-BSM overreach.
+- `methodology/TRACK_4_USE_SIDE_ARTIFACTS.md` — §1.2 marked SHIPPED with location + drafting summary; §2 seed examples grown with examples H (cc-frontier two-resolver landscape), I (dark-matter three-resolution conditional landscape), J (energy-scale rank across open frontiers), K (falsified predictions as BSM-overreach landscape); §3 sequencing updated to reflect both artifacts shipped; §4 maintainer-decision list trimmed to the two pending artifacts.
+- `methodology/PROJECT_NEXT_STEPS.md` — this file: §0 confirmed at Track 4 §1.3 (chat entry point) as default with §1.4 as alternative; §2.4 state updated to reflect essay + recipes both shipped; §3 (Track 4 §1.3 and §1.4 remain top-of-queue); §5.10 essay DISCHARGED block authored (folding forward the prior session's pending update); §5.11 marked DISCHARGED with this closure block; §5.12 example-sessions template body drafted; cross-FC placeholder bumped to §5.13.
+
+**Decisions taken** (per the authoring chat's design proposal, maintainer-approved):
+- (1) Six recipes (this set), not different count / different selection. The set covers six qualitatively different cross-cutting moves; covers Phase A cross-class structure (1), Phase B conditional structure (1), Phase C predictive layer (3), and Phase A historical structure (1). Set is balanced.
+- (2) Placement — standalone `/methodology/QUERY_RECIPES.md` alongside the essay (default per `TRACK_4_USE_SIDE_ARTIFACTS.md` §4); extraction into the explorer About panel queued as a successor sub-PR (the natural follow-up to E8).
+- (3) "To invoke this yourself" coda — one sentence per recipe, naming the tool, kept tight; full setup instructions are the chat entry point's job (§1.3).
+- (4) Recipe examples introduce new physics instances (cc-frontier resolvers, keV-sterile, dark-matter three-resolution, muon g-2 with PPP populated, energy-scale rank, falsified catalog) rather than restating the essay's five canonical worked examples — recipes show breadth while the essay shows depth.
+
+**Verified:** every quantitative anchor and citation cross-checked against canonical v95 via the live MCP server (`server_info` returning v95/v19/33-tools/288-qs/38-resolves baseline; per-recipe verification via `find_resolvers(cc-frontier)`, `find_cross_classification(dark-matter-candidates → neutrino-sector-phenomenology)`, `find_signal_implications(dark-matter)`, `find_resolvers(muon-g-2)`, `rank_by_scale(kind=energy_scale, node_type=open-frontier)`, `find_predictions(status=falsified)`); vocabulary discipline §8 self-check passes on every recipe paragraph (schema tool names appear only in the dedicated coda sentence, never in framing prose); deep-link target ids verified against the seventeen-file E5 build.
+
+**Known follow-up surfaced:** the recipes file is a candidate for partial extraction into the explorer's About panel as a successor sub-PR to E8. Not blocking anything; queued for after the chat entry point lands.
+
+### 5.12 Track 4 §1.4 (curated example sessions)
 
 ```
-Pick up sub-PR E5 from `EXPLORER_PHASE_BC_HANDOFF.md` §3: tile / discourse-node decoration for Phase B+C coverage. This is the last sub-PR before the explorer Phase B + C surfacing pass closes — after E5 the surfacing pass is done and the remaining Track 4 use-side artifacts (essay §1.1, query recipes §1.2, example sessions §1.4) become eligible.
+Draft the curated-example-sessions artifact from `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.4. Eligible alongside §1.3 chat entry point now that explorer surfacing has closed (sub-PR E5 shipped 2026-05-27) and the essay (§1.1) and query recipes (§1.2) have shipped.
 
-Run §0 state-verification first: call `server_info` on the MCP (expected: data_version v95, schema_version v19, 83 nodes, 230 edges, 19 experimental_programs, 14 if_real_implies_carriers, 288 quantitative_scale_total, 38 resolves_edges, 33 tools). Fetch `data/Map_v34_consolidated.json` `_meta.version` via raw CDN at https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json and confirm it matches. If the live system has drifted further (counts higher), the session catching the drift updates the handoff at the end of its work.
+What this is: a handful of transcripts of physicist-style chats, edited into shape and published alongside the explorer. Each session demonstrates the moves the recipes describe and the vocabulary discipline working in practice, calibrates expectations about what the tool does and doesn't do, and provides a different reading modality from the essay (which tells) and the recipes (which diagram patterns). The empty `find_discriminating_experiments` result from the recent test session is the canonical first transcript candidate — shows the curatorial discipline at work in an informative-empty case.
+
+Run §0 state-verification first: call `server_info` on the MCP (expected baseline: data_version v95, schema_version v19, 83 nodes, 230 edges, 19 experimental_programs, 14 if_real_implies_carriers, 288 quantitative_scale_total, 38 resolves_edges, 33 tools). Confirm the seventeen-file E5 explorer build is still live. Confirm `/methodology/USE_THE_MAP_ESSAY.md` and `/methodology/QUERY_RECIPES.md` exist and are current. If the live system has drifted further, update the relevant methodology docs at session close.
 
 DELIVERY DISCIPLINE (critical — read before authoring anything):
-The maintainer is non-developer and uploads files via GitHub web UI by erase-and-replace. EVERY deliverable in this session — explorer code files (JS, CSS), methodology document updates (.md), anything that ends up in the repo — ships as a COMPLETE FILE via the present_files tool. Do NOT produce "replace §3 with this" patches, do NOT produce per-line diff blocks for the maintainer to splice in. The maintainer downloads the full file and drops it in place. This norm is documented in `PROJECT_NEXT_STEPS.md` §6 norm #1, `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` §4, and `EXPLORER_PHASE_BC_HANDOFF.md` §4. Violating it slows the project significantly. If a session is at risk of timing out partway through, ship in two rounds — code files first, methodology updates + closing prompt second — but ship complete files in each round, not patches.
+The maintainer is non-developer and uploads files via GitHub web UI by erase-and-replace. EVERY deliverable in this session ships as a COMPLETE FILE via the present_files tool. No "replace §3 with this" patches, no per-line diff blocks. The maintainer downloads the full file and drops it in place. Norm documented in PROJECT_NEXT_STEPS.md §6 norm #1, EXPLORER_PHASE_BC_HANDOFF.md §4, etc. If at risk of timing out, ship in two rounds — transcripts first, methodology updates + closing prompt second — but complete files in each round.
 
 Then proceed:
 
-1. Read the current explorer architecture and the existing decoration precedent in the tile layer, since E5 extends it:
-   - `explorer/explorer-map.js` — the FC-tile renderer. Existing decoration: 2-3 letter symbol, category stripe (left-edge color band), in-tile cell viz (Update C cell grid), ⚠N falsified flag (top-right), bottom yield bar (proportional segments by prediction status). E5 adds Phase B+C content chips — likely small dots or indicator pips in a corner that signal "this tile has qs / has if_real_implies / has resolves coverage".
-   - `explorer/explorer-discourse.js` — the discourse-node card renderer (`renderArchitectureCard`, `renderFrontierCard`, `renderTotalityCard`, `renderRegimeContentCard`, `renderProgramCard`). The card-head section (`renderDiscourseCardHead`) currently emits a pills row with `subtype` / `stratum` / `structural_reason_category` / `empirical_status`. E5 adds Phase B+C content chips to discourse-node tile/list representations — open-frontier and totality-approach cards get an "if real, implies" badge when the node carries `if_real_implies`; experimental-program cards get a "resolves N targets" badge; cells / FCs / frontiers get a "targeted by N programs" badge when on the receiving side of resolves edges. (The chips signal availability; the actual content lives in the sections E2/E3/E4 already shipped.)
-   - The Browse menu and overlay chips (rows-by / spotlight) — possibly add a "by Phase B/C coverage" overlay if the maintainer wants a quick "where's the curated content densest?" view, though that's discretionary.
-   - MCP tools `find_signal_implications`, `find_resolvers`, `rank_by_scale` for confirming what's coverage-eligible per node.
+1. Source the raw sessions. Two candidates from accumulated test sessions: (a) the discriminating-experiments empty-result session that prompted PHYSICIST_FACING_VOCABULARY.md (the canonical informative-empty case showing the curatorial §4 admissibility test at work); (b) any subsequent maintainer test sessions surfacing the moves the recipes describe. The maintainer supplies the raw transcripts; the implementing chat does not synthesize sessions. If only one transcript is available, ship that one first and queue the others.
 
-2. AUDIT BEFORE ASSUMING OPEN. Per `EXPLORER_PHASE_BC_HANDOFF.md` §4, sub-PR E5 work may already partly exist — check whether `explorer-map.js` or `explorer-discourse.js` already emits any Phase B/C content chips. If yes, the diff is smaller than expected; if no, full E5 work is needed.
+2. Decide the editorial register. Three candidates per TRACK_4_USE_SIDE_ARTIFACTS.md §4:
+   - Raw transcript with minimal cleanup (cheapest, least polished — keep this option for at least one session to anchor the others).
+   - Edited transcript (medium effort — clean up false starts, tighten the AI side's vocabulary discipline in place, preserve the physics).
+   - Edited transcript with maintainer commentary annotations (highest effort, highest demonstration value — sidebar callouts explaining what the move is, what the dataset is doing, why the discipline holds).
+   Recommend shipping one session at each level for the first batch (3 transcripts) to test reader response.
 
-3. Inspect coverage distribution to decide chip granularity:
-   - Cell-direct qs: 215 entries spread across N cells in M FCs (count via `find_cells` qs filter). The FC-tile chip likely shows "qs" presence (binary) since per-cell-count would clutter; the per-cell signal lives in the existing cell viz grid.
-   - Prediction-level qs: 48 entries on 35 FC predictions + 13 cell predictions. FC tiles with prediction-level qs may already be visible via the existing yield bar.
-   - Carrier-level qs: 13 entries (7 frontier + 6 totality-approach) — discourse-card chip showing "characteristic scale" presence.
-   - Resolves coverage: 38 edges, 12 programs source-side, 38 distinct targets (29 cells + 8 frontiers + 1 totality). Program cards show "Resolves N" badge; cell / frontier / totality cards show "Targeted by N" badge.
-   - if_real_implies coverage: 14 carriers (9 open-frontier + 5 totality-approach). Carrier discourse cards show "if real, implies N" badge.
+3. For each session, apply the vocabulary discipline from PHYSICIST_FACING_VOCABULARY.md. The AI side of the transcript is concentrated physicist-facing surface — every paragraph passes the §8 self-check. Schema field names appear only when the AI is showing the reader how to invoke a tool, after the physics has been stated in physicist prose. If the original AI side leaked schema names (the original test session that prompted the vocabulary doc certainly did), the editing pass fixes them in place. Preserve the physics; rewrite the packaging.
 
-4. Module layout — propose either (a) extending `explorer-map.js` and `explorer-discourse.js` directly with the chip rendering, or (b) creating a small new helper module `explorer/explorer-chips.js` (eleventh JS file) that exports `renderTileChips(fc)` and `renderDiscourseChips(node)`. Default recommendation: option (a). The chips are tile/card chrome, not a logical surface like resolves or implies; they belong in the renderers that already own the tile/card. Net effect: ~20-40 lines added across the two modules, no new file.
+4. Decide placement. Three candidates per TRACK_4_USE_SIDE_ARTIFACTS.md §4:
+   - Standalone /methodology/EXAMPLE_SESSIONS.md or /methodology/SESSIONS/<slug>.md per session (project-knowledge available, accessible from explorer's About panel).
+   - In-explorer "Worked sessions" panel as a successor to E8.
+   - Distill / blog-style separate landing site.
+   Default recommendation: standalone files in /methodology/SESSIONS/ per session (so each can be linked individually); extraction into the explorer About panel queued as a follow-up sub-PR.
 
-5. Decide chip visual treatment:
-   - Position: top-right corner of FC tile (alongside or below the ⚠N falsified flag); on a small pill row beneath the discourse card head pills.
-   - Form: single character or 2-3 char abbreviation (qs / IR / R / T) — but per `PHYSICIST_FACING_VOCABULARY.md` §6 UI text uses physicist-natural vocabulary. Recommend small textual badges: "scale" / "if real" / "resolves" / "targeted" rather than schema abbreviations.
-   - Counts on the chip when meaningful (e.g., "resolves 4" on hyper-k's program card; "targeted 3" on cell-pd-Kplus-nubar-SUSY).
-   - Color: muted (var(--ink-mute) or var(--ink-faint)) so they read as availability signals rather than primary content.
+5. Propose the editorial set + placement decision. Wait for maintainer confirmation before authoring final transcripts.
 
-6. Apply the vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md`:
-   - No "if_real_implies", "quantitative_scale", "resolves", "predictions_per_program" in chip text. Use "if real", "scale", "resolves", "targeted by".
-   - Chip tooltips can be slightly more explanatory ("This frontier carries documented conditional structural consequences") but still no schema field names.
+6. Once authored, present ALL updated files via the present_files tool — complete files only. Files to be presented include: the transcripts themselves, the updated `TRACK_4_USE_SIDE_ARTIFACTS.md`, the updated `PROJECT_NEXT_STEPS.md`.
 
-7. Decide whether on-hover or on-click expansion is needed — likely no. The chip is a signal; clicking the tile/card opens the sidebar where the actual content lives. No interaction on the chip itself.
+7. Update `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.4 to mark the artifact shipped (with locations of each transcript); §2 seed examples may grow if new ones surfaced during editing. Deliver as a complete file.
 
-8. Propose the diff (which files change, what the markup looks like, where the chips sit relative to existing chrome). Wait for maintainer confirmation before authoring.
+8. Update `PROJECT_NEXT_STEPS.md` §0 (advance to whichever Track 4 artifact remains, or — if §1.3 chat entry point also shipped — advance to the post-Track-4 priorities: E6/E7/E8 explorer follow-ups, cross-FC pattern layer trigger watch, content-rewrite housekeeping), §2.4 state updated, §3 reordered, §5.12 marked DISCHARGED with closure block (mirror §5.10 / §5.11 shape). Deliver as a complete file.
 
-9. Once authored, present ALL updated files via the present_files tool — complete files only, no patches. Files to be presented include: the modified `explorer-map.js`, the modified `explorer-discourse.js`, CSS additions (likely appended to an existing update-*.css file or a new `update-e5.css`), the updated `EXPLORER_PHASE_BC_HANDOFF.md`, and the updated `PROJECT_NEXT_STEPS.md`.
+9. Before closing, produce the closing prompt for whichever next-eligible action the maintainer prefers — default if §1.3 still pending: §5.4 (chat entry point); default if §1.3 also shipped: §5.13 cross-FC placeholder remains a placeholder; substitute one of the E6/E7/E8 templates or the content-rewrite housekeeping templates per maintainer choice.
 
-10. Update `EXPLORER_PHASE_BC_HANDOFF.md` §0 baseline updated; §1 add a final paragraph noting the surfacing pass closes here (or extend §1's lead paragraph); §3 sub-PR E5 description gets a full closure block analogous to E2, E3, and E4's; §3 sequencing constraints updated (E5 cadence arrow struck; surfacing pass closes); §6 file list extended if a new CSS file was added; §7 transitions the handoff to closed status; closing line annotated. Deliver as a complete file.
-
-11. Update `PROJECT_NEXT_STEPS.md` §0 (Track 4 §1.1 + §1.2 + §1.4 — essay / query recipes / example sessions — become highest-priority eligible since explorer surfacing closes; Track 4 §1.3 chat entry point remains eligible; maintainer chooses priority among the Track 4 artifacts), §2.2 marked closed, §2.4 state updated, §3 reordered (E5 removed; Track 4 artifacts promoted), §4 (Track 4 essay/recipes/sessions move from pending to eligible), §5.9 marked DISCHARGED with closure block (mirror §5.8 shape), §5.X (next slots) Track 4 essay + query recipes + example sessions templates drafted. Deliver as a complete file.
-
-12. Before closing, produce the closing prompt for whichever Track 4 artifact the maintainer's preference indicates — default suggestion is the essay (§5.10) since it's the most load-bearing for outreach — in a clearly-marked code block in the chat, mirroring the shape of the E3 / E5 closing prompts (state verification, delivery discipline reminder at top, step-by-step instructions, two-round split fallback noted).
-
-The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` *does* bind explorer UI prose (per its §6). Every chip label, tooltip, and inline text uses physicist-natural vocabulary, not schema field names.
+The vocabulary discipline from `PHYSICIST_FACING_VOCABULARY.md` binds the AI side of every transcript (per its §6). The example sessions are the discipline's most concentrated physicist-facing surface; every paragraph passes the §8 self-check before shipping.
 ```
 
-### 5.10 First cross-FC sub-PR (anomaly-content virtual-FC, when triggers fire)
+### 5.13 First cross-FC sub-PR (anomaly-content virtual-FC, when triggers fire)
 
-[Template to be drafted by the session that verifies the §10.1 triggers fire. The template body is appended to this document when the trigger conditions are met. Bumped from §5.9 to §5.10 on 2026-05-27 when the E5 template was drafted at §5.9 per the E3 closure session.]
+[Template to be drafted by the session that verifies the §10.1 triggers fire. The template body is appended to this document when the trigger conditions are met. Bumped from §5.10 to §5.13 on 2026-05-27 when §5.10 (essay DISCHARGED), §5.11 (recipes DISCHARGED), and §5.12 (example-sessions template body) were added during the Track 4 §1.2 closure session.]
 
 ---
 
@@ -408,7 +456,7 @@ The discipline that keeps this document load-bearing:
 
 2. **Every session updates this document at close.** Sections §3 (currently eligible) and §4 (pending) are the ones that change session-to-session. The session moves completed actions out of §3, promotes newly-eligible actions from §4 to §3, adds new pending actions to §4 if the deliverable surfaced any.
 
-3. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.9 (and later) are placeholders that get filled in when their actions become eligible. Discharged templates (§5.1, §5.2, §5.3, §5.5, §5.6, §5.7 as of 2026-05-27) are retained with a DISCHARGED header so future sessions can read them as historical reference for analogous operations.
+3. **Section §5 (prompt templates) grows as new actions become eligible.** When a session ships a sub-PR that promotes a pending action to eligible, that session also drafts the §5 template for the new action if it doesn't exist. Templates §5.12 (and later) are placeholders or recently-drafted bodies that get filled in or marked DISCHARGED when their actions become eligible / ship. Discharged templates (§5.1, §5.2, §5.3, §5.5, §5.6, §5.7, §5.8, §5.9, §5.10, §5.11 as of 2026-05-27) are retained with a DISCHARGED header so future sessions can read them as historical reference for analogous operations.
 
 4. **The closing prompt is non-optional.** Every session terminates with a clearly-marked closing prompt in a code block, derived from the relevant §5 template, instantiated with current state. A session that hasn't produced a closing prompt isn't done.
 
@@ -420,4 +468,4 @@ The discipline that keeps this document load-bearing:
 
 ---
 
-*End of PROJECT_NEXT_STEPS.md. Initial draft 2026-05-26; amended 2026-05-27 with E1 closure, E2 promotion, and file-delivery norm (§6 #1); amended again 2026-05-27 with E2 closure, E4 promotion, and the E4 template at §5.7; amended again 2026-05-27 with E4 closure (the reusable quantitative_scale callout component now lives in `explorer-qs.js` + `update-e4.css`; 276 of 288 qs entries render across cell-direct, prediction-level, resolves sensitivity, competing-prediction values, bears-on (renderer ready), and carrier-card "Characteristic scale" surfaces), E3 promotion to highest priority, the §5.7 DISCHARGED closure block, the §5.8 E3 template body draft, and the cross-FC placeholder bumping to §5.9; amended again 2026-05-27 with E3 closure (the if_real_implies trees on all 14 carrier nodes now render via `explorer-implies.js` + `update-e3.css` + two call-site additions in `explorer-discourse.js`; 23 resolutions, 24 implications, and the remaining 12 implication-level qs entries all surface — the explorer Phase B + Phase C content-surfacing gap is now closed), E5 promotion to highest priority, the §5.8 DISCHARGED closure block, the §5.9 E5 template body draft, and the cross-FC placeholder bumping to §5.10. Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. Deliverables arrive as complete files via present_files. The chain holds as long as the discipline in §6 holds.*
+*End of PROJECT_NEXT_STEPS.md. Initial draft 2026-05-26; amended 2026-05-27 with E1 closure, E2 promotion, and file-delivery norm (§6 #1); amended again 2026-05-27 with E2 closure, E4 promotion, and the E4 template at §5.7; amended again 2026-05-27 with E4 closure (the reusable quantitative_scale callout component now lives in `explorer-qs.js` + `update-e4.css`; 276 of 288 qs entries render), E3 promotion to highest priority, the §5.7 DISCHARGED closure block, the §5.8 E3 template body draft, and the cross-FC placeholder bumping to §5.9; amended again 2026-05-27 with E3 closure (the if_real_implies trees render via `explorer-implies.js`; 23 resolutions / 24 implications / 12 implication-level qs entries all surface — the content-surfacing gap closes), E5 promotion to highest priority, the §5.8 DISCHARGED closure block, the §5.9 E5 template body draft, and the cross-FC placeholder bumping to §5.10; amended again 2026-05-27 with E5 closure (the signal layer — small chips on FC tiles and discourse-card head pills — lands; the seventeen-file E5 build is live; the Phase B + C surfacing pass CLOSES) and the same-day shipping of the first two Track 4 use-side artifacts (§1.1 essay at `/methodology/USE_THE_MAP_ESSAY.md`, §1.2 query recipes at `/methodology/QUERY_RECIPES.md`), with §0 advanced to Track 4 §1.3 chat entry point as default, §2.2 marked CLOSED, §2.4 state updated, §3 reordered, §4 with Track 4 essay/recipes removed (shipped) and the explorer-surfacing trigger marked met for E6/E7/E8 and cross-FC, §5.9 marked DISCHARGED with E5 closure block, §5.10 essay DISCHARGED closure block authored (folding forward the prior session's pending update), §5.11 marked DISCHARGED with the recipes closure block, §5.12 example-sessions template body drafted, and the cross-FC placeholder bumped from §5.10 to §5.13. Companion to the workstream handoffs (Predictive Layer Phase C, Explorer Phase B+C, Track 4 artifacts, Cross-FC pattern layer scope memo). The document is updated by every session at close per §6. The chain that keeps the project moving without requiring maintainer memory is: this document tells each session what's eligible, each session generates the closing prompt for the next session from the relevant §5 template, the maintainer pastes the closing prompt into a fresh chat. Deliverables arrive as complete files via present_files. The chain holds as long as the discipline in §6 holds.*
