@@ -11,7 +11,7 @@ Location: `/methodology/EXPLORER_PHASE_BC_HANDOFF.md` in the repo. Attach to pro
 The Predictive Layer Phase C handoff established the discipline that authoring sessions ship work without proportionally updating handoff documents, and that this drift is best caught by verifying live state at session start. The same discipline applies here. Three authoritative sources:
 
 1. **Live MCP server.** Call `server_info`. Note `data_version`, `schema_version`, and the cumulative counts. Current expected state: `data_version: v95`, `schema_version: v19`, `83 nodes`, `230 edges`, `19 experimental_programs`, `14 if_real_implies_carriers`, `288 quantitative_scale_total`, `38 resolves_edges`.
-2. **Live explorer.** Open `https://causaldynamicsemergent-gif.github.io/periodic-table-of-physics/explorer/Map_v34_explorer.html`. Look at the banner / About panel. Today's expected baseline: serves v34 data from `data/Map_v34_consolidated.json`, renders the eleven-file Update C build (1 HTML + 4 CSS + 6 JS) with the 12 forward-looking experimental-program nodes rendering correctly via the existing renderer (sub-PR E1 closure audit, 2026-05-27). The explorer **picks up the canonical JSON at runtime**, so the dataset is current to v95 even though minimal explorer code has changed since Update C closed; the Phase B and Phase C content (resolves edges, if_real_implies trees, quantitative_scale callouts) is in the data being fetched but is **rendered nowhere** until sub-PRs E2 onwards ship.
+2. **Live explorer.** Open `https://causaldynamicsemergent-gif.github.io/periodic-table-of-physics/explorer/Map_v34_explorer.html`. Look at the banner / About panel. Today's expected baseline: serves v34 data from `data/Map_v34_consolidated.json`, renders the twelve-file build (1 HTML + 4 CSS + 7 JS — the eleven-file Update C build plus `explorer-resolves.js` from sub-PR E2). The 12 forward-looking experimental-program nodes render correctly via the existing renderer (sub-PR E1 closure audit, 2026-05-27); the 38 resolves edges render as a "Resolves" section on each program card and as a "Targeted by" section on the cells / frontiers / totality-approach they address (sub-PR E2, 2026-05-27). The explorer **picks up the canonical JSON at runtime**, so the dataset is current to v95; the remaining Phase B and Phase C content (if_real_implies trees, quantitative_scale callouts beyond the minimal-inline form shipped in E2) is in the data being fetched but is **rendered nowhere** until sub-PRs E3 and E4 ship.
 3. **The repo's `/methodology/` directory.** This handoff sits alongside `EXPLORER_HANDOFF.md`. The previous handoff documents the file architecture, the no-project-files-for-code rule, the edits-not-regenerations principle, the iterating-across-milestones pattern, and the 11-file module breakdown. **Everything in `EXPLORER_HANDOFF.md` carries forward**; this document supplements it for the Phase B + C surfacing work only.
 
 If the live system has drifted further than the counts above, the session catching the drift updates this handoff at the end of its work. **All such updates ship as complete files via `present_files`, not as patches** — see §4 working norms.
@@ -20,9 +20,9 @@ If the live system has drifted further than the counts above, the session catchi
 
 ## 1. Why this handoff exists — the gap
 
-The data layer has grown three schema versions and roughly half the dataset's content since the explorer last shipped. The explorer renders the data-shape signatures of those new nodes (the 12 forward-looking experimental-program nodes), but nothing of the new edge / field / implication content sitting beneath them.
+The data layer has grown three schema versions and roughly half the dataset's content since the explorer last shipped. The explorer renders the data-shape signatures of those new nodes (the 12 forward-looking experimental-program nodes, since E1) and the new resolves-edge surfaces hanging off them (since E2), but nothing yet of the if_real_implies trees or the cumulative quantitative_scale callouts sitting on cell / prediction / frontier / totality-approach surfaces.
 
-What the explorer **does** render today (per `EXPLORER_HANDOFF.md`, plus the E1 closure audit):
+What the explorer **does** render today (per `EXPLORER_HANDOFF.md`, plus the E1 and E2 closures):
 
 - 30 formal-classification tiles with cell grids, yield bars, falsified flags, in-tile cell viz, category stripes
 - 484 cells with content / observational status / axis values / predictions / realized examples / citations
@@ -30,6 +30,7 @@ What the explorer **does** render today (per `EXPLORER_HANDOFF.md`, plus the E1 
 - The discourse layer: 41 non-FC nodes (architectures, regime-content, open-frontiers, totality-approaches, **19** experimental-programs — the 7 historical + 12 forward-looking) and the ~89 discourse-layer edges connecting them to FCs
 - The 22-entry glossary panel
 - KaTeX math rendering across all prose surfaces
+- The 38 Phase C resolves edges — rendered as a "Resolves" section on each experimental-program card and a "Targeted by" section on each cell / frontier / totality-approach target card. Each row carries the sensitivity (with bound-direction symbol when uncertainty is null), the timeline pill, the bounds-setting pill when `exclusion_only: true`, the description prose, and an inline competing-predictions block when `predictions_per_program` is populated (sub-PR E2, 2026-05-27).
 
 What the explorer **does not** render today, despite all of this content being present in the v95 data file being fetched at runtime:
 
@@ -39,7 +40,7 @@ What the explorer **does not** render today, despite all of this content being p
 | `if_real_implies` resolutions | 23 | `find_signal_implications` | No |
 | `if_real_implies` implications (kind ∈ {new_cell, new_axis, forced_edge, promotes_subtype, new_FC}) | 24 | `find_signal_implications` | No |
 | 12 new forward-looking experimental-program nodes (DUNE, Hyper-K, JUNO, gw-ground-network, LISA, CMB-S4, Rubin-LSST, DESI, axion-haloscope-network, EDM, muon-g-2-continuation, FCC) | 12 | `list_experimental_programs` | **Yes (since sub-PR E1 closure audit, 2026-05-27 — surfacing-side renderer was already current, see §3 sub-PR E1)** |
-| `resolves` edges (experimental-program → cell or open-frontier or totality-approach, carrying sensitivity / timeline / predictions_per_program / exclusion_only) | 38 | `find_resolvers`, `find_discriminating_experiments` | No |
+| `resolves` edges (experimental-program → cell or open-frontier or totality-approach, carrying sensitivity / timeline / predictions_per_program / exclusion_only) | 38 (13 with populated competing-prediction lists) | `find_resolvers`, `find_discriminating_experiments` | **Yes (since sub-PR E2, 2026-05-27 — new `explorer-resolves.js` module + indexing in `explorer-data.js` + call-sites in the program / cell / frontier / totality cards)** |
 | `quantitative_scale` entries — frontier / totality-approach surface | ~13 | `rank_by_scale`, `get_node` | No |
 | `quantitative_scale` entries — cell-direct surface | ~185 | `find_cells` (with qs filters), `find_bounds` | No |
 | `quantitative_scale` entries — prediction-level surface (cell.predictions[] and FC.predictive_yield[]) | ~78 | `find_predictions` (with qs filters), `find_bounds` | No |
@@ -48,7 +49,7 @@ What the explorer **does not** render today, despite all of this content being p
 | **Total `quantitative_scale` entries** | **288** | | **No** |
 | v19 `bound_direction` enum (lower / upper / two-sided / unspecified) on every qs | 288 fields | per-tool | No |
 
-A physicist landing at the live explorer URL sees a competent Phase A presentation, the 12 forward-looking experimental-program nodes correctly catalogued in the Browse menu and discourse cards, and no visual evidence the Predictive Layer's edges / implications / quantitative-scale callouts exist. This is the gap to close before Track 4 outreach (per `TRACKS_AFTER_PHASE_A.md`), because the explorer is the primary surface a working physicist will judge the project on.
+A physicist landing at the live explorer URL sees a competent Phase A presentation, the 12 forward-looking experimental-program nodes correctly catalogued in the Browse menu and discourse cards, the 38 resolves edges rendering as a Resolves section on each program card and as a Targeted by section on each cell / frontier / totality-approach card they address (sub-PR E2, 2026-05-27), and no visual evidence the Predictive Layer's `if_real_implies` implications and `quantitative_scale` callouts exist. This is the remaining gap to close before Track 4 outreach (per `TRACKS_AFTER_PHASE_A.md`), because the explorer is the primary surface a working physicist will judge the project on.
 
 ---
 
@@ -73,7 +74,9 @@ Six content categories to surface, sketched here. Each becomes a sub-PR in §3. 
 - **In the experimental-program discourse card**, a new section titled e.g. "Resolves" listing each target the program addresses, each with sensitivity + timeline. One row per resolves edge. The discourse-edges card precedent from Update C is the closest existing surface.
 - **In the cell / frontier / totality-approach sidebar view**, a new section titled e.g. "Targeted by" listing each program that resolves the selected node, each with the same metadata. Mirrors the bidirectional `find_resolvers` call.
 
-**Design questions.** Should `predictions_per_program` (when present — currently on 5 of 38 edges) render inline as discriminating-target metadata, or live in a sub-panel? When `exclusion_only: true` (rubin-lsst on σ_8, WDM, PBH-microlensing for example), how does the UI signal that the program is excluding rather than measuring? An icon or pill, probably.
+**Design questions.** Should `predictions_per_program` (when present — currently on 13 of 38 edges) render inline as discriminating-target metadata, or live in a sub-panel? When `exclusion_only: true` (rubin-lsst on σ_8, WDM, PBH-microlensing for example), how does the UI signal that the program is excluding rather than measuring? An icon or pill, probably.
+
+**Status (closed):** Sub-PR E2 (2026-05-27) shipped both sections. See §3 sub-PR E2 below for the closure note.
 
 ### 2.3 `if_real_implies` — conditional structural consequences (Phase B)
 
@@ -129,9 +132,40 @@ Closed without code diff. Audit of `explorer-discourse.js` and `explorer-data.js
 
 This is the surfacing-pass analogue of the Phase C worker rebuild: real work dispatched outside the formal queue, verified by direct inspection rather than by a queue artifact. The closure pattern is recorded in §7 so future sessions know to audit before assuming a queued sub-PR has substantive code work — the formal queue is a recommendation, not a guarantee that work hasn't already shipped.
 
-### Sub-PR E2 — render `resolves` edges
+### Sub-PR E2 — render `resolves` edges — CLOSED (2026-05-27)
 
-A new edge type. Two sub-tasks: (a) the "Resolves" section in the experimental-program discourse card; (b) the "Targeted by" section in the cell / frontier / totality-approach sidebar view. Likely a new module `explorer-resolves.js` (eighth JS file) — the precedent from Update C is "one new logical surface = one new module."
+A new edge type. Two sub-tasks: (a) the "Resolves" section in the experimental-program discourse card; (b) the "Targeted by" section in the cell / frontier / totality-approach sidebar view. Eighth JS file `explorer-resolves.js` added, per the "one new logical surface = one new module" precedent.
+
+**Closure summary.** Shipped the following files:
+
+- **NEW `explorer/explorer-resolves.js`** (~270 lines) — exports `renderResolvesFromProgram(programId)` and `renderTargetedByTarget(targetId)`, plus local helpers: `formatQS` (minimal-inline qs renderer; E4 will absorb and refactor), `renderCompetingPredictions` (inline list under each row), `renderResolvesTargetPill` (cell-or-discourse-node deep-link), `renderResolvesProgramPill`, `renderResolvesRow` (shared row chrome with arrow + head pills + sensitivity line + description + competing-predictions block).
+- **`explorer/explorer-data.js`** — added three resolves indexes (`resolves_by_program`, `resolves_by_target`, `resolves_by_id`) and a supporting `cell_id_to_fc_id` reverse-lookup map (484 cells, no collisions). `_meta.counts.resolves_edges` populated to 38. No change to `DISCOURSE_EDGE_TYPES` — resolves edges have distinct shape (sensitivity / timeline / predictions_per_program / exclusion_only) that doesn't fit `renderEdgeRow`, so they get their own indexes and renderer.
+- **`explorer/explorer-discourse.js`** — three call-site additions: in `renderProgramCard` after `Produces classifications`; in `renderFrontierCard` after `Programs targeting this frontier`; in `renderTotalityCard` after `Architectures interfering here`. Each call is gated by `typeof renderResolvesFromProgram === 'function'` / `typeof renderTargetedByTarget === 'function'` so the discourse module degrades gracefully if the resolves module hasn't loaded.
+- **`explorer/explorer-sidebar.js`** — call-site addition in `renderSidebarCell` after the `Predictions for this cell` section, plus pill-wiring (`[data-fc-cell-jump]`, `[data-disc-jump]`) replicated locally since `renderSidebarCell` doesn't go through `wireDiscourseCardLinks`.
+- **`explorer/update-c-edges.css`** — appended ~155 lines of CSS for `.dc-resolves-row`, `.dc-resolves-head`, `.dc-resolves-arrow`, `.dc-resolves-sensitivity`, `.dc-resolves-prefix`, `.dc-resolves-bd`, `.dc-resolves-units`, `.dc-resolves-citations`, `.dc-resolves-citation`, `.dc-resolves-desc`, `.dc-resolves-ppp*`, `.dx-pill.dx-timeline-pill`, `.dx-pill.dx-bound-pill`.
+- **`explorer/Map_v34_explorer.html`** — added `<script src="explorer-resolves.js"></script>` after the existing `explorer-discourse.js` script tag.
+
+**Decisions taken** (per the proposal in this sub-PR's authoring chat):
+
+- (1) Module layout — new eighth JS file `explorer-resolves.js`.
+- (2) qs rendering — minimal inline now (option (a)), E4 absorbs.
+- (3) PPP layout — inline competing-predictions list (option (a)).
+- (4) `exclusion_only` signal — "Bounds-setting" pill (dashed border, italic, muted) when explicitly true; no pill when false or absent. Bound-direction symbol (≳ / ≲ / = / ~) leads the sensitivity value when uncertainty is null (Rule 34); symbol suppressed when uncertainty is non-null.
+- (5) Cell-card placement — after `Predictions for this cell`, before `Citations`.
+- (6) Frontier-card placement — after `Programs targeting this frontier`, before `Empirical loci`.
+- (7) Totality-card placement — after `Architectures interfering here`, before `Classifications that bear on this totality`.
+
+**Verified** (vm-context smoke test in the authoring chat):
+- All 38 resolves edges indexed by program (38/38 coverage) and by target (38/38 coverage).
+- Twelve forward-looking programs render: hyper-k (4), dune (4), juno (4), rubin-lsst (4), fcc (4), gw-ground-network (3), lisa (3), desi (3), axion-haloscope-network (3), cmb-s4 (3), edm-program (2), muon-g-2-continuation (1).
+- `renderTargetedByTarget(cell-pd-Kplus-nubar-SUSY)` returns 3 rows (HK + DUNE + JUNO discriminating-resolves cluster, sub-PR 48 precedent).
+- `renderTargetedByTarget(muon-g-2)` returns 1 row (sub-PR 53 muon-g-2-continuation, the project's first `exclusion_only=false` resolves edge with populated competing-predictions).
+- `renderTargetedByTarget(cc-frontier)` returns 2 rows (DESI sub-PR 50 + Rubin sub-PR 56, the parallel-resolves-edge cluster on cc-frontier).
+- All 4 syntax-clean files compile under `new Function()`.
+
+**Known follow-up surfaced by E2** (queued for the post-E5 audit pass per `PHYSICIST_FACING_VOCABULARY.md` §9):
+
+- A subset of resolves-edge `description` fields contain curator-internal vocabulary ("exclusion_only", "bound_direction", "predictions_per_program", "T30/T31/T33 sensitivity-encoding-convention", "§4 admissibility-test", "PPP") that renders verbatim in the UI per the load-bearing rule. 17 of 38 edges contain "exclusion_only" in description text; 28 of 38 contain "bound_direction"; 5 of 38 contain "quantitative_scale"; 13 of 38 contain "predictions_per_program". This is a data-side concern (description-rewrite pass through each edge) rather than an explorer-side bug. The §9 periodic-audit clause covers it; a dedicated content-rewrite sub-PR may be the right vehicle, sequenced after E5 closure and before Track 4 outreach launch. The current explorer renders the descriptions verbatim because paraphrasing curator-authored content is forbidden by `EXPLORER_PHASE_BC_HANDOFF.md` §4.
 
 ### Sub-PR E3 — render `if_real_implies` on frontier / totality-approach cards
 
@@ -159,9 +193,9 @@ The live explorer's About / banner / help-overlay text refers to v34 / schema v1
 
 ### Sequencing constraints
 
-E1 closed first (verification-only). E2 ships next; resolves edges hang off the experimental-program nodes that E1 verified rendering for. E4 (the qs component) should precede E3 by a little — the if_real_implies implications carry quantitative_scale entries that E3 should render via the E4 component. But E3 and E4 can also ship in either order with the qs section of implications lighting up when both are in. E5 (decoration) makes most sense after E1–E4 since those are the surfaces being decorated. E6, E7, E8 are independent of each other and of E1–E5.
+E1 closed first (verification-only). E2 closed second (full implementation, 2026-05-27). E4 ships next; resolves edges hang off the experimental-program nodes that E1 verified rendering for and the qs callout component will absorb the minimal-inline `formatQS` shipped in E2. E4 (the qs component) should precede E3 by a little — the if_real_implies implications carry quantitative_scale entries that E3 should render via the E4 component. But E3 and E4 can also ship in either order with the qs section of implications lighting up when both are in. E5 (decoration) makes most sense after E1–E4 since those are the surfaces being decorated. E6, E7, E8 are independent of each other and of E1–E5.
 
-The natural cadence: ~~E1~~ → E2 → E4 → E3 → E5 → (E8 alongside any earlier sub-PR as a stowaway one-line edit) → E6 → E7 if maintainer chooses.
+The natural cadence: ~~E1~~ → ~~E2~~ → E4 → E3 → E5 → (E8 alongside any earlier sub-PR as a stowaway one-line edit) → E6 → E7 if maintainer chooses.
 
 ---
 
@@ -202,7 +236,7 @@ The Map of Physics MCP tools are usually deferred behind `tool_search`. If the a
 - Live explorer: `https://causaldynamicsemergent-gif.github.io/periodic-table-of-physics/explorer/Map_v34_explorer.html`
 - Live MCP: `https://map-of-physics.eddie-8e5.workers.dev`
 - Repo: `https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics`
-- Explorer modules: `/explorer/Map_v34_explorer.html`, `/explorer/explorer-data.js`, `/explorer/explorer-map.js`, `/explorer/explorer-sidebar.js`, `/explorer/explorer-phenomena.js`, `/explorer/explorer-discourse.js`, `/explorer/explorer-glossary.js` plus `/explorer/update-b.css`, `/explorer/update-c.css`, `/explorer/update-c-edges.css`, `/explorer/update-c-typography.css`
+- Explorer modules: `/explorer/Map_v34_explorer.html`, `/explorer/explorer-data.js`, `/explorer/explorer-map.js`, `/explorer/explorer-sidebar.js`, `/explorer/explorer-phenomena.js`, `/explorer/explorer-discourse.js`, `/explorer/explorer-resolves.js` (added sub-PR E2), `/explorer/explorer-glossary.js` plus `/explorer/update-b.css`, `/explorer/update-c.css`, `/explorer/update-c-edges.css`, `/explorer/update-c-typography.css`
 - Canonical data: `/data/Map_v34_consolidated.json` (currently v95)
 - Schema: `/schema/Map_v19_schema.json`
 - v19 spec extension (`bound_direction`, Rules 34–36): `/methodology/MAP_v19_schema_spec_extension.md`
@@ -215,7 +249,7 @@ The Map of Physics MCP tools are usually deferred behind `tool_search`. If the a
 ### Raw URLs for `web_fetch`
 
 - Explorer HTML: `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/explorer/Map_v34_explorer.html`
-- Explorer modules: `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/explorer/explorer-data.js` (and analogously `-map.js`, `-sidebar.js`, `-phenomena.js`, `-discourse.js`, `-glossary.js`)
+- Explorer modules: `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/explorer/explorer-data.js` (and analogously `-map.js`, `-sidebar.js`, `-phenomena.js`, `-discourse.js`, `-resolves.js`, `-glossary.js`)
 - Explorer CSS: `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/explorer/update-b.css` (and analogously `update-c.css`, `update-c-edges.css`, `update-c-typography.css`)
 - Canonical data (1.5 MB, exceeds github.com blob fallback): `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/data/Map_v34_consolidated.json`
 - v19 schema: `https://raw.githubusercontent.com/causaldynamicsemergent-gif/periodic-table-of-physics/main/schema/Map_v19_schema.json`
@@ -240,4 +274,4 @@ Same discipline as `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md` §6:
 
 ---
 
-*End of EXPLORER_PHASE_BC_HANDOFF.md. Drafted 2026-05-26 as the next-phase explorer handoff after Predictive Layer Phase C closed (v95 / 3.2.3 / 288 quantitative_scale entries / 38 resolves edges / 14 if_real_implies carriers / 19 experimental programs). Amended 2026-05-27 to record sub-PR E1 closure as verification-only and to extend §4 with the file-delivery norm after a maintainer flag. The previous explorer handoff (`EXPLORER_HANDOFF.md`) closed at Update C; this document picks up the explorer build to surface the ~6 months of Phase B + Phase C data-side content that has accumulated since.*
+*End of EXPLORER_PHASE_BC_HANDOFF.md. Drafted 2026-05-26 as the next-phase explorer handoff after Predictive Layer Phase C closed (v95 / 3.2.3 / 288 quantitative_scale entries / 38 resolves edges / 14 if_real_implies carriers / 19 experimental programs). Amended 2026-05-27 to record sub-PR E1 closure as verification-only and to extend §4 with the file-delivery norm after a maintainer flag. Amended again 2026-05-27 to record sub-PR E2 closure (38 resolves edges now render via new `explorer-resolves.js` module + indexing + call-sites in the program / cell / frontier / totality cards). The previous explorer handoff (`EXPLORER_HANDOFF.md`) closed at Update C; this document picks up the explorer build to surface the ~6 months of Phase B + Phase C data-side content that has accumulated since.*
