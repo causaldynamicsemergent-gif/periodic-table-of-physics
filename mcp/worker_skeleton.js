@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v95 data / server version 3.2.3
+ * Phase C + v19 / v19 schema / v96 data / server version 3.2.4
  *
  * ABOUT
  * -----
@@ -96,6 +96,29 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.4 — Data refresh v95 → v96. Description-rewrite content
+ *           housekeeping. 89 in-place edits across 38 description
+ *           fields (36 resolves-type edges + 2 dark-matter-carrier
+ *           if_real_implies implications) eliminate 101 occurrences
+ *           of four schema-name leak patterns identified by
+ *           PHYSICIST_FACING_VOCABULARY.md §3 (exclusion_only,
+ *           predictions_per_program, bound_direction, bare "resolves
+ *           edge(s)" plural-noun) plus the two implication-description
+ *           leaks (forced_edge, axis_mapping) where they appeared as
+ *           primary nouns describing physics. All physics content,
+ *           citations, numerical values, units, and direction-of-bound
+ *           preserved byte-identical; only the natural-language
+ *           packaging changes.
+ *
+ *           Documentation-only delta. Schema unchanged
+ *           (Map_v19_schema.json). No new edges, cells,
+ *           classifications, predictions, citations, or
+ *           quantitative_scale entries. No counts shift. Tool surface
+ *           unchanged (33). Validator gates: all rules 1-36 continue
+ *           to pass.
+ *           Banner: v96 / v19 / 33 tools / 38 resolves edges /
+ *                   288 quantitative_scale entries.
+ *
  *   3.2.3 — Data refresh v93 → v95. Lands sub-PRs 57 + 58 in one deploy:
  *
  *           (a) Sub-PR 57 (fcc): 4 resolves edges from the FCC experimental-
@@ -386,9 +409,9 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.3',
+    version: '3.2.4',
     schema_version: 'v19',
-    data_version: 'v95',
+    data_version: 'v96',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
@@ -1475,7 +1498,7 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v19), data version (v95), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v19), data version (v96), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
       'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
@@ -1932,11 +1955,11 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.3',
+  version: '3.2.4',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v95 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v96 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
