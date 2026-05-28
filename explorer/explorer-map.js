@@ -527,7 +527,13 @@ function syncToolbarChips() {
   }
   // Update B — discourse-tab buttons: active when their catalogue panel is open
   document.querySelectorAll('.discourse-tab[data-disc-tab]').forEach(b => {
-    b.classList.toggle('active', b.dataset.discTab === state.activePanel);
+    const tab = b.dataset.discTab;
+    // Sub-PR E7 — the Compare-programs tab stays active for the
+    // per-pair view as well as the catalogue, since the per-pair
+    // panel is a drill-down of the same tab's surface.
+    const matches = (tab === state.activePanel)
+      || (tab === 'discriminating' && state.activePanel === 'discriminating-pair');
+    b.classList.toggle('active', matches);
   });
 }
 

@@ -657,6 +657,14 @@ function renderProgramCard(node) {
     // by the resolves renderer (it returns '' when no edges exist).
     (typeof renderResolvesFromProgram === 'function')
       ? renderResolvesFromProgram(node.id) : '',
+    // Sub-PR E7 — cross-link to the Compare-programs panel for every
+    // other program in the catalogue that shares ≥1 target with this
+    // one. Hidden automatically when no shared coverage exists (the
+    // renderer returns '' in that case). This is the discoverability
+    // path: a physicist viewing DUNE's card sees the catalogue exists
+    // and which other programs are relevant comparisons.
+    (typeof renderProgramDiscriminatingCrossLink === 'function')
+      ? renderProgramDiscriminatingCrossLink(node.id) : '',
   ].join('');
 
   // Key publications — for programs the citations are typically formatted differently
@@ -724,6 +732,13 @@ function wireDiscourseCardLinks(root) {
       selectDiscourseNode(el.dataset.discJump);
     });
   });
+  // Sub-PR E7 — program-card cross-link rows. Hidden when not present
+  // (the cross-link section returns '' for programs with no shared
+  // coverage, and historical programs have no resolves edges so the
+  // section is empty on those cards too).
+  if (typeof wireProgramDiscriminatingCrossLink === 'function') {
+    wireProgramDiscriminatingCrossLink(root);
+  }
 }
 
 function selectDiscourseNode(nodeId) {

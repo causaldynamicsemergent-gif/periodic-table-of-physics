@@ -381,6 +381,141 @@ function augmentDataset(raw) {
     }
   }
 
+  // =============================================================
+  //   Sub-PR E7 — discriminating-experiments lookup substrate
+  //
+  //   For every pair of experimental programs that share at least
+  //   one target through resolves edges, derive:
+  //     - the list of shared targets
+  //     - per-target classification of the comparison into one of
+  //       four physics-categories, computed from the edge metadata
+  //       (exclusion_only flag, predictions_per_program population,
+  //       target-node type)
+  //
+  //   The four classifiers (all derived from the edges' own fields;
+  //   no per-pair hand-curation, which would push project content
+  //   into the presentation layer and violate the firewall):
+  //
+  //     • 'competing-prediction-adjudication' — both edges carry
+  //       per-program competing predictions (PPP populated on both
+  //       sides). The shared theoretical programs publish different
+  //       predicted values; the experiments adjudicate between them
+  //       by measuring the channel directly.
+  //
+  //     • 'orthogonal-channel-measurement' — both edges are bounds-
+  //       setting (exclusion_only:true on both), target is a cell.
+  //       A cell is a definite physical parameter; both programs
+  //       measure it through different physical channels and the
+  //       parameter has the single value nature has fixed.
+  //
+  //     • 'complementary-reach' — either (a) both edges are bounds-
+  //       setting and the target is an open frontier or totality-
+  //       approach (the question itself has multiple resolutions, so
+  //       different channels probe different resolutions, not a
+  //       single shared parameter); or (b) one edge is bounds-setting
+  //       and the other is measurement-discriminating (the programs
+  //       address the target from genuinely complementary directions).
+  //
+  //     • 'shared-coverage' — fallback. Currently unused on v95/v96
+  //       data; all 11 shared-target pairings fit one of the above.
+  //
+  //   Pair ids are alphabetised: 'dune|hyper-k', never 'hyper-k|dune'.
+  //
+  //   On v95/v96: 38 resolves edges across 12 programs produce 6
+  //   pairs with at least one shared target, 11 shared-target rows
+  //   total. The interesting structural fact is that the four
+  //   classifiers represent four genuinely different physics-
+  //   relationships, and the catalogue surfaces both the rare
+  //   "competing predictions" case and the equally-informative
+  //   "shared resolver coverage" case as physics-positive findings.
+  // =============================================================
+  function classifyTargetPair(edgeA, edgeB, targetIsCell) {
+    const pppA = !!(edgeA.predictions_per_program && edgeA.predictions_per_program.length > 0);
+    const pppB = !!(edgeB.predictions_per_program && edgeB.predictions_per_program.length > 0);
+    const boundsA = edgeA.exclusion_only === true;
+    const boundsB = edgeB.exclusion_only === true;
+    if (pppA && pppB) return 'competing-prediction-adjudication';
+    if (boundsA && boundsB) {
+      return targetIsCell ? 'orthogonal-channel-measurement' : 'complementary-reach';
+    }
+    return 'complementary-reach';
+  }
+  // Sort key for the four classifier categories — competing first
+  // (the rarest and most discriminating), then complementary, then
+  // orthogonal-channel, then shared-coverage.
+  const CLASSIFIER_ORDER = {
+    'competing-prediction-adjudication': 0,
+    'complementary-reach':               1,
+    'orthogonal-channel-measurement':    2,
+    'shared-coverage':                   3,
+  };
+  // Build a target → list-of-resolves-edges index
+  const _byTarget = {};
+  for (const eid in resolves_by_id) {
+    const e = resolves_by_id[eid];
+    if (!_byTarget[e.to]) _byTarget[e.to] = [];
+    _byTarget[e.to].push(e);
+  }
+  // Walk each target's edge list; every (i, j) program pair contributes
+  // a row to that pair's shared-targets array.
+  const _pairMap = {};
+  for (const t in _byTarget) {
+    const list = _byTarget[t];
+    // Distinct from-programs at this target, alphabetised
+    const progs = Array.from(new Set(list.map(e => e.from))).sort();
+    if (progs.length < 2) continue;
+    const targetIsCell = !!cell_id_to_fc_id[t];
+    for (let i = 0; i < progs.length; i++) {
+      for (let j = i + 1; j < progs.length; j++) {
+        const a = progs[i], b = progs[j];
+        const pairId = a + '|' + b;
+        if (!_pairMap[pairId]) _pairMap[pairId] = { id: pairId, progA: a, progB: b, sharedTargets: [] };
+        const edgeA = list.find(e => e.from === a);
+        const edgeB = list.find(e => e.from === b);
+        _pairMap[pairId].sharedTargets.push({
+          targetId: t,
+          targetIsCell,
+          edgeA,
+          edgeB,
+          classifier: classifyTargetPair(edgeA, edgeB, targetIsCell),
+        });
+      }
+    }
+  }
+  // Sort each pair's shared targets by classifier (competing first), then target id
+  for (const pid in _pairMap) {
+    _pairMap[pid].sharedTargets.sort((a, b) =>
+      (CLASSIFIER_ORDER[a.classifier] ?? 99) - (CLASSIFIER_ORDER[b.classifier] ?? 99)
+      || (a.targetId || '').localeCompare(b.targetId || '')
+    );
+    // Per-pair summary: count by classifier
+    const byClassifier = {};
+    for (const s of _pairMap[pid].sharedTargets) {
+      byClassifier[s.classifier] = (byClassifier[s.classifier] || 0) + 1;
+    }
+    _pairMap[pid].summary = {
+      total: _pairMap[pid].sharedTargets.length,
+      byClassifier,
+    };
+  }
+  // Discriminating-pairs array, sorted by total shared targets (desc), then pair id
+  const discriminating_pairs = Object.values(_pairMap).sort((a, b) =>
+    b.summary.total - a.summary.total || a.id.localeCompare(b.id)
+  );
+  // Quick lookup by pair-id
+  const discriminating_pairs_by_id = Object.fromEntries(
+    discriminating_pairs.map(p => [p.id, p])
+  );
+  // Per-program count of pairs that program participates in (used by
+  // the program-card cross-link footer)
+  const discriminating_pairs_by_program = {};
+  for (const p of discriminating_pairs) {
+    if (!discriminating_pairs_by_program[p.progA]) discriminating_pairs_by_program[p.progA] = [];
+    if (!discriminating_pairs_by_program[p.progB]) discriminating_pairs_by_program[p.progB] = [];
+    discriminating_pairs_by_program[p.progA].push(p);
+    discriminating_pairs_by_program[p.progB].push(p);
+  }
+
   // Falsifications list
   const falsifications = [];
   for (const fc of fcs) {
@@ -435,6 +570,10 @@ function augmentDataset(raw) {
     resolves_by_target,
     resolves_by_id,
     cell_id_to_fc_id,
+    // Sub-PR E7 — discriminating-experiments lookup substrate
+    discriminating_pairs,
+    discriminating_pairs_by_id,
+    discriminating_pairs_by_program,
     _meta: {
       dataset_version: raw.dataset_version || raw.schema_version || 'v34',
       generated_at: new Date().toISOString(),
@@ -448,6 +587,7 @@ function augmentDataset(raw) {
         discourse_nodes: discourse_nodes.length,
         discourse_edges: Object.values(discourse_edges_by_type).reduce((a, b) => a + b.length, 0),
         resolves_edges: Object.values(resolves_by_id).length,
+        discriminating_pairs: discriminating_pairs.length,
       },
     },
   };
@@ -485,7 +625,7 @@ var state = {
   zoom: 1.0,                    // 1.0 = 100%
   sidebarCollapsed: false,
   // Update A: phenomena layer + panel routing
-  activePanel: 'about',         // phenomena | legend | about | education | research | search | spotlight | fc | discourse | discourse-edges | glossary | edge
+  activePanel: 'about',         // phenomena | legend | about | education | research | search | spotlight | fc | discourse | discourse-edges | glossary | edge | discriminating | discriminating-pair
   phenomenaActive: new Set(),   // start with none on (user opts in via the panel)
   searchQuery: '',
   panX: 0,                      // map pan offset
@@ -493,6 +633,8 @@ var state = {
   // Update C — glossary panel
   selectedGlossaryTerm: null,   // slug of the currently-focused glossary entry (null = no specific focus)
   glossaryFilter: '',           // type-ahead filter on the glossary panel
+  // Sub-PR E7 — discriminating-experiments lookup
+  selectedPair: null,           // alphabetised pair-id ('dune|hyper-k') or null
 };
 var ZOOM_LEVELS = [0.5, 0.65, 0.8, 1.0, 1.25, 1.5, 1.85, 2.25];
 
@@ -628,6 +770,17 @@ function parseHash() {
     // Update C — /glossary  or  /glossary/<slug>
     state.activePanel = 'glossary';
     state.selectedGlossaryTerm = parts[1] || null;
+  } else if (parts[0] === 'pairs') {
+    // Sub-PR E7 — /pairs  catalogue of all program pairs with shared coverage
+    state.activePanel = 'discriminating';
+  } else if (parts[0] === 'pair' && parts[1] && parts[2]) {
+    // Sub-PR E7 — /pair/<progA>/<progB>  per-pair shared-coverage view.
+    // Pair ids are alphabetised; the parser tolerates either order and
+    // canonicalises on read.
+    const a = parts[1], b = parts[2];
+    const pid = (a < b) ? (a + '|' + b) : (b + '|' + a);
+    state.selectedPair = pid;
+    state.activePanel = 'discriminating-pair';
   }
   if (qs) {
     const p = new URLSearchParams(qs);
@@ -665,6 +818,13 @@ function writeHash() {
     // Update C — /glossary  or  /glossary/<slug>
     h += 'glossary';
     if (state.selectedGlossaryTerm) h += '/' + encodeURIComponent(state.selectedGlossaryTerm);
+  } else if (state.activePanel === 'discriminating-pair' && state.selectedPair) {
+    // Sub-PR E7 — /pair/<progA>/<progB>
+    const [a, b] = state.selectedPair.split('|');
+    h += 'pair/' + encodeURIComponent(a) + '/' + encodeURIComponent(b);
+  } else if (state.activePanel === 'discriminating') {
+    // Sub-PR E7 — /pairs  catalogue
+    h += 'pairs';
   }
   const qs = [];
   if (state.group !== 'sector') qs.push('group=' + encodeURIComponent(state.group));

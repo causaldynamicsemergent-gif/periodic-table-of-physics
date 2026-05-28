@@ -474,6 +474,12 @@ function switchSidebarPanel(panel) {
   if (panel !== 'discourse-edges') {
     if (typeof clearDiscourseEdgeSelection === 'function') clearDiscourseEdgeSelection();
   }
+  // Sub-PR E7 — clear the selected pair when leaving the per-pair view.
+  // The catalogue view doesn't carry a selectedPair, so clearing on
+  // 'discriminating' as well is fine (no-op if already null).
+  if (panel !== 'discriminating-pair') {
+    if (typeof clearDiscriminatingSelection === 'function') clearDiscriminatingSelection();
+  }
   writeHash();
   renderPanel();
   closeBrowseMenu();
@@ -517,6 +523,21 @@ function renderPanel() {
     case 'browse-totalities':      renderSidebarBrowseTotalities();     break;
     case 'browse-regime-content':  renderSidebarBrowseRegimeContent();  break;
     case 'browse-programs':        renderSidebarBrowsePrograms();       break;
+    case 'discriminating':                                              // Sub-PR E7 — catalogue
+      if (typeof renderSidebarDiscriminatingCatalogue === 'function') renderSidebarDiscriminatingCatalogue();
+      else renderSidebarAbout();
+      break;
+    case 'discriminating-pair': {                                       // Sub-PR E7 — per-pair view
+      if (state.selectedPair && typeof renderSidebarDiscriminatingPair === 'function') {
+        renderSidebarDiscriminatingPair(state.selectedPair);
+      } else if (typeof renderSidebarDiscriminatingCatalogue === 'function') {
+        // Fall back to the catalogue when the pair id is missing
+        renderSidebarDiscriminatingCatalogue();
+      } else {
+        renderSidebarAbout();
+      }
+      break;
+    }
     default:                       renderSidebarAbout();
   }
   syncSidebarQuickBar();

@@ -1,0 +1,541 @@
+/* =============================================================
+   update-e7.css — sub-PR E7
+   Discriminating-experiments lookup (Compare programs panel).
+
+   Three nesting levels:
+
+     (1) Catalogue panel — sits at the same level as the other
+         sidebar panels (legend, about, glossary, etc.) reached
+         via the "⇄ Compare programs" toolbar tab. Heading +
+         classifier legend + sorted list of pair rows.
+
+     (2) Per-pair view — opened by clicking a catalogue row or
+         a cross-link from a program card. Has a breadcrumb back
+         to the catalogue, a pair head (the two program pills),
+         and a sequence of per-target sections.
+
+     (3) Per-target section — one classifier pill at top, generic
+         category blurb, two-column side-by-side comparison of
+         each program's reach / timeline / bounds-setting state /
+         description, and (only for competing-prediction-
+         adjudication targets) a shared competing-predictions
+         block underneath.
+
+   Classifier palette (intuitive mapping, not arbitrary):
+     • competing-prediction-adjudication → --accent (brick red)
+       Adjudicative tension between competing predictions.
+     • orthogonal-channel-measurement   → --st-confirmed (green)
+       Convergent measurement of a single parameter.
+     • complementary-reach              → --st-retro (purple)
+       Synthesis from complementary channels.
+     • shared-coverage                  → --ink-mute (neutral)
+       Generic fallback; unused on v95/v96 data.
+
+   No schema field names appear in UI text per
+   PHYSICIST_FACING_VOCABULARY.md §3 / §4 / §6. The four
+   classifier labels and blurbs are physicist-natural phrases
+   describing the category, not the underlying field structure.
+
+   Side-by-side columns at sidebar width ≥520px; below that
+   the two-column grid collapses to a stacked vertical layout
+   so the panel remains usable when the splitter is dragged
+   narrow.
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   Classifier pills — used in catalogue legend, per-target heads,
+   and cross-link rows. Tonal background + matching border.
+   ------------------------------------------------------------- */
+.dc-cls-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  padding: 3px 8px 3px 7px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink-soft);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.dc-cls-pill.dc-cls-competing {
+  color: var(--accent);
+  border-color: rgba(139,26,26,0.30);
+  background: rgba(139,26,26,0.05);
+}
+
+.dc-cls-pill.dc-cls-orthogonal {
+  color: var(--st-confirmed);
+  border-color: rgba(46,125,91,0.30);
+  background: rgba(46,125,91,0.05);
+}
+
+.dc-cls-pill.dc-cls-complementary {
+  color: var(--st-retro);
+  border-color: rgba(90,74,138,0.30);
+  background: rgba(90,74,138,0.05);
+}
+
+.dc-cls-pill.dc-cls-shared {
+  color: var(--ink-mute);
+}
+
+
+/* -------------------------------------------------------------
+   Catalogue panel
+   ------------------------------------------------------------- */
+.dc-pair-cat-legend {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+}
+
+.dc-pair-cat-legend-row {
+  display: grid;
+  grid-template-columns: minmax(180px, max-content) 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 5px 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.dc-pair-cat-legend-row + .dc-pair-cat-legend-row {
+  border-top: 1px dashed var(--rule-soft);
+  margin-top: 2px;
+  padding-top: 7px;
+}
+
+.dc-pair-cat-legend-blurb {
+  color: var(--ink-soft);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.dc-pair-catlist {
+  margin-top: 6px;
+}
+
+.dc-pair-catrow {
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  margin-top: 8px;
+  background: var(--paper);
+  cursor: pointer;
+  transition: background-color 80ms ease, border-color 80ms ease, box-shadow 80ms ease;
+}
+
+.dc-pair-catrow:hover {
+  background: var(--paper-2);
+  border-color: var(--ink-mute);
+  box-shadow: var(--shadow-soft);
+}
+
+.dc-pair-catrow:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.dc-pair-catrow-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.dc-pair-catrow-pair {
+  font-family: 'Spectral', serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.dc-pair-catrow-sym {
+  color: var(--ink-mute);
+  margin: 0 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.dc-pair-catrow-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+
+.dc-pair-catrow-summary {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-family: 'Crimson Pro', Georgia, serif;
+  line-height: 1.45;
+}
+
+
+/* -------------------------------------------------------------
+   Per-pair head section
+   ------------------------------------------------------------- */
+.dc-pair-head-section {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.dc-pair-head-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dc-pair-head-prog {
+  font-size: 12.5px !important;
+}
+
+.dc-pair-head-sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  color: var(--ink-mute);
+  margin: 0 2px;
+}
+
+.dc-pair-head-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.dc-pair-head-progmeta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.02em;
+}
+
+.dc-pair-head-sum {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+
+/* -------------------------------------------------------------
+   Per-target section
+   ------------------------------------------------------------- */
+.dc-pair-targets {
+  margin-top: 6px;
+}
+
+.dc-pair-target {
+  padding: 14px 0 16px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.dc-pair-target:last-child {
+  border-bottom: none;
+}
+
+.dc-pair-target-head {
+  margin-bottom: 12px;
+}
+
+.dc-pair-target-pillrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.dc-pair-target-pill {
+  font-size: 12.5px !important;
+  padding: 4px 10px !important;
+}
+
+.dc-pair-target-pill-ctx {
+  color: var(--ink-mute);
+  font-weight: 400;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.dc-pair-target-pill-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dc-pair-target-blurb {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+
+/* -------------------------------------------------------------
+   Two-column comparison grid
+   At narrow widths the grid collapses to a single column so the
+   panel works even when the user has dragged the splitter narrow.
+   ------------------------------------------------------------- */
+.dc-pair-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 920px) {
+  /* Once the viewport is wide enough that a typical sidebar split
+     can hold the two-column layout, expand. Roughly: viewport ≥
+     920px ⇒ sidebar ≥ ~520px assuming a 400px+ map pane. The
+     splitter remembers its width in localStorage so user choices
+     persist; this break-point keeps the columns side-by-side at
+     the typical default width. */
+  .dc-pair-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.dc-pair-col {
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  padding: 10px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;  /* allow renderQS contents to wrap inside the column */
+}
+
+.dc-pair-col-empty {
+  color: var(--ink-mute);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 12.5px;
+  padding: 14px 11px;
+  background: var(--paper-3);
+  border: 1px dashed var(--rule);
+  border-radius: 3px;
+}
+
+.dc-pair-col-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dc-pair-col-arrow {
+  color: var(--ink-mute);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.dc-pair-col-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.dc-pair-col-sensitivity {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.dc-pair-col-citations {
+  margin-top: 2px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+
+.dc-pair-col-citation {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+}
+
+.dc-pair-col-citation + .dc-pair-col-citation {
+  margin-top: 3px;
+}
+
+.dc-pair-col-desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.dc-pair-col-desc p + p {
+  margin-top: 6px;
+}
+
+
+/* -------------------------------------------------------------
+   Shared competing-prediction block
+   Appears once per target with classifier =
+   competing-prediction-adjudication, beneath the two-column row.
+   ------------------------------------------------------------- */
+.dc-pair-shared-ppp {
+  margin-top: 12px;
+  padding: 11px 12px 12px;
+  background: rgba(139,26,26,0.04);
+  border: 1px solid rgba(139,26,26,0.18);
+  border-radius: 3px;
+}
+
+.dc-pair-shared-ppp-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 9px;
+}
+
+.dc-pair-shared-ppp-row {
+  padding: 7px 0;
+  border-top: 1px dashed rgba(139,26,26,0.18);
+}
+
+.dc-pair-shared-ppp-row:first-of-type {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.dc-pair-shared-ppp-program {
+  font-family: 'Spectral', serif;
+  font-weight: 500;
+  font-size: 13.5px;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.dc-pair-shared-ppp-value {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.dc-pair-shared-ppp-desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.dc-pair-shared-ppp-footnote {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(139,26,26,0.12);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+
+
+/* -------------------------------------------------------------
+   Empty / fallback state
+   ------------------------------------------------------------- */
+.dc-pair-empty {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mute);
+  padding: 12px;
+  background: var(--paper-2);
+  border: 1px dashed var(--rule);
+  border-radius: 3px;
+}
+
+.dc-pair-back {
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 5px 10px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.dc-pair-back:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+
+/* -------------------------------------------------------------
+   Cross-link footer on program cards (embedded by
+   renderProgramCard via renderProgramDiscriminatingCrossLink)
+   ------------------------------------------------------------- */
+.dc-pair-xlink-section .sec-sub {
+  margin-bottom: 8px;
+}
+
+.dc-pair-xlink-row {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  margin-top: 6px;
+  background: var(--paper);
+  cursor: pointer;
+  transition: background-color 80ms ease, border-color 80ms ease;
+}
+
+.dc-pair-xlink-row:hover {
+  background: var(--paper-2);
+  border-color: var(--ink-mute);
+}
+
+.dc-pair-xlink-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.dc-pair-xlink-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.dc-pair-xlink-sym {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--ink-mute);
+  font-size: 12px;
+}
+
+.dc-pair-xlink-other {
+  font-family: 'Spectral', serif;
+  font-size: 13.5px;
+  color: var(--ink);
+  flex: 1;
+}
+
+.dc-pair-xlink-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+
+.dc-pair-xlink-summary {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-family: 'Crimson Pro', Georgia, serif;
+  line-height: 1.45;
+}
