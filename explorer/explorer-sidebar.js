@@ -480,6 +480,12 @@ function switchSidebarPanel(panel) {
   if (panel !== 'discriminating-pair') {
     if (typeof clearDiscriminatingSelection === 'function') clearDiscriminatingSelection();
   }
+  // Sub-PR E6 — clear the selected kind + filter when leaving the
+  // per-kind view. The catalogue view doesn't carry a selectedKind,
+  // so clearing on 'ranks' as well is fine (no-op if already null).
+  if (panel !== 'ranks-kind') {
+    if (typeof clearRanksSelection === 'function') clearRanksSelection();
+  }
   writeHash();
   renderPanel();
   closeBrowseMenu();
@@ -533,6 +539,21 @@ function renderPanel() {
       } else if (typeof renderSidebarDiscriminatingCatalogue === 'function') {
         // Fall back to the catalogue when the pair id is missing
         renderSidebarDiscriminatingCatalogue();
+      } else {
+        renderSidebarAbout();
+      }
+      break;
+    }
+    case 'ranks':                                                       // Sub-PR E6 — catalogue
+      if (typeof renderSidebarRanksCatalogue === 'function') renderSidebarRanksCatalogue();
+      else renderSidebarAbout();
+      break;
+    case 'ranks-kind': {                                                // Sub-PR E6 — per-kind drill-down
+      if (state.selectedKind && typeof renderSidebarRanksKind === 'function') {
+        renderSidebarRanksKind(state.selectedKind);
+      } else if (typeof renderSidebarRanksCatalogue === 'function') {
+        // Fall back to the catalogue when the kind id is missing
+        renderSidebarRanksCatalogue();
       } else {
         renderSidebarAbout();
       }

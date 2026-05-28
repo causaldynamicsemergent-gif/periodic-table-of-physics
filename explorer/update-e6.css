@@ -1,0 +1,556 @@
+/* =============================================================
+   update-e6.css — sub-PR E6
+   Scales-by-kind panel.
+
+   Three nesting levels, modeled on update-e7.css (Compare
+   programs) but distinct in palette to keep the two surfaces
+   visually different — E7 classifies physics-relations between
+   pairs of programs (3 colors: accent / confirmed / retro);
+   E6 classifies the eight physical dimensions of quantitative
+   commitments (5 distinct accents + 3 neutral tones).
+
+     (1) Catalogue panel — sits at the same level as the
+         other sidebar panels (legend, about, glossary,
+         Compare programs, etc.) reached via the "▲▼ Scales"
+         toolbar tab. Heading + intro paragraph + one row per
+         physical dimension with count + min → max range +
+         physicist-prose blurb.
+
+     (2) Per-kind drill-down — opened by clicking a catalogue
+         row or by landing on #/scales/<kind>. Breadcrumb back
+         to the catalogue, panel head (kind pill + count +
+         range + blurb + sort-note), direction-filter chip
+         row, and a ranked list of every entry.
+
+     (3) Per-row — a three-column grid: left column has the
+         direction tag + value + units (rendered via the E4
+         renderQS atom), middle column has the description +
+         context + surface chip + optional citation chevron,
+         right column has the host pill that deep-links into
+         the source card.
+
+   Kind palette (eight dimensions, deliberate physics-motivated
+   assignment, distinct from E7):
+     • energy_scale     → --struct (blue)        structural foundation
+     • mass             → --accent (brick red)   iconic physics quantity
+     • time             → --hybrid (gold)        temporal evolution
+     • length           → --phen (green)         spatial extent
+     • coupling         → --st-retro (purple)    tying-together semantics
+     • ratio            → --ink-soft (dark grey) abstract ratio
+     • dimensionless    → --ink-mute (light grey) pure numbers
+     • sigma_deviation  → --ink-soft + σ glyph   tension marker
+
+   No schema field names appear in UI text per
+   PHYSICIST_FACING_VOCABULARY.md §3 / §4 / §6. The eight kind
+   labels, the five direction-filter labels, the six surface
+   chip labels, and every tooltip read as physicist-natural
+   phrases.
+
+   The per-kind list is dense — the longest kind has 96 entries
+   (dimensionless). Row height is kept compact (~58–72px each)
+   so a physicist scrolling can scan rapidly. Citations stay
+   collapsed by default for the same reason.
+   ============================================================= */
+
+
+/* -------------------------------------------------------------
+   Kind pills — used in catalogue rows and per-kind drill-down
+   panel head. Tonal background + matching border, mirrors the
+   E7 classifier-pill chrome but with the kind palette.
+   ------------------------------------------------------------- */
+.rk-kind-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  padding: 3px 8px 3px 7px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink-soft);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.rk-kind-pill.rk-kind-energy {
+  color: var(--struct);
+  border-color: rgba(21,100,168,0.30);
+  background: rgba(21,100,168,0.05);
+}
+.rk-kind-pill.rk-kind-mass {
+  color: var(--accent);
+  border-color: rgba(139,26,26,0.30);
+  background: rgba(139,26,26,0.05);
+}
+.rk-kind-pill.rk-kind-time {
+  color: var(--hybrid);
+  border-color: rgba(184,134,11,0.30);
+  background: rgba(184,134,11,0.05);
+}
+.rk-kind-pill.rk-kind-length {
+  color: var(--phen);
+  border-color: rgba(46,125,91,0.30);
+  background: rgba(46,125,91,0.05);
+}
+.rk-kind-pill.rk-kind-coupling {
+  color: var(--st-retro);
+  border-color: rgba(90,74,138,0.30);
+  background: rgba(90,74,138,0.05);
+}
+.rk-kind-pill.rk-kind-ratio {
+  color: var(--ink-soft);
+  border-color: rgba(61,58,50,0.30);
+}
+.rk-kind-pill.rk-kind-dimensionless {
+  color: var(--ink-mute);
+}
+.rk-kind-pill.rk-kind-sigma {
+  color: var(--ink-soft);
+  border-color: rgba(61,58,50,0.30);
+  background: var(--paper-3);
+}
+
+
+/* -------------------------------------------------------------
+   Catalogue panel
+   ------------------------------------------------------------- */
+.rk-catlist {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.rk-cat-row {
+  padding: 12px 12px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 80ms ease, background 80ms ease, transform 60ms ease;
+}
+.rk-cat-row:hover {
+  border-color: var(--ink-mute);
+  background: var(--paper-2);
+}
+.rk-cat-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.rk-cat-row:active {
+  transform: translateY(1px);
+}
+.rk-cat-row-empty {
+  cursor: default;
+  background: var(--paper-2);
+  opacity: 0.72;
+}
+.rk-cat-row-empty:hover {
+  border-color: var(--rule);
+  background: var(--paper-2);
+}
+
+.rk-cat-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.rk-cat-row-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.rk-cat-row-ct-empty {
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+.rk-cat-row-range {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+  flex-wrap: wrap;
+  line-height: 1.5;
+}
+.rk-range-min, .rk-range-max {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.rk-range-sep {
+  color: var(--ink-mute);
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rk-cat-row-blurb {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+
+/* -------------------------------------------------------------
+   Per-kind panel — head section
+   ------------------------------------------------------------- */
+.rk-head-section {
+  padding-bottom: 4px;
+}
+
+.rk-head-pill {
+  margin-bottom: 6px;
+}
+
+.rk-head-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-bottom: 3px;
+}
+
+.rk-head-range {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+  line-height: 1.5;
+}
+
+.rk-head-blurb {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 6px 0 6px;
+}
+
+.rk-head-sortnote {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+
+/* -------------------------------------------------------------
+   Filter chip row
+   ------------------------------------------------------------- */
+.rk-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 0 8px;
+  border-top: 1px dashed var(--rule-soft);
+  margin-top: 6px;
+}
+
+.rk-filter-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 1.3;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.rk-filter-chip:hover {
+  background: var(--paper-3);
+  border-color: var(--ink-mute);
+  color: var(--ink);
+}
+.rk-filter-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.rk-filter-chip[disabled] {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+.rk-filter-chip[disabled]:hover {
+  background: var(--paper);
+  border-color: var(--rule);
+  color: var(--ink-soft);
+}
+.rk-filter-chip-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.rk-filter-chip-active:hover {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+  color: var(--paper);
+}
+.rk-filter-chip-active .rk-filter-chip-ct {
+  color: var(--paper-3);
+}
+
+.rk-filter-chip-ct {
+  font-size: 9.5px;
+  color: var(--ink-mute);
+}
+
+
+/* -------------------------------------------------------------
+   Per-kind ranked list — row chrome
+   ------------------------------------------------------------- */
+.rk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.rk-row {
+  padding: 9px 10px 9px 12px;
+  border-top: 1px dashed var(--rule-soft);
+  background: transparent;
+}
+.rk-row:first-child {
+  border-top: none;
+}
+.rk-row:hover {
+  background: var(--paper-2);
+}
+
+.rk-row-main {
+  display: grid;
+  grid-template-columns: minmax(150px, 25%) minmax(0, 1fr) minmax(120px, max-content);
+  gap: 12px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .rk-row-main {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+/* --- left column: direction tag + value + units --- */
+.rk-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rk-row-direction {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.rk-row-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+/* KaTeX-rendered values inherit baseline; the qs-units span (from
+   renderQS) is rendered slightly muted so units don't compete with
+   the numeric value for emphasis. */
+.rk-row-value .qs-units {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+.rk-row-value .qs-bd {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-right: 1px;
+}
+
+.rk-row-unranked {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* --- middle column: description + context + surface chip + citations --- */
+.rk-row-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rk-row-desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.rk-row-context {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  line-height: 1.4;
+}
+
+.rk-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 3px;
+  align-items: center;
+}
+
+.rk-row-surface {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: var(--paper-3);
+  color: var(--ink-mute);
+  border: 1px solid var(--rule-soft);
+  line-height: 1.3;
+}
+
+.rk-row-citetoggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px 2px 4px;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper);
+  color: var(--ink-mute);
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.3;
+}
+.rk-row-citetoggle:hover {
+  background: var(--paper-3);
+  color: var(--ink-soft);
+  border-color: var(--ink-faint);
+}
+.rk-row-citetoggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.rk-row-citetoggle-chev {
+  font-size: 9px;
+  color: var(--ink-mute);
+  line-height: 1;
+}
+
+.rk-row-citations {
+  margin-top: 5px;
+  padding: 6px 8px;
+  background: var(--paper-2);
+  border-left: 2px solid var(--rule);
+  border-radius: 2px;
+}
+.rk-row-citation {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  padding: 2px 0;
+}
+.rk-row-citation + .rk-row-citation {
+  border-top: 1px dashed var(--rule-soft);
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+/* --- right column: host pill --- */
+.rk-row-right {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.rk-host-pill {
+  white-space: normal;
+  text-align: left;
+  max-width: 100%;
+}
+
+
+/* -------------------------------------------------------------
+   Empty states
+   ------------------------------------------------------------- */
+.rk-empty,
+.rk-empty-filtered {
+  padding: 12px 14px;
+  background: var(--paper-2);
+  border-left: 3px solid var(--rule);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 10px 0;
+}
+
+.rk-filter-clear {
+  display: block;
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.rk-filter-clear:hover {
+  background: var(--paper-3);
+  border-color: var(--ink-mute);
+  color: var(--ink);
+}
+
+.rk-back {
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.rk-back:hover {
+  background: var(--paper-3);
+  border-color: var(--ink-mute);
+  color: var(--ink);
+}

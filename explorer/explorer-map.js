@@ -531,8 +531,11 @@ function syncToolbarChips() {
     // Sub-PR E7 — the Compare-programs tab stays active for the
     // per-pair view as well as the catalogue, since the per-pair
     // panel is a drill-down of the same tab's surface.
+    // Sub-PR E6 — same pattern for the Scales tab: stays active for
+    // the per-kind drill-down view as well as the catalogue.
     const matches = (tab === state.activePanel)
-      || (tab === 'discriminating' && state.activePanel === 'discriminating-pair');
+      || (tab === 'discriminating' && state.activePanel === 'discriminating-pair')
+      || (tab === 'ranks' && state.activePanel === 'ranks-kind');
     b.classList.toggle('active', matches);
   });
 }

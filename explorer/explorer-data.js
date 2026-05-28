@@ -516,6 +516,351 @@ function augmentDataset(raw) {
     discriminating_pairs_by_program[p.progB].push(p);
   }
 
+  // =============================================================
+  //   Sub-PR E6 — quantitative-scale entries substrate
+  //
+  //   Walks every surface that can carry a quantitative_scale
+  //   (or its sibling sensitivity field on resolves edges) and
+  //   produces:
+  //
+  //     - DATA.qs_entries           — flat array of denormalised entries
+  //     - DATA.qs_entries_by_kind   — entries per kind, sorted by physical magnitude
+  //     - DATA.qs_kind_summary      — per-kind {count, minEntry, maxEntry, hasUnranked}
+  //
+  //   Six surfaces (five carry quantitative_scale per the schema;
+  //   the sixth — resolves-edge sensitivity — has the same shape
+  //   under a different field name, included so the rank panel
+  //   surfaces experimental reach alongside theoretical commitments):
+  //
+  //     1. cell-direct        — fc.cells[i].quantitative_scale
+  //     2. cell-prediction    — fc.cells[i].predictions[j].quantitative_scale
+  //     3. fc-prediction      — fc.predictive_yield[j].quantitative_scale
+  //     4. carrier-frontier   — open-frontier node.quantitative_scale
+  //        carrier-totality   — totality-approach node.quantitative_scale
+  //     5. implication        — node.if_real_implies[i].implications[j].quantitative_scale
+  //     6. experimental-reach — resolves-edge.sensitivity (sibling field, same shape)
+  //
+  //   v95 totals: ~288 quantitative_scale entries + 38 resolves
+  //   sensitivities = ~326 rank-panel rows.
+  //
+  //   Unit normalisation: each entry gets a `magnitude` field
+  //   (log10 of value in a kind-specific base unit) used purely
+  //   for sorting. Entries whose units don't map to a recognised
+  //   conversion factor get magnitude_ok=false and sort to the
+  //   end of their kind alphabetically by host_label.
+  // =============================================================
+
+  // Per-kind log10 unit-conversion factors. Base units:
+  //   energy_scale, mass  → eV  (mass-energy equivalence via E=mc²,
+  //                              kg=5.609e35 eV; common HEP convention)
+  //   length             → m
+  //   time               → s
+  //   coupling, dimensionless, ratio, sigma_deviation → 1
+  //                        (treat raw value as the magnitude; units
+  //                         when present read as a category label)
+  //
+  // Unknown unit strings fall back to magnitude_ok=false and the
+  // entry sorts alphabetically at the end of its kind. The map of
+  // recognised units is intentionally generous — the dataset uses
+  // a mix of SI prefixes, astronomical units, and a few project-
+  // internal abbreviations.
+  const QS_UNIT_LOG10 = {
+    'energy_scale': {
+      'eV':   0,    'meV': -3,   'μeV': -6,   'µeV': -6,   'ueV': -6,
+      'neV': -9,    'peV': -12,  'feV': -15,
+      'keV':  3,    'MeV':  6,   'GeV':  9,   'TeV': 12,   'PeV': 15,  'EeV': 18,  'ZeV': 21,
+      'J':    18.795,  'erg':  11.795,         // 1 J = 6.242×10¹⁸ eV
+      'K':    -4.0648,                          // k_B × 1 K = 8.617×10⁻⁵ eV
+    },
+    'mass': {
+      'eV':   0,    'meV': -3,   'μeV': -6,   'µeV': -6,   'ueV': -6,
+      'keV':  3,    'MeV':  6,   'GeV':  9,   'TeV': 12,   'PeV': 15,
+      'eV²':  0,    'eV2':  0,                  // T17 squared-dimensional encoding; sort co-located with eV
+      'eV/c²': 0,   'eV/c2': 0,                 // explicit /c² form
+      'MeV/c²': 6,  'MeV/c2': 6,
+      'GeV/c²': 9,  'GeV/c2': 9,
+      'kg':   35.749,    'g':    32.749,
+      'M_sun': 66.05,    'M_⊙': 66.05,
+      'M_pl':  28.087,                          // Planck mass = 1.22×10¹⁹ GeV
+    },
+    'length': {
+      'm':    0,    'cm': -2,    'mm': -3,    'μm': -6,    'µm': -6,    'um': -6,
+      'nm':  -9,    'pm': -12,   'fm': -15,   'am': -18,   'zm': -21,
+      'km':   3,    'Mm':  6,    'Gm':  9,
+      'AU':   11.175,    'ly':  15.976,
+      'pc':   16.489,    'kpc': 19.489,    'Mpc': 22.489,    'Gpc': 25.489,
+      'R_sun': 8.842,    'R_⊙': 8.842,
+      'R_earth': 6.804,  'R_⊕': 6.804,
+      'l_pl':  -34.792,                         // Planck length ~ 1.616×10⁻³⁵ m
+    },
+    'time': {
+      's':    0,    'ms': -3,    'μs': -6,    'µs': -6,    'us': -6,
+      'ns':  -9,    'ps': -12,   'fs': -15,   'as': -18,
+      'min':  1.778,    'minute': 1.778,
+      'h':    3.556,    'hr':     3.556,    'hour':   3.556,
+      'd':    4.937,    'day':    4.937,
+      'wk':   5.781,    'week':   5.781,
+      'yr':   7.499,    'year':   7.499,    'a':      7.499,
+      'kyr':  10.499,   'Myr':    13.499,
+      'Gyr':  16.499,   'Tyr':    19.499,
+      't_pl': -43.268,                          // Planck time ~ 5.39×10⁻⁴⁴ s
+    },
+    // Dimensionless families — units when present don't add a
+    // conversion factor; the raw value carries the magnitude.
+    'coupling':       { '': 0, 'dimensionless': 0 },
+    'dimensionless':  { '': 0, 'dimensionless': 0 },
+    'ratio':          { '': 0, 'dimensionless': 0 },
+    'sigma_deviation':{ '': 0, 'σ': 0, 'sigma': 0 },
+  };
+
+  function qsEntryMagnitude(qs, kind) {
+    if (!qs || qs.value === undefined || qs.value === null) {
+      return { magnitude: -Infinity, magnitude_ok: false };
+    }
+    const v = qs.value;
+    const isLog10 = !!qs.log10;
+    const units = qs.units || '';
+    // Base magnitude in the entry's own units
+    let base;
+    if (isLog10) {
+      base = (typeof v === 'number') ? v : NaN;
+    } else if (typeof v === 'number' && v !== 0) {
+      base = Math.log10(Math.abs(v));
+    } else if (v === 0) {
+      // value = 0 magnitudes sort to the front
+      return { magnitude: -Infinity, magnitude_ok: true };
+    } else {
+      base = NaN;
+    }
+    if (!isFinite(base)) {
+      return { magnitude: -Infinity, magnitude_ok: false };
+    }
+    const table = QS_UNIT_LOG10[kind] || null;
+    if (!table) {
+      // Unknown kind — sort by raw magnitude, flag as unranked
+      return { magnitude: base, magnitude_ok: false };
+    }
+    const factor = table[units];
+    if (factor === undefined) {
+      // For dimensionless families, an unrecognised units string
+      // is acceptable (the raw value is still the magnitude); for
+      // dimensional kinds, mark unranked.
+      const isDimensionlessFamily = (kind === 'coupling' || kind === 'dimensionless' || kind === 'ratio' || kind === 'sigma_deviation');
+      if (isDimensionlessFamily) return { magnitude: base, magnitude_ok: true };
+      return { magnitude: base, magnitude_ok: false };
+    }
+    return { magnitude: base + factor, magnitude_ok: true };
+  }
+
+  // Helper: produce a short one-line description for a host based
+  // on the surface type. Used by the rank panel row's middle column.
+  function _cellContentString(cell) {
+    if (!cell) return '';
+    if (typeof cell.content === 'string') return cell.content;
+    if (cell.cell_id) return cell.cell_id;
+    return '';
+  }
+
+  const qs_entries = [];
+
+  // (1) cell-direct + (2) cell-prediction surfaces — walk every fc, every cell
+  for (const fc of fcs) {
+    for (const cell of (fc.cells || [])) {
+      const cellContent = _cellContentString(cell);
+      // cell-direct
+      if (cell.quantitative_scale && cell.quantitative_scale.value !== undefined) {
+        const qs = cell.quantitative_scale;
+        const mag = qsEntryMagnitude(qs, qs.kind);
+        qs_entries.push({
+          kind: qs.kind || '',
+          qs,
+          magnitude: mag.magnitude,
+          magnitude_ok: mag.magnitude_ok,
+          surface: 'cell-direct',
+          host_id: cell.cell_id || '',
+          host_type: 'formal-classification',
+          host_label: cellContent || cell.cell_id || 'cell',
+          fc_id: fc.id,
+          cell_id: cell.cell_id,
+          description: cellContent,
+        });
+      }
+      // cell-prediction
+      for (let pi = 0; pi < (cell.predictions || []).length; pi++) {
+        const pred = cell.predictions[pi];
+        if (pred && pred.quantitative_scale && pred.quantitative_scale.value !== undefined) {
+          const qs = pred.quantitative_scale;
+          const mag = qsEntryMagnitude(qs, qs.kind);
+          qs_entries.push({
+            kind: qs.kind || '',
+            qs,
+            magnitude: mag.magnitude,
+            magnitude_ok: mag.magnitude_ok,
+            surface: 'cell-prediction',
+            host_id: cell.cell_id || '',
+            host_type: 'formal-classification',
+            host_label: cellContent || cell.cell_id || 'cell',
+            host_cell_label: cellContent || '',
+            fc_id: fc.id,
+            cell_id: cell.cell_id,
+            prediction_idx: pi,
+            description: pred.prediction || pred.description || '',
+          });
+        }
+      }
+    }
+    // (3) fc-prediction surface — fc.predictions === predictive_yield
+    for (let pi = 0; pi < (fc.predictions || []).length; pi++) {
+      const pred = fc.predictions[pi];
+      if (pred && pred.quantitative_scale && pred.quantitative_scale.value !== undefined) {
+        const qs = pred.quantitative_scale;
+        const mag = qsEntryMagnitude(qs, qs.kind);
+        qs_entries.push({
+          kind: qs.kind || '',
+          qs,
+          magnitude: mag.magnitude,
+          magnitude_ok: mag.magnitude_ok,
+          surface: 'fc-prediction',
+          host_id: fc.id,
+          host_type: 'formal-classification',
+          host_label: fc.label,
+          fc_id: fc.id,
+          prediction_idx: pi,
+          description: pred.prediction || pred.description || '',
+        });
+      }
+    }
+  }
+
+  // (4) carrier surface + (5) implication surface — walk discourse_nodes
+  for (const node of discourse_nodes) {
+    const isFrontier = (node.type === 'open-frontier');
+    const isTotality = (node.type === 'totality-approach');
+    if (!isFrontier && !isTotality) continue;
+    // carrier-frontier / carrier-totality
+    if (node.quantitative_scale && node.quantitative_scale.value !== undefined) {
+      const qs = node.quantitative_scale;
+      const mag = qsEntryMagnitude(qs, qs.kind);
+      qs_entries.push({
+        kind: qs.kind || '',
+        qs,
+        magnitude: mag.magnitude,
+        magnitude_ok: mag.magnitude_ok,
+        surface: isFrontier ? 'carrier-frontier' : 'carrier-totality',
+        host_id: node.id,
+        host_type: node.type,
+        host_label: node.label || node.id,
+        description: node.label || node.id,
+      });
+    }
+    // implication-level surface
+    const resolutions = node.if_real_implies || [];
+    for (let ri = 0; ri < resolutions.length; ri++) {
+      const res = resolutions[ri] || {};
+      const impls = res.implications || [];
+      for (let ii = 0; ii < impls.length; ii++) {
+        const impl = impls[ii] || {};
+        if (impl.quantitative_scale && impl.quantitative_scale.value !== undefined) {
+          const qs = impl.quantitative_scale;
+          const mag = qsEntryMagnitude(qs, qs.kind);
+          qs_entries.push({
+            kind: qs.kind || '',
+            qs,
+            magnitude: mag.magnitude,
+            magnitude_ok: mag.magnitude_ok,
+            surface: 'implication',
+            host_id: node.id,
+            host_type: node.type,
+            host_label: node.label || node.id,
+            implication_resolution_idx: ri,
+            implication_idx: ii,
+            description: impl.description || impl.target || '',
+          });
+        }
+      }
+    }
+  }
+
+  // (6) experimental-reach surface — resolves-edge sensitivity
+  for (const eid in resolves_by_id) {
+    const e = resolves_by_id[eid];
+    if (!e || !e.sensitivity || e.sensitivity.value === undefined) continue;
+    const qs = e.sensitivity;
+    const mag = qsEntryMagnitude(qs, qs.kind);
+    // Reach target label — for cell targets, the cell content; for
+    // discourse-node targets, the node label.
+    let reachTargetLabel = '';
+    const targetId = e.to;
+    if (cell_id_to_fc_id[targetId]) {
+      const fcId = cell_id_to_fc_id[targetId];
+      const fc = fcById[fcId];
+      const cell = fc && (fc.cells || []).find(c => c.cell_id === targetId);
+      reachTargetLabel = _cellContentString(cell) || targetId;
+    } else if (discourse_by_id[targetId]) {
+      reachTargetLabel = discourse_by_id[targetId].label || targetId;
+    }
+    const programNode = discourse_by_id[e.from];
+    const programLabel = (programNode && programNode.label) || e.from;
+    qs_entries.push({
+      kind: qs.kind || '',
+      qs,
+      magnitude: mag.magnitude,
+      magnitude_ok: mag.magnitude_ok,
+      surface: 'experimental-reach',
+      host_id: e.from,
+      host_type: 'experimental-program',
+      host_label: programLabel,
+      edge_id: e.id || '',
+      reach_target_id: targetId,
+      reach_target_label: reachTargetLabel,
+      description: reachTargetLabel
+        ? `Reach toward ${reachTargetLabel}`
+        : 'Reach',
+    });
+  }
+
+  // (Bears-on edge surface — renderer-ready, but v95 has zero entries.
+  // When non-zero, walk edges of type === 'bears-on' for edge.quantitative_scale
+  // here. Skipped silently for now.)
+
+  // Group entries by kind and sort within each group:
+  //   ranked entries first, sorted by magnitude ascending;
+  //   unranked entries after, alphabetised by host_label.
+  const qs_entries_by_kind = {};
+  for (const entry of qs_entries) {
+    const k = entry.kind || '__unknown__';
+    if (!qs_entries_by_kind[k]) qs_entries_by_kind[k] = [];
+    qs_entries_by_kind[k].push(entry);
+  }
+  for (const k in qs_entries_by_kind) {
+    qs_entries_by_kind[k].sort((a, b) => {
+      const aOk = a.magnitude_ok !== false;
+      const bOk = b.magnitude_ok !== false;
+      if (aOk && !bOk) return -1;
+      if (!aOk && bOk) return 1;
+      if (aOk && bOk) {
+        if (a.magnitude !== b.magnitude) return a.magnitude - b.magnitude;
+        return (a.host_label || '').localeCompare(b.host_label || '');
+      }
+      return (a.host_label || '').localeCompare(b.host_label || '');
+    });
+  }
+
+  // Per-kind summary: count, minEntry (smallest magnitude),
+  // maxEntry (largest magnitude), hasUnranked (any entry whose
+  // units didn't normalise).
+  const qs_kind_summary = {};
+  for (const k in qs_entries_by_kind) {
+    const list = qs_entries_by_kind[k];
+    const ranked = list.filter(e => e.magnitude_ok !== false);
+    qs_kind_summary[k] = {
+      count: list.length,
+      minEntry: ranked.length ? ranked[0] : (list[0] || null),
+      maxEntry: ranked.length ? ranked[ranked.length - 1] : (list[list.length - 1] || null),
+      hasUnranked: list.some(e => e.magnitude_ok === false),
+    };
+  }
+
   // Falsifications list
   const falsifications = [];
   for (const fc of fcs) {
@@ -574,6 +919,10 @@ function augmentDataset(raw) {
     discriminating_pairs,
     discriminating_pairs_by_id,
     discriminating_pairs_by_program,
+    // Sub-PR E6 — quantitative-scale catalogue substrate
+    qs_entries,
+    qs_entries_by_kind,
+    qs_kind_summary,
     _meta: {
       dataset_version: raw.dataset_version || raw.schema_version || 'v34',
       generated_at: new Date().toISOString(),
@@ -588,6 +937,7 @@ function augmentDataset(raw) {
         discourse_edges: Object.values(discourse_edges_by_type).reduce((a, b) => a + b.length, 0),
         resolves_edges: Object.values(resolves_by_id).length,
         discriminating_pairs: discriminating_pairs.length,
+        quantitative_scale_entries: qs_entries.length,
       },
     },
   };
@@ -625,7 +975,7 @@ var state = {
   zoom: 1.0,                    // 1.0 = 100%
   sidebarCollapsed: false,
   // Update A: phenomena layer + panel routing
-  activePanel: 'about',         // phenomena | legend | about | education | research | search | spotlight | fc | discourse | discourse-edges | glossary | edge | discriminating | discriminating-pair
+  activePanel: 'about',         // phenomena | legend | about | education | research | search | spotlight | fc | discourse | discourse-edges | glossary | edge | discriminating | discriminating-pair | ranks | ranks-kind
   phenomenaActive: new Set(),   // start with none on (user opts in via the panel)
   searchQuery: '',
   panX: 0,                      // map pan offset
@@ -635,6 +985,9 @@ var state = {
   glossaryFilter: '',           // type-ahead filter on the glossary panel
   // Sub-PR E7 — discriminating-experiments lookup
   selectedPair: null,           // alphabetised pair-id ('dune|hyper-k') or null
+  // Sub-PR E6 — scales-by-kind catalogue
+  selectedKind: null,           // 'energy_scale' | 'mass' | 'time' | 'length' | 'coupling' | 'ratio' | 'dimensionless' | 'sigma_deviation' | null
+  selectedKindFilter: null,     // null | 'lower' | 'upper' | 'measured' | 'exact' | 'other'  (null = all)
 };
 var ZOOM_LEVELS = [0.5, 0.65, 0.8, 1.0, 1.25, 1.5, 1.85, 2.25];
 
@@ -781,6 +1134,15 @@ function parseHash() {
     const pid = (a < b) ? (a + '|' + b) : (b + '|' + a);
     state.selectedPair = pid;
     state.activePanel = 'discriminating-pair';
+  } else if (parts[0] === 'scales') {
+    // Sub-PR E6 — /scales  catalogue of all qs entries grouped by kind;
+    //             /scales/<kind>  per-kind ranked drill-down.
+    if (parts[1]) {
+      state.selectedKind = parts[1];
+      state.activePanel = 'ranks-kind';
+    } else {
+      state.activePanel = 'ranks';
+    }
   }
   if (qs) {
     const p = new URLSearchParams(qs);
@@ -825,6 +1187,12 @@ function writeHash() {
   } else if (state.activePanel === 'discriminating') {
     // Sub-PR E7 — /pairs  catalogue
     h += 'pairs';
+  } else if (state.activePanel === 'ranks-kind' && state.selectedKind) {
+    // Sub-PR E6 — /scales/<kind>  per-kind drill-down
+    h += 'scales/' + encodeURIComponent(state.selectedKind);
+  } else if (state.activePanel === 'ranks') {
+    // Sub-PR E6 — /scales  catalogue
+    h += 'scales';
   }
   const qs = [];
   if (state.group !== 'sector') qs.push('group=' + encodeURIComponent(state.group));
