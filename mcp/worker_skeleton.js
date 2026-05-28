@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v96 data / server version 3.2.4
+ * Phase C + v19 / v19 schema / v97 data / server version 3.2.5
  *
  * ABOUT
  * -----
@@ -96,6 +96,33 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.5 — Data refresh v96 → v97. Description-rewrite content
+ *           housekeeping option B follow-up. Vocabulary discipline
+ *           applied to the adjacent leak patterns out-of-scope in the
+ *           option A sweep that landed in v96
+ *           (PHYSICIST_FACING_VOCABULARY.md §3 translation register;
+ *           §8 self-check). Target patterns: PPP abbreviation,
+ *           T-convention labels T30/T31/T33, references to the
+ *           program-internal-calculation admissibility test, schema
+ *           cross-references to quantitative_scale / if_real_implies,
+ *           sub-PR N cross-references replaced with physics-named
+ *           referents, all-caps landmark phrases, the one "field"
+ *           data-structure noun use. 32 of 38 resolves edges affected;
+ *           0 of 24 if_real_implies implications affected (option A
+ *           had cleaned the implication-side leaks). Full-description
+ *           replacement preserving all physics content (citations,
+ *           numerical bounds, structural rationale, cross-references
+ *           via physics-named referents).
+ *
+ *           Documentation-only delta. Schema unchanged
+ *           (Map_v19_schema.json). No new edges, cells,
+ *           classifications, predictions, citations, or
+ *           quantitative_scale entries. No counts shift. Tool surface
+ *           unchanged (33). Validator gates: all rules 1-36 continue
+ *           to pass.
+ *           Banner: v97 / v19 / 33 tools / 38 resolves edges /
+ *                   288 quantitative_scale entries.
+ *
  *   3.2.4 — Data refresh v95 → v96. Description-rewrite content
  *           housekeeping. 89 in-place edits across 38 description
  *           fields (36 resolves-type edges + 2 dark-matter-carrier
@@ -409,9 +436,9 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.4',
+    version: '3.2.5',
     schema_version: 'v19',
-    data_version: 'v96',
+    data_version: 'v97',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
@@ -1498,7 +1525,7 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v19), data version (v96), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v19), data version (v97), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
       'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
@@ -1955,11 +1982,11 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.4',
+  version: '3.2.5',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v96 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v97 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
