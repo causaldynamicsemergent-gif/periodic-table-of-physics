@@ -173,7 +173,7 @@ function renderSidebarAbout() {
       </div>
 
       <div class="ap-section">What it isn't</div>
-      <p class="ap-text">Not a textbook. Not a complete catalogue — coverage of the discourse-level layer (architectures, frontiers, candidate-foundational programs, and the bears-on edges between them) is forthcoming. Not predictive of which research programs will succeed. Every placement carries an explicit rationale a reader can audit and disagree with.</p>
+      <p class="ap-text">Not a textbook. Not a complete catalogue. Not predictive of which research programs will succeed. The discourse layer around the formal classifications — architectures, open frontiers, totality approaches, regime contents, experimental programs, and the relations between them — is recorded, and the predictive layer on top of it (conditional consequences, experimental coverage relations, characteristic scales) is in; coverage will continue to deepen. Every placement carries an explicit rationale a reader can audit and disagree with.</p>
     </div>
   `;
   wirePanelJumps(inner);
@@ -286,7 +286,7 @@ function renderSidebarResearch() {
       </div>
 
       <div class="ap-section">AI-augmented workflows</div>
-      <p class="ap-text">The dataset (71 nodes, 186 edges, 484 cells, 209 predictions, 17 falsifications) is queryable via the live MCP server at <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">map-of-physics.eddie-8e5.workers.dev</code>. 25 read-only tools for cell content search, prediction filtering, edge traversal, and cross-classification comparison.</p>
+      <p class="ap-text">The dataset (83 nodes, 230 edges, 484 cells, 209 predictions, 17 falsifications, 38 experimental-coverage relations, 288 characteristic scales) is queryable via the live read-only server at <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">map-of-physics.eddie-8e5.workers.dev</code>. 33 tools cover cell-content search, prediction filtering, cross-classification traversal, experimental-coverage lookup, characteristic-scale ranking by dimension, conditional-consequence lookup on open frontiers, and program-pair shared-coverage queries.</p>
 
       <p class="ap-text" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-style: italic; color: var(--ink-mute);">The map's success condition is whether the cuts the taxonomy makes turn out to predict things, organize work productively, or reveal connections that weren't visible before. That's the test the project welcomes — challenge any edge status or classification placement via the GitHub repo.</p>
     </div>
@@ -1387,6 +1387,10 @@ async function init() {
   const m = DATA._meta.counts;
   document.getElementById('header-subtitle').textContent =
     `${m.formal_classifications} classifications · ${m.cells} cells · ${m.predictions} predictions · ${m.falsifications} falsifications`;
+  const headerVersionEl = document.getElementById('header-version');
+  if (headerVersionEl && DATA._meta.dataset_version) {
+    headerVersionEl.textContent = DATA._meta.dataset_version;
+  }
 
   wireToolbar();
   wireSplitter();

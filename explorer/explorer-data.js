@@ -924,7 +924,7 @@ function augmentDataset(raw) {
     qs_entries_by_kind,
     qs_kind_summary,
     _meta: {
-      dataset_version: raw.dataset_version || raw.schema_version || 'v34',
+      dataset_version: (raw._meta && raw._meta.version) || raw.dataset_version || raw.schema_version || 'v34',
       generated_at: new Date().toISOString(),
       counts: {
         formal_classifications: fcs.length,
