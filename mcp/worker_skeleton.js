@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v98 data / server version 3.2.6
+ * Phase C + v20 / v20 schema / v99 data / server version 3.2.7
  *
  * ABOUT
  * -----
@@ -96,6 +96,42 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.7 — Data refresh v98 → v99 + schema reference v19 → v20. Lands
+ *           the v20 schema bump retrofit pass closure shipped 2026-05-28
+ *           (the immediate prior session) as the final sub-PR in the v20
+ *           schema bump stack. The retrofit-pass was the mechanical no-op
+ *           + changelog-closure sub-PR per
+ *           `methodology/MAP_v20_schema_spec_extension.md` §6.2: no
+ *           existing substrate entry modified. Three edits in the
+ *           canonical data file at v99: (1) `_meta.version` bumped
+ *           v98 → v99; (2) `_meta._schema` bumped Map_v19_schema.json →
+ *           Map_v20_schema.json; (3) one new changelog entry recording
+ *           the v17 if_real_implies enum-gap observation's closure (the
+ *           SM-consistent / no-new-structure-forced resolution branch
+ *           family, surfaced by sub-PR 55 muon-g-2 carrier refresh, now
+ *           addressable via the new enum value `no_structural_consequence`).
+ *
+ *           This worker rebuild surfaces the schema_version transition
+ *           through `server_info`: the bundled-data file's `_meta._schema`
+ *           reference now points at Map_v20_schema.json, and the worker's
+ *           `server_info` response reflects that as `schema_version: v20`.
+ *           No code logic change — the worker remains read-only and does
+ *           not enforce schema rules; the schema reference is a label
+ *           threaded through `server_info` for client discovery.
+ *
+ *           Data-only delta. No new tool surface — `find_signal_implications`
+ *           continues to return `if_real_implies` payloads transparently
+ *           and would surface the new `no_structural_consequence` kind
+ *           if any implication carrying it were authored. No new edges,
+ *           cells, classifications, predictions, citations, or
+ *           quantitative_scale entries; counts byte-identical to v98 since
+ *           the retrofit pass made no substrate change. Tool surface
+ *           unchanged (33). Validator gates: all rules 1-37 (including
+ *           new Rule 37 enforcing `no_structural_consequence` sole-occupancy
+ *           per spec §3.3) continue to pass against canonical v99.
+ *           Banner: v99 / v20 / 33 tools / 40 resolves edges /
+ *                   288 quantitative_scale entries.
+ *
  *   3.2.6 — Data refresh v97 → v98. Lands the 2026-05-28 θ_23-octant
  *           experimental-coverage authoring: TWO (2) resolves edges
  *           from hyper-k and dune into cell-nu-theta23-atmospheric
@@ -462,11 +498,11 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.6',
-    schema_version: 'v19',
-    data_version: 'v98',
+    version: '3.2.7',
+    schema_version: 'v20',
+    data_version: 'v99',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
-    phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
+    phase: 'Predictive Layer Phase C + v20 (quantitative_scale, resolves, bound_direction, no_structural_consequence)',
     counts: COUNTS,
     tool_count: TOOL_NAMES.length,
   };
@@ -1551,7 +1587,7 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v19), data version (v98), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v20), data version (v99), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
       'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
@@ -2008,16 +2044,16 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.6',
+  version: '3.2.7',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v98 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v99 / v20 schema / Phase C + v20)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
   `(${COUNTS.if_real_implies_implications} implications).\n` +
-  `Phase C + v19: ${COUNTS.quantitative_scale_total} quantitative_scale entries ` +
+  `Phase C + v20: ${COUNTS.quantitative_scale_total} quantitative_scale entries ` +
   `(${COUNTS.quantitative_scale_by_bound_direction['lower'] || 0} lower / ` +
   `${COUNTS.quantitative_scale_by_bound_direction['upper'] || 0} upper / ` +
   `${COUNTS.quantitative_scale_by_bound_direction['two-sided'] || 0} two-sided / ` +
