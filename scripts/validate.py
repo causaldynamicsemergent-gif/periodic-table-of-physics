@@ -3,7 +3,7 @@
 validate.py — the data-integrity tripwire for the Periodic Table of Physics repo.
 
 What this does:
-  1. Loads the schema (schema/Map_v19_schema.json).
+  1. Loads the schema (schema/Map_v20_schema.json).
   2. Loads the consolidated dataset (data/Map_v34_consolidated.json).
   3. Validates the dataset against the schema.
   4. Runs the v16 validator-side rules 19-23 (Predictive Layer Phase A) on the
@@ -18,12 +18,18 @@ What this does:
      errors; rule 35 (bound_direction recommended on uncertainty=null entries)
      is warning-level, mirroring the v16 Rule 22 precedent. See
      MAP_v19_schema_spec_extension.md §6.
-  8. Distinguishes three classes of finding:
+  8. Runs the v20 validator-side extension on the loaded data: Rule 24's
+     per-kind dispatch gains a no_structural_consequence → target=null branch,
+     and new Rule 37 enforces sole-occupancy of the implications array when a
+     no_structural_consequence value is present. Both are hard errors. See
+     MAP_v20_schema_spec_extension.md §5.
+  9. Distinguishes three classes of finding:
        (a) Known legacy errors — 4 pre-firewall 'constrains'-subtype carryovers.
            Tolerated; documented in PROJECT_INFRASTRUCTURE.md §2.
        (b) New errors — any schema error not matching the legacy signature,
-           plus any validator-side rule 19/20/21/23/24/25/26/27/28/29/30/31/32/33/34/36
-           finding. CI fails on these.
+           plus any validator-side rule
+           19/20/21/23/24/25/26/27/28/29/30/31/32/33/34/36/37 finding. CI
+           fails on these.
        (c) Warnings — validator-side rule 22 and rule 35 findings. Reported
            but do NOT fail CI. Rule 22 stays warning-level so the v15.3 → v16
            bump didn't break the tripwire before the ADE-clique authoring
@@ -48,7 +54,7 @@ except ImportError:
 
 # --- configuration -----------------------------------------------------------
 
-SCHEMA_PATH = Path("schema/Map_v19_schema.json")
+SCHEMA_PATH = Path("schema/Map_v20_schema.json")
 DATA_PATH = Path("data/Map_v34_consolidated.json")
 
 # Legacy error tolerance: pre-firewall 'constrains' subtype carryover.
@@ -430,15 +436,19 @@ def check_rule_24_if_real_implies_target_resolution(
 ) -> list[str]:
     """Rule 24. For each if_real_implies[].implications[] entry, target must
     resolve correctly per kind:
-      - new_cell, new_axis      → existing formal-classification id (string)
-      - forced_edge             → target.from and target.to are FC ids
-      - promotes_subtype        → existing edge id OR existing cell_id (string)
-      - new_FC                  → null
+      - new_cell, new_axis           → existing formal-classification id (string)
+      - forced_edge                  → target.from and target.to are FC ids
+      - promotes_subtype             → existing edge id OR existing cell_id (string)
+      - new_FC                       → null
+      - no_structural_consequence    → null  (v20 extension)
     Failure: hard error.
 
     Note: JSON-Schema rules §3.2-§3.4 enforce the shape (null / string / object);
     this rule adds the cross-record id-resolution check that JSON Schema cannot
-    express. The new_FC null check is defense-in-depth — §3.2 enforces it too.
+    express. The new_FC and no_structural_consequence null checks are
+    defense-in-depth — the v17 §3.2 conditional rule (widened in v20 from
+    `const "new_FC"` to `enum ["new_FC", "no_structural_consequence"]`)
+    enforces them too. See MAP_v20_schema_spec_extension.md §5.1.
     """
     errors = []
     fc_id_set = set(fcs_by_id.keys())
@@ -484,6 +494,17 @@ def check_rule_24_if_real_implies_target_resolution(
                 # JSON-Schema §3.2 also catches this; included here for defense-in-depth.
                 errors.append(
                     f"Rule 24: {ctx} new_FC requires target=null; got {target!r}."
+                )
+
+        elif kind == "no_structural_consequence":
+            if target is not None:
+                # JSON-Schema §3.2 (widened in v20 to enumerate both null-target
+                # kinds) also catches this; included here for defense-in-depth,
+                # matching the existing new_FC defense-in-depth precedent.
+                # See MAP_v20_schema_spec_extension.md §5.1.
+                errors.append(
+                    f"Rule 24: {ctx} no_structural_consequence requires target=null; "
+                    f"got {target!r}."
                 )
     return errors
 
@@ -837,8 +858,61 @@ def check_rule_36_bound_direction_enum_conformance(qs_entries: list) -> list[str
     return errors
 
 
+# --- validator-side rules (v20) ----------------------------------------------
+#
+# Rule 37 extends the Phase B if_real_implies mechanism to the v20
+# `no_structural_consequence` implication kind. It enforces the §3.3 intra-
+# array sole-occupancy constraint that JSON Schema cannot express — the
+# v17 implications array exists to enumerate the set of forced structural
+# consequences, and mixing no_structural_consequence ("this resolution forces
+# no new structure") with any forcing kind ("AND forces this new cell") is
+# incoherent. The only coherent shape is a singleton implications array
+# containing one no_structural_consequence entry. The companion v20 change
+# is the per-kind dispatch extension on Rule 24 (above) admitting null
+# targets for no_structural_consequence; together the two changes implement
+# the v20 spec extension's §5 validator-side requirements.
+
+def check_rule_37_no_structural_consequence_sole_occupancy(
+    carriers_by_node: dict,
+) -> list[str]:
+    """Rule 37. Within a single if_real_implies_entry's implications array, a
+    no_structural_consequence implication may not co-occur with any other
+    implication. The implications array containing a no_structural_consequence
+    entry must contain exactly one entry. Failure: hard error.
+
+    Rationale: the v17 implications array exists to enumerate the set of forced
+    structural consequences. Mixing no_structural_consequence with any forcing
+    kind is contradictory — 'this resolution forces no new structure AND
+    forces this new cell' is incoherent. The only coherent shape is a singleton
+    implications array containing one no_structural_consequence entry. See
+    MAP_v20_schema_spec_extension.md §3.3.
+    """
+    errors = []
+    for carrier_id, entries in carriers_by_node.items():
+        for e_idx, entry in enumerate(entries):
+            if not isinstance(entry, dict):
+                continue
+            implications = entry.get("implications") or []
+            has_nsc = any(
+                isinstance(impl, dict)
+                and impl.get("kind") == "no_structural_consequence"
+                for impl in implications
+            )
+            if has_nsc and len(implications) > 1:
+                ctx = f"nodes[{carrier_id}].if_real_implies[{e_idx}]"
+                errors.append(
+                    f"Rule 37: {ctx} contains a no_structural_consequence "
+                    f"implication alongside {len(implications) - 1} other "
+                    f"implication(s); no_structural_consequence requires "
+                    f"sole occupancy of the implications array "
+                    f"(MAP_v20_schema_spec_extension.md §3.3)."
+                )
+    return errors
+
+
 def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
-    """Run all v16 + v17 + v18 + v19 validator-side rules. Returns (errors, warnings)."""
+    """Run all v16 + v17 + v18 + v19 + v20 validator-side rules. Returns
+    (errors, warnings)."""
     edges_by_id, fcs_by_id, cells_indexed = _build_indices(data)
     cell_ids, carriers_by_node, carriers_flat = _build_v17_indices(data, cells_indexed)
     nodes_by_id, qs_entries = _build_v18_indices(data)
@@ -867,6 +941,8 @@ def run_validator_side_rules(data: dict) -> tuple[list[str], list[str]]:
     # v19 rules
     errors.extend(check_rule_34_bound_direction_forbidden_on_non_null_uncertainty(qs_entries))
     errors.extend(check_rule_36_bound_direction_enum_conformance(qs_entries))
+    # v20 rules
+    errors.extend(check_rule_37_no_structural_consequence_sole_occupancy(carriers_by_node))
 
     warnings: list[str] = []
     warnings.extend(check_rule_22_axis_mapping_recommended(edges))
@@ -897,7 +973,7 @@ def main() -> int:
     new_schema = [e for e in schema_errors if KNOWN_LEGACY_SIGNATURE not in e.message]
 
     # 2. Validator-side rules
-    #    Errors:   19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36
+    #    Errors:   19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37
     #    Warnings: 22, 35
     rule_errors, rule_warnings = run_validator_side_rules(data)
 
@@ -931,7 +1007,7 @@ def main() -> int:
     # Validator-side rule errors — fail CI
     print(
         f"\nValidator-side rule errors "
-        f"(rules 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36): "
+        f"(rules 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 37): "
         f"{len(rule_errors)}"
     )
     if rule_errors:
