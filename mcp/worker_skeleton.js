@@ -1,6 +1,6 @@
 /* =====================================================================
  * Map of Physics — MCP endpoint
- * Phase C + v19 / v19 schema / v97 data / server version 3.2.5
+ * Phase C + v19 / v19 schema / v98 data / server version 3.2.6
  *
  * ABOUT
  * -----
@@ -96,6 +96,32 @@
  *
  * VERSION HISTORY
  * ---------------
+ *   3.2.6 — Data refresh v97 → v98. Lands the 2026-05-28 θ_23-octant
+ *           experimental-coverage authoring: TWO (2) resolves edges
+ *           from hyper-k and dune into cell-nu-theta23-atmospheric
+ *           (the θ_23-octant measured-tension cell). Edge encoding
+ *           mirrors the existing four edges on cell-nu-deltaCP and
+ *           cell-nu-mass-hierarchy (sub-PRs 46-47 precedent):
+ *           kind=sigma_deviation, bound_direction=lower,
+ *           predictions_per_program=[], exclusion_only=true,
+ *           sensitivity 3σ on both edges. Anchored to HK Design
+ *           Report arXiv:1805.04163 §6 and DUNE TDR Vol II
+ *           arXiv:2002.03005 §3 / Abi et al. 2020 EPJ C 80:978 §6.
+ *           Closes the cell-nu-theta23-atmospheric experimental-
+ *           coverage gap surfaced in the 2026-05-26
+ *           vocabulary-discipline-origin session; held for separate
+ *           authoring per META_v21_1 §2.5 firewall self-check
+ *           (physics-content motivation independent of the surfacing
+ *           trigger).
+ *
+ *           Data-only delta. Schema unchanged (Map_v19_schema.json).
+ *           No new cells, classifications, predictions, citations,
+ *           or quantitative_scale entries beyond the two edge
+ *           sensitivity entries. Tool surface unchanged (33).
+ *           Validator gates: all rules 1-36 continue to pass.
+ *           Banner: v98 / v19 / 33 tools / 40 resolves edges /
+ *                   288 quantitative_scale entries.
+ *
  *   3.2.5 — Data refresh v96 → v97. Description-rewrite content
  *           housekeeping option B follow-up. Vocabulary discipline
  *           applied to the adjacent leak patterns out-of-scope in the
@@ -436,9 +462,9 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
-    version: '3.2.5',
+    version: '3.2.6',
     schema_version: 'v19',
-    data_version: 'v97',
+    data_version: 'v98',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v19 (quantitative_scale, resolves, bound_direction)',
     counts: COUNTS,
@@ -1525,7 +1551,7 @@ const TOOLS = [
   {
     name: 'server_info',
     description:
-      'Server diagnostic. Returns server version, schema version (v19), data version (v97), and counts of ' +
+      'Server diagnostic. Returns server version, schema version (v19), data version (v98), and counts of ' +
       'nodes, edges, formal-classifications, experimental-programs, cells, glossary entries, ' +
       'Phase A counts (realized / forbidden-by-pattern / conjectured-by-pattern / indeterminate cells, axis_mapping edges), ' +
       'Phase B counts (if_real_implies carriers, resolutions, implications), ' +
@@ -1982,11 +2008,11 @@ for (const t of TOOLS) {
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO_OBJ = {
   name: 'map-of-physics',
-  version: '3.2.5',
+  version: '3.2.6',
 };
 
 const BANNER =
-  'Map of Physics — MCP endpoint (v97 / v19 schema / Phase C + v19)\n' +
+  'Map of Physics — MCP endpoint (v98 / v19 schema / Phase C + v19)\n' +
   `${COUNTS.nodes} nodes, ${COUNTS.edges} edges, ${COUNTS.formal_classifications} formal-classifications, ` +
   `${COUNTS.total_cells} cells, ${TOOL_NAMES.length} tools.\n` +
   `Phase B: ${COUNTS.if_real_implies_resolutions} if_real_implies resolutions on ${COUNTS.if_real_implies_carriers} carriers ` +
