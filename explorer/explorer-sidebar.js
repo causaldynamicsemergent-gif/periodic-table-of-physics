@@ -151,6 +151,18 @@ function renderSidebarAbout() {
         <li><strong>Locating a problem.</strong> A working physicist can find the classifications that bear on their frontier and the cells inside each one that constrain it.</li>
       </ul>
 
+      <div class="ap-section">Query recipes</div>
+      <p class="ap-text">Six patterns of question the catalogue is built to answer — each demonstrated in <a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/QUERY_RECIPES.md" target="_blank" rel="noopener">QUERY_RECIPES.md</a> with worked examples and citations. The jump-links below open the panel where the catalogue surfaces each pattern.</p>
+      <ul class="ap-list ap-recipes">
+        <li><strong>Which programs target this open question?</strong> Experimental coverage of a frontier, cell, or candidate-foundational program. <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
+        <li><strong>Where does the same entity classify in two frameworks?</strong> Cross-classification anchors between subfields. <button class="ap-recipe-jump" data-panel-jump="browse-classifications">browse classifications →</button></li>
+        <li><strong>If this open question resolves one way, what gets forced?</strong> Conditional structural consequences on open frontiers. <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
+        <li><strong>Which experiments adjudicate between competing predictions?</strong> Shared coverage between programs with side-by-side prediction lists. <button class="ap-recipe-jump" data-panel-jump="discriminating">compare programs →</button></li>
+        <li><strong>What characteristic scales does the catalogue record?</strong> Every numerical commitment ranked by physical dimension. <button class="ap-recipe-jump" data-panel-jump="ranks">scales →</button></li>
+        <li><strong>Which predictions has the catalogue recorded as falsified?</strong> The seventeen ruled-out predictions, by sector. <button class="ap-recipe-jump" data-spotlight="falsified">spotlight falsified →</button></li>
+      </ul>
+      <p class="ap-text" style="margin-top: 14px;"><a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">Worked example sessions →</a> — physicists' chats walking these patterns through the catalogue, edited and published.</p>
+
       <div class="ap-section">Who it serves</div>
       <p class="ap-text">Two audiences. Pick the one closer to you:</p>
       <div class="ap-jumps">

@@ -88,3 +88,42 @@
   border-color: var(--rule);
 }
 
+
+/* ---- Query recipes section in the About panel (post-E8 loop-close) ----
+   Lightweight inline styling for the recipe list + jump-buttons.
+   The recipes list reuses .ap-list base styling and overrides
+   bottom-margin per item so two-line entries with inline jump-buttons
+   stay readable; .ap-recipe-jump is a no-chrome inline-link button that
+   pipes through the existing wirePanelJumps() handler chain. */
+
+.ap-recipes li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.ap-recipes li:last-child { margin-bottom: 0; }
+
+.ap-recipe-jump {
+  display: inline;
+  margin-left: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.ap-recipe-jump:hover { text-decoration: underline; color: var(--ink); }
+.ap-recipe-jump:focus { outline: 1px dotted var(--accent); outline-offset: 1px; }
+
+.ap-recipes-doclink {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+}
+.ap-recipes-doclink:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
