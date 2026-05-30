@@ -67,6 +67,16 @@ In rough order:
 - **Execute M0** (MCP Mendeleev orientation: `server_info` purpose field, tool-description rewrites, tool grouping, glossary entries) — §3.2 / §6. Independent of E0.
 - **Then** the existing `EXPLORER_PHASE_BC_HANDOFF.md` E1–E8 queue (now landing on an E0-Mendeleev-framed surface), and after E1–E5, the `TRACK_4_USE_SIDE_ARTIFACTS.md` use-side queue.
 
+**Standing emphasis note — reproduce in the E0 kickoff prompt and every closing/kickoff prompt that follows.** As literally listed, E0a–E0e read as tile decoration plus a subtitle. But `MENDELEEV_FRAME.md` §7 and `META_v21_1_methodology_firewall.md` §8 name the configuration builder the explorer's *central* Mendeleev surface — the surface that performs the mode-3 move and renders, for a non-MCP reader, the gaps and recurrences the substrate already supports (the P0'' session surfaced one such recurrence by hand, with no builder, using `compare_classifications` + `get_classification`). So the E0 author must make builder-as-surface explicit and not let it hide inside "tile chrome."
+
+Three guards so this does not re-drift into a phantom "big separate phase" (this is the exact drift caught at the end of the P0'' session):
+
+- It is an emphasis/sizing note for the implementing chat, which `MENDELEEV_POSITIONING_HANDOFF.md` §3.1/§6 already invites ("the implementing chat should propose the actual PR shape"). It does **not** change what completion means and does **not** enlarge the remaining work beyond this §4 list.
+- The builder *renders* a move the substrate already supports; it does **not** generate or author content. The `conjectured-by-pattern` count stays at zero until a constructed configuration forces a gap at query time — pre-authoring such cells would be a firewall §2 violation (`META §8`). A builder that authors cells is the drift, not the deliverable.
+- "Central" is about emphasis on the surface a fresh reader lands on, not about scope size. E0 makes the existing moves visible; it is not a new content subsystem.
+
+Reproduce this note in every closing/kickoff prompt for the workstream, the same way the §0 quote-back template propagates — so the builder-as-surface emphasis is not lost between sessions and is not re-inflated into an undefined phase. Both failure directions (losing it, and inflating it) are drift.
+
 The Phase C data-authoring track (`PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`: sub-PR 57 fcc, Step 4.5, worker refresh) runs in parallel and is unaffected by this positioning work. Note its handoff also lags live state (the worker is already at v99/v20).
 
 ---
@@ -93,7 +103,21 @@ HANDOFF.md §3.1/§6 and the "After P0'' ships" note in P0_PRIME_PRIME_
 KICKOFF_PROMPT.md). It must carry the §0 template: state verification +
 drift-register read + methodology-doc read + quote-back step. Source the
 E0 surface text (subtitle, etc.) from MENDELEEV_FRAME.md, applying
-PHYSICIST_FACING_VOCABULARY.md §3. Propose the prompt for review before
+PHYSICIST_FACING_VOCABULARY.md §3.
+
+In that E0 prompt, reproduce the §4 standing emphasis note: E0a–E0e read as
+tile decoration plus a subtitle, but the configuration builder is the
+explorer's CENTRAL Mendeleev surface per MENDELEEV_FRAME.md §7 / META §8 —
+so make builder-as-surface explicit and do not let it hide inside "tile
+chrome." State the three guards plainly so it does not re-drift: (1) this is
+emphasis/sizing, not a scope change, and does not enlarge the work beyond
+the §4 list or change what completion means; (2) the builder RENDERS a move
+the substrate already supports — it does not author content, and the
+conjectured-by-pattern zero stays zero until a configuration forces a gap at
+query time (authoring those cells would be a firewall §2 violation); (3)
+"central" is about the surface a fresh reader lands on, not scope size.
+Instruct that this note is carried into every subsequent closing/kickoff
+prompt for the workstream. Then propose the prompt for review before
 finalizing.
 
 Alternatively, if I ask for it first: do the compression pass on
