@@ -147,6 +147,18 @@ function fcCoverage(fc) {
 //   Periodic table render (Level 1; persistent)
 // =============================================================
 function renderMap() {
+  // E0 lead — parallel top-level views. When the open-questions view is
+  // active, hand off to its renderer. Routing through the single existing
+  // renderMap() entry point means every call site (boot, selections,
+  // toolbar) respects the active view with no other changes.
+  if (typeof state !== 'undefined' && state.activeView === 'questions'
+      && typeof renderQuestionsView === 'function') {
+    renderQuestionsView();
+    return;
+  }
+  const _pane = document.getElementById('map-pane');
+  if (_pane) _pane.classList.remove('view-questions');
+  if (typeof syncViewToggle === 'function') syncViewToggle();
   // Group classifications
   let groupOf, groupOrder;
   if (state.group === 'sector') {
@@ -469,6 +481,9 @@ function wireToolbar() {
       renderSidebarSpotlight();
     }
   });
+
+  // E0 lead — wire the open-questions / classifications view toggle.
+  if (typeof wireViewToggle === 'function') wireViewToggle();
 }
 
 function wireRowsByDropdown() {
@@ -576,6 +591,9 @@ function clampPan() {
 }
 
 function zoomFitToView() {
+  // E0 lead — the open-questions view is a scrollable card surface, not a
+  // zoomable map; skip fit-to-view there.
+  if (typeof state !== 'undefined' && state.activeView === 'questions') return;
   // Goal: set zoom so the whole map content fits inside the pane vertically
   // (horizontal already fits at every zoom level thanks to the width:100/zoom trick).
   const pane = document.getElementById('map-pane');

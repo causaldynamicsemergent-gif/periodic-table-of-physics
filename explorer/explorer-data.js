@@ -968,6 +968,7 @@ var state = {
   selectedDiscourseNode: null,  // Update B — selected architecture/frontier/totality/regime-content/program
   selectedEdgeId: null,         // Update C — selected cross-classification edge (clickable on-map edges)
   selectedDiscourseEdgesPair: null, // Update C — discourse-highlight ring badge: { nodeId, fcId } or null
+  activeView: 'questions',       // E0 lead — top-level view: 'questions' (open-frontier landing, default) | 'classifications' (FC tile grid)
   group: 'sector',              // sector | category | closure
   spotlightActive: new Set(),   // Update B — multi-select prediction statuses (empty = no spotlight)
   overlay: 'none',              // none | phen-phen
@@ -1100,7 +1101,14 @@ function showToast(msg, kind) {
 // =============================================================
 function parseHash() {
   const h = location.hash.replace(/^#\/?/, '');
-  if (!h) return;
+  if (!h) {
+    // E0 lead — no hash: fall back to the user's last-used view, else default.
+    try {
+      const stored = localStorage.getItem('mop-active-view');
+      if (stored === 'classifications' || stored === 'questions') state.activeView = stored;
+    } catch (e) {}
+    return;
+  }
   const [path, qs] = h.split('?');
   const parts = path.split('/').filter(Boolean);
   if (parts[0] === 'fc' && parts[1]) {
@@ -1157,6 +1165,19 @@ function parseHash() {
     if (p.get('overlay')) state.overlay = p.get('overlay');
     if (p.get('pred'))    state.predFilter = p.get('pred');
   }
+  // E0 lead — resolve the active top-level view. An explicit ?view= wins;
+  // otherwise an FC- or edge-selection path implies the classifications
+  // view, and everything else (bare, /discourse, /glossary, …) is the
+  // open-questions view.
+  const _qsParams = qs ? new URLSearchParams(qs) : null;
+  const _vparam = _qsParams && _qsParams.get('view');
+  if (_vparam === 'questions' || _vparam === 'classifications') {
+    state.activeView = _vparam;
+  } else if (parts[0] === 'fc' || parts[0] === 'edge') {
+    state.activeView = 'classifications';
+  } else {
+    state.activeView = 'questions';
+  }
 }
 function writeHash() {
   let h = '#/';
@@ -1203,6 +1224,11 @@ function writeHash() {
   }
   if (state.overlay !== 'none') qs.push('overlay=' + encodeURIComponent(state.overlay));
   if (state.selectedFC && state.predFilter !== 'all') qs.push('pred=' + encodeURIComponent(state.predFilter));
+  // E0 lead — preserve the active view across reloads, but only when it
+  // diverges from what the path already implies (keeps clean URLs in the
+  // common case: bare/discourse ⇒ questions, fc/edge ⇒ classifications).
+  const pathImpliedView = (state.selectedFC || state.selectedEdgeId) ? 'classifications' : 'questions';
+  if (state.activeView !== pathImpliedView) qs.push('view=' + encodeURIComponent(state.activeView));
   if (qs.length) h += '?' + qs.join('&');
   if (location.hash !== h) {
     try { history.replaceState(null, '', h); }

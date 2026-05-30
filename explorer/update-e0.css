@@ -1,0 +1,209 @@
+/* =============================================================
+   update-e0.css  —  E0 lead: open-questions parallel view
+   Styling for the open-frontiers landing surface and the toolbar
+   view-toggle. Uses the existing design tokens (--ink, --paper-N,
+   --accent, --rule, --ink-mute) so it reads as one surface with the
+   rest of the explorer.
+   ============================================================= */
+
+/* ---- toolbar view toggle (segmented control, leftmost) ---- */
+.view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--paper);
+}
+.view-toggle-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 5px 11px;
+  background: var(--paper);
+  color: var(--ink-mute);
+  border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.view-toggle-btn:last-child { border-right: none; }
+.view-toggle-btn:hover { background: var(--paper-3); color: var(--ink); }
+.view-toggle-btn.active { background: var(--ink); color: var(--paper); }
+
+/* Hide the zoomable-map chrome while the questions view is showing. */
+.map-pane.view-questions .zoom-controls { display: none; }
+
+/* ---- the open-questions view ---- */
+.oq-view {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 22px 60px;
+}
+.oq-intro { margin: 4px 0 22px; }
+.oq-intro-lede {
+  font-family: 'Crimson Pro', serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 760px;
+}
+.oq-intro-lede em { font-style: italic; color: var(--ink); }
+.oq-intro-meta {
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+.oq-switch-inline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  background: none; border: none; padding: 0;
+  color: var(--accent); cursor: pointer; text-decoration: underline;
+}
+
+.oq-group { margin-bottom: 26px; }
+.oq-group-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 5px;
+  margin: 0 0 14px;
+}
+.oq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px;
+}
+
+/* ---- the preview card ---- */
+.oq-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--ink-faint);
+  border-radius: 3px;
+  padding: 13px 15px 14px;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s, transform 0.06s;
+}
+.oq-card:hover {
+  border-color: var(--ink-mute);
+  border-left-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(26,24,20,0.08);
+}
+.oq-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.oq-card-selected {
+  border-left-color: var(--accent);
+  background: var(--paper-2);
+}
+.oq-card-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin-bottom: 8px;
+}
+.oq-card-title {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+.oq-card-open {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.oq-card:hover .oq-card-open { color: var(--accent); }
+
+.oq-bound {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  margin: 6px 0;
+}
+.oq-bound .oq-bound-label,
+.oq-cands-label, .oq-neigh-label, .oq-cov-label, .oq-reason-label, .oq-forced-label {
+  display: inline-block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+  margin-right: 5px;
+}
+.oq-bound .katex { font-size: 1.05em; }
+.oq-bound-aside { color: var(--ink-mute); font-size: 10.5px; }
+.oq-bound-absent { color: var(--ink-faint); font-style: italic; }
+
+.oq-reason {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+.oq-cands { margin: 8px 0; }
+.oq-cand-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.oq-cand-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 2px 7px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+.oq-cand-viability { color: var(--ink-mute); }
+
+.oq-forced {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 8px 0;
+  line-height: 1.45;
+  padding-left: 8px;
+  border-left: 2px solid var(--paper-4);
+}
+.oq-forced-label { display: inline; text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--ink-mute); }
+.oq-forced-count { color: var(--ink-faint); font-size: 10.5px; }
+
+.oq-neigh { margin: 9px 0 4px; }
+.oq-neigh-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.oq-neighbor-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 2px 7px;
+  color: var(--accent);
+  cursor: pointer;
+  line-height: 1.4;
+}
+.oq-neighbor-pill:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.oq-neigh-none, .oq-neigh-thin .oq-neigh-none { color: var(--ink-faint); font-style: italic; font-size: 11px; }
+
+.oq-cov {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--rule);
+}
+.oq-cov-count { color: var(--ink-faint); }
+.oq-cov-none {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--rule);
+}

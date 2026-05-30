@@ -1262,6 +1262,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <link rel="stylesheet" href="update-e5.css">
 <link rel="stylesheet" href="update-e7.css">
 <link rel="stylesheet" href="update-e6.css">
+<link rel="stylesheet" href="update-e0.css">
 </head>
 <body>
 <div class="shell">
@@ -1280,6 +1281,13 @@ body.splitter-dragging * { cursor: col-resize !important; }
   </header>
 
   <div class="toolbar">
+    <div class="view-toggle" role="group" aria-label="Top-level view">
+      <button type="button" class="view-toggle-btn" data-view="questions" aria-pressed="true" title="Open questions — the open frontiers as primary cards (default landing)">Open questions</button>
+      <button type="button" class="view-toggle-btn" data-view="classifications" aria-pressed="false" title="Structural classifications — the formal-classification tile grid">Classifications</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
     <div class="browse-wrap" id="browse-wrap">
       <button class="browse-btn" id="browse-btn">Browse <span class="caret">▾</span></button>
       <div class="browse-menu" id="browse-menu"></div>
@@ -1409,6 +1417,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <script src="explorer-discriminating.js"></script>
 <script src="explorer-ranks.js"></script>
 <script src="explorer-glossary.js"></script>
+<script src="explorer-frontiers.js"></script>
 <script>init();</script>
 </body>
 </html>
