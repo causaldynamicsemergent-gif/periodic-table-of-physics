@@ -16,6 +16,8 @@ Curated end-to-end walkthroughs, each verified against the live data. Each takes
 
 - **[`sessions/strong-cp.md`](sessions/strong-cp.md)** — *What does the catalogue say about the strong-CP problem?* A frontier with two independent bounds-setting channels — axion haloscopes bounding $g_{a\gamma\gamma}$ and next-generation neutron-EDM searches bounding $\bar\theta_{\mathrm{QCD}}$ — addressing the same Peccei–Quinn resolution from complementary directions, plus an honest reading of why the discriminating-experiments question comes back empty, and the QCD-axion classification a detection would force.
 
+- **[`sessions/mass-ordering.md`](sessions/mass-ordering.md)** — *Which experiments will settle the neutrino mass ordering?* Convergent coverage of a single already-fixed quantity — the sign of Δm²₃₁, normal vs inverted — through three orthogonal channels: matter-driven beam (DUNE, ≥5σ), statistical-power atmospheric (Hyper-K, ≥3σ rising to ≥5σ with beam), and vacuum-interference reactor (JUNO, 3σ, running). Shows why the discriminating-experiments question comes back empty for a *different* reason than strong-CP: not range-valued candidates but a fact of nature with no competing predictions to adjudicate, measured three independent ways.
+
 *(Next-generation EDM searches appear in both sessions — neutron-EDM for strong-CP, electron-EDM for leptogenesis — which makes that program the catalogue's first dual-frontier experimental program.)*
 
 ### How to use the map — [`recipes.md`](recipes.md)
