@@ -55,6 +55,18 @@ function cellSwatchClass(cell, fc) {
     return 'excluded';
   }
 
+  // E0a/E0b — conjectured-by-pattern: a position the classification's
+  // constructive pattern implies should be occupied but that nothing
+  // fills yet (the empty-cell prediction; the gallium/germanium analog).
+  // Checked here, ahead of the prediction-status and realized checks, so
+  // the constructive prediction always draws the eye even if the cell
+  // also carries a live prediction. The live count is zero at data v99
+  // (find_forced_cells conjectured-by-pattern → []); this branch is the
+  // dormant render path that fires when a configuration forces a gap.
+  if (cell.constructive_status === 'conjectured-by-pattern') {
+    return 'conjectured';
+  }
+
   // Gather predictions: inline (cell-scoped, ~14 cells in v34) plus
   // FC-level predictions whose cell_ref / cell_id points at this cell.
   var inlinePreds = cell.predictions || [];
@@ -85,13 +97,14 @@ function tileCellBreakdown(fc) {
   var cells = (fc && fc.cells) || [];
   if (!cells.length) return null;
   var b = {
-    excluded: 0, falsified: 0, confirmed: 0, tension: 0,
+    excluded: 0, conjectured: 0, falsified: 0, confirmed: 0, tension: 0,
     notTested: 0, retro: 0, realizedOnly: 0, empty: 0,
     total: cells.length,
   };
   for (var i = 0; i < cells.length; i++) {
     var klass = cellSwatchClass(cells[i], fc);
     if      (klass === 'excluded')          b.excluded++;
+    else if (klass === 'conjectured')       b.conjectured++;
     else if (klass === 'has-falsified')     b.falsified++;
     else if (klass === 'has-confirmed')     b.confirmed++;
     else if (klass === 'has-tension')       b.tension++;
@@ -141,6 +154,59 @@ function fcCoverage(fc) {
     if (fcPreds[k] && fcPreds[k].quantitative_scale) qsCount++;
   }
   return { qsCount: qsCount, targetedCount: targetedCells };
+}
+
+// =============================================================
+//   E0b — conjectured-by-pattern (empty-cell prediction) count
+//
+//   Number of cells in this FC the constructive pattern predicts
+//   should be filled but that nothing fills yet. Zero for every FC
+//   at data v99 (find_forced_cells conjectured-by-pattern → []); the
+//   chip that reads this renders only when ≥ 1, so it is invisible
+//   today by design — the honest state, not a bug. Populates when the
+//   configuration builder forces a gap at query time (firewall §8).
+// =============================================================
+function fcConjecturedCount(fc) {
+  var cells = (fc && fc.cells) || [];
+  var n = 0;
+  for (var i = 0; i < cells.length; i++) {
+    if (cells[i] && cells[i].constructive_status === 'conjectured-by-pattern') n++;
+  }
+  return n;
+}
+
+// =============================================================
+//   E0c — established cross-classification recurrence
+//
+//   True when this FC is an endpoint of at least one cross-
+//   classification edge with status 'established' — i.e. the same
+//   physical content recurs at corresponding positions in another
+//   classification (the periodicity analog). Read from
+//   DATA.edges_by_fc (built in explorer-data.js). Returns { has,
+//   title } where title is a physicist-natural hint naming one such
+//   recurrence, for the marker's tooltip.
+// =============================================================
+function fcEstablishedRecurrence(fc) {
+  var byFc = (typeof DATA !== 'undefined' && DATA && DATA.edges_by_fc) || {};
+  var list = (fc && fc.id && byFc[fc.id]) || [];
+  for (var i = 0; i < list.length; i++) {
+    var e = list[i];
+    if (e && e.status === 'established') {
+      var otherId = (e.from === fc.id) ? e.to : e.from;
+      var otherLabel = otherId;
+      var fcs = (typeof DATA !== 'undefined' && DATA && DATA.formal_classifications) || [];
+      for (var k = 0; k < fcs.length; k++) {
+        if (fcs[k].id === otherId) { otherLabel = fcs[k].label; break; }
+      }
+      return {
+        has: true,
+        title: 'Recurs in ' + otherLabel
+             + ' — the same physical content sits at corresponding positions '
+             + 'in both classifications (the periodicity analog).',
+      };
+    }
+  }
+  return { has: false, title: '' };
 }
 
 // =============================================================
@@ -333,9 +399,23 @@ function renderTile(fc) {
   // chip text uses physicist-natural labels ("scale", "targeted"),
   // not the schema field names.
   var cov = fcCoverage(fc);
+  // E0b — empty-cell prediction count (zero everywhere at v99; see helper).
+  var conjCount = fcConjecturedCount(fc);
   var covChipsHtml = '';
-  if (cov.qsCount > 0 || cov.targetedCount > 0) {
+  if (conjCount > 0 || cov.qsCount > 0 || cov.targetedCount > 0) {
     var chips = [];
+    // E0b — the gap chip leads: it names a Mendeleev PREDICTION, not a
+    // coverage signal, so it sits first and is styled as the most
+    // prominent chip (update-e0-mendeleev.css). Renders only when ≥ 1.
+    if (conjCount > 0) {
+      chips.push('<span class="tile-chip tile-chip-conjectured" title="'
+        + esc(conjCount + ' position' + (conjCount === 1 ? '' : 's')
+              + ' the constructive pattern implies should be filled but that '
+              + 'nothing fills yet — the empty-cell prediction (the gallium / '
+              + 'germanium analog).')
+        + '">'
+        + conjCount + ' gap' + (conjCount === 1 ? '' : 's') + '</span>');
+    }
     if (cov.qsCount > 0) {
       chips.push('<span class="tile-chip tile-chip-scale" title="'
         + esc(cov.qsCount + ' cell' + (cov.qsCount === 1 ? '' : 's')
@@ -355,11 +435,18 @@ function renderTile(fc) {
     covChipsHtml = '<div class="tile-chips" aria-hidden="true">' + chips.join('') + '</div>';
   }
 
+  // E0c — default-on cross-classification recurrence marker. Rides at the
+  // end of the top-left count text; no interaction needed to see it.
+  var recur = fcEstablishedRecurrence(fc);
+  var recurHtml = recur.has
+    ? ' <span class="tile-xc-recurrence" title="' + esc(recur.title) + '">⇄</span>'
+    : '';
+
   return `
     <div class="pt-tile ${fc.category}${dim?' dim':''}${spot?' spot':''}${selected?' selected':''}${phenOn?' phen-on':''}${phenOffWhileActive?' phen-off-and-active':''}${discourseHighlight?' discourse-highlight':''}" data-fc="${esc(fc.id)}" tabindex="0" aria-label="${esc(fc.label)}"${phenStyle?' style="'+phenStyle+'"':''}>
       ${badgeHtml}
       <div class="tile-corner">
-        <span class="cell-ct">${fc.cell_count}c · ${fc.prediction_count}p</span>
+        <span class="cell-ct">${fc.cell_count}c · ${fc.prediction_count}p${recurHtml}</span>
         ${fals ? `<span class="fals-flag" title="${fals} falsified">⚠${fals}</span>` : '<span></span>'}
       </div>
       <div class="tile-symbol">${esc(fc.symbol)}</div>
@@ -396,6 +483,7 @@ function showTileTooltip(e, fcId) {
       if (b.notTested)    parts.push(`${b.notTested} not yet tested`);
       if (b.retro)        parts.push(`${b.retro} retro`);
       if (b.realizedOnly) parts.push(`${b.realizedOnly} realized`);
+      if (b.conjectured)  parts.push(`${b.conjectured} predicted gap${b.conjectured === 1 ? '' : 's'}`);
       if (b.excluded)     parts.push(`${b.excluded} structurally excluded`);
       if (b.empty)        parts.push(`${b.empty} empty`);
       if (parts.length) {
@@ -404,10 +492,15 @@ function showTileTooltip(e, fcId) {
     }
   }
 
+  const recurTT = fcEstablishedRecurrence(fc);
+  const recurHtmlTT = recurTT.has
+    ? `<br><span style="color:var(--accent);font-size:11px">⇄ ${esc(recurTT.title)}</span>`
+    : '';
+
   t.innerHTML = `
     <div class="tt-title">${esc(fc.symbol)} · ${esc(fc.label)}</div>
     <div class="tt-meta">${esc(fc.category)} · ${esc(fc.sector)} · ${esc(fc.closure_level)}</div>
-    <div class="tt-body">${esc(fc.cell_count)} cells · ${esc(fc.prediction_count)} predictions<br>${esc(statLine)}${cellBreakdownHtml}</div>
+    <div class="tt-body">${esc(fc.cell_count)} cells · ${esc(fc.prediction_count)} predictions<br>${esc(statLine)}${cellBreakdownHtml}${recurHtmlTT}</div>
   `;
   t.classList.add('visible');
   moveTooltip(e);

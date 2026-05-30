@@ -1,0 +1,136 @@
+/* =============================================================
+   update-e0-mendeleev.css — sub-PR E0 (MENDELEEV_POSITIONING_HANDOFF.md
+   §3.1): surfacing the Mendeleev frame on the classifications tile grid.
+
+   NOTE ON NAMING. This file is deliberately NOT update-e0.css. The
+   shipped update-e0.css styles a DIFFERENT, already-deployed feature
+   ("E0 lead: open-questions parallel view"). The E0 label is reused by
+   two unrelated bodies of work; this file carries the Mendeleev-frame
+   tile chrome (constructive grid completion, conjectured-cell emphasis,
+   default-on cross-classification recurrence marker, two-line masthead
+   subtitle). Reconciling the two "E0"s is a maintainer call flagged in
+   the PR description; the file name keeps them from clobbering.
+
+   What this adds, against MENDELEEV_FRAME.md §1/§2/§6/§7 and the
+   firewall §8 content/organization distinction:
+
+     E0a/E0b — the in-tile cell grid already distinguishes realized
+       (status/realized fills) and forbidden-by-pattern (.excluded,
+       faint single-direction hatch). The one missing constructive
+       state is conjectured-by-pattern. .tile-swatch.conjectured is the
+       third fill — the empty-cell PREDICTION (the gallium/germanium
+       analog), drawn as the most arresting swatch. It correctly never
+       renders today: the live count is zero (find_forced_cells
+       conjectured-by-pattern → []), and stays zero until the
+       configuration builder forces a gap at query time. Pre-authoring
+       such cells would violate firewall §2 (META §8). This is the
+       RENDER PATH for that substrate output, dormant until populated.
+
+     E0b — .tile-chip-conjectured: the per-tile gap count, the most
+       prominent chip in the E5 chip row. Renders only when count ≥ 1,
+       so it shows nothing today (honest, not a bug).
+
+     E0c — .tile-xc-recurrence: a small ⇄ marker, on by default, on
+       every tile that is an endpoint of an `established`
+       cross-classification edge — the periodicity analog visible
+       without interaction (e.g. topological-insulator materials ⇄
+       ten-fold way; critical systems ⇄ the CFT at their fixed point).
+
+     E0d — .subtitle-frame / .subtitle-counts: the masthead subtitle,
+       split into the Mendeleev one-liner (primary) plus the data
+       counts (secondary). The only E0 move on the actual first-
+       impression surface, since the default landing view is the
+       open-questions view, not this tile grid.
+
+   Vocabulary discipline (PHYSICIST_FACING_VOCABULARY.md §3): physics
+   prose only on the surface — "gap", "predicted", "recurs" — no
+   snake_case schema names, no Register-A software jargon. "closure"
+   stays off the first glance (it is already a footer glyph, E0e).
+   Colour-blind safety: the three constructive fills are distinguished
+   by PATTERN (solid vs single-hatch vs cross-hatch) as well as hue.
+   Uses only the :root design tokens from Map_v34_explorer.html.
+   ============================================================= */
+
+
+/* ===== E0a / E0b — conjectured-by-pattern swatch (third fill) =====
+   forbidden-by-pattern (.excluded) is a faint single-direction hatch
+   meaning "nature forbids this position". conjectured-by-pattern is
+   its constructive opposite: "the pattern implies this position SHOULD
+   be filled, and nothing fills it yet". It must read as the most
+   arresting swatch — a saturated accent cross-hatch with a solid
+   accent border, distinct from .excluded by colour (accent vs faint
+   ink), pattern (cross-hatch vs single hatch), and border weight. */
+.tile-swatch.conjectured {
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient( 45deg,
+      var(--accent) 0, var(--accent) 0.8px,
+      transparent 0.8px, transparent 2.4px),
+    repeating-linear-gradient(-45deg,
+      var(--accent) 0, var(--accent) 0.8px,
+      transparent 0.8px, transparent 2.4px);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 1px rgba(139, 26, 26, 0.18);
+}
+
+
+/* ===== E0b — per-tile gap-count chip =====
+   Sits in the existing .tile-chips row (update-e5.css). It is the
+   most prominent chip — full accent left-border and accent text —
+   because it is the only chip naming a Mendeleev PREDICTION rather
+   than a coverage signal. Renders only when ≥ 1 gap exists. */
+.tile-chip-conjectured {
+  border-left: 2px solid var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.pt-tile:hover .tile-chip-conjectured {
+  color: var(--accent);
+  background: var(--paper);
+}
+
+
+/* ===== E0c — default-on cross-classification recurrence marker =====
+   A small ⇄ riding at the end of the top-left count text on every tile
+   that participates in an `established` cross-classification edge. On
+   by default (no interaction needed), low visual weight so it reads as
+   ambient signal, accent-tinted so it is legible. Arrows over FC↔FC
+   edges were rejected (clutter; the phen↔phen overlay owns the arrow
+   idiom); a per-tile mark is the smaller-footprint indication. */
+.tile-xc-recurrence {
+  margin-left: 4px;
+  color: var(--accent);
+  opacity: 0.7;
+  font-weight: 700;
+  cursor: help;
+}
+.pt-tile:hover .tile-xc-recurrence { opacity: 1; }
+.pt-tile.dim .tile-xc-recurrence { opacity: 0.3; }
+
+
+/* ===== E0d — masthead subtitle (Mendeleev one-liner + counts) =====
+   Replaces the bare counts line with the frame sentence as primary and
+   the counts demoted to a faint second line. Capped width so the
+   sentence wraps to ~2 lines under the title rather than stretching
+   the full masthead. The .subtitle container's base rule lives in
+   Map_v34_explorer.html; these style its two children. */
+.title-block .subtitle { display: block; }
+.subtitle-frame {
+  display: block;
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px;
+  line-height: 1.32;
+  color: var(--ink-soft);
+  max-width: 680px;
+  margin-top: 1px;
+}
+.subtitle-counts {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+@media (max-width: 720px) {
+  .subtitle-frame { font-size: 11px; max-width: none; }
+}

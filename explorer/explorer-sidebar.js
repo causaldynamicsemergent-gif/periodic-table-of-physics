@@ -1397,8 +1397,25 @@ async function init() {
   }
 
   const m = DATA._meta.counts;
-  document.getElementById('header-subtitle').textContent =
-    `${m.formal_classifications} classifications · ${m.cells} cells · ${m.predictions} predictions · ${m.falsifications} falsifications`;
+  // E0d — masthead subtitle in the Mendeleev frame (MENDELEEV_FRAME.md
+  // §1/§2/§6; wording maintainer-approved). The frame sentence leads; the
+  // data counts are demoted to a faint second line. This is the one E0
+  // move on the actual first-impression surface, since the default landing
+  // view is the open-questions view rather than this tile grid. All four
+  // moves are legible and M2/M3 read as moves the map ENABLES ("yours to
+  // run"), per the substrate-contained / substrate-enabled distinction.
+  const subtitleEl = document.getElementById('header-subtitle');
+  if (subtitleEl) {
+    subtitleEl.innerHTML =
+      '<span class="subtitle-frame">Each classification lays physical content along its own axes; '
+      + 'build a cross-section across several and structurally-missing entries and recurring structure '
+      + 'surface the way the gaps at gallium and germanium did. The map keeps the organization anchored '
+      + 'to the literature, so the pattern-finding and the tests of candidate unification frameworks are '
+      + 'yours to run; experimental coverage is tracked alongside.</span>'
+      + '<span class="subtitle-counts">'
+      + m.formal_classifications + ' classifications · ' + m.cells + ' cells · '
+      + m.predictions + ' predictions · ' + m.falsifications + ' falsifications</span>';
+  }
   const headerVersionEl = document.getElementById('header-version');
   if (headerVersionEl && DATA._meta.dataset_version) {
     headerVersionEl.textContent = DATA._meta.dataset_version;
