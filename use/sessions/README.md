@@ -22,15 +22,15 @@ Curated end-to-end walkthroughs, each verified against the live data. Each takes
 
 A "How to use the map" page: the query patterns from the worked sessions, distilled into a paragraph each, for a physicist who wants to try a question of their own. No prior experience with the underlying server assumed.
 
-### The essay — `essay.md` *(forthcoming)*
+### The essay — [`essay.md`](essay.md)
 
-A short essay threading several worked examples into the answer to "what is this and why should I care." Publishes together with `recipes.md`. Not yet drafted.
+A short essay threading three worked examples — leptogenesis, the strong-CP problem, and the catalogue's seventeen falsified predictions — into the answer to "what is this and why should I care." Publishes together with `recipes.md`.
 
 ---
 
 ## How to read these
 
-Start with a session that opens on a question you recognize, then skim [`recipes.md`](recipes.md) for the general patterns. The sessions are the demonstration; the recipes are the scaffolding for your own questions; the essay (when it lands) is the framing for why the whole thing is worth your time.
+Start with a session that opens on a question you recognize, then skim [`recipes.md`](recipes.md) for the general patterns. The sessions are the demonstration; the recipes are the scaffolding for your own questions; the essay is the framing for why the whole thing is worth your time.
 
 ---
 

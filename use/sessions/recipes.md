@@ -24,4 +24,4 @@ These recipes share a spine: the catalogue answers *structural* questions — wh
 
 ---
 
-*Written in the physicist-facing vocabulary discipline. Recipes are the distilled-recipe paragraphs of the worked sessions; as new sessions are added, their recipes join this page. See [`README.md`](README.md) for the directory index and the forthcoming `essay.md` for the longer-form framing.*
+*Written in the physicist-facing vocabulary discipline. Recipes are the distilled-recipe paragraphs of the worked sessions; as new sessions are added, their recipes join this page. See [`README.md`](README.md) for the directory index and [`essay.md`](essay.md) for the longer-form framing.*
