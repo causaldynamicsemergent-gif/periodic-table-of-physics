@@ -118,4 +118,24 @@ Examples of probe-style questions are listed in §3.2 of the revised methodology
 
 ---
 
+## 8. The content / organization distinction — what the firewall does and does not bind
+
+**This section was added 2026-05-29 in P0' sub-PR.** A second-order failure mode, distinct from the back-influence failure §2 names, surfaced during the Mendeleev-positioning workstream: a too-strict reading of the firewall as also prohibiting configuration-time emergence of patterns and gaps from substrate organization. This section makes the distinction explicit, so the firewall as a whole binds what it should and does not foreclose what it should not.
+
+**The firewall binds content authoring.** §2 names the back-influence failure mode and the §2.5 self-check that detects it. Both apply to *authoring decisions* — what cells, edges, classifications, predictions, or other content enters the substrate. The discipline is: authoring decisions are made from physics content independently, not driven by pattern-finding outputs. The §2.5 self-check ("would I author this anyway on physics-content grounds alone?") is the operational test. None of this changes.
+
+**The firewall does not bind configuration-time emergence.** When a physicist (or the substrate's tooling) constructs a configuration over the substrate's literature-anchored content — single-classification, pairwise, or multi-face — and a pattern or a gap appears as a consequence of that configuration meeting the content, the appearance is *substrate output*, not substrate content. No authoring decision is being made. The firewall's §2.5 self-check does not apply, because there is no authoring choice in scope. The substrate's tooling that performs this surfacing (the configuration builder, the comparison panel, the open-frontier view's structural-neighborhood navigation, the existing `find_forced_cells` / `find_cross_classification` / `find_structurally_excluded` queries, and the analogous query layer added by E0 / M0 work) is performing the substrate's central function, not violating the firewall.
+
+**Why this distinction matters.** The project's stated positioning is Mendeleev-style. Mendeleev's central move was to organize literature-anchored empirical data (atomic weights, valences, chemical behavior) along chosen axes; the empty cells and the periodicity emerged from the organization itself. No prior chemistry literature predicted gallium at position 31. A periodic-table-of-physics project that prohibits configuration-time emergence prohibits its own central function. The firewall as originally stated in §1–§7 was correct in what it bound (back-influence on authoring); it left the distinction between content authoring and substrate-output emergence implicit. This section makes the distinction explicit so that the firewall continues to bind back-influence on authoring (no relaxation of the §2 principle) while the substrate's tooling can surface patterns and gaps at configuration time without violating the firewall.
+
+**Operational implications.**
+
+- The `conjectured-by-pattern` schema field, currently zero-populated at the cell level, is correctly read as a category that populates at configuration time, not at content-authoring time. The substrate's tooling generates `conjectured-by-pattern` cell outputs when configurations are constructed and gaps appear. Pre-authoring `conjectured-by-pattern` cells with specific content would be content-authoring driven by pattern-finding — a §2 firewall violation. The current zero-count is correct.
+
+- Surface-text claims about substrate outputs (patterns surfaced, gaps identified, configurations constructed) do not need to be backed by prior literature endorsement of the specific pattern or gap. They need to be backed by the substrate's organization being correctly constructed and its content being literature-anchored. The outputs follow.
+
+- The literature-anchoring principle in `MENDELEEV_POSITIONING_HANDOFF.md` §7, the bullet on "the literature-anchoring principle binds content authoring, not configuration-time emergence," is the parallel correction at the handoff layer. The handoff's corrected bullet and this §8 together establish the operational discipline.
+
+**Cross-references.** `MENDELEEV_POSITIONING_HANDOFF.md` §7 (corrected literature-anchoring principle bullet); `DRIFT_PATTERN_REGISTER.md` Entry 1 (content drift: substrate outputs vs substrate inputs) for the conversational trajectory that surfaced this distinction.
+
 *End of META_v21_1_methodology_firewall.md*
