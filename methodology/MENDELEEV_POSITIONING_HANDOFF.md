@@ -4,7 +4,7 @@
 
 Location: `/methodology/MENDELEEV_POSITIONING_HANDOFF.md`. Attach to project knowledge so AI sessions see it automatically.
 
-Companion to `EXPLORER_PHASE_BC_HANDOFF.md` (inserts a new sub-PR E0 before its existing E1–E8 sequence), `PHYSICIST_FACING_VOCABULARY.md` (the prose-surface discipline; this work extends the same discipline to the orientation surfaces), and `TRACK_4_USE_SIDE_ARTIFACTS.md` (the use-side queue, which sequences after this work closes).
+Companion to `EXPLORER_PHASE_BC_HANDOFF.md` (inserts a new sub-PR EM0 before its existing E1–E8 sequence), `PHYSICIST_FACING_VOCABULARY.md` (the prose-surface discipline; this work extends the same discipline to the orientation surfaces), and `TRACK_4_USE_SIDE_ARTIFACTS.md` (the use-side queue, which sequences after this work closes).
 
 ---
 
@@ -61,34 +61,36 @@ The substrate-contained / substrate-enabled distinction matters because it sets 
 
 Two parallel surfaces, two parallel sub-PR sequences. Both depend on a small upstream artifact (§4) that names M1–M4 once so the surface text stays consistent.
 
-### 3.1 Explorer Mendeleev surfacing (sub-PR E0)
+### 3.1 Explorer Mendeleev surfacing (sub-PR EM0)
 
-Slots into the existing E1–E8 queue in `EXPLORER_PHASE_BC_HANDOFF.md` §3 as a new **sub-PR E0**, shipped *before* E1. The reason for the ordering: E1–E5 add Phase B + Phase C content to a surface a fresh physicist is currently reading as a review-article catalog. Without E0, that content lands in a frame that mutes its significance. With E0, the Phase B + C content arrives in a surface the physicist already reads as Mendeleev-style; then conditional-consequence chains (Phase B) and quantitative-bound entries (Phase C) read as *structural commitments the table is making*, not as more entries in a catalog.
+> **Naming note (EM0·R reconciliation, 2026-05-30).** This sub-PR was originally labelled "E0" in this handoff. That label collided with the *open-questions parallel view* — a separate, already-shipped piece of explorer work self-labelled "E0 lead" in the explorer JS and styled by `update-e0.css` (classes `.oq-*`). The two were only ever kept physically apart by the Mendeleev work shipping its CSS under the distinct filename `update-e0-mendeleev.css`. EM0·R renames this Mendeleev-surfacing sub-PR (and its moves EM0a–EM0e) to **EM0** throughout the handoff corpus so the docs match; the open-questions work keeps "E0". This is a docs-only change — **the shipped CSS filename `update-e0-mendeleev.css` is intentionally not renamed** (the label is EM0; the file stays `update-e0-mendeleev.css`). See `DRIFT_PATTERN_REGISTER.md` Entry 3.
 
-**What E0 does — five concrete moves, none of which change the data layer:**
+Slots into the existing E1–E8 queue in `EXPLORER_PHASE_BC_HANDOFF.md` §3 as a new **sub-PR EM0**, shipped *before* E1. The reason for the ordering: E1–E5 add Phase B + Phase C content to a surface a fresh physicist is currently reading as a review-article catalog. Without EM0, that content lands in a frame that mutes its significance. With EM0, the Phase B + C content arrives in a surface the physicist already reads as Mendeleev-style; then conditional-consequence chains (Phase B) and quantitative-bound entries (Phase C) read as *structural commitments the table is making*, not as more entries in a catalog.
 
-- **E0a. In-tile constructive grid.** The existing in-tile cell viz (Update C) renders cells as a grid coloured by observational-status. E0a extends the colour scheme so realized, conjectured-by-pattern, and forbidden-by-pattern cells are visually distinct from one another *and* from cells that are simply not-yet-authored. Three distinct fills, one absence. This is the single most important visual move; without it the constructive predictions are invisible at the tile level.
+**What EM0 does — five concrete moves, none of which change the data layer:**
 
-- **E0b. Conjectured cells draw the eye.** Within E0a, the conjectured-by-pattern fill should be the most visually arresting — a hatched fill, a saturated outline, a small icon. Whatever signals *"the table is asserting something here that hasn't been found yet."* A small per-tile chip showing the conjectured count (*"2 conjectured"*) makes the prediction parseable at a glance without a click.
+- **EM0a. In-tile constructive grid.** The existing in-tile cell viz (Update C) renders cells as a grid coloured by observational-status. EM0a extends the colour scheme so realized, conjectured-by-pattern, and forbidden-by-pattern cells are visually distinct from one another *and* from cells that are simply not-yet-authored. Three distinct fills, one absence. This is the single most important visual move; without it the constructive predictions are invisible at the tile level.
 
-- **E0c. Cross-classification patterns visible by default.** The phen↔phen overlay currently exists but is off by default. E0c either (a) turns on a strongest-pattern subset by default, or (b) adds a new default-on overlay surfacing the bidirectional-anchor-closures and parallel-anchors. The choice between (a) and (b) is for the implementing chat to resolve. The goal is that a physicist looking at the static map sees *at least one* recurring-structure indication without interacting.
+- **EM0b. Conjectured cells draw the eye.** Within EM0a, the conjectured-by-pattern fill should be the most visually arresting — a hatched fill, a saturated outline, a small icon. Whatever signals *"the table is asserting something here that hasn't been found yet."* A small per-tile chip showing the conjectured count (*"2 conjectured"*) makes the prediction parseable at a glance without a click.
 
-- **E0d. Subtitle naming the moves.** Under the explorer's title, a single-sentence subtitle in the Mendeleev frame. Draft: *"Cells are physical content positioned in formal classifications. Empty cells with structural reason are predictions or exclusions. Patterns across classifications — the analog of periodicity — and tests of candidate unification frameworks are moves the substrate enables; the discovery work is yours."* The implementing chat may shorten or rephrase, but the four moves (M1–M4 in §2) must each appear *and* the substrate-contained / substrate-enabled distinction must read off the subtitle — M2 and M3 are framed as moves the substrate enables, not claims the map makes. This subtitle is the eight-second orientation layer that tells the physicist what to look for in the next minute of poking.
+- **EM0c. Cross-classification patterns visible by default.** The phen↔phen overlay currently exists but is off by default. EM0c either (a) turns on a strongest-pattern subset by default, or (b) adds a new default-on overlay surfacing the bidirectional-anchor-closures and parallel-anchors. The choice between (a) and (b) is for the implementing chat to resolve. The goal is that a physicist looking at the static map sees *at least one* recurring-structure indication without interacting.
 
-- **E0e. Per-tile closure indicator.** `closure_level` is already a field on FC records. E0e renders it on the tile chrome (small badge or symbol) so the physicist sees whether a classification's constructive pattern terminates (the noble-gases analog) or is open. Cheap edit; high informational value.
+- **EM0d. Subtitle naming the moves.** Under the explorer's title, a single-sentence subtitle in the Mendeleev frame. Draft: *"Cells are physical content positioned in formal classifications. Empty cells with structural reason are predictions or exclusions. Patterns across classifications — the analog of periodicity — and tests of candidate unification frameworks are moves the substrate enables; the discovery work is yours."* The implementing chat may shorten or rephrase, but the four moves (M1–M4 in §2) must each appear *and* the substrate-contained / substrate-enabled distinction must read off the subtitle — M2 and M3 are framed as moves the substrate enables, not claims the map makes. This subtitle is the eight-second orientation layer that tells the physicist what to look for in the next minute of poking.
 
-**Files touched by E0:** likely `explorer-map.js` (tile chrome + in-tile viz), `Map_v34_explorer.html` (subtitle), `explorer-data.js` (any new index needs), one of the CSS files for the visual treatment. The implementing chat should propose the diff against current explorer source via `web_fetch` per the working norms in `EXPLORER_HANDOFF.md`.
+- **EM0e. Per-tile closure indicator.** `closure_level` is already a field on FC records. EM0e renders it on the tile chrome (small badge or symbol) so the physicist sees whether a classification's constructive pattern terminates (the noble-gases analog) or is open. Cheap edit; high informational value.
+
+**Files touched by EM0:** likely `explorer-map.js` (tile chrome + in-tile viz), `Map_v34_explorer.html` (subtitle), `explorer-data.js` (any new index needs), one of the CSS files for the visual treatment. The implementing chat should propose the diff against current explorer source via `web_fetch` per the working norms in `EXPLORER_HANDOFF.md`.
 
 **Design questions for the implementing chat to resolve before authoring code:**
 
-- *(E0a/b)* The exact visual treatment for realized vs conjectured vs forbidden — colour scheme, fill pattern, accessibility (colour-blind palette must work). Update C's existing palette is the starting point.
-- *(E0c)* Whether to ship default-on overlay arrows or default-on tile chips. Arrows are more visually striking but risk cluttering the static map; chips are smaller-footprint.
-- *(E0d)* Subtitle wording — the implementing chat drafts; maintainer approves.
-- *(E0e)* Badge form (text "■", "◐", "□" as already used in tile footer; an icon; a colour treatment).
+- *(EM0a/b)* The exact visual treatment for realized vs conjectured vs forbidden — colour scheme, fill pattern, accessibility (colour-blind palette must work). Update C's existing palette is the starting point.
+- *(EM0c)* Whether to ship default-on overlay arrows or default-on tile chips. Arrows are more visually striking but risk cluttering the static map; chips are smaller-footprint.
+- *(EM0d)* Subtitle wording — the implementing chat drafts; maintainer approves.
+- *(EM0e)* Badge form (text "■", "◐", "□" as already used in tile footer; an icon; a colour treatment).
 
 ### 3.2 MCP Mendeleev orientation (sub-PR M0)
 
-Independent of E0. Lands on the MCP worker side. Four concrete moves:
+Independent of EM0. Lands on the MCP worker side. Four concrete moves:
 
 - **M0a. Purpose statement in `server_info`.** The current `server_info` response reports operational metadata (`data_version`, `schema_version`, `tool_count`, `resolves_edges`). M0a adds a first-class `purpose` field — a 100–200 word orientation statement leading with the Mendeleev frame and the four moves M1–M4 in order. Sourced from `MENDELEEV_FRAME.md` (§4 below) so all surfaces stay consistent.
 
@@ -113,7 +115,7 @@ Independent of E0. Lands on the MCP worker side. Four concrete moves:
 
 A short methodology doc that names M1–M4 once, in canonical wording, with a one-paragraph rationale per move. This doc seeds:
 
-- The explorer subtitle (E0d) and the help-overlay text (eventually).
+- The explorer subtitle (EM0d) and the help-overlay text (eventually).
 - The `server_info` purpose statement (M0a).
 - The lead sentence of each rewritten tool description (M0b).
 - The glossary entries (M0d).
@@ -127,7 +129,7 @@ Writing it once means the surfaces stay consistent. Editing it later is a single
 
 **Vocabulary discipline:** This document is methodology-facing (maintainer + AI sessions resuming work), so Register C terms (firewall, §4 admissibility, structural-FC vs phenomenon-FC) are appropriate. But MENDELEEV_FRAME.md is *also* the source text for several physicist-facing surfaces, so each section should include a physicist-facing prose paragraph the surfaces can quote or adapt directly. The vocabulary supplement (`PHYSICIST_FACING_VOCABULARY.md`) governs the adapted forms.
 
-MENDELEEV_FRAME.md is the first sub-PR in the workstream (call it **sub-PR P0**). E0 and M0 depend on it.
+MENDELEEV_FRAME.md is the first sub-PR in the workstream (call it **sub-PR P0**). EM0 and M0 depend on it.
 
 ---
 
@@ -135,7 +137,7 @@ MENDELEEV_FRAME.md is the first sub-PR in the workstream (call it **sub-PR P0**)
 
 ```
 P0 (draft MENDELEEV_FRAME.md)
-  ├─→ E0 (explorer Mendeleev surfacing)         ─→ E1…E8 (existing Phase B+C surfacing queue)
+  ├─→ EM0 (explorer Mendeleev surfacing)         ─→ E1…E8 (existing Phase B+C surfacing queue)
   └─→ M0 (MCP Mendeleev orientation)
                                                           │
                                                           ↓
@@ -143,7 +145,7 @@ P0 (draft MENDELEEV_FRAME.md)
                                                 (TRACK_4_USE_SIDE_ARTIFACTS.md)
 ```
 
-P0 first. E0 and M0 can land in parallel after P0 ships. E1–E8 sequence picks up after E0 (the existing handoff's queue rewrites to start with E1 unchanged, but now landing on an E0-Mendeleev-framed surface). The use-side artifacts queue sequences after E1–E5 close as already specified in `TRACK_4_USE_SIDE_ARTIFACTS.md` §3.
+P0 first. EM0 and M0 can land in parallel after P0 ships. E1–E8 sequence picks up after EM0 (the existing handoff's queue rewrites to start with E1 unchanged, but now landing on an EM0-Mendeleev-framed surface). The use-side artifacts queue sequences after E1–E5 close as already specified in `TRACK_4_USE_SIDE_ARTIFACTS.md` §3.
 
 The Phase C content-authoring queue (sub-PR 57 fcc, Step 4.5 implication-level `quantitative_scale`, worker data refresh) sits on its own track and can land in parallel with any of this. It is content authoring, not positioning, and is governed by `PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`.
 
@@ -156,37 +158,37 @@ The Phase C content-authoring queue (sub-PR 57 fcc, Step 4.5 implication-level `
 ### P0 — MENDELEEV_FRAME.md
 - One file: `/methodology/MENDELEEV_FRAME.md`.
 - 800–1500 words, structure per §4 above.
-- Maintainer-approved before E0 and M0 begin.
+- Maintainer-approved before EM0 and M0 begin.
 - One chat.
 
-### E0a — In-tile constructive grid
+### EM0a — In-tile constructive grid
 - Touches `explorer-map.js` (in-tile cell viz extension), one CSS file (visual treatment).
 - Realized / conjectured / forbidden / not-authored as four visually distinct fills.
 - Colour-blind-accessible palette.
 - One chat.
 
-### E0b — Conjectured cells draw the eye + per-tile conjectured-count chip
+### EM0b — Conjectured cells draw the eye + per-tile conjectured-count chip
 - Touches `explorer-map.js` and CSS.
-- Conjectured fill is the most visually arresting of the four from E0a.
+- Conjectured fill is the most visually arresting of the four from EM0a.
 - Per-tile chip showing conjectured-count when ≥1.
-- Can merge into E0a as a single PR if natural.
+- Can merge into EM0a as a single PR if natural.
 
-### E0c — Cross-classification patterns default-visible
+### EM0c — Cross-classification patterns default-visible
 - Touches `explorer-map.js` (overlay defaults) or adds new default-on visualization.
 - At least one recurring-structure indication visible on the static map without interaction.
 - Implementing chat resolves the arrows-vs-chips question before authoring.
 
-### E0d — Subtitle
+### EM0d — Subtitle
 - Touches `Map_v34_explorer.html`.
 - One sentence under the title, names M1–M4 by their physics-prose forms (per `PHYSICIST_FACING_VOCABULARY.md`).
 - Smallest sub-PR by diff size.
 
-### E0e — Per-tile closure indicator
+### EM0e — Per-tile closure indicator
 - Touches `explorer-map.js` and CSS.
 - Reads `closure_level` from the FC record, renders a small badge or symbol on the tile.
-- Independent of E0a–E0d; can ship in any order with them.
+- Independent of EM0a–EM0d; can ship in any order with them.
 
-(E0a–E0e may collapse into 2–3 PRs in practice. The above is the logical decomposition; the implementing chat should propose the actual PR shape.)
+(EM0a–EM0e may collapse into 2–3 PRs in practice. The above is the logical decomposition; the implementing chat should propose the actual PR shape.)
 
 ### M0a/b/c — MCP worker rebuild with Mendeleev orientation
 - Touches `/mcp/worker_skeleton.js`, `/mcp/build_worker.py`, `/mcp/README.md`.
@@ -207,10 +209,10 @@ Inherited from `EXPLORER_HANDOFF.md`, `EXPLORER_PHASE_BC_HANDOFF.md`, `PREDICTIV
 
 - **This work does not touch the data layer.** No new cells, no new edges, no new classifications, no schema changes. The firewall (`META_v21_1_methodology_firewall.md`) is unaffected. The data already supports M1–M4; the positioning makes that visible.
 - **MENDELEEV_FRAME.md is the single source of truth for the four moves.** Surface text in the explorer, MCP, glossary, and eventual essay quotes or adapts MENDELEEV_FRAME.md rather than re-inventing wording per surface. Drift between surfaces is the failure mode; a single source prevents it.
-- **The vocabulary discipline (`PHYSICIST_FACING_VOCABULARY.md`) applies in full to the physicist-facing surface text** drafted in E0 and to the AI-orientation prose in M0 to the extent that AI orientation prose eventually reaches a physicist (via the chat entry point in `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.3).
+- **The vocabulary discipline (`PHYSICIST_FACING_VOCABULARY.md`) applies in full to the physicist-facing surface text** drafted in EM0 and to the AI-orientation prose in M0 to the extent that AI orientation prose eventually reaches a physicist (via the chat entry point in `TRACK_4_USE_SIDE_ARTIFACTS.md` §1.3).
 - **The Mendeleev framing is descriptive, not aspirational.** The data layer actually supports M1–M4; this work surfaces what is already there. If a surface text claim about a Mendeleev move can't be backed by current data + tools, the claim doesn't go in. The opening worked example in any future essay must be a real query against the current map, not a hypothetical.
-- **The literature-anchoring principle binds content authoring, not configuration-time emergence.** (Corrected 2026-05-29 in P0' sub-PR; see `META_v21_1_methodology_firewall.md` §8 and `DRIFT_PATTERN_REGISTER.md` Entry 1 for the conversational trajectory.) Content entering the substrate is literature-anchored — no project-side computation enters as cell content, edge claims, or quantitative scales. Organizational structure connecting content (axes, classifications, cross-classification edges) is the project's contribution; authoring those is bound by the firewall and §4 admissibility test. Patterns and gaps emerging when the substrate's organization meets its literature-anchored content — at query time, during configuration construction, in the configuration builder the E0 work surfaces — are first-class substrate outputs, neither invented nor literature-required. The positioning prose carries three categories explicitly: **substrate-contained** (M4 and M1 mode-1: the map directly holds the content), **substrate-enabled** (M2 and M3: the map enables the user's work on top), and **substrate-output** (M1 modes 2–3: the map surfaces patterns and gaps at configuration time). Surfaces that frame M1 modes 2–3 as "requiring prior literature endorsement" foreclose the project's central Mendeleev move; surfaces that frame them as "the map's autonomous synthesis" overstate the project's authority. The frame doc, subtitle, tool descriptions, and glossary entries all carry the three-category distinction. The original version of this bullet (pre-correction) said *"substrate content is added only when the indexing / synthesis is itself proposed in the literature — not when the project would be synthesizing across literature-anchored fragments"*; that statement is preserved as the rule binding **content authoring** but does not extend to substrate outputs at configuration time.
-- **Existing surface content is load-bearing where it's correct.** Update C's tile chrome, the existing yield bar, the discourse panel, the help overlay's current content — none of these are wrong; they're framed at the wrong level. E0 extends the chrome; it doesn't replace working surfaces.
+- **The literature-anchoring principle binds content authoring, not configuration-time emergence.** (Corrected 2026-05-29 in P0' sub-PR; see `META_v21_1_methodology_firewall.md` §8 and `DRIFT_PATTERN_REGISTER.md` Entry 1 for the conversational trajectory.) Content entering the substrate is literature-anchored — no project-side computation enters as cell content, edge claims, or quantitative scales. Organizational structure connecting content (axes, classifications, cross-classification edges) is the project's contribution; authoring those is bound by the firewall and §4 admissibility test. Patterns and gaps emerging when the substrate's organization meets its literature-anchored content — at query time, during configuration construction, in the configuration builder the EM0 work surfaces — are first-class substrate outputs, neither invented nor literature-required. The positioning prose carries three categories explicitly: **substrate-contained** (M4 and M1 mode-1: the map directly holds the content), **substrate-enabled** (M2 and M3: the map enables the user's work on top), and **substrate-output** (M1 modes 2–3: the map surfaces patterns and gaps at configuration time). Surfaces that frame M1 modes 2–3 as "requiring prior literature endorsement" foreclose the project's central Mendeleev move; surfaces that frame them as "the map's autonomous synthesis" overstate the project's authority. The frame doc, subtitle, tool descriptions, and glossary entries all carry the three-category distinction. The original version of this bullet (pre-correction) said *"substrate content is added only when the indexing / synthesis is itself proposed in the literature — not when the project would be synthesizing across literature-anchored fragments"*; that statement is preserved as the rule binding **content authoring** but does not extend to substrate outputs at configuration time.
+- **Existing surface content is load-bearing where it's correct.** Update C's tile chrome, the existing yield bar, the discourse panel, the help overlay's current content — none of these are wrong; they're framed at the wrong level. EM0 extends the chrome; it doesn't replace working surfaces.
 
 ---
 
@@ -228,7 +230,7 @@ Project files auto-attach when a fresh chat opens. To resume:
 ```
 Pick up sub-PR P0 from MENDELEEV_POSITIONING_HANDOFF.md: draft MENDELEEV_FRAME.md.
 
-Background: this is the upstream artifact for the explorer E0 sub-PR sequence
+Background: this is the upstream artifact for the explorer EM0 sub-PR sequence
 and the MCP M0 sub-PR sequence. It names the four moves the Map of Physics
 supports (M1 empty-cell prediction, M2 cross-classification patterns, M3
 unification-attempt testing, M4 experimental-program adjudication) once, in
@@ -316,8 +318,8 @@ Same discipline as the other handoffs:
 
 1. **The live system + the canonical data are authoritative**, not this document. §0 makes that explicit.
 2. **When P0 ships**, §6 closes the P0 row and the handoff's working text references the shipped MENDELEEV_FRAME.md directly.
-3. **When E0 and M0 ship**, §6 closes those rows; the explorer's first-ten-seconds surface and the MCP's `server_info` are verified Mendeleev-framed; the work transitions to the next-downstream concerns (E1–E5 Phase B+C surfacing per the explorer handoff; use-side artifacts per the Track 4 queue).
-4. **When all of E0/M0/E1–E5/use-side artifacts ship**, this handoff transitions to "closed" status. The successor handoff (likely an outreach handoff, since Track 4 outreach is what this work is ultimately upstream of) takes over.
+3. **When EM0 and M0 ship**, §6 closes those rows; the explorer's first-ten-seconds surface and the MCP's `server_info` are verified Mendeleev-framed; the work transitions to the next-downstream concerns (E1–E5 Phase B+C surfacing per the explorer handoff; use-side artifacts per the Track 4 queue).
+4. **When all of EM0/M0/E1–E5/use-side artifacts ship**, this handoff transitions to "closed" status. The successor handoff (likely an outreach handoff, since Track 4 outreach is what this work is ultimately upstream of) takes over.
 
 ---
 
@@ -325,7 +327,7 @@ Same discipline as the other handoffs:
 
 - This handoff: `/methodology/MENDELEEV_POSITIONING_HANDOFF.md`
 - Upstream artifact (to be drafted in P0): `/methodology/MENDELEEV_FRAME.md`
-- Companion handoff (E0 inserts before its E1): `/methodology/EXPLORER_PHASE_BC_HANDOFF.md`
+- Companion handoff (EM0 inserts before its E1): `/methodology/EXPLORER_PHASE_BC_HANDOFF.md`
 - Companion handoff (data-side authoring continues in parallel): `/methodology/PREDICTIVE_LAYER_PHASE_C_HANDOFF.md`
 - Vocabulary discipline: `/methodology/PHYSICIST_FACING_VOCABULARY.md`
 - Downstream queue: `/methodology/TRACK_4_USE_SIDE_ARTIFACTS.md`
@@ -344,4 +346,4 @@ Same discipline as the other handoffs:
 
 ---
 
-*End of MENDELEEV_POSITIONING_HANDOFF.md, drafted 2026-05-28 in response to a test-chat exchange that surfaced the Mendeleev-positioning gap, and revised the same day to carry the literature-anchoring principle and the substrate-contained / substrate-enabled distinction (a maintainer call after a Mode-D substrate-authoring proposal in a parallel chat clarified that the project synthesizes only what the literature has synthesized; the positioning prose must reflect that discipline). The data layer already supports the four moves M1–M4; this workstream makes that support visible on the surfaces a fresh reader (human or AI) lands on first, in a way that honestly distinguishes what the map directly holds (M1, M4) from what the map enables the physicist to do (M2, M3). Upstream of Track 4 outreach and the use-side artifact queue. P0 drafts the canonical frame doc; E0 surfaces it on the explorer; M0 surfaces it on the MCP; both wind through the rest of the project's downstream sequence unchanged.*
+*End of MENDELEEV_POSITIONING_HANDOFF.md, drafted 2026-05-28 in response to a test-chat exchange that surfaced the Mendeleev-positioning gap, and revised the same day to carry the literature-anchoring principle and the substrate-contained / substrate-enabled distinction (a maintainer call after a Mode-D substrate-authoring proposal in a parallel chat clarified that the project synthesizes only what the literature has synthesized; the positioning prose must reflect that discipline). The data layer already supports the four moves M1–M4; this workstream makes that support visible on the surfaces a fresh reader (human or AI) lands on first, in a way that honestly distinguishes what the map directly holds (M1, M4) from what the map enables the physicist to do (M2, M3). Upstream of Track 4 outreach and the use-side artifact queue. P0 drafts the canonical frame doc; EM0 surfaces it on the explorer; M0 surfaces it on the MCP; both wind through the rest of the project's downstream sequence unchanged.*

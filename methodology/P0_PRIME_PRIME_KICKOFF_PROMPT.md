@@ -55,7 +55,7 @@ What needs rework against the corrected methodology:
     empirically rare." The redraft says so explicitly: the field populates
     at configuration time when the substrate's tooling surfaces a gap, not
     at content-authoring time. The current zero-count is correct because
-    the configuration-builder that generates the entries is the E0 work
+    the configuration-builder that generates the entries is the EM0 work
     itself.
   - Mendeleev worked example replaces hierarchy-problem as the worked
     instance for M1's lead description. Hierarchy-problem becomes the
@@ -200,9 +200,9 @@ Five points of contrast with the original P0 kickoff prompt:
 
 ## After P0'' ships
 
-The follow-up sub-PRs (E0 lead and M0 lead) need their own kickoff prompts, drafted after P0'' produces the corrected frame doc. Both should apply the same §0 template (state verification + drift register read + methodology doc read + quote-back), since the process drift correction binds going forward.
+The follow-up sub-PRs (EM0 lead and M0 lead) need their own kickoff prompts, drafted after P0'' produces the corrected frame doc. Both should apply the same §0 template (state verification + drift register read + methodology doc read + quote-back), since the process drift correction binds going forward.
 
-The E0 kickoff prompt I drafted earlier in the P0 conversation is now stale — it was written against the un-corrected methodology. When E0 starts, draft a fresh kickoff prompt against the corrected frame doc + corrected methodology + drift register.
+The EM0 kickoff prompt I drafted earlier in the P0 conversation is now stale — it was written against the un-corrected methodology. When EM0 starts, draft a fresh kickoff prompt against the corrected frame doc + corrected methodology + drift register.
 
 ---
 
