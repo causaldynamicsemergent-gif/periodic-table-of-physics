@@ -134,3 +134,38 @@
 @media (max-width: 720px) {
   .subtitle-frame { font-size: 11px; max-width: none; }
 }
+
+
+/* ===== EM0·R — open-questions landing readout ==============================
+   The default landing view is the open-questions view, not the tile grid,
+   so EM0a/EM0b (constructive prediction) and EM0c (cross-classification
+   recurrence) — which live on the tile chrome — are not on the surface a
+   fresh physicist actually lands on first. MENDELEEV_FRAME.md §7's
+   first-impression test ("at least one constructive prediction and at least
+   one cross-classification recurrence without having to ask") is a test of
+   the LANDING surface. This block mirrors the two tile idioms onto the
+   open-questions card's structural-neighbourhood row (.oq-neigh), as a single
+   ambient readout line — accent for the forbidden-by-pattern exclusion (the
+   constructive prediction, drawn to the eye like EM0b), and the same ↔
+   recurrence glyph at low weight used by .tile-xc-recurrence (EM0c). No data
+   layer change; both counts ride existing indices. Renders only when
+   populated, so it shows nothing where there is nothing. */
+.oq-neigh-readout {
+  margin-top: 5px;
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ink-mute);
+}
+.oq-neigh-readout-forb {
+  color: var(--accent);
+  font-weight: 600;
+}
+.oq-neigh-readout-rec {
+  color: var(--ink-soft);
+}
+.oq-neigh-rec-glyph {
+  color: var(--accent);
+  opacity: 0.7;
+  font-weight: 700;
+  cursor: help;
+}

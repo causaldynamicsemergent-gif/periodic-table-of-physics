@@ -159,6 +159,34 @@ function frontierCandidateChips(node) {
   return '<div class="oq-cands"><span class="oq-cands-label">Candidate resolutions</span><div class="oq-cand-row">' + chips + '</div></div>';
 }
 
+// EM0·R — counts for the neighbourhood readout. Both ride existing
+// indices; neither authors content (firewall §2 / META §8: these are
+// substrate outputs, not authored cells).
+//   fcRecurrenceCount: distinct classifications this FC shares a
+//     cross-classification correspondence with (DATA.edges_by_fc) — the
+//     periodicity analog, the same source EM0c marks on the tile grid.
+//   fcForbiddenCount: positions this FC's constructive pattern rules out
+//     (constructive_status === 'forbidden-by-pattern') — the same measure
+//     server_info reports (22 map-wide). Deliberately NOT the
+//     structurally_excluded content-sentinel, which counts differently;
+//     that 22-vs-38 reconciliation is a separate data-side item.
+function fcRecurrenceCount(fcId) {
+  const edges = (typeof DATA !== 'undefined' && DATA.edges_by_fc && DATA.edges_by_fc[fcId]) || [];
+  const partners = new Set();
+  for (const e of edges) {
+    const other = (e.from === fcId) ? e.to : e.from;
+    if (other && other !== fcId) partners.add(other);
+  }
+  return partners.size;
+}
+function fcForbiddenCount(fcId) {
+  const fc = (typeof FC_BY_ID !== 'undefined' && FC_BY_ID) ? FC_BY_ID[fcId] : null;
+  if (!fc || !fc.cells) return 0;
+  let n = 0;
+  for (const c of fc.cells) if (c.constructive_status === 'forbidden-by-pattern') n++;
+  return n;
+}
+
 function frontierNeighborhood(node) {
   const bears = frontierBearsOn(node.id);
   if (!bears.length) {
@@ -168,7 +196,32 @@ function frontierNeighborhood(node) {
     '<button type="button" class="oq-neighbor-pill" data-fc="' + esc(b.fcId) + '" title="Open this classification — the empty cell&#39;s structural neighbourhood">'
     + esc(b.label) + '</button>'
   ).join('');
-  return '<div class="oq-neigh"><span class="oq-neigh-label">Structurally constrained by</span><div class="oq-neigh-row">' + pills + '</div></div>';
+  // EM0·R — the two first-impression indications MENDELEEV_FRAME §7 asks the
+  // landing surface to carry, surfaced here without interaction: a
+  // constructive prediction (a forbidden-by-pattern exclusion, today) and a
+  // cross-classification recurrence. Both are properties of the constraining
+  // classifications shown above, surfaced through the frontier's
+  // neighbourhood — not claims about the frontier itself. Each clause renders
+  // only when populated, so no count is fabricated where none exists.
+  let totForb = 0, recurFcs = 0;
+  for (const b of bears) {
+    totForb += fcForbiddenCount(b.fcId);
+    if (fcRecurrenceCount(b.fcId) > 0) recurFcs++;
+  }
+  const clauses = [];
+  if (totForb > 0) {
+    clauses.push('<span class="oq-neigh-readout-forb">' + totForb
+      + ' position' + (totForb === 1 ? '' : 's') + ' the structure rules out</span>');
+  }
+  if (recurFcs > 0) {
+    clauses.push('<span class="oq-neigh-readout-rec">' + recurFcs
+      + (recurFcs === 1 ? ' classification here recurs' : ' of these recur')
+      + ' across the map <span class="oq-neigh-rec-glyph" title="appears at a corresponding position in another classification">↔</span></span>');
+  }
+  const readout = clauses.length
+    ? '<div class="oq-neigh-readout">Within this neighbourhood: ' + clauses.join(' · ') + '</div>'
+    : '';
+  return '<div class="oq-neigh"><span class="oq-neigh-label">Structurally constrained by</span><div class="oq-neigh-row">' + pills + '</div>' + readout + '</div>';
 }
 
 function frontierCoverageLine(node) {
