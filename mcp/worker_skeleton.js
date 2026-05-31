@@ -498,12 +498,14 @@ function pick(obj, keys) {
 function tool_server_info() {
   return {
     server: 'map-of-physics',
+    purpose: PURPOSE,
     version: '3.2.7',
     schema_version: 'v20',
     data_version: 'v99',
     dataset_version: (DATA._meta && DATA._meta._file_role) || 'v34 consolidated',
     phase: 'Predictive Layer Phase C + v20 (quantitative_scale, resolves, bound_direction, no_structural_consequence)',
     counts: COUNTS,
+    tool_clusters: TOOL_CLUSTERS,
     tool_count: TOOL_NAMES.length,
   };
 }
@@ -1583,6 +1585,40 @@ function tool_find_discriminating_experiments({ program_a, program_b, limit } = 
 // TOOL REGISTRY
 // ============================================================
 
+// ============================================================
+// M0: Mendeleev orientation surface (source: methodology/MENDELEEV_FRAME.md)
+// ============================================================
+const PURPOSE =
+  "The Map of Physics is a periodic-table-style catalogue of modern physics: a network of " +
+  "formal classifications, each laying physical or mathematical content along its own axes, " +
+  "linked where the same content recurs. It supports four moves. M1, empty-cell prediction \u2014 " +
+  "lay out a classification, or a cross-section of several, and a position with a structural " +
+  "reason to exist but no occupant surfaces as a prediction (the gallium and \u03a9\u207b analog), " +
+  "alongside its dual, the positions the structure forbids: the map holds 22 such forbidden-by-pattern " +
+  "exclusions today, and surfaces pattern-forced empty cells (conjectured-by-pattern) at configuration " +
+  "time \u2014 a category that correctly stands empty until a constructed configuration forces a gap. " +
+  "M2, cross-classification recurrence \u2014 the same content at corresponding positions in two " +
+  "classifications, the periodicity analog. M3, testing a candidate unification framework against the " +
+  "recorded structure. M4, experimental-program adjudication. The map holds the realized cells and " +
+  "structural exclusions (M1) and the experimental-coverage edges (M4) directly; it provides the " +
+  "literature-anchored organization that makes recurrences (M2) and framework tests (M3) findable \u2014 " +
+  "the recognition and the testing are yours.";
+
+const TOOL_CLUSTERS = [
+  { id: 'mendeleev-moves', label: 'Mendeleev moves \u2014 empty-cell prediction (M1) & cross-classification recurrence (M2)',
+    tools: ['find_forced_cells', 'find_structurally_excluded', 'get_forcing_constraint',
+            'find_cross_classification', 'compare_classifications', 'find_classification_chain'] },
+  { id: 'unification-test-moves', label: 'Unification-test moves (M3) \u2014 test a candidate framework against the structure; the test is the user\u2019s',
+    tools: ['find_hosting', 'find_targeting', 'find_targets_of_program', 'get_axis_mapping'] },
+  { id: 'experimental-adjudication', label: 'Experimental adjudication (M4) \u2014 which experiments bear on a frontier and which discriminate competing predictions',
+    tools: ['find_discriminating_experiments', 'find_resolvers', 'find_predictions'] },
+  { id: 'navigation', label: 'Navigation & data access',
+    tools: ['server_info', 'get_node', 'get_classification', 'get_experimental_program', 'glossary_lookup',
+            'list_nodes', 'list_classifications', 'list_experimental_programs', 'search', 'neighbors', 'paths',
+            'find_uses_classification', 'find_produces_classification', 'find_bears_on', 'find_status_distribution',
+            'find_cells', 'find_loose_ends', 'find_signal_implications', 'rank_by_scale', 'find_bounds'] },
+];
+
 const TOOLS = [
   {
     name: 'server_info',
@@ -1726,8 +1762,7 @@ const TOOLS = [
   {
     name: 'find_cross_classification',
     description:
-      'Find cross-classification edges (formal-classification ↔ formal-classification). ' +
-      'Filterable by from, to, subtype, status, and targeted_by.',
+            "Mendeleev move — cross-classification recurrence (substrate-enabled). Returns the edges where the literature records the same physical content sitting at corresponding positions in two classifications — the periodicity analog (e.g. a real critical system and the conformal field theory at its Wilson-Fisher fixed point). With compare_classifications, find_cells filtered by content, and per-classification scans, this is how recurrences are found: the substrate supplies the literature-anchored organization that makes them visible; recognizing further recurrences is yours. Filter by from, to, subtype, status, targeted_by.",
     inputSchema: {
       type: 'object',
       properties: {
@@ -1787,8 +1822,7 @@ const TOOLS = [
   {
     name: 'find_targeting',
     description:
-      'Which candidate-foundational programs target this open-frontier node, ' +
-      'with the candidate-targeting edges from each, plus any cross-classification edges naming the frontier in targeted_by.',
+            "Unification-test move (substrate-enabled). Given an open frontier, returns which candidate-foundational programs target it — the candidate-targeting edges from each, plus any cross-classification edges naming the frontier in targeted_by. Use it to see which frameworks stake a claim on a given open question, then test those claims against the recorded structure; the adjudication is yours. Takes frontier_id.",
     inputSchema: {
       type: 'object',
       properties: { frontier_id: { type: 'string' } },
@@ -1799,7 +1833,7 @@ const TOOLS = [
   {
     name: 'find_targets_of_program',
     description:
-      'Full target set of a program: candidate_targeting frontiers UNION cross-classification edges with targeted_by containing program_id.',
+            "Unification-test move (substrate-enabled). Returns a candidate-foundational program's full target set — the open frontiers it targets together with the cross-classification edges naming it in targeted_by. The complete set of structural commitments the program makes against the map, for you to test for consistency. Takes program_id.",
     inputSchema: {
       type: 'object',
       properties: { program_id: { type: 'string' } },
@@ -1809,7 +1843,8 @@ const TOOLS = [
   },
   {
     name: 'find_hosting',
-    description: 'Which architectures or frontiers this candidate-foundational program claims to host or target.',
+    description:
+      "Unification-test move (substrate-enabled). Returns the structural commitments a candidate-foundational program makes — which architectures and frontiers it claims to host or target. Use it to test whether a proposed unification framework's claims are consistent with the literature-anchored organization the map records; the test is yours, the substrate is the map's. Takes program_id.",
     inputSchema: {
       type: 'object',
       properties: { program_id: { type: 'string' } },
@@ -1847,7 +1882,7 @@ const TOOLS = [
   {
     name: 'find_structurally_excluded',
     description:
-      'Find cells with content "structurally-excluded" — cells positively absent for structural reasons (e.g., fermion-multiplet × generation=N/A in SM). v16 makes these first-class via constructive_status and forced_by.',
+            "Mendeleev move — empty-cell prediction, the forbidding dual. Returns the positions a classification's own constructive pattern rules out — the analog of periodic-table positions a valence rule forbids (e.g. gauge bosons, which do not replicate over fermion generations). A structurally-excluded cell is a first-class prediction: the table asserting a position cannot be filled. Each carries forced_by, the closure edge that forces it. Optional fc_id narrows to one classification.",
     inputSchema: {
       type: 'object',
       properties: { fc_id: { type: 'string' }, limit: { type: 'integer' } },
@@ -1857,8 +1892,7 @@ const TOOLS = [
   {
     name: 'find_forced_cells',
     description:
-      'Find cells with constructive_status in {forbidden-by-pattern, conjectured-by-pattern, indeterminate}. ' +
-      'Default returns all three; filter via constructive_status to narrow. Includes forced_by references to the constraint edge.',
+            "Mendeleev move — empty-cell prediction. Returns the cells a classification's constructive pattern marks out: forbidden-by-pattern (the structure rules the position out — 22 today), conjectured-by-pattern (the structure implies a position no content yet fills, the gallium/Ω⁻ analog — surfaced at configuration time, currently none), and indeterminate. Defaults to all three; constructive_status narrows. Each carries forced_by, the closure constraint behind it.",
     inputSchema: {
       type: 'object',
       properties: {
@@ -1883,9 +1917,7 @@ const TOOLS = [
   {
     name: 'get_axis_mapping',
     description:
-      'Given a cross-classification edge id, return its axis_mapping record (or null if absent) ' +
-      'together with context about the source and target FC axes (so axis names can be cross-checked against from_axes / to_axes). ' +
-      'Per spec §5.3, only subtypes {bijection, categorically-equivalent, derives-from} may carry axis_mapping; the response includes is_mappable_subtype and a note explaining absences.',
+            "Unification-test move (substrate-enabled). For a cross-classification edge, returns how one classification's axes correspond to the other's — the axis_mapping record, with the source and target axes alongside it so the correspondence can be checked against them. This is the fine structure a framework test runs on: whether a claimed embedding lines up axis to axis. Only bijection, categorically-equivalent, and derives-from edges carry a mapping (spec §5.3); the record flags is_mappable_subtype and explains absences. Takes edge_id.",
     inputSchema: {
       type: 'object',
       properties: { edge_id: { type: 'string' } },
@@ -1920,7 +1952,7 @@ const TOOLS = [
   {
     name: 'compare_classifications',
     description:
-      'Structural comparison of two formal-classifications: shared axis names, direct cross-classification edges between them, shared cross-classification subtypes in use, cell counts, closure statuses.',
+            "Mendeleev move — cross-classification recurrence (substrate-enabled). Sets two classifications side by side and surfaces what they share — common axis names, the cross-classification edges linking them, shared edge subtypes, cell counts, closure statuses — so a recurrence between them reads off the comparison. The substrate supplies the organization; recognizing the recurrence is yours. Takes id1, id2.",
     inputSchema: {
       type: 'object',
       properties: { id1: { type: 'string' }, id2: { type: 'string' } },

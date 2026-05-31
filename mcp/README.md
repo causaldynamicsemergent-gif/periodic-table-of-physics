@@ -57,7 +57,7 @@ fetch via raw CDN or via the MCP server itself.
 
 ## Tool surface
 
-The 29 tools are documented in each handler's case in `worker_skeleton.js`'s
+The 33 tools are documented in each handler's case in `worker_skeleton.js`'s
 `tools/list` response. The shape and authority for additions:
 
 - Phase A (v16) added 3 tools (`find_forced_cells`, `get_forcing_constraint`,
@@ -72,6 +72,38 @@ New tools should be added in the same pattern: add the handler function, add
 the routing case in the dispatch switch, add the tool descriptor in the
 `tools/list` response. Update `server_info`'s `tool_count`, the version in
 the header, and the banner string in the GET handler.
+
+## Mendeleev orientation surface (M0)
+
+The first surface a calling LLM (and the physicist behind it) meets —
+`server_info`, the tool descriptions, and the tool typology — leads with the
+four moves the map supports, so the structural-prediction layer is visible at
+first contact rather than derived from tool names. Canonical wording lives in
+`methodology/MENDELEEV_FRAME.md`; every surface here quotes or adapts it so the
+explorer, the MCP face, and the glossary stay consistent.
+
+- **`server_info.purpose`** — a first-class orientation field stating the four
+  moves in order: M1 empty-cell prediction, M2 cross-classification recurrence,
+  M3 testing a candidate unification framework against the structure, M4
+  experimental-program adjudication. It reads off which moves the map *holds*
+  (M1 realized cells + structural exclusions, M4 coverage edges) and which it
+  *enables* (M2/M3, where the recognition and testing are the user's).
+- **Move-led tool descriptions** — the structural-pattern tools
+  (`find_forced_cells`, `find_structurally_excluded`, `find_cross_classification`,
+  `compare_classifications`, `find_hosting`, `find_targeting`,
+  `find_targets_of_program`, `get_axis_mapping`) lead with the move in physics
+  prose, then name the filter. The M4 tools keep their descriptions.
+- **`server_info.tool_clusters`** — the M1–M4 typology expressed over the tool
+  set (Mendeleev moves / unification-test moves / experimental adjudication /
+  navigation), so the typology is learnable without parsing tool names.
+
+This surface **reorients and describes; it does not author content.** It changes
+no tool's return payload, adds no cells/edges/predictions, and leaves the
+`conjectured-by-pattern` count at zero — that category is a configuration-time
+output, not authored content (`META_v21_1_methodology_firewall.md` §8;
+`DRIFT_PATTERN_REGISTER.md` Entry 1). New glossary terms in Mendeleev vocabulary
+("Empty cell," "Structural exclusion," "Cross-classification pattern,"
+"Constructive closure") are organization, not content.
 
 ## Spec compliance notes
 
