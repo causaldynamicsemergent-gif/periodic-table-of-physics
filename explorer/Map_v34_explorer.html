@@ -1264,6 +1264,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <link rel="stylesheet" href="update-e6.css">
 <link rel="stylesheet" href="update-e0.css">
 <link rel="stylesheet" href="update-e0-mendeleev.css">
+<link rel="stylesheet" href="update-em1-builder.css">
 </head>
 <body>
 <div class="shell">
@@ -1301,6 +1302,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <div class="tb-divider"></div>
 
     <div class="tb-group tb-discourse-tabs">
+      <button class="toolbar-button discourse-tab bld-primary" data-disc-tab="builder" type="button" title="Lay two or more classifications along a shared axis and read off recurrences and gaps — the Mendeleev move"><span class="dt-icon">⧉</span> Build cross-section</button>
       <button class="toolbar-button discourse-tab" data-disc-tab="browse-classifications" type="button" title="Catalogue of all formal classifications — searchable, grouped by sector"><span class="dt-icon">☰</span> Classifications</button>
       <button class="toolbar-button discourse-tab" data-disc-tab="browse-architectures"  type="button" title="Catalogue of architecture nodes — established + candidate-foundational programs"><span class="dt-icon">⌬</span> Architectures</button>
       <button class="toolbar-button discourse-tab" data-disc-tab="browse-frontiers"      type="button" title="Catalogue of open frontiers, grouped by structural reason"><span class="dt-icon">✕</span> Frontiers</button>
@@ -1395,7 +1397,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p><strong>Drag</strong> anywhere on the map background to pan. <strong>Scroll / pinch</strong> over the map to zoom (cursor-anchored). Buttons in the top-left: <strong>+</strong> / <strong>−</strong> step zoom, <strong>⟲</strong> fits the whole map to your viewport. Keyboard: <kbd class="tip-key">+</kbd> / <kbd class="tip-key">−</kbd> step zoom, <kbd class="tip-key">0</kbd> or <kbd class="tip-key">f</kbd> fit to view, <kbd class="tip-key">Esc</kbd> to clear a selection. The sidebar collapses with the <kbd class="tip-key">›</kbd> tab on its left edge.</p>
 
     <h3>Cross-sections and empty cells</h3>
-    <p>The deepest use of the map is to lay several classifications side by side along a shared axis and read off what the combined structure implies — the move the periodic table is named for. Where the same physical content sits at corresponding positions in two classifications, that recurrence is the analog of chemical periodicity (the <strong>⇄</strong> marker flags tiles where it happens; <strong>⇄ Compare</strong> and a classification's cross-classification edges in its sidebar let you trace it). Where the combined structure implies a position should be occupied and nothing occupies it, that gap is an empty-cell prediction; where the structure forbids a position, that is a structural exclusion. The map keeps the organization anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are <em>yours to run</em> — the map supplies the organized ground, not the conclusions. A full cross-section builder that constructs these multi-classification views and surfaces their gaps directly is in progress; today the recurrences, exclusions, and (when present) predicted gaps are already visible per tile.</p>
+    <p>The deepest use of the map is to lay several classifications side by side along a shared axis and read off what the combined structure implies — the move the periodic table is named for. Where the same physical content sits at corresponding positions in two classifications, that recurrence is the analog of chemical periodicity (the <strong>⇄</strong> marker flags tiles where it happens; <strong>⇄ Compare</strong> and a classification's cross-classification edges in its sidebar let you trace it). Where the combined structure implies a position should be occupied and nothing occupies it, that gap is an empty-cell prediction; where the structure forbids a position, that is a structural exclusion. The map keeps the organization anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are <em>yours to run</em> — the map supplies the organized ground, not the conclusions. The cross-section builder constructs these multi-classification views directly: open <strong>⧉ Build cross-section</strong> in the toolbar, lay two or more classifications along a shared axis, and read off the recurrences and gaps the combined structure implies. Recurrences, exclusions, and (when present) predicted gaps remain visible per tile as well.</p>
 
     <h3>The experimental layer</h3>
     <p>Beyond the formal classifications, the table records the experimental programs targeting each frontier and the characteristic numerical commitments behind them. Click <strong>⚙ Programs</strong> for the catalogue of 19 experimental programs (collaborations, accelerators, surveys, observatories). Click <strong>⇄ Compare programs</strong> to see where two programs share targets — competing-prediction adjudication, orthogonal-channel measurement, or complementary reach. Click <strong>▲▼ Scales</strong> for the cross-map catalogue of every quantitative bound and characteristic scale recorded in the map, grouped by physical dimension. Inside any frontier's sidebar card you'll see its conditional consequences ("if real, implies …") — what gets forced into the map if the frontier resolves a particular way. The <strong>ask the map →</strong> link in the header opens a guided chat that uses the catalogue's read-only query surface directly.</p>
@@ -1415,6 +1417,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <script src="explorer-qs.js"></script>
 <script src="explorer-map.js"></script>
 <script src="explorer-sidebar.js"></script>
+<script src="explorer-builder.js"></script>
 <script src="explorer-phenomena.js"></script>
 <script src="explorer-discourse.js"></script>
 <script src="explorer-resolves.js"></script>

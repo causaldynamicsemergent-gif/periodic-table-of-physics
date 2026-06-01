@@ -643,7 +643,8 @@ function syncToolbarChips() {
     // the per-kind drill-down view as well as the catalogue.
     const matches = (tab === state.activePanel)
       || (tab === 'discriminating' && state.activePanel === 'discriminating-pair')
-      || (tab === 'ranks' && state.activePanel === 'ranks-kind');
+      || (tab === 'ranks' && state.activePanel === 'ranks-kind')
+      || (tab === 'builder' && state.activePanel === 'builder');
     b.classList.toggle('active', matches);
   });
 }

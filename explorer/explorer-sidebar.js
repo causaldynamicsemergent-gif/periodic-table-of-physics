@@ -135,6 +135,11 @@ function renderSidebarAbout() {
   const inner = document.getElementById('sidebar-inner');
   inner.innerHTML = `
     <div class="sidebar-section">
+      <button class="bld-cta" data-panel-jump="builder" type="button">
+        <div class="bld-cta-title">⧉ Build a cross-section</div>
+        <div class="bld-cta-desc">Lay two or more classifications along a shared axis and read off the recurrences and gaps the combined structure implies — the move the table is named for.</div>
+        <div class="bld-cta-go">open the builder →</div>
+      </button>
       <h3>About the table</h3>
       <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time.</p>
 
@@ -571,6 +576,10 @@ function renderPanel() {
       }
       break;
     }
+    case 'builder':
+      if (typeof renderSidebarBuilder === 'function') renderSidebarBuilder();
+      else renderSidebarAbout();
+      break;
     default:                       renderSidebarAbout();
   }
   syncSidebarQuickBar();
