@@ -1,0 +1,146 @@
+/* =============================================================
+   Periodic Table of Physics — EM1 configuration / cross-section builder
+   File: update-em1-builder.css
+   Sub-PR: EM1. Styles the builder panel only. The shipped Mendeleev-
+   surfacing stylesheet update-e0-mendeleev.css is intentionally left
+   unchanged (DRIFT_PATTERN_REGISTER.md Entry 3 — label is EM1, the EM0
+   surfacing file keeps its name). Uses the existing :root palette; defines
+   no new colour tokens beyond the recurrence-tier weights.
+   ============================================================= */
+
+.bld-card { font-size: 13px; }
+
+.bld-intro {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 14.5px; line-height: 1.55; color: var(--ink-soft);
+  margin: 8px 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-soft);
+}
+
+.bld-section { margin: 14px 0; }
+.bld-section-h {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-mute); margin-bottom: 7px;
+}
+
+.bld-search {
+  width: 100%; box-sizing: border-box; padding: 6px 9px; margin-bottom: 8px;
+  border: 1px solid var(--rule); border-radius: 5px; background: var(--paper);
+  color: var(--ink); font-size: 12.5px;
+}
+.bld-search:focus { outline: none; border-color: var(--ink-mute); }
+
+.bld-picker { max-height: 168px; overflow-y: auto; padding-right: 4px; }
+.bld-sector { margin-bottom: 9px; }
+.bld-sector-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-faint); margin: 4px 0 4px;
+}
+.bld-fc-chip {
+  display: inline-flex; align-items: center; gap: 5px; margin: 2px 3px 2px 0;
+  padding: 3px 8px; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--paper); color: var(--ink-soft); font-size: 12px; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.bld-fc-chip:hover { background: var(--paper-2); border-color: var(--ink-faint); }
+.bld-fc-chip.on { background: var(--paper-4); border-color: var(--ink-mute); color: var(--ink); }
+.bld-fc-sym { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-mute); }
+
+.bld-selected-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.bld-selected {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px;
+  background: var(--accent); color: var(--paper); border-radius: 4px;
+  font-size: 12px; cursor: pointer;
+}
+.bld-selected .bld-x { opacity: 0.7; font-weight: 600; }
+.bld-selected:hover .bld-x { opacity: 1; }
+.bld-none { color: var(--ink-faint); font-style: italic; font-size: 12px; }
+
+.bld-axis-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 4px; }
+.bld-axis-label { font-size: 11px; color: var(--ink-mute); }
+.bld-axis-chip {
+  padding: 2px 8px; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--paper); color: var(--ink-soft); font-size: 11.5px; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+}
+.bld-axis-chip.on { background: var(--struct); border-color: var(--struct); color: #fff; }
+.bld-noaxis {
+  font-size: 12.5px; color: var(--ink-mute); background: var(--paper-2);
+  border: 1px dashed var(--rule); border-radius: 5px; padding: 9px 11px; line-height: 1.5;
+}
+
+.bld-nudge {
+  font-size: 11.5px; color: var(--ink-mute); background: var(--hybrid-tint);
+  border-left: 3px solid var(--hybrid); padding: 7px 10px; margin: 10px 0; line-height: 1.45;
+}
+
+/* Lattice */
+.bld-lattice-wrap { overflow-x: auto; margin: 12px 0; }
+.bld-lattice { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+.bld-lattice th, .bld-lattice td {
+  border: 1px solid var(--rule-soft); padding: 5px 7px; text-align: left; vertical-align: top;
+}
+.bld-rowhead, .bld-colhead {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mute);
+  background: var(--paper-2); text-transform: none;
+}
+.bld-colhead { text-align: center; }
+.bld-rowval {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink);
+  background: var(--paper-2); white-space: nowrap; max-width: 150px;
+}
+.bld-pos { background: var(--paper); }
+.bld-pos.bld-empty { color: var(--ink-faint); text-align: center; }
+.bld-occ {
+  display: block; padding: 2px 4px; margin: 1px 0; border-radius: 3px;
+  cursor: pointer; line-height: 1.3; border-left: 3px solid transparent;
+}
+.bld-occ:hover { background: var(--paper-2); }
+.bld-occ.swatch-has-realized-only, .bld-occ.swatch-has-confirmed { border-left-color: var(--st-confirmed); }
+.bld-occ.swatch-excluded { border-left-color: var(--ink-faint); background: repeating-linear-gradient(45deg, transparent, transparent 3px, var(--paper-3) 3px, var(--paper-3) 4px); }
+.bld-occ.swatch-conjectured { border-left-color: var(--accent); }
+.bld-occ.swatch-has-tension { border-left-color: var(--st-tension); }
+.bld-occ.swatch-has-falsified { border-left-color: var(--st-falsified); }
+
+/* Per-row verdict tag — the three recurrence tiers never share a look */
+.bld-verdict-tag {
+  display: inline-block; margin-top: 3px; padding: 1px 6px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 8.5px; letter-spacing: 0.04em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.bld-est   { background: var(--phen);   color: #fff; }                         /* established — highest weight */
+.bld-cand  { background: var(--paper);  color: var(--struct); border: 1px dashed var(--struct); } /* candidate — lower weight, dashed */
+.bld-raw   { background: var(--paper-2); color: var(--ink-faint); }            /* raw alignment — faint */
+.bld-forb  { background: var(--paper-3); color: var(--ink-mute); }             /* exclusion */
+.bld-conj  { background: var(--accent); color: var(--paper); }                /* conjectured gap */
+.bld-real  { background: transparent; color: var(--ink-faint); }
+
+.bld-verdict-recurrence-established { background: var(--phen-tint); }
+.bld-verdict-recurrence-candidate   { background: var(--struct-tint); }
+.bld-verdict-forbidden              { background: var(--paper-2); }
+
+.bld-est-note {
+  font-size: 11.5px; color: var(--ink-soft); background: var(--phen-tint);
+  border-left: 3px solid var(--phen); padding: 7px 10px; margin: 8px 0; line-height: 1.45;
+}
+
+/* Legend */
+.bld-legend { margin: 14px 0; padding-top: 10px; border-top: 1px solid var(--rule-soft); }
+.bld-legend-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-mute); margin-bottom: 8px;
+}
+.bld-legend-row { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; }
+.bld-chip {
+  flex: none; padding: 1px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+}
+.bld-legend-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
+
+/* Actions */
+.bld-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.bld-example, .bld-reset {
+  padding: 5px 11px; border: 1px solid var(--rule); border-radius: 5px;
+  background: var(--paper); color: var(--ink-soft); font-size: 12px; cursor: pointer;
+}
+.bld-example:hover { background: var(--paper-2); border-color: var(--ink-mute); }
+.bld-reset:hover { background: var(--paper-2); }
