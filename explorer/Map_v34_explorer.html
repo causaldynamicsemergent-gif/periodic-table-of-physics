@@ -1290,9 +1290,8 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
     <div class="tb-divider"></div>
 
-    <div class="browse-wrap" id="browse-wrap">
-      <button class="browse-btn" id="browse-btn">Browse <span class="caret">▾</span></button>
-      <div class="browse-menu" id="browse-menu"></div>
+    <div class="tb-group tb-discourse-tabs">
+      <button class="toolbar-button discourse-tab bld-primary" data-disc-tab="builder" type="button" title="Lay two or more classifications along a shared axis and read off recurrences and gaps — the Mendeleev move"><span class="dt-icon">⧉</span> Build cross-section</button>
     </div>
 
     <div class="cell-search-wrap">
@@ -1301,40 +1300,45 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
     <div class="tb-divider"></div>
 
-    <div class="tb-group tb-discourse-tabs">
-      <button class="toolbar-button discourse-tab bld-primary" data-disc-tab="builder" type="button" title="Lay two or more classifications along a shared axis and read off recurrences and gaps — the Mendeleev move"><span class="dt-icon">⧉</span> Build cross-section</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-classifications" type="button" title="Catalogue of all formal classifications — searchable, grouped by sector"><span class="dt-icon">☰</span> Classifications</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-architectures"  type="button" title="Catalogue of architecture nodes — established + candidate-foundational programs"><span class="dt-icon">⌬</span> Architectures</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-frontiers"      type="button" title="Catalogue of open frontiers, grouped by structural reason"><span class="dt-icon">✕</span> Frontiers</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-totalities"     type="button" title="Catalogue of totality approaches — whole-system organizing principles"><span class="dt-icon">◇</span> Totalities</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-regime-content" type="button" title="Catalogue of regime-content nodes — empirically-confirmed regimes"><span class="dt-icon">▣</span> Regime</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="browse-programs"       type="button" title="Catalogue of experimental programs — collaborations, accelerators, surveys"><span class="dt-icon">⚙</span> Programs</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="discriminating"        type="button" title="Pairs of experimental programs with documented shared coverage — competing-prediction adjudication, orthogonal-channel measurement, complementary reach"><span class="dt-icon">⇄</span> Compare programs</button>
-      <button class="toolbar-button discourse-tab" data-disc-tab="ranks"                 type="button" title="Catalogue of every quantitative bound and characteristic scale recorded in the map, grouped by physical dimension"><span class="dt-icon">▲▼</span> Scales</button>
+    <div class="browse-wrap" id="browse-wrap">
+      <button class="browse-btn" id="browse-btn">Browse <span class="caret">▾</span></button>
+      <div class="browse-menu" id="browse-menu"></div>
     </div>
 
-    <div class="tb-divider"></div>
-
-    <div class="rowsby-wrap" id="rowsby-wrap">
-      <button class="toolbar-button" id="rowsby-btn" type="button" title="Group rows by sector / category / closure">Rows: <span class="tb-btn-label">sector</span> <span class="tb-btn-caret">▾</span></button>
-      <div class="rowsby-menu" id="rowsby-menu" role="menu"></div>
-    </div>
-
-    <div class="tb-divider"></div>
-
-    <button class="toolbar-button" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▾</span></button>
-
-    <div class="tb-divider"></div>
-
-    <div class="tb-group">
-      <span class="group-label">overlay</span>
-      <button class="tb-chip active" data-filter="overlay" data-value="none">none</button>
-      <button class="tb-chip" data-filter="overlay" data-value="phen-phen" title="draw arrows between phenomenon classifications">phen↔phen</button>
+    <div class="browse-wrap analyse-wrap" id="analyse-wrap">
+      <button class="browse-btn" id="analyse-btn">Analyse <span class="caret">▾</span></button>
+      <div class="browse-menu" id="analyse-menu"></div>
     </div>
 
     <div class="tb-spacer"></div>
 
-    <button class="tb-reset" id="btn-reset-layers">reset layers</button>
+    <div class="browse-wrap view-wrap" id="view-wrap">
+      <button class="browse-btn" id="view-btn">View <span class="caret">▾</span></button>
+      <div class="browse-menu view-menu" id="view-menu">
+        <div class="view-section">
+          <div class="view-section-head">Rows by</div>
+          <div class="view-chips">
+            <button class="view-chip" data-rowsby="sector" type="button">sector</button>
+            <button class="view-chip" data-rowsby="category" type="button">category</button>
+            <button class="view-chip" data-rowsby="closure" type="button">closure</button>
+          </div>
+        </div>
+        <div class="view-section">
+          <div class="view-section-head">Spotlight predictions</div>
+          <button class="toolbar-button view-fullrow" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▸</span></button>
+        </div>
+        <div class="view-section">
+          <div class="view-section-head">Overlay</div>
+          <div class="view-chips">
+            <button class="tb-chip active" data-filter="overlay" data-value="none" type="button">none</button>
+            <button class="tb-chip" data-filter="overlay" data-value="phen-phen" type="button" title="draw arrows between phenomenon classifications">phen↔phen</button>
+          </div>
+        </div>
+        <div class="view-section">
+          <button class="tb-reset" id="btn-reset-layers" type="button">reset layers</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="body-grid" id="body-grid">
@@ -1428,6 +1432,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <script src="explorer-glossary.js"></script>
 <script src="explorer-frontiers.js"></script>
 <script src="explorer-nav.js"></script>
+<script src="explorer-toolbar.js"></script>
 <script>init();</script>
 </body>
 </html>

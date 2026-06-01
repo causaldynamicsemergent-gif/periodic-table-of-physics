@@ -1234,12 +1234,12 @@ var browseMode = 'tabs'; // 'tabs' only — classifications-mode removed in Upda
 function buildBrowseMenu(filter) {
   const menu = document.getElementById('browse-menu');
   const tabs = [
-    { id: 'phenomena', icon: '◉', title: 'Physical phenomena', desc: 'Toggle physical things on and off to highlight where they live.' },
-    { id: 'legend',    icon: '◈', title: 'Legend',             desc: 'Colour stripes, status bars, closure marks — how to read a tile.' },
-    { id: 'glossary',  icon: '§', title: 'Glossary',           desc: 'The 22 terms used to describe how the map is organised.' },
-    { id: 'about',     icon: '?', title: 'About the table',    desc: 'What this map is, what it\'s for, what it isn\'t.' },
-    { id: 'education', icon: '✎', title: 'For education',      desc: 'Students, teachers, curious newcomers.' },
-    { id: 'research',  icon: '⚙', title: 'For research',       desc: 'Working researchers, grant writers, grad students.' },
+    { id: 'browse-classifications', icon: '☰', title: 'Classifications', desc: 'All formal classifications, grouped by sector.' },
+    { id: 'browse-architectures',   icon: '⌬', title: 'Architectures',   desc: 'Established and candidate-foundational programs.' },
+    { id: 'browse-frontiers',       icon: '✕', title: 'Frontiers',       desc: 'Open frontiers, grouped by structural reason.' },
+    { id: 'browse-totalities',      icon: '◇', title: 'Totalities',      desc: 'Whole-system organizing principles.' },
+    { id: 'browse-regime-content',  icon: '▣', title: 'Regime',          desc: 'Empirically-confirmed regimes.' },
+    { id: 'browse-programs',        icon: '⚙', title: 'Programs',        desc: 'Experimental programs — collaborations, surveys.' },
   ];
   menu.innerHTML = tabs.map(t => {
     const active = (state.activePanel === t.id);
