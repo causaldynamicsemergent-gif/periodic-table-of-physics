@@ -587,13 +587,17 @@ function renderPanel() {
 }
 
 function syncSidebarQuickBar() {
-  document.querySelectorAll('.quick-bar-btn').forEach(b => {
+  // Only the panel buttons carry data-quick-panel; the Home button (action,
+  // not a panel) is excluded so it never picks up an active state.
+  document.querySelectorAll('.quick-bar-btn[data-quick-panel]').forEach(b => {
     b.classList.toggle('active', b.dataset.quickPanel === state.activePanel);
   });
 }
 
 function wireSidebarQuickBar() {
-  document.querySelectorAll('.quick-bar-btn').forEach(b => {
+  // Scoped to [data-quick-panel] so the Home button (wired to navHome in
+  // explorer-nav.js) is not also routed through switchSidebarPanel.
+  document.querySelectorAll('.quick-bar-btn[data-quick-panel]').forEach(b => {
     b.addEventListener('click', () => {
       switchSidebarPanel(b.dataset.quickPanel);
     });

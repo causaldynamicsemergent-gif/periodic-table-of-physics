@@ -224,16 +224,16 @@
 .sidebar-nav-bar .nav-home { color: var(--accent); border-color: var(--accent); }
 .sidebar-nav-bar .nav-home:hover { background: var(--accent); color: var(--paper); }
 
-/* ---- UX pass: toolbar grouping (Analyse ▾ / View ▾ dropdowns) ---- */
-.analyse-wrap, .view-wrap { position: relative; }
-.view-menu { min-width: 210px; padding: 4px 0; }
-.view-menu .view-section { padding: 7px 12px; border-top: 1px solid var(--rule-soft); }
-.view-menu .view-section:first-child { border-top: none; }
-.view-menu .view-section-head {
+/* ---- UX pass: toolbar grouping (Analyse ▾ / View ▾ / Phenomena ▾ dropdowns) ---- */
+.analyse-wrap, .view-wrap, .phenomena-wrap { position: relative; }
+.view-menu, .phenomena-menu { min-width: 210px; padding: 4px 0; }
+.view-menu .view-section, .phenomena-menu .view-section { padding: 7px 12px; border-top: 1px solid var(--rule-soft); }
+.view-menu .view-section:first-child, .phenomena-menu .view-section:first-child { border-top: none; }
+.view-menu .view-section-head, .phenomena-menu .view-section-head {
   font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px;
 }
-.view-menu .view-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.view-menu .view-chips, .phenomena-menu .view-chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .view-menu .view-chip {
   font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 10px;
   border: 1px solid var(--rule); border-radius: 5px; background: var(--paper);
@@ -241,5 +241,9 @@
 }
 .view-menu .view-chip:hover { background: var(--paper-3); border-color: var(--ink-mute); color: var(--ink); }
 .view-menu .view-chip.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.view-menu .view-fullrow { width: 100%; text-align: left; display: flex; align-items: center; gap: 6px; }
+.view-menu .view-fullrow, .phenomena-menu .view-fullrow { width: 100%; text-align: left; display: flex; align-items: center; gap: 6px; }
 .view-menu .tb-reset { width: 100%; }
+
+/* ---- UX pass: Home moved into the sidebar quick-bar (left of Legend) ---- */
+.quick-bar-btn.quick-home { color: var(--accent); border-color: var(--accent); }
+.quick-bar-btn.quick-home:hover { background: var(--accent); color: var(--paper); }

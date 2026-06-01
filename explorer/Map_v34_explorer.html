@@ -1328,14 +1328,23 @@ body.splitter-dragging * { cursor: col-resize !important; }
           <button class="toolbar-button view-fullrow" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▸</span></button>
         </div>
         <div class="view-section">
+          <button class="tb-reset" id="btn-reset-layers" type="button">reset layers</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="browse-wrap phenomena-wrap" id="phenomena-wrap">
+      <button class="browse-btn" id="phenomena-btn">Phenomena <span class="caret">▾</span></button>
+      <div class="browse-menu phenomena-menu" id="phenomena-menu">
+        <div class="view-section">
+          <button class="toolbar-button view-fullrow" id="phenomena-panel-btn" type="button" title="Highlight where each physical thing lives across the map">Physical phenomena <span class="tb-btn-caret">▸</span></button>
+        </div>
+        <div class="view-section">
           <div class="view-section-head">Overlay</div>
           <div class="view-chips">
             <button class="tb-chip active" data-filter="overlay" data-value="none" type="button">none</button>
             <button class="tb-chip" data-filter="overlay" data-value="phen-phen" type="button" title="draw arrows between phenomenon classifications">phen↔phen</button>
           </div>
-        </div>
-        <div class="view-section">
-          <button class="tb-reset" id="btn-reset-layers" type="button">reset layers</button>
         </div>
       </div>
     </div>
@@ -1361,8 +1370,8 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-nav-bar" id="sidebar-nav-bar"></div>
       <div class="sidebar-quick-bar" id="sidebar-quick-bar">
+        <button class="quick-bar-btn quick-home" id="quick-home-btn" title="Clear the sidebar back to the start">⌂ Home</button>
         <button class="quick-bar-btn" data-quick-panel="legend" title="Open the legend">◈ Legend</button>
-        <button class="quick-bar-btn" data-quick-panel="phenomena" title="Open the physical phenomena panel">◉ Phenomena</button>
         <button class="quick-bar-btn" data-quick-panel="glossary" title="Open the glossary of map terms">§ Glossary</button>
         <button class="quick-bar-btn" data-quick-panel="about" title="About the table">? About</button>
       </div>
@@ -1390,13 +1399,13 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. The periodic table stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
 
     <h3>Physical phenomena</h3>
-    <p>Click the <strong>Phenomena</strong> button at the top of the sidebar (or open <strong>Browse → Physical phenomena</strong>). Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset.</p>
+    <p>Open <strong>Phenomena ▾</strong> in the toolbar and choose <strong>Physical phenomena</strong>. Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> toggle in the same menu draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
 
     <h3>Finding a specific thing</h3>
     <p>The search box at the top of the toolbar searches all 484 cells. Type <em>black holes</em>, <em>gluons</em>, <em>AdS/CFT</em>, <em>topological insulator</em>, or anything else. Results are grouped by classification with cell snippets; clicking a result opens that exact cell. For the terms used to describe how the map itself is organised (<em>open frontier</em>, <em>discharge status</em>, <em>candidate-foundational</em>, …) open the <strong>Glossary</strong> via the sidebar quick-bar or Browse menu.</p>
 
     <h3>Layers + filters</h3>
-    <p><strong>Rows by</strong> reorganises the table: by sector (default), category (structural/hybrid/phenomenon), or closure level. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. <strong>Overlay: phen↔phen edges</strong> draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
+    <p><strong>Rows by</strong> reorganises the table: by sector (default), category (structural/hybrid/phenomenon), or closure level. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. The phen↔phen overlay now lives in the <strong>Phenomena ▾</strong> menu (see above).</p>
 
     <h3>Map controls</h3>
     <p><strong>Drag</strong> anywhere on the map background to pan. <strong>Scroll / pinch</strong> over the map to zoom (cursor-anchored). Buttons in the top-left: <strong>+</strong> / <strong>−</strong> step zoom, <strong>⟲</strong> fits the whole map to your viewport. Keyboard: <kbd class="tip-key">+</kbd> / <kbd class="tip-key">−</kbd> step zoom, <kbd class="tip-key">0</kbd> or <kbd class="tip-key">f</kbd> fit to view, <kbd class="tip-key">Esc</kbd> to clear a selection. The sidebar collapses with the <kbd class="tip-key">›</kbd> tab on its left edge.</p>

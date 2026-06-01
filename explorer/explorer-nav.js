@@ -8,9 +8,10 @@
 //   where you came from, so there was no way back and no way to clear to
 //   the start — a rabbit hole. This adds:
 //     • a navigation history stack (state.navStack),
-//     • a persistent bar at the top of the sidebar with a "← Back" button
-//       (named for where it returns to) and a "⌂ Home" button (clears to
-//       the start), visible from every panel.
+//     • a persistent bar at the top of the sidebar carrying a "← Back" button
+//       (named for where it returns to), visible from every panel. The
+//       "⌂ Home" button (clears to the start) now lives in the sidebar
+//       quick-bar, left of Legend; this module wires it to navHome.
 //
 //   How it captures history without rewriting every navigation function:
 //   the sidebar's navigations all flow through a small set of GLOBAL
@@ -150,14 +151,14 @@
     var hasBack = state.navStack.length > 0;
     var backLabel = hasBack ? labelFor(state.navStack[state.navStack.length - 1]) : '';
     var here = labelFor(snapshot());
+    // Home now lives in the sidebar quick-bar (left of Legend), so the nav-bar
+    // carries only the contextual Back button + the "you are here" label.
     bar.innerHTML =
       (hasBack
         ? '<button class="nav-back" id="nav-back-btn" title="Go back to ' + esc(backLabel) + '">\u2190 ' + esc(backLabel) + '</button>'
         : '<span class="nav-back nav-back-disabled">\u2190 Back</span>') +
-      '<span class="nav-here" title="' + esc(here) + '">' + esc(here) + '</span>' +
-      '<button class="nav-home" id="nav-home-btn" title="Clear the sidebar back to the start">\u2302 Home</button>';
+      '<span class="nav-here" title="' + esc(here) + '">' + esc(here) + '</span>';
     var b = document.getElementById('nav-back-btn'); if (b) b.addEventListener('click', navBack);
-    var h = document.getElementById('nav-home-btn'); if (h) h.addEventListener('click', navHome);
   }
 
   // Wrap the navigation functions: record where we are before going deeper,
@@ -182,6 +183,13 @@
     var origClear = window.clearSelection;
     window.clearSelection = function () { var r = origClear.apply(this, arguments); updateBar(); return r; };
   }
+
+  // Home moved out of the nav-bar into the sidebar quick-bar (#quick-home-btn,
+  // left of Legend). It clears to the start via navHome. The button carries no
+  // data-quick-panel, so wireSidebarQuickBar (scoped to [data-quick-panel])
+  // leaves it alone and only this handler fires.
+  var qHome = document.getElementById('quick-home-btn');
+  if (qHome) qHome.addEventListener('click', navHome);
 
   // Paint the bar once after the first render settles.
   if (document.readyState === 'loading') {

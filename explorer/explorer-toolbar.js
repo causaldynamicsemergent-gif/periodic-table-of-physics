@@ -11,20 +11,21 @@
 //     • Browse ▾   — the six catalogues (built in explorer-sidebar.js,
 //                    buildBrowseMenu; routes via switchSidebarPanel)
 //     • Analyse ▾  — the two cross-map tools (wired here)
-//     • View ▾     — rows-by / spotlight / overlay / reset (wired here)
+//     • View ▾     — rows-by / spotlight / reset (wired here)
+//     • Phenomena ▾ — physical-phenomena panel + phen↔phen overlay (wired here)
 //
-//   The info panels (phenomena / legend / glossary / about / education /
-//   research) left the toolbar entirely — they are reachable from the
-//   sidebar quick-bar and the Home button.
+//   The remaining info panels (legend / glossary / about / education /
+//   research) are reachable from the sidebar quick-bar and the Home button.
 //
-//   Implementation note: spotlight, overlay chips and reset KEEP their
+//   Implementation note: spotlight, the overlay chips and reset KEEP their
 //   original ids/classes (#spotlight-btn, .tb-chip[data-filter="overlay"],
 //   #btn-reset-layers), so their handlers in explorer-map.js (wireToolbar)
-//   keep working unchanged even though they now live inside the View menu.
-//   Only rows-by is re-expressed here as inline chips. We do NOT touch
-//   explorer-map.js. The old rows-by dropdown is gone, so its wirer
-//   (wireRowsByDropdown) and syncToolbarChips both no-op safely on the
-//   missing #rowsby-btn / #rowsby-menu (they are guarded).
+//   keep working unchanged. The overlay chips now live inside the Phenomena
+//   menu; spotlight + reset stay inside the View menu. Only rows-by is
+//   re-expressed here as inline chips. We do NOT touch explorer-map.js. The
+//   old rows-by dropdown is gone, so its wirer (wireRowsByDropdown) and
+//   syncToolbarChips both no-op safely on the missing #rowsby-btn /
+//   #rowsby-menu (they are guarded).
 //
 //   Reads (globals): state, esc, switchSidebarPanel, syncToolbarChips,
 //   renderMap, writeHash.
@@ -82,7 +83,22 @@
     });
   }
 
-  // ---- View ▾ — rows-by / spotlight / overlay / reset ----
+  // ---- Phenomena ▾ — physical-phenomena panel + phen↔phen overlay ----
+  // The panel link routes through switchSidebarPanel('phenomena') (same as the
+  // old quick-bar entry). The two overlay chips were MOVED here from View ▾ but
+  // keep their ids/classes (.tb-chip[data-filter="overlay"]), so their handlers
+  // in explorer-map.js (wireToolbar / syncToolbarChips) keep firing unchanged —
+  // no re-wiring needed for them, and no map.js edit.
+  var phenomenaDD = wireDropdown('phenomena-btn', 'phenomena-menu', 'phenomena-wrap');
+  var phenPanelBtn = document.getElementById('phenomena-panel-btn');
+  if (phenPanelBtn) {
+    phenPanelBtn.addEventListener('click', function () {
+      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('phenomena');
+      if (phenomenaDD) phenomenaDD.close();
+    });
+  }
+
+  // ---- View ▾ — rows-by / spotlight / reset ----
   function syncViewChips() {
     var g = (typeof state !== 'undefined') ? state.group : 'sector';
     document.querySelectorAll('#view-menu .view-chip[data-rowsby]').forEach(function (c) {
