@@ -292,7 +292,7 @@ function renderSidebarBuilder() {
   var inner = document.getElementById('sidebar-inner'); if (!inner) return;
   var bs = builderState();
 
-  var intro = '<div class="bld-intro">Lay two or more classifications along a shared axis and read off what the combined structure implies \u2014 the move the periodic table is named for. The same entity recurring across classifications (the analog of periodicity) and positions the structure implies but nothing fills (the analog of the gaps Mendeleev left for gallium) show up as a consequence of the layout. The recognition is yours; the map supplies the organized ground.</div>';
+  var intro = '<div class="bld-intro">Lay two or more classifications along a shared axis and read off what the combined structure implies \u2014 the Mendeleev move the map is built around. The same entity recurring across classifications (the analog of periodicity) and positions the structure implies but nothing fills (the analog of the gaps Mendeleev left for gallium) show up as a consequence of the layout. The recognition is yours; the map supplies the organized ground.</div>';
 
   var bySector = {};
   FCS.forEach(function(fc) { (bySector[fc.sector] = bySector[fc.sector] || []).push(fc); });

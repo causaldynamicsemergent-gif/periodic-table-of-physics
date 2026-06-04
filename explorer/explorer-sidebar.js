@@ -1392,7 +1392,7 @@ async function init() {
       </div>
     </div>`;
   document.getElementById('pt-content').innerHTML =
-    `<div style="padding:80px 20px;text-align:center;color:var(--ink-mute);font-style:italic">Loading the periodic table…</div>`;
+    `<div style="padding:80px 20px;text-align:center;color:var(--ink-mute);font-style:italic">Loading the map…</div>`;
 
   try {
     const { data: raw, url } = await fetchCanonicalData();
@@ -1420,11 +1420,12 @@ async function init() {
   const subtitleEl = document.getElementById('header-subtitle');
   if (subtitleEl) {
     subtitleEl.innerHTML =
-      '<span class="subtitle-frame">Each classification lays physical content along its own axes; '
-      + 'build a cross-section across several and structurally-missing entries and recurring structure '
-      + 'surface the way the gaps at gallium and germanium did. The map keeps the organization anchored '
-      + 'to the literature, so the pattern-finding and the tests of candidate unification frameworks are '
-      + 'yours to run; experimental coverage is tracked alongside.</span>'
+      '<span class="subtitle-frame">A map of how physics\u2019s research programs connect across domains. '
+      + 'Each classification lays its content along its own axes; build a cross-section across several and '
+      + 'the recurring structure \u2014 and the structurally-missing entries where two mature areas meet through '
+      + 'an unresolved link \u2014 surface as a consequence of the layout. The organization stays anchored to the '
+      + 'literature, so the pattern-finding and the tests of candidate unification frameworks are yours to run; '
+      + 'experimental coverage is tracked alongside.</span>'
       + '<span class="subtitle-counts">'
       + m.formal_classifications + ' classifications · ' + m.cells + ' cells · '
       + m.predictions + ' predictions · ' + m.falsifications + ' falsifications</span>';

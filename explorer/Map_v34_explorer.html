@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Periodic Table of Physics — v34</title>
+<title>Map of Physics — v34</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -1092,6 +1092,83 @@ body.splitter-dragging * { cursor: col-resize !important; }
   color: var(--ink-mute);
 }
 
+/* ---- Feedback: floating right-edge tab + survey modal ---- */
+.feedback-tab {
+  position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+  z-index: 900; cursor: pointer; border: none;
+  background: var(--accent); color: #fbf9f1;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  writing-mode: vertical-rl; text-orientation: mixed;
+  padding: 16px 7px; border-radius: 8px 0 0 8px;
+  box-shadow: -2px 0 10px rgba(26,24,20,0.18);
+  transition: padding 0.12s ease, background 0.12s ease;
+}
+.feedback-tab:hover { padding-right: 11px; background: #761515; }
+.feedback-overlay {
+  position: fixed; inset: 0; z-index: 1000; display: none;
+  background: rgba(26,24,20,0.46); backdrop-filter: blur(2px);
+  align-items: center; justify-content: center; padding: 24px;
+}
+.feedback-overlay.open { display: flex; }
+.feedback-modal {
+  background: var(--paper); color: var(--ink);
+  width: min(560px, 100%); max-height: 88vh; overflow-y: auto;
+  border: 1px solid var(--rule); border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(26,24,20,0.30);
+  padding: 26px 28px 30px; position: relative;
+}
+.feedback-modal h2 {
+  font-family: 'Spectral', serif; font-weight: 600; font-size: 21px;
+  margin: 0 0 4px; color: var(--ink);
+}
+.feedback-modal .fb-lede {
+  font-size: 13.5px; color: var(--ink-mute); line-height: 1.5; margin: 0 0 18px;
+}
+.feedback-modal .fb-close {
+  position: absolute; top: 14px; right: 16px; border: none; background: none;
+  font-size: 24px; line-height: 1; color: var(--ink-faint); cursor: pointer;
+}
+.feedback-modal .fb-close:hover { color: var(--ink); }
+.fb-q { margin: 0 0 16px; }
+.fb-q > label.fb-q-label {
+  display: block; font-weight: 600; font-size: 13.5px; color: var(--ink-soft);
+  margin-bottom: 7px;
+}
+.fb-opts { display: flex; flex-direction: column; gap: 5px; }
+.fb-opts label {
+  display: flex; align-items: flex-start; gap: 8px; font-size: 13px;
+  color: var(--ink-soft); cursor: pointer; line-height: 1.4;
+}
+.fb-opts input[type=radio] { margin-top: 2px; accent-color: var(--accent); }
+.fb-q textarea, .fb-q input[type=text] {
+  width: 100%; box-sizing: border-box; font-family: inherit; font-size: 13px;
+  color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule);
+  border-radius: 7px; padding: 8px 10px; resize: vertical;
+}
+.fb-q textarea:focus, .fb-q input[type=text]:focus { outline: none; border-color: var(--accent); }
+.fb-submit {
+  margin-top: 6px; width: 100%; border: none; cursor: pointer;
+  background: var(--accent); color: #fbf9f1; font-family: 'JetBrains Mono', monospace;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.04em;
+  padding: 11px 14px; border-radius: 8px;
+}
+.fb-submit:hover { background: #761515; }
+.fb-submit:disabled { opacity: 0.55; cursor: default; }
+.fb-thanks { display: none; text-align: center; padding: 12px 4px 4px; }
+.fb-thanks.show { display: block; }
+.fb-thanks h2 { margin-bottom: 8px; }
+.fb-thanks p { font-size: 13.5px; color: var(--ink-mute); line-height: 1.55; margin: 0 0 18px; }
+.fb-forward {
+  display: inline-block; text-decoration: none; cursor: pointer;
+  background: var(--paper-3); color: var(--ink); border: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 12.5px;
+  padding: 10px 16px; border-radius: 8px;
+}
+.fb-forward:hover { background: var(--paper-4); }
+.fb-err { display:none; color: var(--accent); font-size: 12.5px; margin-top: 8px; }
+.fb-err.show { display: block; }
+
 /* ---- About / Education / Research panels ---- */
 .ap-lead {
   font-size: 13.5px;
@@ -1271,7 +1348,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
   <header class="masthead">
     <div class="title-block">
-      <h1>Periodic Table of Physics<span class="v" id="header-version">v34</span></h1>
+      <h1>Map of Physics<span class="v" id="header-version">v34</span></h1>
       <div class="subtitle" id="header-subtitle">loading…</div>
     </div>
     <div class="header-actions">
@@ -1371,7 +1448,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
         <button class="quick-bar-btn quick-home" id="quick-home-btn" title="Clear the sidebar back to the start">⌂ Home</button>
         <button class="quick-bar-btn" data-quick-panel="legend" title="Open the legend">◈ Legend</button>
         <button class="quick-bar-btn" data-quick-panel="glossary" title="Open the glossary of map terms">§ Glossary</button>
-        <button class="quick-bar-btn" data-quick-panel="about" title="About the table">? About</button>
+        <button class="quick-bar-btn" data-quick-panel="about" title="About the map">? About</button>
       </div>
       <div class="sidebar-inner" id="sidebar-inner">
         <!-- populated by JS -->
@@ -1386,7 +1463,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <div class="help-overlay" id="help-overlay">
   <div class="help-modal">
     <button class="close" id="help-close">×</button>
-    <h2>How to read this periodic table</h2>
+    <h2>How to read this map</h2>
     <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a Mendeleev-style partition of physical or mathematical structure. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
 
     <h3>Tile anatomy</h3>
@@ -1394,7 +1471,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p>The little grid of squares inside a tile is its <strong>cells</strong>, one square each. A filled square is a position physically realized; a faint hatched square is a position the classification's own structure <em>forbids</em> (the dual of an empty cell — nature rules it out); a bold accent cross-hatch is a position the structure <em>predicts should exist but that nothing fills yet</em> — the empty-cell prediction, the analog of the gaps Mendeleev left for gallium and germanium. A plain pale square is a position not yet authored. A small <strong>⇄</strong> by the count means the same physical content recurs in another classification — the periodicity analog — visible without clicking. A tile carrying empty-cell predictions shows a count chip (e.g. <em>2 gaps</em>); today every such count reads zero, which is correct — those positions populate when a cross-section is built, not before.</p>
 
     <h3>Drill-down</h3>
-    <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. The periodic table stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
+    <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. The map stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
 
     <h3>Physical phenomena</h3>
     <p>Open <strong>Phenomena ▾</strong> in the toolbar and choose <strong>Physical phenomena</strong>. Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> toggle in the same menu draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
@@ -1409,7 +1486,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p><strong>Drag</strong> anywhere on the map background to pan. <strong>Scroll / pinch</strong> over the map to zoom (cursor-anchored). Buttons in the top-left: <strong>+</strong> / <strong>−</strong> step zoom, <strong>⟲</strong> fits the whole map to your viewport. Keyboard: <kbd class="tip-key">+</kbd> / <kbd class="tip-key">−</kbd> step zoom, <kbd class="tip-key">0</kbd> or <kbd class="tip-key">f</kbd> fit to view, <kbd class="tip-key">Esc</kbd> to clear a selection. The sidebar collapses with the <kbd class="tip-key">›</kbd> tab on its left edge.</p>
 
     <h3>Cross-sections and empty cells</h3>
-    <p>The deepest use of the map is to lay several classifications side by side along a shared axis and read off what the combined structure implies — the move the periodic table is named for. Where the same physical content sits at corresponding positions in two classifications, that recurrence is the analog of chemical periodicity (the <strong>⇄</strong> marker flags tiles where it happens; <strong>⇄ Compare</strong> and a classification's cross-classification edges in its sidebar let you trace it). Where the combined structure implies a position should be occupied and nothing occupies it, that gap is an empty-cell prediction; where the structure forbids a position, that is a structural exclusion. The map keeps the organization anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are <em>yours to run</em> — the map supplies the organized ground, not the conclusions. The cross-section builder constructs these multi-classification views directly: open <strong>⧉ Build cross-section</strong> in the toolbar, lay two or more classifications along a shared axis, and read off the recurrences and gaps the combined structure implies. Recurrences, exclusions, and (when present) predicted gaps remain visible per tile as well.</p>
+    <p>The deepest use of the map is to lay several classifications side by side along a shared axis and read off what the combined structure implies — the Mendeleev move the map is built around. Where the same physical content sits at corresponding positions in two classifications, that recurrence is the analog of chemical periodicity (the <strong>⇄</strong> marker flags tiles where it happens; <strong>⇄ Compare</strong> and a classification's cross-classification edges in its sidebar let you trace it). Where the combined structure implies a position should be occupied and nothing occupies it, that gap is an empty-cell prediction; where the structure forbids a position, that is a structural exclusion. The map keeps the organization anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are <em>yours to run</em> — the map supplies the organized ground, not the conclusions. The cross-section builder constructs these multi-classification views directly: open <strong>⧉ Build cross-section</strong> in the toolbar, lay two or more classifications along a shared axis, and read off the recurrences and gaps the combined structure implies. Recurrences, exclusions, and (when present) predicted gaps remain visible per tile as well.</p>
 
     <h3>The experimental layer</h3>
     <p>Beyond the formal classifications, the table records the experimental programs targeting each frontier and the characteristic numerical commitments behind them. Click <strong>⚙ Programs</strong> for the catalogue of 19 experimental programs (collaborations, accelerators, surveys, observatories). Click <strong>⇄ Compare programs</strong> to see where two programs share targets — competing-prediction adjudication, orthogonal-channel measurement, or complementary reach. Click <strong>▲▼ Scales</strong> for the cross-map catalogue of every quantitative bound and characteristic scale recorded in the map, grouped by physical dimension. Inside any frontier's sidebar card you'll see its conditional consequences ("if real, implies …") — what gets forced into the map if the frontier resolves a particular way. The <strong>ask the map →</strong> link in the header opens a guided chat that uses the catalogue's read-only query surface directly.</p>
@@ -1420,6 +1497,84 @@ body.splitter-dragging * { cursor: col-resize !important; }
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ============== Feedback: floating tab + survey modal ============== -->
+<button class="feedback-tab" id="feedback-tab" aria-label="Give feedback on the map">Feedback</button>
+
+<div class="feedback-overlay" id="feedback-overlay" role="dialog" aria-modal="true" aria-labelledby="fb-title">
+  <div class="feedback-modal">
+    <button class="fb-close" id="feedback-close" aria-label="Close">×</button>
+
+    <!-- The survey. Static markup => Netlify detects it at build time.
+         Submitted via AJAX so the reviewer stays on the page (see script below). -->
+    <form name="map-feedback" id="feedback-form" method="POST"
+          data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="map-feedback">
+      <p hidden><label>Leave blank: <input name="bot-field"></label></p>
+
+      <h2 id="fb-title">Review the Map of Physics</h2>
+      <p class="fb-lede">A few quick questions, then a box for anything on your mind. Your answers go straight to the maintainer. Thank you for taking a look.</p>
+
+      <div class="fb-q">
+        <label class="fb-q-label">Which best describes you?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="audience" value="grad-student"> Graduate student</label>
+          <label><input type="radio" name="audience" value="researcher"> Active researcher</label>
+          <label><input type="radio" name="audience" value="professor"> Professor / faculty</label>
+          <label><input type="radio" name="audience" value="other"> Other</label>
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <label class="fb-q-label">Did the map show you a cross-domain connection you didn't already have?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="cross_domain" value="genuinely-new"> Yes — genuinely new to me</label>
+          <label><input type="radio" name="cross_domain" value="somewhat"> Somewhat</label>
+          <label><input type="radio" name="cross_domain" value="already-knew"> No — I already knew the links in my area</label>
+          <label><input type="radio" name="cross_domain" value="didnt-try"> Didn't try this</label>
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <label class="fb-q-label">Did anything read as overclaiming what the map can do?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="overclaim" value="honest"> No — the framing felt honest</label>
+          <label><input type="radio" name="overclaim" value="a-little"> A little</label>
+          <label><input type="radio" name="overclaim" value="yes"> Yes (please say where below)</label>
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <label class="fb-q-label">In your area, did the link statuses (established / partial / aspired) seem accurate?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="status_accuracy" value="accurate"> Accurate</label>
+          <label><input type="radio" name="status_accuracy" value="mostly"> Mostly</label>
+          <label><input type="radio" name="status_accuracy" value="some-wrong"> Some are wrong (below)</label>
+          <label><input type="radio" name="status_accuracy" value="didnt-check"> Didn't check closely</label>
+        </div>
+      </div>
+
+      <div class="fb-q">
+        <label class="fb-q-label">What's wrong, missing, or would make this useful to you?</label>
+        <textarea name="comments" rows="4" placeholder="Anything — a wrong edge, a missing classification, where the framing slips, what you'd want next…"></textarea>
+      </div>
+
+      <div class="fb-q">
+        <label class="fb-q-label">Name / email (optional — only if you're open to a follow-up)</label>
+        <input type="text" name="reviewer" placeholder="optional">
+      </div>
+
+      <button type="submit" class="fb-submit" id="feedback-submit">Send feedback</button>
+      <div class="fb-err" id="feedback-err">Something went wrong sending that. You can email the maintainer directly via the GitHub repo, or try again.</div>
+    </form>
+
+    <div class="fb-thanks" id="feedback-thanks">
+      <h2>Thank you.</h2>
+      <p>Your feedback is on its way to the maintainer. If you know a colleague whose area this map touches, forwarding it for a second opinion is the most useful thing you can do next.</p>
+      <a class="fb-forward" id="feedback-forward" href="#">✉ Forward to a colleague for review</a>
+    </div>
+  </div>
+</div>
 
 <!-- KaTeX runtime — version-pinned + SRI-hashed; loads synchronously so katex is available when explorer modules first call it (the deferred form would race fetchCanonicalData from cache) -->
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.js"
@@ -1441,5 +1596,65 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <script src="explorer-nav.js"></script>
 <script src="explorer-toolbar.js"></script>
 <script>init();</script>
+<script>
+/* ============== Feedback survey (self-contained; no module deps) ============== */
+(function () {
+  var tab     = document.getElementById('feedback-tab');
+  var overlay = document.getElementById('feedback-overlay');
+  var closeB  = document.getElementById('feedback-close');
+  var form    = document.getElementById('feedback-form');
+  var submit  = document.getElementById('feedback-submit');
+  var thanks  = document.getElementById('feedback-thanks');
+  var errEl   = document.getElementById('feedback-err');
+  var forward = document.getElementById('feedback-forward');
+  if (!tab || !overlay || !form) return;
+
+  function open()  { overlay.classList.add('open'); }
+  function close() { overlay.classList.remove('open'); }
+
+  tab.addEventListener('click', open);
+  closeB.addEventListener('click', close);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
+
+  // Netlify Forms AJAX submit: URL-encoded body incl. form-name; stay on page.
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.classList.remove('show');
+    submit.disabled = true; submit.textContent = 'Sending…';
+    var data = new URLSearchParams(new FormData(form)).toString();
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data
+    })
+    .then(function (r) {
+      if (!r.ok) throw new Error('bad status ' + r.status);
+      form.style.display = 'none';
+      thanks.classList.add('show');
+    })
+    .catch(function () {
+      submit.disabled = false; submit.textContent = 'Send feedback';
+      errEl.classList.add('show');
+    });
+  });
+
+  // Forward-to-colleague: prefilled mail with the current map URL, built at click time.
+  forward.addEventListener('click', function (e) {
+    e.preventDefault();
+    var url = window.location.href;
+    var subject = 'Worth a look: the Map of Physics';
+    var body =
+      "I've been reviewing this map of how physics's research programs connect across "
+      + "domains — it may touch your area, and your read would be valuable.\n\n"
+      + url + "\n\n"
+      + "There's a Feedback tab on the right edge if you have thoughts.";
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
 </body>
 </html>
