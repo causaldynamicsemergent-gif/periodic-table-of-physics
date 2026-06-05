@@ -252,8 +252,12 @@ function drawPhenPhenOverlay() {
   if (act.has('phen-phen'))   edgeList = edgeList.concat(overlayLayerEdges('phen-phen'));
   if (act.has('cross-class')) edgeList = edgeList.concat(overlayLayerEdges('cross-class'));
   if (state.tileSpotlight && state.tileSpotlight.size) {
+    // UX pass — a lit line is always drawn, even when it touches no lit
+    // tile; otherwise toggling a row in the panel lit an edge that never
+    // appeared on screen while everything else dimmed.
     const lit = state.tileSpotlight;
-    edgeList = edgeList.filter(e => e && (lit.has(e.from) || lit.has(e.to)));
+    const litE = state.edgeSpotlight || new Set();
+    edgeList = edgeList.filter(e => e && (lit.has(e.from) || lit.has(e.to) || litE.has(e.id)));
   }
   for (const e of edgeList) {
     const a = tileCenter(e.from), b = tileCenter(e.to);
@@ -306,6 +310,21 @@ function drawPhenPhenOverlay() {
     // toggling never navigates the sidebar away.
     toggleOverlayEdge(target.getAttribute('data-edge-id'));
   };
+  // UX pass — hovering a line shows what it is before you commit a click.
+  // Reuses the tile tooltip element and its positioning.
+  svg.onmouseover = function (ev) {
+    const t = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
+    if (t) showEdgeTooltip(ev, t.getAttribute('data-edge-id'));
+  };
+  svg.onmousemove = function (ev) {
+    const t = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
+    if (t) { if (typeof moveTooltip === 'function') moveTooltip(ev); }
+    else if (typeof hideTooltip === 'function') hideTooltip();
+  };
+  svg.onmouseout = function (ev) {
+    const t = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
+    if (t && typeof hideTooltip === 'function') hideTooltip();
+  };
 }
 
 // UX pass — apply lit/dim classes to the phen↔phen line groups from
@@ -351,8 +370,10 @@ function toggleOverlayEdge(id) {
   if (!state.edgeSpotlight) state.edgeSpotlight = new Set();
   if (state.edgeSpotlight.has(id)) state.edgeSpotlight.delete(id);
   else state.edgeSpotlight.add(id);
-  const svg = document.getElementById('pt-overlay');
-  if (svg && typeof applyEdgeSpotlightClasses === 'function') applyEdgeSpotlightClasses(svg);
+  // Redraw rather than just re-class: with tiles lit the overlay draws a
+  // filtered subset, and a newly-lit line must join the drawing even when
+  // it touches no lit tile.
+  if (state.overlayActive && state.overlayActive.size) drawPhenPhenOverlay();
   refreshOverlayLinesLit();
 }
 
@@ -367,12 +388,16 @@ function refreshOverlayLinesLit() {
 }
 
 // The sidebar panel: what each overlay shows, and every line as a toggle row.
+// UX pass — which overlay-panel rows are unfolded; survives re-renders.
+const _ovlExpanded = new Set();
+
 function renderSidebarOverlayLines() {
   const inner = document.getElementById('sidebar-inner');
   if (!inner) return;
   const act = state.overlayActive || new Set();
   const litSet = state.edgeSpotlight || new Set();
   const sym = id => (typeof FC_BY_ID !== 'undefined' && FC_BY_ID[id] && FC_BY_ID[id].symbol) || id;
+  const fullName = id => (typeof FC_BY_ID !== 'undefined' && FC_BY_ID[id] && FC_BY_ID[id].label) || id;
 
   const LAYERS = [
     { key: 'phen-phen',
@@ -392,14 +417,23 @@ function renderSidebarOverlayLines() {
       const rows = edges.map(e => {
         if (!e || !e.id) return '';
         const lit = litSet.has(e.id);
+        const exp = _ovlExpanded.has(e.id);
         const subBits = [];
         if (e.subtype) subBits.push(e.subtype);
         if (e.status)  subBits.push(e.status);
+        const desc = e.description ? String(e.description) : '';
         return `
-          <div class="ovl-row${lit ? ' ovl-lit' : ''}" data-ovl-edge="${esc(e.id)}" role="button" tabindex="0" title="Click to light this line on the map; click again to switch it off">
+          <div class="ovl-row${lit ? ' ovl-lit' : ''}${exp ? ' sbc-open' : ''}" data-ovl-edge="${esc(e.id)}" role="button" tabindex="0" aria-expanded="${exp}" title="Click to light this line on the map and unfold its description; click again to switch both off">
             <span class="ovl-pair">${esc(sym(e.from))} → ${esc(sym(e.to))}</span>
             ${subBits.length ? `<span class="ovl-sub">${esc(subBits.join(' · '))}</span>` : ''}
+            <span class="sbc-chev">${exp ? '▾' : '▸'}</span>
             <button type="button" class="ovl-open" data-ovl-open="${esc(e.id)}" title="Open this edge's full record">↗</button>
+          </div>
+          <div class="sbc-detail" data-ovl-detail="${esc(e.id)}"${exp ? '' : ' hidden'}>
+            <div class="sbc-detail-inner">
+              <div class="sbc-detail-meta">${esc(fullName(e.from))} → ${esc(fullName(e.to))}${subBits.length ? ' · ' + esc(subBits.join(' · ')) : ''}</div>
+              ${desc ? `<div class="sbc-detail-desc">${esc(desc)}</div>` : `<div class="sbc-detail-desc" style="font-style:italic;color:var(--ink-mute)">No prose description is recorded on this edge — the ↗ record card carries its full structure.</div>`}
+            </div>
           </div>`;
       }).join('');
       return `
@@ -421,7 +455,18 @@ function renderSidebarOverlayLines() {
 
   inner.querySelectorAll('[data-ovl-edge]').forEach(row => {
     const id = row.getAttribute('data-ovl-edge');
-    const onToggle = () => toggleOverlayEdge(id);
+    const onToggle = () => {
+      // lit on the map and unfolded in the list move together
+      const detail = inner.querySelector(`[data-ovl-detail="${CSS.escape(id)}"]`);
+      const nowOpen = !_ovlExpanded.has(id);
+      if (nowOpen) _ovlExpanded.add(id); else _ovlExpanded.delete(id);
+      if (detail) detail.hidden = !nowOpen;
+      row.classList.toggle('sbc-open', nowOpen);
+      row.setAttribute('aria-expanded', String(nowOpen));
+      const chev = row.querySelector('.sbc-chev');
+      if (chev) chev.textContent = nowOpen ? '▾' : '▸';
+      toggleOverlayEdge(id);
+    };
     row.addEventListener('click', onToggle);
     row.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
@@ -433,4 +478,33 @@ function renderSidebarOverlayLines() {
       if (typeof selectCrossClassEdge === 'function') selectCrossClassEdge(btn.dataset.ovlOpen);
     });
   });
+}
+
+
+// UX pass — find an overlay edge by id across both layers.
+function overlayEdgeById(id) {
+  if (DATA.cross_class_edges_by_id && DATA.cross_class_edges_by_id[id]) return DATA.cross_class_edges_by_id[id];
+  return (DATA.phen_phen_edges || []).find(e => e && e.id === id) || null;
+}
+
+// UX pass — the line-hover tooltip: who connects to whom, the relation and
+// its status, and a snippet of the description, so a click is informed.
+function showEdgeTooltip(ev, id) {
+  const e = overlayEdgeById(id);
+  const t = document.getElementById('tooltip');
+  if (!e || !t) return;
+  const nm = x => (typeof FC_BY_ID !== 'undefined' && FC_BY_ID[x] && FC_BY_ID[x].label) || x;
+  const bits = [];
+  if (e.subtype) bits.push(String(e.subtype).replace(/-/g, ' '));
+  if (e.status)  bits.push(String(e.status));
+  const desc = e.description ? String(e.description) : '';
+  const short = desc.length > 220 ? desc.slice(0, 217) + '…' : desc;
+  t.innerHTML = `
+    <div style="font-weight:600;margin-bottom:2px">${esc(nm(e.from))} → ${esc(nm(e.to))}</div>
+    ${bits.length ? `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);margin-bottom:${short ? '4px' : '0'}">${esc(bits.join(' · '))}</div>` : ''}
+    ${short ? `<div style="font-size:11.5px;line-height:1.4;color:var(--ink-soft)">${esc(short)}</div>` : ''}
+    <div style="font-size:10px;color:var(--ink-faint);margin-top:4px">click to light · click again to switch off</div>
+  `;
+  t.classList.add('visible');
+  if (typeof moveTooltip === 'function') moveTooltip(ev);
 }

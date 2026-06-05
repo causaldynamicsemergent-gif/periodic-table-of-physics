@@ -616,6 +616,19 @@ function wireSidebarQuickBar() {
       switchSidebarPanel(b.dataset.quickPanel);
     });
   });
+  // UX pass — the quick-bar Reset: layers back to defaults, every lit tile
+  // and overlay line off, and the view refit to the whole map. Reuses the
+  // reset-layers handler so there is one source of truth for what a reset
+  // means, then refits the zoom.
+  const resetBtn = document.getElementById('quick-reset-map');
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    const layers = document.getElementById('btn-reset-layers');
+    if (layers) layers.click();
+    if (typeof zoomFitToView === 'function') zoomFitToView();
+    if (state.activePanel === 'overlay-lines' && typeof renderSidebarOverlayLines === 'function') {
+      renderSidebarOverlayLines();
+    }
+  });
 }
 
 // =============================================================
