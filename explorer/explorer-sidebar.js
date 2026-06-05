@@ -137,11 +137,13 @@ function renderSidebarAbout() {
     <div class="sidebar-section">
       <button class="bld-cta" data-panel-jump="builder" type="button">
         <div class="bld-cta-title">⧉ Build a cross-section</div>
-        <div class="bld-cta-desc">Lay two or more classifications along a shared axis and read off the recurrences and gaps the combined structure implies — the Mendeleev move the map is built around.</div>
+        <div class="bld-cta-desc">Lay two or more classifications along a shared axis and read off the recurrences and gaps the combined structure implies.</div>
         <div class="bld-cta-go">open the builder →</div>
       </button>
       <h3>About the map</h3>
       <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time. It sits upstream of discovery: it helps a physicist decide where to point attention, not what they will find.</p>
+      <p class="ap-text">Each classification lays its content along its own axes; build a cross-section across several and the recurring structure — and the structurally-missing entries where two mature areas meet through an unresolved link — surface as a consequence of the layout. The organization stays anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are yours to run; experimental coverage is tracked alongside.</p>
+      <p class="ap-text" style="color:var(--ink-mute);font-size:12px">${(typeof DATA !== 'undefined' && DATA && DATA._meta && DATA._meta.counts) ? (DATA._meta.counts.formal_classifications + ' classifications · ' + DATA._meta.counts.cells + ' cells · ' + DATA._meta.counts.predictions + ' predictions · ' + DATA._meta.counts.falsifications + ' falsifications') : ''}</p>
 
       <div class="ap-section">What it is</div>
       <p class="ap-text">Each tile is a formal classification: a taxonomy of physical content that nature appears to respect, with its own internal axis structure, predictive yield, and citations to primary literature. Until now these have been scattered across separate subfields. This is the first artifact that assembles them.</p>
@@ -204,7 +206,7 @@ function renderSidebarEducation() {
       <p class="ap-lead">For students, teachers, and curious newcomers: a single map showing both what physics has worked out and what it hasn't.</p>
 
       <div class="ap-section">What's useful here</div>
-      <p class="ap-text">This is not a chemistry-style periodic table you memorize. The useful thing is the bottom-of-tile bar — the predictive yield. Physics teaching usually shows the settled parts in isolation. Here you see them next to what's still being tested, what's contested, and what's already been ruled out. Knowing which is which is half of learning the subject.</p>
+      <p class="ap-text">This is not a chart you memorize. The useful thing is the bottom-of-tile bar — the predictive yield. Physics teaching usually shows the settled parts in isolation. Here you see them next to what's still being tested, what's contested, and what's already been ruled out. Knowing which is which is half of learning the subject.</p>
 
       <div class="ap-section">First pass — where to start</div>
       <div class="ap-jumps">
@@ -212,7 +214,7 @@ function renderSidebarEducation() {
           <span class="jump-num">01</span>
           <span class="jump-text">
             <span class="jump-title">Open the Standard Model</span>
-            <span class="jump-desc">Particle physics's own periodic table — every elementary particle, organised by the rules governing it.</span>
+            <span class="jump-desc">Every elementary particle, organised by the rules governing it.</span>
           </span>
           <span class="jump-arrow">→</span>
         </button>
@@ -254,7 +256,7 @@ function renderSidebarResearch() {
   inner.innerHTML = `
     <div class="sidebar-section">
       <h3>For research</h3>
-      <p class="ap-lead">For working researchers, professors, grad students, and grant writers: physics's Mendeleev-grade structural content, assembled and cross-referenced. The map as a structural lens on where productive work sits.</p>
+      <p class="ap-lead">For working researchers, professors, grad students, and grant writers: physics's formal structural content, assembled and cross-referenced. The map as a structural lens on where productive work sits.</p>
 
       <div class="ap-section">What's on screen</div>
       <p class="ap-text">Each tile is a formal classification with its own internal axis structure, predictive-yield record, and primary-literature anchors. Tiles connect through cross-classification edges. Inside a tile, cells carry axis values, realized examples, and per-cell prediction status.</p>
@@ -1411,26 +1413,9 @@ async function init() {
   }
 
   const m = DATA._meta.counts;
-  // E0d — masthead subtitle in the Mendeleev frame (MENDELEEV_FRAME.md
-  // §1/§2/§6; wording maintainer-approved). The frame sentence leads; the
-  // data counts are demoted to a faint second line. This is the one E0
-  // move on the actual first-impression surface, since the default landing
-  // view is the open-questions view rather than this tile grid. All four
-  // moves are legible and M2/M3 read as moves the map ENABLES ("yours to
-  // run"), per the substrate-contained / substrate-enabled distinction.
-  const subtitleEl = document.getElementById('header-subtitle');
-  if (subtitleEl) {
-    subtitleEl.innerHTML =
-      '<span class="subtitle-frame">A map of how physics\u2019s research programs connect across domains. '
-      + 'Each classification lays its content along its own axes; build a cross-section across several and '
-      + 'the recurring structure \u2014 and the structurally-missing entries where two mature areas meet through '
-      + 'an unresolved link \u2014 surface as a consequence of the layout. The organization stays anchored to the '
-      + 'literature, so the pattern-finding and the tests of candidate unification frameworks are yours to run; '
-      + 'experimental coverage is tracked alongside.</span>'
-      + '<span class="subtitle-counts">'
-      + m.formal_classifications + ' classifications · ' + m.cells + ' cells · '
-      + m.predictions + ' predictions · ' + m.falsifications + ' falsifications</span>';
-  }
+  // UX pass — the masthead subtitle was removed from the header; its framing
+  // sentence and the data counts now live in the About panel
+  // (renderSidebarAbout), keeping the first-impression surface to the title.
   const headerVersionEl = document.getElementById('header-version');
   if (headerVersionEl && DATA._meta.dataset_version) {
     headerVersionEl.textContent = DATA._meta.dataset_version;

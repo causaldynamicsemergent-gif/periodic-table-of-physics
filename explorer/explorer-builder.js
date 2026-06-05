@@ -66,6 +66,17 @@ function builderState() {
   return state.builder;
 }
 
+// UX pass — while the builder is open, clicking tiles on the map toggles the
+// classification in or out of the cross-section (same accumulate gesture as
+// the map highlight). Called from the map's tile click handler.
+function builderToggleFC(id) {
+  var bs = builderState();
+  var i = bs.fcIds.indexOf(id);
+  if (i >= 0) bs.fcIds.splice(i, 1); else bs.fcIds.push(id);
+  bs.axisKey = null;
+  renderSidebarBuilder();
+}
+
 // ---- Cross-FC entity-value index (the explicit recurrence signal) ----------
 // A value token is an "entity token" when it appears as a classification-axis
 // value (or a cell axis_value) in two or more DIFFERENT classifications. Built
@@ -279,7 +290,7 @@ var BUILDER_TIER_META = {
   'recorded':    { cls: 'bld-rec',  tag: 'recurrence (recorded)',
     desc: 'The same entity is classified in both classifications — recorded at the cell level, with no forced classification-level edge (the mode-3 case).' },
   'candidate':   { cls: 'bld-cand', tag: 'candidate correspondence',
-    desc: 'Anchored on all sides and touching a checkable consequence, but recorded nowhere. The organization permits it; whether it is real periodicity or coincidence is yours to evaluate \u2014 no confidence is asserted.' },
+    desc: 'Anchored on all sides and touching a checkable consequence, but recorded nowhere. The organization permits it; whether it is real structure or coincidence is yours to evaluate \u2014 no confidence is asserted.' },
   'raw-alignment': { cls: 'bld-raw', tag: 'co-location',
     desc: 'Lands at the same position but is not anchored on all sides or touches no checkable consequence.' },
   'forbidden':   { cls: 'bld-forb', tag: 'structural exclusion',
@@ -292,7 +303,7 @@ function renderSidebarBuilder() {
   var inner = document.getElementById('sidebar-inner'); if (!inner) return;
   var bs = builderState();
 
-  var intro = '<div class="bld-intro">Lay two or more classifications along a shared axis and read off what the combined structure implies \u2014 the Mendeleev move the map is built around. The same entity recurring across classifications (the analog of periodicity) and positions the structure implies but nothing fills (the analog of the gaps Mendeleev left for gallium) show up as a consequence of the layout. The recognition is yours; the map supplies the organized ground.</div>';
+  var intro = '<div class="bld-intro">Lay two or more classifications along a shared axis — pick them below, or simply click tiles on the map — and read off what the combined structure implies. The same entity recurring across classifications, and positions the structure implies but nothing fills, show up as a consequence of the layout. The recognition is yours; the map supplies the organized ground.</div>';
 
   var bySector = {};
   FCS.forEach(function(fc) { (bySector[fc.sector] = bySector[fc.sector] || []).push(fc); });

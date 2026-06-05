@@ -202,7 +202,7 @@ function fcEstablishedRecurrence(fc) {
         has: true,
         title: 'Recurs in ' + otherLabel
              + ' — the same physical content sits at corresponding positions '
-             + 'in both classifications (the periodicity analog).',
+             + 'in both classifications.',
       };
     }
   }
@@ -285,18 +285,26 @@ function renderMap() {
   // Wire tile interactions
   ptContent.querySelectorAll('.pt-tile').forEach(el => {
     el.addEventListener('click', (e) => {
-      // UX pass — unified highlight/dim. Shift- (or Ctrl/Cmd-) click toggles
-      // this tile in the lit set for side-by-side comparison without touching
-      // the sidebar. A plain click keeps the existing gesture — open the
-      // record — and now also lights this tile, dimming the rest. Esc, the
-      // sidebar's ×, ⌂ Home, or a plain click on the map background restores
-      // the full map.
-      if (e.shiftKey || e.ctrlKey || e.metaKey) {
-        toggleTileSpotlight(el.dataset.fc);
+      const id = el.dataset.fc;
+      // UX pass — with the cross-section builder open, map clicks build the
+      // cross-section directly: toggle this classification in or out of it.
+      // The builder's render then lights the selected set on the map.
+      if (document.querySelector('.bld-intro') && typeof builderToggleFC === 'function') {
+        builderToggleFC(id);
         return;
       }
-      state.tileSpotlight = new Set([el.dataset.fc]);
-      selectFC(el.dataset.fc);
+      // UX pass — accumulating highlight: each click lights another tile
+      // (and opens its record); clicking a lit tile switches it off and
+      // leaves the sidebar as it is. Esc, the sidebar's ×, ⌂ Home, or a
+      // plain click on the map background restores the full map.
+      if (!state.tileSpotlight) state.tileSpotlight = new Set();
+      if (state.tileSpotlight.has(id)) {
+        state.tileSpotlight.delete(id);
+        renderMap();
+        return;
+      }
+      state.tileSpotlight.add(id);
+      selectFC(id);
     });
     el.addEventListener('mouseenter', e => showTileTooltip(e, el.dataset.fc));
     el.addEventListener('mousemove',  e => moveTooltip(e));
@@ -430,8 +438,7 @@ function renderTile(fc) {
       chips.push('<span class="tile-chip tile-chip-conjectured" title="'
         + esc(conjCount + ' position' + (conjCount === 1 ? '' : 's')
               + ' the constructive pattern implies should be filled but that '
-              + 'nothing fills yet — the empty-cell prediction (the gallium / '
-              + 'germanium analog).')
+              + 'nothing fills yet — the empty-cell prediction.')
         + '">'
         + conjCount + ' gap' + (conjCount === 1 ? '' : 's') + '</span>');
     }
