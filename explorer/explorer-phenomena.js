@@ -241,7 +241,19 @@ function drawPhenPhenOverlay() {
   }
 
   const paths = [];
-  for (const e of DATA.phen_phen_edges) {
+  // UX pass — one overlay machine, two layers: the phenomenon↔phenomenon
+  // arrows, or the full cross-classification edge set (derives-from /
+  // specializes / …) the old map drew as "edges". With tiles lit, only
+  // edges touching a lit tile are drawn, so the overlay follows the focus
+  // instead of flooding the grid.
+  let edgeList = (state.overlay === 'cross-class')
+    ? Object.keys(DATA.cross_class_edges_by_id || {}).map(k => DATA.cross_class_edges_by_id[k])
+    : (DATA.phen_phen_edges || []);
+  if (state.tileSpotlight && state.tileSpotlight.size) {
+    const lit = state.tileSpotlight;
+    edgeList = edgeList.filter(e => e && (lit.has(e.from) || lit.has(e.to)));
+  }
+  for (const e of edgeList) {
     const a = tileCenter(e.from), b = tileCenter(e.to);
     if (!a || !b) continue;
     const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;

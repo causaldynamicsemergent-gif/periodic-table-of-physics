@@ -903,6 +903,11 @@ function renderSidebarCell(fc, cell) {
 function selectFC(fcId) {
   const fc = FC_BY_ID[fcId];
   if (!fc) return;
+  // UX pass — navigating to a classification never leaves its tile behind
+  // the dimming layer: with a lit set active, the destination joins it.
+  if (state.tileSpotlight && state.tileSpotlight.size && !state.tileSpotlight.has(fcId)) {
+    state.tileSpotlight.add(fcId);
+  }
   state.selectedFC = fcId;
   state.selectedCell = null;
   state.selectedDiscourseNode = null;    // Update B
@@ -1271,6 +1276,9 @@ function buildBrowseMenu(filter) {
 //   Type-ahead search at the top, sectored list of FCs below. Peer with
 //   the five discourse-type catalogue panels.
 // =============================================================
+// UX pass — which catalogue rows are unfolded; survives re-renders (search).
+const _sbcExpanded = new Set();
+
 function renderSidebarBrowseClassifications(filter) {
   const inner = document.getElementById('sidebar-inner');
   const q = (filter || '').toLowerCase().trim();
@@ -1302,13 +1310,24 @@ function renderSidebarBrowseClassifications(filter) {
     body = orderedKeys.map(sector => `
       <div class="dx-browse-group">
         <div class="dx-browse-group-head">${esc(sector)} <span class="dx-browse-group-ct">(${groups[sector].length})</span></div>
-        ${groups[sector].map(fc => `
-          <div class="dx-browse-item sb-classif-item" data-fc-jump="${esc(fc.id)}" role="button" tabindex="0">
+        ${groups[sector].map(fc => {
+          const lit = state.tileSpotlight && state.tileSpotlight.has(fc.id);
+          const exp = _sbcExpanded.has(fc.id);
+          return `
+          <div class="dx-browse-item sb-classif-item${lit ? ' sbc-lit' : ''}${exp ? ' sbc-open' : ''}" data-sbc-fc="${esc(fc.id)}" role="button" tabindex="0" aria-expanded="${exp}">
             <span class="sb-classif-sym sb-classif-sym-${esc(fc.category)}">${esc(fc.symbol)}</span>
             <span class="dx-browse-name">${esc(fc.label)}</span>
             <span class="sb-classif-counts">${fc.cell_count}c · ${fc.prediction_count}p</span>
+            <span class="sbc-chev">${exp ? '▾' : '▸'}</span>
           </div>
-        `).join('')}
+          <div class="sbc-detail" data-sbc-detail="${esc(fc.id)}"${exp ? '' : ' hidden'}>
+            <div class="sbc-detail-inner">
+              ${fc.description ? `<div class="sbc-detail-desc">${esc(fc.description)}</div>` : ''}
+              <div class="sbc-detail-meta">${esc(fc.sector)} · ${fc.cell_count} cells · ${fc.prediction_count} predictions</div>
+              <button type="button" class="sbc-open-record" data-sbc-open="${esc(fc.id)}">open full record →</button>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     `).join('');
   }
@@ -1316,17 +1335,40 @@ function renderSidebarBrowseClassifications(filter) {
   inner.innerHTML = `
     <div class="sidebar-section">
       <h3>All classifications <span class="dx-section-ct">· ${FCS.length}</span></h3>
-      <div class="sec-sub">The ${FCS.length} formal classifications in v34, searchable and grouped by sector. ${q ? `Showing <strong>${totalShown}</strong> matches.` : 'Click any to open its detail card.'}</div>
+      <div class="sec-sub">The ${FCS.length} formal classifications in v34, searchable and grouped by sector. ${q ? `Showing <strong>${totalShown}</strong> matches.` : 'Click a row to light it on the map and unfold its details right here; click again to switch it off. Several can be on at once — the full record is one more click inside.'}</div>
       ${searchBar}
       ${body}
     </div>
   `;
 
-  // Wire FC-jump items
-  inner.querySelectorAll('[data-fc-jump]').forEach(el => {
-    el.addEventListener('click', () => selectFC(el.dataset.fcJump));
+  // UX pass — catalogue rows toggle in place: one click lights the tile on
+  // the map (accumulate, the same gesture as clicking the map itself) AND
+  // unfolds a scrollable detail block under the row; a second click folds
+  // it and switches the tile off. The catalogue never navigates away, so
+  // several classifications can be inspected and toggled in one sitting.
+  inner.querySelectorAll('[data-sbc-fc]').forEach(el => {
+    const id = el.dataset.sbcFc;
+    const toggleRow = () => {
+      const detail = inner.querySelector(`[data-sbc-detail="${CSS.escape(id)}"]`);
+      const nowOpen = !_sbcExpanded.has(id);
+      if (nowOpen) _sbcExpanded.add(id); else _sbcExpanded.delete(id);
+      if (detail) detail.hidden = !nowOpen;
+      el.classList.toggle('sbc-open', nowOpen);
+      el.setAttribute('aria-expanded', String(nowOpen));
+      const chev = el.querySelector('.sbc-chev');
+      if (chev) chev.textContent = nowOpen ? '▾' : '▸';
+      if (typeof toggleTileSpotlight === 'function') toggleTileSpotlight(id);
+      el.classList.toggle('sbc-lit', !!(state.tileSpotlight && state.tileSpotlight.has(id)));
+    };
+    el.addEventListener('click', toggleRow);
     el.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectFC(el.dataset.fcJump); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRow(); }
+    });
+  });
+  inner.querySelectorAll('[data-sbc-open]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      selectFC(btn.dataset.sbcOpen);
     });
   });
   // Wire search input

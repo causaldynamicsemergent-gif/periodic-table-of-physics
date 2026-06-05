@@ -330,7 +330,7 @@ function renderMap() {
   });
 
   // Overlay
-  if (state.overlay === 'phen-phen') drawPhenPhenOverlay();
+  if (state.overlay !== 'none') drawPhenPhenOverlay();   // UX pass — also the cross-class layer
   else document.getElementById('pt-overlay').classList.remove('show');
 }
 
@@ -719,7 +719,7 @@ function applyZoom() {
   wrap.style.transformOrigin = '0 0';
   wrap.style.width = `${100/state.zoom}%`;
   document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
-  if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 220);
+  if (state.overlay !== 'none') setTimeout(drawPhenPhenOverlay, 220);   // UX pass — also the cross-class layer
 }
 
 function clampPan() {
@@ -863,3 +863,11 @@ function zoomOut() {
   clampPan();
   applyZoom();
 }
+
+// UX pass — the on-map ✕ clear control: one click returns every lit tile
+// and every lit overlay line to the resting state (same as Esc or a plain
+// click on the map background).
+(function () {
+  var b = document.getElementById('btn-clear-lit');
+  if (b) b.addEventListener('click', function () { clearMapSpotlights(); });
+})();

@@ -1434,6 +1434,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
           <div class="view-chips">
             <button class="tb-chip active" data-filter="overlay" data-value="none" type="button">none</button>
             <button class="tb-chip" data-filter="overlay" data-value="phen-phen" type="button" title="draw arrows between phenomenon classifications">phen↔phen</button>
+            <button class="tb-chip" data-filter="overlay" data-value="cross-class" type="button" title="draw the cross-classification edges (derives-from, specializes, …) between classifications — with tiles lit, only edges touching them are drawn">cross-class</button>
           </div>
         </div>
       </div>
@@ -1451,6 +1452,8 @@ body.splitter-dragging * { cursor: col-resize !important; }
         <span class="zoom-level" id="zoom-level">100%</span>
         <button id="zoom-in" title="Zoom in">+</button>
         <button id="zoom-reset" title="Fit map to view (or press 0 / f)">⟲</button>
+        <span class="zc-sep" aria-hidden="true"></span>
+        <button id="btn-clear-lit" class="zc-clear" title="Switch every lit tile and overlay line back off — Esc or a plain click on the map background does this too">✕ clear</button>
       </div>
       <button class="sidebar-toggle" id="sidebar-toggle" title="Hide sidebar">›</button>
       <div class="map-zoom-wrap" id="map-zoom-wrap">
@@ -1492,7 +1495,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. Clicking also lights the tile and dims the rest; click further tiles to light several at once, and click a lit tile to switch it off — so exactly the part of the map you want to focus on stays lit. <kbd class="tip-key">Esc</kbd>, the sidebar's ×, ⌂ Home, or a plain click on the map background restores the full map. With the cross-section builder open, clicking tiles adds them to (or removes them from) the cross-section, and the selected classifications light up the same way. The map stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
 
     <h3>Physical phenomena</h3>
-    <p>Open <strong>Phenomena ▾</strong> in the toolbar and choose <strong>Physical phenomena</strong>. Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> toggle in the same menu draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
+    <p>Open <strong>Phenomena ▾</strong> in the toolbar and choose <strong>Physical phenomena</strong>. Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> or <strong>cross-class</strong> toggle in the same menu draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
 
     <h3>Finding a specific thing</h3>
     <p>The search box at the top of the toolbar searches all 484 cells. Type <em>black holes</em>, <em>gluons</em>, <em>AdS/CFT</em>, <em>topological insulator</em>, or anything else. Results are grouped by classification with cell snippets; clicking a result opens that exact cell. For the terms used to describe how the map itself is organised (<em>open frontier</em>, <em>discharge status</em>, <em>candidate-foundational</em>, …) open the <strong>Glossary</strong> via the sidebar quick-bar or Browse menu.</p>

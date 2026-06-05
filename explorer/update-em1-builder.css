@@ -297,3 +297,26 @@
   position: absolute; clip: rect(1px, 1px, 1px, 1px);
   padding: 0; border: 0; height: 1px; width: 1px; overflow: hidden;
 }
+
+
+/* ============ UX pass — catalogue rows: in-place expand + light ============ */
+.sb-classif-item .sbc-chev { margin-left: 6px; color: var(--ink-faint); font-size: 10px; flex: none; }
+.sb-classif-item.sbc-lit { background: var(--paper-3); box-shadow: inset 2px 0 0 var(--accent); }
+.sb-classif-item.sbc-open .sbc-chev { color: var(--ink); }
+.sbc-detail-inner {
+  max-height: 190px; overflow-y: auto;
+  margin: 0 0 8px 10px; padding: 8px 10px 10px 12px;
+  border-left: 2px solid var(--rule);
+}
+.sbc-detail-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 7px; }
+.sbc-detail-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mute); margin-bottom: 8px; }
+.sbc-open-record {
+  cursor: pointer; background: var(--paper-3); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 4px 9px;
+}
+.sbc-open-record:hover { background: var(--paper-4); }
+
+/* ============ UX pass — on-map clear control ============ */
+.zc-sep { width: 1px; align-self: stretch; background: var(--ink-mute); margin: 3px 2px; opacity: 0.5; }
+#zoom-controls .zc-clear { font-size: 10px; letter-spacing: 0.04em; padding: 0 9px; white-space: nowrap; }
