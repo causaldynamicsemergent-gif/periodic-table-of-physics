@@ -137,11 +137,11 @@ function renderSidebarAbout() {
     <div class="sidebar-section">
       <button class="bld-cta" data-panel-jump="builder" type="button">
         <div class="bld-cta-title">⧉ Build a cross-section</div>
-        <div class="bld-cta-desc">Lay two or more classifications along a shared axis and read off the recurrences and gaps the combined structure implies — the move the table is named for.</div>
+        <div class="bld-cta-desc">Lay two or more classifications along a shared axis and read off the recurrences and gaps the combined structure implies — the Mendeleev move the map is built around.</div>
         <div class="bld-cta-go">open the builder →</div>
       </button>
-      <h3>About the table</h3>
-      <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time.</p>
+      <h3>About the map</h3>
+      <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time. It sits upstream of discovery: it helps a physicist decide where to point attention, not what they will find.</p>
 
       <div class="ap-section">What it is</div>
       <p class="ap-text">Each tile is a formal classification: a taxonomy of physical content that nature appears to respect, with its own internal axis structure, predictive yield, and citations to primary literature. Until now these have been scattered across separate subfields. This is the first artifact that assembles them.</p>
@@ -151,7 +151,7 @@ function renderSidebarAbout() {
 
       <div class="ap-section">What it's for</div>
       <ul class="ap-list">
-        <li><strong>Cross-subfield navigation.</strong> Two classifications under different sectors may share machinery — the map makes those connections visible.</li>
+        <li><strong>Cross-subfield navigation.</strong> Two classifications under different sectors may share machinery — the map makes those connections visible, including where two mature programs meet through a link that is still unresolved.</li>
         <li><strong>Auditing predictive yield.</strong> See in one glance what physics has predicted, what got confirmed, what got falsified, and what's still being tested.</li>
         <li><strong>Locating a problem.</strong> A working physicist can find the classifications that bear on their frontier and the cells inside each one that constrain it.</li>
       </ul>
@@ -169,13 +169,13 @@ function renderSidebarAbout() {
       <p class="ap-text" style="margin-top: 14px;"><a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">Worked example sessions →</a> — physicists' chats walking these patterns through the catalogue, edited and published.</p>
 
       <div class="ap-section">Who it serves</div>
-      <p class="ap-text">Two audiences. Pick the one closer to you:</p>
+      <p class="ap-text">One capability — making the cross-domain structure of physics explicit — consulted in three modes. <strong>Graduate students</strong>: orientation — which mature neighboring programs touch your problem, and which load-bearing concepts to learn first. <strong>Researchers</strong>: scouting — tracing the bridges between distant areas to the unresolved link a connection turns on. <strong>Professors</strong>: synthesis and direction — the broad structural view for framing programs, teaching connective tissue, and steering students toward ripe problems. Two deeper guides:</p>
       <div class="ap-jumps">
         <button class="ap-jump" data-panel-jump="education">
           <span class="jump-num">01</span>
           <span class="jump-text">
             <span class="jump-title">For education</span>
-            <span class="jump-desc">Students, teachers, curious newcomers — what physics knows and what it doesn't, on one screen.</span>
+            <span class="jump-desc">Students, teachers, newcomers — orientation: what physics knows and what it doesn't, on one screen.</span>
           </span>
           <span class="jump-arrow">→</span>
         </button>
@@ -183,7 +183,7 @@ function renderSidebarAbout() {
           <span class="jump-num">02</span>
           <span class="jump-text">
             <span class="jump-title">For research</span>
-            <span class="jump-desc">Working researchers, grant writers, grad students — direction-setting and cross-disciplinary navigation.</span>
+            <span class="jump-desc">Researchers, professors, grad students — scouting and direction-setting across disciplines.</span>
           </span>
           <span class="jump-arrow">→</span>
         </button>
@@ -254,7 +254,7 @@ function renderSidebarResearch() {
   inner.innerHTML = `
     <div class="sidebar-section">
       <h3>For research</h3>
-      <p class="ap-lead">For working researchers, grad students, and grant writers: physics's Mendeleev-grade structural content, assembled and cross-referenced. The map as a structural lens on where productive work sits.</p>
+      <p class="ap-lead">For working researchers, professors, grad students, and grant writers: physics's Mendeleev-grade structural content, assembled and cross-referenced. The map as a structural lens on where productive work sits.</p>
 
       <div class="ap-section">What's on screen</div>
       <p class="ap-text">Each tile is a formal classification with its own internal axis structure, predictive-yield record, and primary-literature anchors. Tiles connect through cross-classification edges. Inside a tile, cells carry axis values, realized examples, and per-cell prediction status.</p>
@@ -931,6 +931,7 @@ function selectCell(fcId, cellId) {
   document.getElementById('sidebar').scrollTop = 0;
 }
 function clearSelection() {
+  state.tileSpotlight = new Set();         // UX pass — clear the highlight/dim layer
   state.selectedFC = null;
   state.selectedCell = null;
   state.selectedDiscourseNode = null;    // Update B

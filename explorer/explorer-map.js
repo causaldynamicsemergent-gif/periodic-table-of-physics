@@ -19,8 +19,8 @@
 //   on all four scripts being parsed before init() runs them.
 // =============================================================
 
-var ZOOM_MIN = 0.35;
-var ZOOM_MAX = 2.0;
+var ZOOM_MIN = 0.15;
+var ZOOM_MAX = 3.5;
 
 // =============================================================
 //   In-tile cell visualisation (Update C — third item)
@@ -284,7 +284,20 @@ function renderMap() {
 
   // Wire tile interactions
   ptContent.querySelectorAll('.pt-tile').forEach(el => {
-    el.addEventListener('click', () => selectFC(el.dataset.fc));
+    el.addEventListener('click', (e) => {
+      // UX pass — unified highlight/dim. Shift- (or Ctrl/Cmd-) click toggles
+      // this tile in the lit set for side-by-side comparison without touching
+      // the sidebar. A plain click keeps the existing gesture — open the
+      // record — and now also lights this tile, dimming the rest. Esc, the
+      // sidebar's ×, ⌂ Home, or a plain click on the map background restores
+      // the full map.
+      if (e.shiftKey || e.ctrlKey || e.metaKey) {
+        toggleTileSpotlight(el.dataset.fc);
+        return;
+      }
+      state.tileSpotlight = new Set([el.dataset.fc]);
+      selectFC(el.dataset.fc);
+    });
     el.addEventListener('mouseenter', e => showTileTooltip(e, el.dataset.fc));
     el.addEventListener('mousemove',  e => moveTooltip(e));
     el.addEventListener('mouseleave', hideTooltip);
@@ -320,8 +333,14 @@ function renderTile(fc) {
   // that does.
   const anySpot      = state.spotlightActive && state.spotlightActive.size > 0;
   const matchesSpot  = anySpot && Array.from(state.spotlightActive).some(s => (fc.yield_stats[s] || 0) > 0);
-  const dim          = anySpot && !matchesSpot;
-  const spot         = matchesSpot;
+  // UX pass — unified highlight/dim. A second, tile-level layer: the set of
+  // classifications lit directly (click / shift-click / builder selections).
+  // It composes with the prediction-status spotlight above — a tile dims if
+  // either active layer leaves it out.
+  const anyTileSpot  = state.tileSpotlight && state.tileSpotlight.size > 0;
+  const tileLit      = anyTileSpot && state.tileSpotlight.has(fc.id);
+  const dim          = (anySpot && !matchesSpot) || (anyTileSpot && !tileLit);
+  const spot         = (matchesSpot || tileLit) && !dim;
   const selected     = (state.selectedFC === fc.id);
   const fals         = fc.yield_stats.falsified || 0;
   // Update B — discourse-highlight ring: selecting an architecture / frontier /
@@ -530,6 +549,29 @@ var ROWSBY_OPTIONS = [
   { value: 'closure',  label: 'Closure',  desc: 'Complete · partial · conjectural.' },
 ];
 
+// UX pass — unified highlight/dim model: the tile-level lit set.
+// Top-level functions, so they are window-globals like every other module
+// function here (the builder calls setTileSpotlight by bare name).
+function setTileSpotlight(ids) {
+  const next = new Set(ids || []);
+  const cur  = state.tileSpotlight || new Set();
+  if (next.size === cur.size && Array.from(next).every(id => cur.has(id))) return; // unchanged — skip the re-render
+  state.tileSpotlight = next;
+  renderMap();
+}
+function toggleTileSpotlight(id) {
+  if (!state.tileSpotlight) state.tileSpotlight = new Set();
+  if (state.tileSpotlight.has(id)) state.tileSpotlight.delete(id);
+  else state.tileSpotlight.add(id);
+  renderMap();
+}
+function clearTileSpotlight() {
+  if (state.tileSpotlight && state.tileSpotlight.size) {
+    state.tileSpotlight = new Set();
+    renderMap();
+  }
+}
+
 function wireToolbar() {
   // Overlay chips (unchanged from A.1; kept inline because there are only 2 options)
   document.querySelectorAll('.tb-chip[data-filter="overlay"]').forEach(b => {
@@ -565,6 +607,7 @@ function wireToolbar() {
   document.getElementById('btn-reset-layers').addEventListener('click', () => {
     state.group = 'sector';
     state.spotlightActive = new Set();    // Update B — empty set, not 'all'
+    state.tileSpotlight   = new Set();    // UX pass — clear the highlight/dim layer too
     state.overlay = 'none';
     syncToolbarChips();
     writeHash();
@@ -754,9 +797,20 @@ function wireMapDragPan() {
     if (!dragging) return;
     dragging = false;
     pane.classList.remove('grabbing');
+    // UX pass — a plain (non-drag) click on the map background clears the
+    // highlight/dim layer, mirroring Esc. mousedown above only arms on the
+    // background (tiles, zoom controls and the sidebar tab are skipped), so
+    // this fires for exactly the empty-canvas click.
+    if (!moved) clearTileSpotlight();
   });
 
-  // Trackpad / wheel zoom (cursor-anchored)
+  // Trackpad / wheel zoom (cursor-anchored, device-normalized).
+  // UX pass — the old handler applied a fixed factor per wheel EVENT, so
+  // trackpads (which fire many small-delta events per gesture) zoomed far
+  // faster than a clicky mouse wheel. Normalize deltaY to pixels via
+  // deltaMode, clamp the per-event travel so a fast fling can't jump the
+  // scale, then apply an exponential factor: smooth proportional steps on
+  // trackpads, ~7% per notch on a mouse wheel.
   pane.addEventListener('wheel', e => {
     e.preventDefault();
     const rect = wrap.getBoundingClientRect();
@@ -765,8 +819,9 @@ function wireMapDragPan() {
     const localX = px / state.zoom;
     const localY = py / state.zoom;
     const oldZoom = state.zoom;
-    // Gentler zoom factor than before — was 1.1, now ~1.07 per wheel tick
-    const factor = e.deltaY < 0 ? 1.07 : 1/1.07;
+    const unit   = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? 120 : 1);
+    const delta  = Math.max(-40, Math.min(40, e.deltaY * unit));
+    const factor = Math.exp(-delta * 0.0018);
     let newZoom = oldZoom * factor;
     newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newZoom));
     if (newZoom === oldZoom) return; // hit a limit, don't move pan

@@ -416,6 +416,10 @@ function renderSidebarBuilder() {
     nudge + recurHtml + latticeHtml + staleHtml + legend + actions + '</div>';
 
   wireBuilderPanel();
+  // UX pass — the builder's selected classifications light up on the map
+  // (same highlight/dim layer as tile clicks). setTileSpotlight no-ops when
+  // the set is unchanged, so picker keystrokes don't re-render the map.
+  if (typeof setTileSpotlight === 'function') setTileSpotlight(builderState().fcIds);
 }
 
 function wireBuilderPanel() {

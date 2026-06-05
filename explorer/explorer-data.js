@@ -981,6 +981,10 @@ var state = {
   searchQuery: '',
   panX: 0,                      // map pan offset
   panY: 0,
+  // UX pass — unified highlight/dim: the set of tiles lit directly on the
+  // map (plain click, shift-click multi-compare, or the cross-section
+  // builder's selected classifications). Ephemeral — not written to the hash.
+  tileSpotlight: new Set(),
   // Update C — glossary panel
   selectedGlossaryTerm: null,   // slug of the currently-focused glossary entry (null = no specific focus)
   glossaryFilter: '',           // type-ahead filter on the glossary panel
@@ -990,7 +994,7 @@ var state = {
   selectedKind: null,           // 'energy_scale' | 'mass' | 'time' | 'length' | 'coupling' | 'ratio' | 'dimensionless' | 'sigma_deviation' | null
   selectedKindFilter: null,     // null | 'lower' | 'upper' | 'measured' | 'exact' | 'other'  (null = all)
 };
-var ZOOM_LEVELS = [0.5, 0.65, 0.8, 1.0, 1.25, 1.5, 1.85, 2.25];
+var ZOOM_LEVELS = [0.15, 0.25, 0.35, 0.5, 0.65, 0.8, 1.0, 1.25, 1.5, 1.85, 2.25, 2.8, 3.5];
 
 var MCP_BASE = 'https://map-of-physics.eddie-8e5.workers.dev';
 
