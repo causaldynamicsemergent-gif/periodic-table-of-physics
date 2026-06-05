@@ -934,6 +934,7 @@ function selectCell(fcId, cellId) {
 }
 function clearSelection() {
   state.tileSpotlight = new Set();         // UX pass — clear the highlight/dim layer
+  state.edgeSpotlight = new Set();         // UX pass — and the lit phen↔phen lines
   state.selectedFC = null;
   state.selectedCell = null;
   state.selectedDiscourseNode = null;    // Update B

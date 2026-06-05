@@ -578,6 +578,15 @@ function clearTileSpotlight() {
     renderMap();
   }
 }
+// UX pass — one clear for both lit layers (tiles and phen↔phen lines).
+function clearMapSpotlights() {
+  const hadTiles = state.tileSpotlight && state.tileSpotlight.size;
+  const hadEdges = state.edgeSpotlight && state.edgeSpotlight.size;
+  if (!hadTiles && !hadEdges) return;
+  state.tileSpotlight = new Set();
+  state.edgeSpotlight = new Set();
+  renderMap();
+}
 
 function wireToolbar() {
   // Overlay chips (unchanged from A.1; kept inline because there are only 2 options)
@@ -615,6 +624,7 @@ function wireToolbar() {
     state.group = 'sector';
     state.spotlightActive = new Set();    // Update B — empty set, not 'all'
     state.tileSpotlight   = new Set();    // UX pass — clear the highlight/dim layer too
+    state.edgeSpotlight   = new Set();    // UX pass — and the lit phen↔phen lines
     state.overlay = 'none';
     syncToolbarChips();
     writeHash();
@@ -808,7 +818,7 @@ function wireMapDragPan() {
     // highlight/dim layer, mirroring Esc. mousedown above only arms on the
     // background (tiles, zoom controls and the sidebar tab are skipped), so
     // this fires for exactly the empty-canvas click.
-    if (!moved) clearTileSpotlight();
+    if (!moved) clearMapSpotlights();
   });
 
   // Trackpad / wheel zoom (cursor-anchored, device-normalized).

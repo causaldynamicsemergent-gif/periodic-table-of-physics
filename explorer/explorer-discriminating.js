@@ -303,6 +303,8 @@ function renderPairTargetSection(stRow, programA, programB) {
 // =============================================================
 function renderSidebarDiscriminatingCatalogue() {
   const inner = document.getElementById('sidebar-inner');
+  // UX pass — entering the catalogue clears any pair highlight on the map.
+  if (typeof setTileSpotlight === 'function') setTileSpotlight([]);
   const pairs = (DATA && DATA.discriminating_pairs) || [];
   if (!pairs.length) {
     inner.innerHTML = `
@@ -434,6 +436,16 @@ function renderSidebarDiscriminatingPair(pairId) {
   `;
   // Wire interactions
   wireDiscriminatingCardLinks(inner);
+
+  // UX pass — connect the comparison to the map: light the classifications
+  // holding this pair's shared targets (frontier targets have no tile).
+  if (typeof setTileSpotlight === 'function' && DATA && DATA.cell_id_to_fc_id) {
+    const fcIds = (pair.sharedTargets || [])
+      .map(function (st) { return st && (st.target || st.targetId || st.to); })
+      .map(function (t) { return t ? DATA.cell_id_to_fc_id[t] : null; })
+      .filter(Boolean);
+    setTileSpotlight(Array.from(new Set(fcIds)));
+  }
 }
 
 // =============================================================

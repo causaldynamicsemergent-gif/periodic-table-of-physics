@@ -466,7 +466,7 @@ function ranksRenderRow(entry, idx, kind) {
     : '';
 
   return `
-    <div class="rk-row" data-rk-row-idx="${idx}">
+    <div class="rk-row" data-rk-row-idx="${idx}"${entry.fc_id ? ` data-rk-fc="${esc(entry.fc_id)}"` : ''}>
       <div class="rk-row-main">
         <div class="rk-row-left">
           ${directionTag ? `<div class="rk-row-direction">${esc(directionTag)}</div>` : ''}
@@ -673,6 +673,15 @@ function wireRanksKindLinks(root) {
     });
   });
   // Citation expand/collapse
+  // UX pass — scales rows light their classification on the map
+  // (accumulate-toggle, mirroring tile clicks). Inner buttons keep their
+  // own actions; clicks on them are ignored here.
+  root.querySelectorAll('[data-rk-fc]').forEach(row => {
+    row.addEventListener('click', ev => {
+      if (ev.target && ev.target.closest && ev.target.closest('button, a')) return;
+      if (typeof toggleTileSpotlight === 'function') toggleTileSpotlight(row.getAttribute('data-rk-fc'));
+    });
+  });
   root.querySelectorAll('[data-rk-cite-toggle]').forEach(el => {
     el.addEventListener('click', () => {
       const targetId = el.dataset.rkCiteToggle;

@@ -985,6 +985,8 @@ var state = {
   // map (plain click, shift-click multi-compare, or the cross-section
   // builder's selected classifications). Ephemeral — not written to the hash.
   tileSpotlight: new Set(),
+  // UX pass — phen↔phen lines lit by click (accumulate-toggle, mirrors tiles).
+  edgeSpotlight: new Set(),
   // Update C — glossary panel
   selectedGlossaryTerm: null,   // slug of the currently-focused glossary entry (null = no specific focus)
   glossaryFilter: '',           // type-ahead filter on the glossary panel

@@ -276,6 +276,7 @@ function drawPhenPhenOverlay() {
     paths.push(`</g>`);
   }
   svg.innerHTML = paths.join('');
+  applyEdgeSpotlightClasses(svg);   // UX pass — restore lit/dim line state across redraws
 
   // Update C — click delegation. Assigning .onclick (property, not
   // addEventListener) is idempotent — re-running drawPhenPhenOverlay
@@ -284,8 +285,32 @@ function drawPhenPhenOverlay() {
   // element.
   svg.onclick = function (ev) {
     const target = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
-    if (target && typeof selectCrossClassEdge === 'function') {
-      selectCrossClassEdge(target.getAttribute('data-edge-id'));
+    if (!target) return;
+    const id = target.getAttribute('data-edge-id');
+    // UX pass — accumulate-toggle for phen↔phen lines, mirroring tiles:
+    // clicking a line lights it (and opens its record); clicking a lit line
+    // switches it off and leaves the sidebar as it is. Esc, ⌂ Home, reset
+    // layers, or a plain click on the map background restores all lines.
+    if (!state.edgeSpotlight) state.edgeSpotlight = new Set();
+    if (state.edgeSpotlight.has(id)) {
+      state.edgeSpotlight.delete(id);
+    } else {
+      state.edgeSpotlight.add(id);
+      if (typeof selectCrossClassEdge === 'function') selectCrossClassEdge(id);
     }
+    applyEdgeSpotlightClasses(svg);
   };
+}
+
+// UX pass — apply lit/dim classes to the phen↔phen line groups from
+// state.edgeSpotlight. Called after every overlay redraw and every toggle.
+function applyEdgeSpotlightClasses(svg) {
+  if (!svg) return;
+  const set = state.edgeSpotlight || new Set();
+  const any = set.size > 0;
+  svg.querySelectorAll('[data-edge-id]').forEach(function (g) {
+    const lit = any && set.has(g.getAttribute('data-edge-id'));
+    g.classList.toggle('lit', lit);
+    g.classList.toggle('dim', any && !lit);
+  });
 }

@@ -616,6 +616,16 @@ function formatOperationalPeriod(op) {
 }
 
 function renderProgramCard(node) {
+  // UX pass — connect programs to the map: light the classifications whose
+  // cells this program targets (frontier/totality targets have no tile).
+  if (typeof setTileSpotlight === 'function' && typeof DATA !== 'undefined' && DATA && DATA.resolves_by_id && DATA.cell_id_to_fc_id) {
+    const fcIds = Object.keys(DATA.resolves_by_id)
+      .map(function (k) { return DATA.resolves_by_id[k]; })
+      .filter(function (e) { return e && e.from === node.id; })
+      .map(function (e) { return DATA.cell_id_to_fc_id[e.to]; })
+      .filter(Boolean);
+    setTileSpotlight(Array.from(new Set(fcIds)));
+  }
   const grouped = groupDiscourseEdges(node.id);
   const subtypePill = node.subtype
     ? `<span class="dx-pill dx-program-subtype">${esc(PROGRAM_SUBTYPE_LABELS[node.subtype] || node.subtype)}</span>`

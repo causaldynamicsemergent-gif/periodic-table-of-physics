@@ -1168,6 +1168,23 @@ body.splitter-dragging * { cursor: col-resize !important; }
 .fb-forward:hover { background: var(--paper-4); }
 .fb-err { display:none; color: var(--accent); font-size: 12.5px; margin-top: 8px; }
 .fb-err.show { display: block; }
+.fb-forward-block { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.fb-forward-head { font-weight: 600; font-size: 13.5px; color: var(--ink-soft); margin-bottom: 4px; }
+.fb-forward-hint { font-size: 12.5px; color: var(--ink-mute); margin: 0 0 8px; line-height: 1.45; }
+.fb-forward-text {
+  width: 100%; box-sizing: border-box; font-family: inherit; font-size: 12.5px;
+  color: var(--ink-soft); background: var(--paper-2); border: 1px solid var(--rule);
+  border-radius: 7px; padding: 8px 10px; resize: vertical; line-height: 1.45;
+}
+.fb-forward-actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.fb-copy-btn {
+  cursor: pointer; background: var(--paper-3); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11.5px;
+  padding: 7px 12px;
+}
+.fb-copy-btn:hover { background: var(--paper-4); }
+.fb-copied { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--accent); }
 
 /* ---- About / Education / Research panels ---- */
 .ap-lead {
@@ -1348,7 +1365,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
   <header class="masthead">
     <div class="title-block">
-      <h1>Map of Physics<span class="v" id="header-version">v34</span></h1>
+      <h1><svg class="site-logo" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><rect x="1.5" y="1.5" width="8" height="8" rx="1.2"/><rect class="lg-accent" x="14.5" y="4.5" width="8" height="8" rx="1.2"/><rect x="6.5" y="14.5" width="8" height="8" rx="1.2"/><path class="lg-edge" d="M9.5 6 L14.5 8 M7 9.5 L9.5 14.5 M16.5 12.5 L13.5 15.5"/></svg>Map of Physics<span class="v" id="header-version">v34</span></h1>
     </div>
     <div class="header-actions">
       <button class="btn-ghost" id="btn-help">? how to read</button>
@@ -1514,55 +1531,41 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <p hidden><label>Leave blank: <input name="bot-field"></label></p>
 
       <h2 id="fb-title">Review the Map of Physics</h2>
-      <p class="fb-lede">A few quick questions, then a box for anything on your mind. Your answers go straight to the maintainer. Thank you for taking a look.</p>
+      <p class="fb-lede">Who you are, then three places to push back. Your answers go straight to the maintainer — thank you for taking a look.</p>
 
       <div class="fb-q">
-        <label class="fb-q-label">Which best describes you?</label>
+        <label class="fb-q-label" for="fb-name">Name *</label>
+        <input type="text" id="fb-name" name="name" required autocomplete="name">
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-affiliation">Affiliation *</label>
+        <input type="text" id="fb-affiliation" name="affiliation" required autocomplete="organization">
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-subfield">Primary subfield *</label>
+        <input type="text" id="fb-subfield" name="subfield" required placeholder="e.g. condensed matter, hep-th, astrophysics…">
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label">Role</label>
         <div class="fb-opts">
-          <label><input type="radio" name="audience" value="grad-student"> Graduate student</label>
-          <label><input type="radio" name="audience" value="researcher"> Active researcher</label>
-          <label><input type="radio" name="audience" value="professor"> Professor / faculty</label>
-          <label><input type="radio" name="audience" value="other"> Other</label>
+          <label><input type="radio" name="role" value="grad-student"> Graduate student</label>
+          <label><input type="radio" name="role" value="researcher"> Active researcher</label>
+          <label><input type="radio" name="role" value="professor"> Professor / faculty</label>
+          <label><input type="radio" name="role" value="other"> Other</label>
         </div>
       </div>
 
       <div class="fb-q">
-        <label class="fb-q-label">Did the map show you a cross-domain connection you didn't already have?</label>
-        <div class="fb-opts">
-          <label><input type="radio" name="cross_domain" value="genuinely-new"> Yes — genuinely new to me</label>
-          <label><input type="radio" name="cross_domain" value="somewhat"> Somewhat</label>
-          <label><input type="radio" name="cross_domain" value="already-knew"> No — I already knew the links in my area</label>
-          <label><input type="radio" name="cross_domain" value="didnt-try"> Didn't try this</label>
-        </div>
+        <label class="fb-q-label" for="fb-placements">Specific placements</label>
+        <textarea id="fb-placements" name="placements" rows="3" placeholder="Disagree with any classification, cell, edge, or status? Which, how, and why?"></textarea>
       </div>
-
       <div class="fb-q">
-        <label class="fb-q-label">Did anything read as overclaiming what the map can do?</label>
-        <div class="fb-opts">
-          <label><input type="radio" name="overclaim" value="honest"> No — the framing felt honest</label>
-          <label><input type="radio" name="overclaim" value="a-little"> A little</label>
-          <label><input type="radio" name="overclaim" value="yes"> Yes (please say where below)</label>
-        </div>
+        <label class="fb-q-label" for="fb-taxonomy">Taxonomy</label>
+        <textarea id="fb-taxonomy" name="taxonomy" rows="3" placeholder="Would you draw any of the cuts differently — axes, sectors, edge kinds? Be specific."></textarea>
       </div>
-
       <div class="fb-q">
-        <label class="fb-q-label">In your area, did the link statuses (established / partial / aspired) seem accurate?</label>
-        <div class="fb-opts">
-          <label><input type="radio" name="status_accuracy" value="accurate"> Accurate</label>
-          <label><input type="radio" name="status_accuracy" value="mostly"> Mostly</label>
-          <label><input type="radio" name="status_accuracy" value="some-wrong"> Some are wrong (below)</label>
-          <label><input type="radio" name="status_accuracy" value="didnt-check"> Didn't check closely</label>
-        </div>
-      </div>
-
-      <div class="fb-q">
-        <label class="fb-q-label">What's wrong, missing, or would make this useful to you?</label>
-        <textarea name="comments" rows="4" placeholder="Anything — a wrong edge, a missing classification, where the framing slips, what you'd want next…"></textarea>
-      </div>
-
-      <div class="fb-q">
-        <label class="fb-q-label">Name / email (optional — only if you're open to a follow-up)</label>
-        <input type="text" name="reviewer" placeholder="optional">
+        <label class="fb-q-label" for="fb-missing">Missing / unclear</label>
+        <textarea id="fb-missing" name="missing" rows="3" placeholder="What did you expect to find that the map doesn't have? Where did you trip on first read?"></textarea>
       </div>
 
       <button type="submit" class="fb-submit" id="feedback-submit">Send feedback</button>
@@ -1571,8 +1574,18 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
     <div class="fb-thanks" id="feedback-thanks">
       <h2>Thank you.</h2>
-      <p>Your feedback is on its way to the maintainer. If you know a colleague whose area this map touches, forwarding it for a second opinion is the most useful thing you can do next.</p>
-      <a class="fb-forward" id="feedback-forward" href="#">✉ Forward to a colleague for review</a>
+      <p>Your feedback is on its way to the maintainer. If a colleague's area touches this map, the forward block below makes a second opinion one paste away.</p>
+    </div>
+
+    <div class="fb-forward-block">
+      <div class="fb-forward-head">Forward to a colleague</div>
+      <p class="fb-forward-hint">Copy the ready-made email below and paste it anywhere — or just take the link and write your own.</p>
+      <textarea id="fb-forward-text" class="fb-forward-text" rows="7" readonly></textarea>
+      <div class="fb-forward-actions">
+        <button type="button" class="fb-copy-btn" id="fb-copy-email">Copy email text</button>
+        <button type="button" class="fb-copy-btn" id="fb-copy-link">Copy link only</button>
+        <span class="fb-copied" id="fb-copied" aria-live="polite"></span>
+      </div>
     </div>
   </div>
 </div>
@@ -1607,10 +1620,27 @@ body.splitter-dragging * { cursor: col-resize !important; }
   var submit  = document.getElementById('feedback-submit');
   var thanks  = document.getElementById('feedback-thanks');
   var errEl   = document.getElementById('feedback-err');
-  var forward = document.getElementById('feedback-forward');
+  var fwdText  = document.getElementById('fb-forward-text');
+  var copyMail = document.getElementById('fb-copy-email');
+  var copyLink = document.getElementById('fb-copy-link');
+  var copiedEl = document.getElementById('fb-copied');
   if (!tab || !overlay || !form) return;
 
-  function open()  { overlay.classList.add('open'); }
+  function forwardEmailText() {
+    var url = window.location.href;
+    return "Subject: Worth a look \u2014 the Map of Physics\n\n"
+      + "Hi \u2014\n\n"
+      + "I've been reviewing an interactive map of how physics's research programs "
+      + "connect across domains \u2014 classifications, cross-classification links, "
+      + "predictions and their experimental status, all anchored to the literature.\n\n"
+      + "It may touch your area, and your read would be valuable:\n\n"
+      + url + "\n\n"
+      + "There's a Feedback tab on the right edge if anything looks wrong or missing.";
+  }
+  function open()  {
+    overlay.classList.add('open');
+    if (fwdText && !fwdText.value) fwdText.value = forwardEmailText();
+  }
   function close() { overlay.classList.remove('open'); }
 
   tab.addEventListener('click', open);
@@ -1642,19 +1672,28 @@ body.splitter-dragging * { cursor: col-resize !important; }
     });
   });
 
-  // Forward-to-colleague: prefilled mail with the current map URL, built at click time.
-  forward.addEventListener('click', function (e) {
-    e.preventDefault();
-    var url = window.location.href;
-    var subject = 'Worth a look: the Map of Physics';
-    var body =
-      "I've been reviewing this map of how physics's research programs connect across "
-      + "domains — it may touch your area, and your read would be valuable.\n\n"
-      + url + "\n\n"
-      + "There's a Feedback tab on the right edge if you have thoughts.";
-    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body);
-  });
+  // Forward-to-colleague: copy the ready-made email text, or just the link.
+  function showCopied(msg) {
+    if (!copiedEl) return;
+    copiedEl.textContent = msg;
+    setTimeout(function () { copiedEl.textContent = ''; }, 1800);
+  }
+  function copyText(text, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showCopied(msg); },
+        function () { fallbackCopy(text, msg); });
+    } else { fallbackCopy(text, msg); }
+  }
+  function fallbackCopy(text, msg) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'absolute'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showCopied(msg); } catch (e2) {}
+    document.body.removeChild(ta);
+  }
+  if (copyMail) copyMail.addEventListener('click', function () { copyText(forwardEmailText(), 'email text copied \u2713'); });
+  if (copyLink) copyLink.addEventListener('click', function () { copyText(window.location.href, 'link copied \u2713'); });
 })();
 </script>
 </body>
