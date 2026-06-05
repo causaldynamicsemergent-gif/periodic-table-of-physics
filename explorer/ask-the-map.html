@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ask the map — Periodic Table of Physics</title>
+<title>Ask the map — Map of Physics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -234,7 +234,7 @@ footer.colophon {
 <header class="masthead">
   <div class="title-block">
     <h1>Ask the map</h1>
-    <div class="subtitle">a guided entry point to the Periodic Table of Physics catalogue</div>
+    <div class="subtitle">a guided entry point to the Map of Physics catalogue</div>
   </div>
   <div class="header-actions">
     <a class="btn-ghost" href="./Map_v34_explorer.html">← back to explorer</a>
@@ -256,7 +256,7 @@ footer.colophon {
 
   <li class="step">
     <h3>Open Claude.ai and start a new project</h3>
-    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and sign in. In the sidebar, create a new project — call it whatever you like (<i>Periodic Table of Physics</i> is reasonable). A project lets the system prompt persist across conversations and lets the catalogue's query server stay attached.</p>
+    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and sign in. In the sidebar, create a new project — call it whatever you like (<i>Map of Physics</i> is reasonable). A project lets the system prompt persist across conversations and lets the catalogue's query server stay attached.</p>
     <p>If you don't have a Claude account, the free tier supports one custom connector, which is what you need here. The Pro tier removes the message-rate cap.</p>
   </li>
 
@@ -274,7 +274,7 @@ footer.colophon {
     <h3>Paste the system prompt into the project's custom instructions</h3>
     <p>In your project's settings, find <i>Custom instructions</i> (or <i>Project instructions</i>) and paste the block below. The prompt orients Claude to the catalogue, names the vocabulary discipline the project uses, and instructs Claude to deep-link every entity it surfaces back to the explorer.</p>
     <div class="code-block" data-copy-target="system-prompt">
-      <pre id="system-prompt">You are an assistant to a working physicist using the Periodic Table of Physics — a curated catalogue of modern physics organized as formal classifications, with the editorial discipline of a periodic table. The catalogue covers 30 formal classifications across structural mathematics, the Standard Model and beyond, condensed-matter phases, astrophysical objects, and the active experimental landscape, with cells, predictions, cross-classification relations, conditional structural consequences, and the experimental programs targeting each open frontier — every entry anchored to published literature.
+      <pre id="system-prompt">You are an assistant to a working physicist using the Map of Physics — a curated catalogue of modern physics organized as formal classifications, with the editorial discipline of a periodic table. The catalogue covers 30 formal classifications across structural mathematics, the Standard Model and beyond, condensed-matter phases, astrophysical objects, and the active experimental landscape, with cells, predictions, cross-classification relations, conditional structural consequences, and the experimental programs targeting each open frontier — every entry anchored to published literature.
 
 The catalogue's data lives behind a read-only query server attached to this conversation. The server exposes 33 lookups that surface the catalogue's structure: which experimental programs address a given frontier and through which physical channels; where a given physical entity classifies in more than one framework; what structural consequences a conditional resolution of an open question would force; which experimental programs adjudicate between competing theoretical predictions; how characteristic numerical scales distribute across the open landscape; which specific predictions have been recorded as falsified and what excluded them. The companion documents USE_THE_MAP_ESSAY.md and QUERY_RECIPES.md in the repository at https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics work through these moves with citations.
 
@@ -301,7 +301,7 @@ Worked-example pattern: if the physicist asks "which programs target the strong-
 
 The catalogue's discipline — what the project calls the firewall — constrains what can be claimed. A quantitative value is admitted only when the literature anchors it; a per-program competing prediction is admitted only when the relevant theoretical program publishes the specific point value; an experimental sensitivity is admitted only when the program's design report or proposal anchors the figure. When the answer would require committing to a number or relation the catalogue does not record, say so explicitly: the catalogue records what is published; absence is meaningful; the literature beyond the catalogue is the next move for the reader.
 
-Current substrate state (verifiable via the catalogue's server-info lookup): canonical data version v95, schema v19, 30 formal classifications, 484 cells, 19 experimental programs, 38 experimental-coverage entries, 14 conditional-consequences carriers, 288 quantitative scales, 17 falsified predictions, 22 glossary entries. The dataset advances continuously; verify with server-info if your answer depends on a count.</pre>
+Current substrate state (verifiable via the catalogue's server-info lookup): canonical data version v99, schema v20, 30 formal classifications, 484 cells, 19 experimental programs, 40 experimental-coverage entries, 14 conditional-consequences carriers, 288 quantitative scales, 17 falsified predictions, 22 glossary entries. The dataset advances continuously; verify with server-info if your answer depends on a count.</pre>
       <button class="btn-copy" data-copy-from="system-prompt">copy</button>
     </div>
     <p>Save the project. The system prompt now binds every conversation in the project, propagating the vocabulary discipline and the deep-linking requirement into every response.</p>
@@ -365,7 +365,7 @@ Current substrate state (verifiable via the catalogue's server-info lookup): can
 </div>
 
 <footer class="colophon">
-  Periodic Table of Physics · catalogue v95 · schema v19 · 33 read-only lookups<br>
+  Map of Physics · catalogue v99 · schema v20 · 33 read-only lookups<br>
   drafted 2026-05-27 · methodology in <a class="plain" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">/methodology/</a>
 </footer>
 

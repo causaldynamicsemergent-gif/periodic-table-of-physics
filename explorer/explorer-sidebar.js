@@ -303,9 +303,9 @@ function renderSidebarResearch() {
       </div>
 
       <div class="ap-section">AI-augmented workflows</div>
-      <p class="ap-text">The dataset (83 nodes, 230 edges, 484 cells, 209 predictions, 17 falsifications, 38 experimental-coverage relations, 288 characteristic scales) is queryable via the live read-only server at <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">map-of-physics.eddie-8e5.workers.dev</code>. 33 tools cover cell-content search, prediction filtering, cross-classification traversal, experimental-coverage lookup, characteristic-scale ranking by dimension, conditional-consequence lookup on open frontiers, and program-pair shared-coverage queries.</p>
+      <p class="ap-text">The dataset (83 nodes, 232 edges, 484 cells, 209 predictions, 17 falsifications, 40 experimental-coverage relations, 288 characteristic scales) is queryable via the live read-only server at <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">map-of-physics.eddie-8e5.workers.dev</code>. 33 tools cover cell-content search, prediction filtering, cross-classification traversal, experimental-coverage lookup, characteristic-scale ranking by dimension, conditional-consequence lookup on open frontiers, and program-pair shared-coverage queries.</p>
 
-      <p class="ap-text" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-style: italic; color: var(--ink-mute);">The map's success condition is whether the cuts the taxonomy makes turn out to predict things, organize work productively, or reveal connections that weren't visible before. That's the test the project welcomes — challenge any edge status or classification placement via the GitHub repo.</p>
+      <p class="ap-text" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-style: italic; color: var(--ink-mute);">The map's success condition is whether the cuts the taxonomy makes organize work productively and reveal connections that weren't visible before. Whether they also carry predictive power is an open question the project treats as unproven rather than assumed. That's the test the project welcomes — challenge any edge status or classification placement via the GitHub repo.</p>
     </div>
   `;
   wirePanelJumps(inner);
