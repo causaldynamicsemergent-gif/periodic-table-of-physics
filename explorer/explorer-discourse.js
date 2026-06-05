@@ -908,6 +908,10 @@ function renderSidebarBrowsePrograms() {
   wireBrowseList(inner);
 }
 
+// UX pass — which catalogue rows are unfolded, across all five discourse
+// catalogues (architectures / frontiers / totalities / regime / programs).
+const _dxbExpanded = new Set();
+
 function renderBrowseItem(n) {
   const icon = DISCOURSE_TYPE_ICONS[n.type] || '·';
   // Try to summarize the node in one line — count incident edges
@@ -939,24 +943,53 @@ function renderBrowseItem(n) {
     if (chips.length) covHtml = chips.join('');
   }
 
+  const exp = _dxbExpanded.has(n.id);
+  const typeLbl = DISCOURSE_TYPE_LABELS[n.type] || n.type;
   return `
-    <div class="dx-browse-item" data-disc-jump="${esc(n.id)}" role="button" tabindex="0">
+    <div class="dx-browse-item${exp ? ' sbc-open' : ''}" data-dxb-node="${esc(n.id)}" role="button" tabindex="0" aria-expanded="${exp}">
       <span class="dx-browse-icon">${esc(icon)}</span>
       <span class="dx-browse-name">${esc(n.label)}</span>
       ${covHtml}
       <span class="dx-browse-ct" title="incident edges">${incidentCt}e</span>
+      <span class="sbc-chev">${exp ? '▾' : '▸'}</span>
+    </div>
+    <div class="sbc-detail" data-dxb-detail="${esc(n.id)}"${exp ? '' : ' hidden'}>
+      <div class="sbc-detail-inner">
+        ${n.description ? `<div class="sbc-detail-desc">${esc(n.description)}</div>` : ''}
+        <div class="sbc-detail-meta">${esc(typeLbl)}${n.subtype ? ' · ' + esc(String(n.subtype).replace(/-/g, ' ')) : ''} · ${incidentCt} incident edge${incidentCt === 1 ? '' : 's'}</div>
+        <button type="button" class="sbc-open-record" data-dxb-open="${esc(n.id)}">open full record →</button>
+      </div>
     </div>
   `;
 }
 
 function wireBrowseList(root) {
-  root.querySelectorAll('[data-disc-jump]').forEach(el => {
-    el.addEventListener('click', () => selectDiscourseNode(el.dataset.discJump));
+  // UX pass — catalogue rows unfold in place instead of navigating away:
+  // a click toggles a scrollable detail block under the row, so several
+  // entries can be inspected and folded back without leaving the page.
+  // The full record — which for programs also lights its targeted
+  // classifications on the map — is the button inside the detail block.
+  root.querySelectorAll('[data-dxb-node]').forEach(el => {
+    const id = el.dataset.dxbNode;
+    const toggleRow = () => {
+      const detail = root.querySelector(`[data-dxb-detail="${CSS.escape(id)}"]`);
+      const nowOpen = !_dxbExpanded.has(id);
+      if (nowOpen) _dxbExpanded.add(id); else _dxbExpanded.delete(id);
+      if (detail) detail.hidden = !nowOpen;
+      el.classList.toggle('sbc-open', nowOpen);
+      el.setAttribute('aria-expanded', String(nowOpen));
+      const chev = el.querySelector('.sbc-chev');
+      if (chev) chev.textContent = nowOpen ? '▾' : '▸';
+    };
+    el.addEventListener('click', toggleRow);
     el.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        selectDiscourseNode(el.dataset.discJump);
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRow(); }
+    });
+  });
+  root.querySelectorAll('[data-dxb-open]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      selectDiscourseNode(btn.dataset.dxbOpen);
     });
   });
 }

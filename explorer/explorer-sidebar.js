@@ -120,7 +120,10 @@ function renderSidebarDefault() {
       const v = b.dataset.quick;
       if (v === 'falsified')      { state.spotlightActive.add('falsified'); }
       else if (v === 'confirmed') { state.spotlightActive.add('confirmed'); }
-      else if (v === 'overlay-phen') { state.overlay = 'phen-phen'; }
+      else if (v === 'overlay-phen') {
+        if (!state.overlayActive) state.overlayActive = new Set();
+        state.overlayActive.add('phen-phen');
+      }
       syncToolbarChips();
       writeHash();
       renderMap();
@@ -334,11 +337,19 @@ function wirePanelJumps(root) {
   });
   root.querySelectorAll('[data-overlay]').forEach(el => {
     el.addEventListener('click', () => {
-      state.overlay = el.dataset.overlay;
+      // UX pass — overlay layers are independent toggles in a set
+      if (!state.overlayActive) state.overlayActive = new Set();
+      const v = el.dataset.overlay;
+      if (state.overlayActive.has(v)) {
+        state.overlayActive.delete(v);
+        if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(v);
+      } else {
+        state.overlayActive.add(v);
+      }
       syncToolbarChips();
       writeHash();
       renderMap();
-      showToast(`Overlay: ${state.overlay}`);
+      showToast(`Overlay ${v}: ${state.overlayActive.has(v) ? 'on' : 'off'}`);
     });
   });
   root.querySelectorAll('[data-rows-by]').forEach(el => {
@@ -520,6 +531,7 @@ function renderPanel() {
     case 'search':                 renderSidebarSearch(state.searchQuery); break;
     case 'legend':                 renderSidebarDefault();      break;
     case 'spotlight':              renderSidebarSpotlight();    break;   // Update B
+    case 'overlay-lines':          if (typeof renderSidebarOverlayLines === 'function') renderSidebarOverlayLines(); else renderSidebarAbout(); break; // UX pass — overlay layers panel
     case 'glossary':               renderSidebarGlossary(state.glossaryFilter || ''); break; // Update C
     case 'discourse': {                                                  // Update B
       const n = DATA.discourse_by_id && DATA.discourse_by_id[state.selectedDiscourseNode];
@@ -1200,7 +1212,7 @@ function wireSplitter() {
       if (w) localStorage.setItem(STORAGE_KEY, String(w));
     } catch (e) {}
     // Overlay arrows need to be redrawn if active
-    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 0);
+    if (state.overlayActive && state.overlayActive.size) setTimeout(drawPhenPhenOverlay, 0);
   }
   // Keyboard accessibility — left/right arrow keys
   function onKeyDown(e) {
@@ -1213,7 +1225,7 @@ function wireSplitter() {
     if (w > MAX_PANEL) w = MAX_PANEL;
     grid.style.setProperty('--panel-width', w + 'px');
     try { localStorage.setItem(STORAGE_KEY, String(w)); } catch (e2) {}
-    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 0);
+    if (state.overlayActive && state.overlayActive.size) setTimeout(drawPhenPhenOverlay, 0);
     e.preventDefault();
   }
 
@@ -1514,7 +1526,7 @@ async function init() {
     state.sidebarCollapsed = collapsed;
     document.getElementById('sidebar-toggle').textContent = collapsed ? '‹' : '›';
     document.getElementById('sidebar-toggle').title = collapsed ? 'Show sidebar' : 'Hide sidebar';
-    setTimeout(() => { if (state.overlay === 'phen-phen') drawPhenPhenOverlay(); }, 220);
+    setTimeout(() => { if (state.overlayActive && state.overlayActive.size) drawPhenPhenOverlay(); }, 220);
   });
 
   document.addEventListener('keydown', e => {
@@ -1531,7 +1543,7 @@ async function init() {
   });
 
   window.addEventListener('resize', () => {
-    if (state.overlay === 'phen-phen') setTimeout(drawPhenPhenOverlay, 60);
+    if (state.overlayActive && state.overlayActive.size) setTimeout(drawPhenPhenOverlay, 60);
   });
 
   parseHash();

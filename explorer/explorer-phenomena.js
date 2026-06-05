@@ -220,7 +220,8 @@ function renderSidebarPhenomena() {
 
 // =============================================================
 //   Phen↔phen overlay (uses sticky positions of the tiles)
-//   Drawn on top of the periodic-table map when state.overlay === 'phen-phen'.
+//   Drawn on top of the map when any overlay layer is active (phen-phen,
+//   cross-class, or both — state.overlayActive).
 //   Called from renderMap (map.js) and from window-resize / splitter-drag.
 // =============================================================
 function drawPhenPhenOverlay() {
@@ -246,9 +247,10 @@ function drawPhenPhenOverlay() {
   // specializes / …) the old map drew as "edges". With tiles lit, only
   // edges touching a lit tile are drawn, so the overlay follows the focus
   // instead of flooding the grid.
-  let edgeList = (state.overlay === 'cross-class')
-    ? Object.keys(DATA.cross_class_edges_by_id || {}).map(k => DATA.cross_class_edges_by_id[k])
-    : (DATA.phen_phen_edges || []);
+  let edgeList = [];
+  const act = state.overlayActive || new Set();
+  if (act.has('phen-phen'))   edgeList = edgeList.concat(overlayLayerEdges('phen-phen'));
+  if (act.has('cross-class')) edgeList = edgeList.concat(overlayLayerEdges('cross-class'));
   if (state.tileSpotlight && state.tileSpotlight.size) {
     const lit = state.tileSpotlight;
     edgeList = edgeList.filter(e => e && (lit.has(e.from) || lit.has(e.to)));
@@ -298,19 +300,11 @@ function drawPhenPhenOverlay() {
   svg.onclick = function (ev) {
     const target = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
     if (!target) return;
-    const id = target.getAttribute('data-edge-id');
-    // UX pass — accumulate-toggle for phen↔phen lines, mirroring tiles:
-    // clicking a line lights it (and opens its record); clicking a lit line
-    // switches it off and leaves the sidebar as it is. Esc, ⌂ Home, reset
-    // layers, or a plain click on the map background restores all lines.
-    if (!state.edgeSpotlight) state.edgeSpotlight = new Set();
-    if (state.edgeSpotlight.has(id)) {
-      state.edgeSpotlight.delete(id);
-    } else {
-      state.edgeSpotlight.add(id);
-      if (typeof selectCrossClassEdge === 'function') selectCrossClassEdge(id);
-    }
-    applyEdgeSpotlightClasses(svg);
+    // UX pass — a line click is a pure toggle now: light it, click again to
+    // switch it off, and build up any series of lit lines you like. The full
+    // edge record opens from the ↗ button in the overlay-lines panel, so
+    // toggling never navigates the sidebar away.
+    toggleOverlayEdge(target.getAttribute('data-edge-id'));
   };
 }
 
@@ -324,5 +318,119 @@ function applyEdgeSpotlightClasses(svg) {
     const lit = any && set.has(g.getAttribute('data-edge-id'));
     g.classList.toggle('lit', lit);
     g.classList.toggle('dim', any && !lit);
+  });
+}
+
+
+// =============================================================
+//   UX pass — overlay layers as a set + the overlay-lines panel
+// =============================================================
+
+// The edges belonging to one overlay layer.
+function overlayLayerEdges(layer) {
+  if (typeof DATA === 'undefined' || !DATA) return [];
+  if (layer === 'phen-phen') return DATA.phen_phen_edges || [];
+  if (layer === 'cross-class') {
+    const byId = DATA.cross_class_edges_by_id || {};
+    return Object.keys(byId).map(k => byId[k]);
+  }
+  return [];
+}
+
+// Switching a layer off drops its lines from the lit set, so stale
+// selections can't leave a re-opened overlay behind the dim filter.
+function clearOverlayLayerLit(layer) {
+  if (!state.edgeSpotlight || !state.edgeSpotlight.size) return;
+  overlayLayerEdges(layer).forEach(e => { if (e && e.id) state.edgeSpotlight.delete(e.id); });
+}
+
+// One toggle shared by the map's lines and the panel's rows — keeps the
+// two surfaces in sync in both directions.
+function toggleOverlayEdge(id) {
+  if (!id) return;
+  if (!state.edgeSpotlight) state.edgeSpotlight = new Set();
+  if (state.edgeSpotlight.has(id)) state.edgeSpotlight.delete(id);
+  else state.edgeSpotlight.add(id);
+  const svg = document.getElementById('pt-overlay');
+  if (svg && typeof applyEdgeSpotlightClasses === 'function') applyEdgeSpotlightClasses(svg);
+  refreshOverlayLinesLit();
+}
+
+// Cheap class refresh of the panel rows (no re-render, keeps scroll position).
+function refreshOverlayLinesLit() {
+  const list = document.getElementById('ovl-lines');
+  if (!list) return;
+  const set = state.edgeSpotlight || new Set();
+  list.querySelectorAll('[data-ovl-edge]').forEach(row => {
+    row.classList.toggle('ovl-lit', set.has(row.getAttribute('data-ovl-edge')));
+  });
+}
+
+// The sidebar panel: what each overlay shows, and every line as a toggle row.
+function renderSidebarOverlayLines() {
+  const inner = document.getElementById('sidebar-inner');
+  if (!inner) return;
+  const act = state.overlayActive || new Set();
+  const litSet = state.edgeSpotlight || new Set();
+  const sym = id => (typeof FC_BY_ID !== 'undefined' && FC_BY_ID[id] && FC_BY_ID[id].symbol) || id;
+
+  const LAYERS = [
+    { key: 'phen-phen',
+      title: 'Phenomenon ↔ phenomenon',
+      blurb: 'Arrows between phenomenon classifications whose physical content feeds one another — the same entity or process appearing on both sides of the link.' },
+    { key: 'cross-class',
+      title: 'Cross-classification edges',
+      blurb: 'Every recorded structural relation between two classifications — one deriving from, specializing, or standing equivalent to another — each carrying its literature status.' },
+  ];
+
+  let body;
+  if (act.size === 0) {
+    body = `<div class="dx-edge-empty">No overlay is active. Switch on <strong>phen↔phen</strong> or <strong>cross-class</strong> in the <strong>Phenomena ▾</strong> menu to draw lines on the map and list them here.</div>`;
+  } else {
+    body = LAYERS.filter(L => act.has(L.key)).map(L => {
+      const edges = overlayLayerEdges(L.key);
+      const rows = edges.map(e => {
+        if (!e || !e.id) return '';
+        const lit = litSet.has(e.id);
+        const subBits = [];
+        if (e.subtype) subBits.push(e.subtype);
+        if (e.status)  subBits.push(e.status);
+        return `
+          <div class="ovl-row${lit ? ' ovl-lit' : ''}" data-ovl-edge="${esc(e.id)}" role="button" tabindex="0" title="Click to light this line on the map; click again to switch it off">
+            <span class="ovl-pair">${esc(sym(e.from))} → ${esc(sym(e.to))}</span>
+            ${subBits.length ? `<span class="ovl-sub">${esc(subBits.join(' · '))}</span>` : ''}
+            <button type="button" class="ovl-open" data-ovl-open="${esc(e.id)}" title="Open this edge's full record">↗</button>
+          </div>`;
+      }).join('');
+      return `
+        <div class="ovl-layer">
+          <div class="ovl-layer-head">${esc(L.title)} <span class="dx-section-ct">· ${edges.length}</span></div>
+          <div class="ovl-layer-blurb">${L.blurb}</div>
+          ${rows}
+        </div>`;
+    }).join('');
+  }
+
+  inner.innerHTML = `
+    <div class="sidebar-section" id="ovl-lines">
+      <h3>Overlay lines</h3>
+      <div class="sec-sub">Lines drawn on the map. Click a line here or on the map to light it and dim the rest; click again to switch it off — build up any series you like. With tiles lit, only lines touching them are drawn. ✕ clear, Esc, or a plain click on the map background restores everything.</div>
+      ${body}
+    </div>
+  `;
+
+  inner.querySelectorAll('[data-ovl-edge]').forEach(row => {
+    const id = row.getAttribute('data-ovl-edge');
+    const onToggle = () => toggleOverlayEdge(id);
+    row.addEventListener('click', onToggle);
+    row.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
+    });
+  });
+  inner.querySelectorAll('[data-ovl-open]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (typeof selectCrossClassEdge === 'function') selectCrossClassEdge(btn.dataset.ovlOpen);
+    });
   });
 }

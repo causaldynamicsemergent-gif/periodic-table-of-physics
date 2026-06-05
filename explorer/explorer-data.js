@@ -971,7 +971,9 @@ var state = {
   activeView: 'questions',       // E0 lead — top-level view: 'questions' (open-frontier landing, default) | 'classifications' (FC tile grid)
   group: 'sector',              // sector | category | closure
   spotlightActive: new Set(),   // Update B — multi-select prediction statuses (empty = no spotlight)
-  overlay: 'none',              // none | phen-phen
+  // UX pass — overlay layers are independent toggles; the set holds any of
+  // 'phen-phen' / 'cross-class'. Empty set = no overlay drawn.
+  overlayActive: new Set(),
   predFilter: 'all',            // status filter for sidebar's predictions list
   zoom: 1.0,                    // 1.0 = 100%
   sidebarCollapsed: false,
@@ -1168,7 +1170,11 @@ function parseHash() {
       // Back-compat with pre-B URLs: ?highlight=X becomes a one-element set
       state.spotlightActive = new Set([p.get('highlight')]);
     }
-    if (p.get('overlay')) state.overlay = p.get('overlay');
+    if (p.get('overlay')) {
+      // UX pass — comma-separated layer list (was a single value)
+      state.overlayActive = new Set(p.get('overlay').split(',')
+        .map(x => x.trim()).filter(x => x === 'phen-phen' || x === 'cross-class'));
+    }
     if (p.get('pred'))    state.predFilter = p.get('pred');
   }
   // E0 lead — resolve the active top-level view. An explicit ?view= wins;
@@ -1228,7 +1234,7 @@ function writeHash() {
     const vals = Array.from(state.spotlightActive).sort();
     qs.push('spotlight=' + encodeURIComponent(vals.join(',')));
   }
-  if (state.overlay !== 'none') qs.push('overlay=' + encodeURIComponent(state.overlay));
+  if (state.overlayActive && state.overlayActive.size) qs.push('overlay=' + encodeURIComponent(Array.from(state.overlayActive).join(',')));
   if (state.selectedFC && state.predFilter !== 'all') qs.push('pred=' + encodeURIComponent(state.predFilter));
   // E0 lead — preserve the active view across reloads, but only when it
   // diverges from what the path already implies (keeps clean URLs in the

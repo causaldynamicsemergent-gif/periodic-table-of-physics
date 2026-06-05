@@ -330,7 +330,7 @@ function renderMap() {
   });
 
   // Overlay
-  if (state.overlay !== 'none') drawPhenPhenOverlay();   // UX pass — also the cross-class layer
+  if (state.overlayActive && state.overlayActive.size) drawPhenPhenOverlay();   // UX pass — any active layer
   else document.getElementById('pt-overlay').classList.remove('show');
 }
 
@@ -589,13 +589,33 @@ function clearMapSpotlights() {
 }
 
 function wireToolbar() {
-  // Overlay chips (unchanged from A.1; kept inline because there are only 2 options)
+  // Overlay chips — UX pass: phen↔phen and cross-class are independent
+  // toggles (both can be on at once); 'none' switches every layer off.
+  // Turning a layer ON opens the overlay-lines panel; turning a layer OFF
+  // also drops that layer's lines from the lit set, so a re-opened overlay
+  // never arrives pre-dimmed by a stale selection.
   document.querySelectorAll('.tb-chip[data-filter="overlay"]').forEach(b => {
     b.addEventListener('click', () => {
-      state.overlay = b.dataset.value;
+      const v = b.dataset.value;
+      if (!state.overlayActive) state.overlayActive = new Set();
+      if (v === 'none') {
+        state.overlayActive.forEach(layer => {
+          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(layer);
+        });
+        state.overlayActive = new Set();
+      } else if (state.overlayActive.has(v)) {
+        state.overlayActive.delete(v);
+        if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(v);
+      } else {
+        state.overlayActive.add(v);
+        if (typeof switchSidebarPanel === 'function') switchSidebarPanel('overlay-lines');
+      }
       syncToolbarChips();
       writeHash();
       renderMap();
+      if (state.activePanel === 'overlay-lines' && typeof renderSidebarOverlayLines === 'function') {
+        renderSidebarOverlayLines();
+      }
     });
   });
 
@@ -625,7 +645,7 @@ function wireToolbar() {
     state.spotlightActive = new Set();    // Update B — empty set, not 'all'
     state.tileSpotlight   = new Set();    // UX pass — clear the highlight/dim layer too
     state.edgeSpotlight   = new Set();    // UX pass — and the lit phen↔phen lines
-    state.overlay = 'none';
+    state.overlayActive = new Set();
     syncToolbarChips();
     writeHash();
     renderMap();
@@ -670,7 +690,8 @@ function wireRowsByDropdown() {
 function syncToolbarChips() {
   // Overlay chips — still inline
   document.querySelectorAll('.tb-chip[data-filter="overlay"]').forEach(b => {
-    b.classList.toggle('active', b.dataset.value === state.overlay);
+    const act = state.overlayActive || new Set();
+    b.classList.toggle('active', b.dataset.value === 'none' ? act.size === 0 : act.has(b.dataset.value));
   });
   // Rows-by button label reflects current group; menu items reflect active
   const rowsByBtn = document.getElementById('rowsby-btn');
@@ -719,7 +740,7 @@ function applyZoom() {
   wrap.style.transformOrigin = '0 0';
   wrap.style.width = `${100/state.zoom}%`;
   document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
-  if (state.overlay !== 'none') setTimeout(drawPhenPhenOverlay, 220);   // UX pass — also the cross-class layer
+  if (state.overlayActive && state.overlayActive.size) setTimeout(drawPhenPhenOverlay, 220);   // UX pass — any active layer
 }
 
 function clampPan() {
@@ -794,6 +815,11 @@ function wireMapDragPan() {
     if (t.closest('.pt-tile')) return;
     if (t.closest('.zoom-controls')) return;
     if (t.closest('.sidebar-toggle')) return;
+    // UX pass — overlay lines are click-toggles, not map background: without
+    // this exclusion a line click armed the pan, and the non-drag mouseup
+    // fired the clear-everything gesture — the bug where toggling a second
+    // line appeared to switch every line back on.
+    if (t.closest('#pt-overlay')) return;
     dragging = true;
     moved = false;
     startX = e.clientX; startY = e.clientY;
