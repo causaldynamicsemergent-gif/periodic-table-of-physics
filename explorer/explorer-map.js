@@ -353,12 +353,18 @@ function renderTile(fc) {
   const matchesSpot  = anySpot && Array.from(state.spotlightActive).some(s => (fc.yield_stats[s] || 0) > 0);
   // UX pass — unified highlight/dim. A second, tile-level layer: the set of
   // classifications lit directly (click / shift-click / builder selections).
-  // It composes with the prediction-status spotlight above — a tile dims if
-  // either active layer leaves it out.
+  // It composes with the prediction-status spotlight above as a UNION — a
+  // tile is lit if EITHER active layer claims it (directly lit, or matching
+  // an active status). A tile dims only when at least one lighting layer is
+  // active and no layer claims it. (Previously this was an intersection:
+  // turning on a status spotlight while tiles were selected dimmed the
+  // selection unless it also matched the status.)
   const anyTileSpot  = state.tileSpotlight && state.tileSpotlight.size > 0;
   const tileLit      = anyTileSpot && state.tileSpotlight.has(fc.id);
-  const dim          = (anySpot && !matchesSpot) || (anyTileSpot && !tileLit);
-  const spot         = (matchesSpot || tileLit) && !dim;
+  const anyLayer     = anySpot || anyTileSpot;
+  const claimed      = matchesSpot || tileLit;
+  const dim          = anyLayer && !claimed;
+  const spot         = claimed;
   const selected     = (state.selectedFC === fc.id);
   const fals         = fc.yield_stats.falsified || 0;
   // Update B — discourse-highlight ring: selecting an architecture / frontier /
