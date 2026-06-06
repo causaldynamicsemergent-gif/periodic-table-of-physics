@@ -34,8 +34,8 @@ function renderSidebarDefault() {
 
   inner.innerHTML = `
     <div class="sidebar-section">
-      <h3>Legend</h3>
-      <div style="font-size:11.5px;color:var(--ink-mute);line-height:1.5;margin-bottom:12px">
+      <div class="sb-page-title">Legend</div>
+      <div class="sb-page-sub">
         How to read every tile on the map. Each tile is a <em>formal classification</em> with five visual signals: category stripe, symbol, cell count, predictive-yield bar, closure mark.
       </div>
     </div>
@@ -141,7 +141,7 @@ function renderSidebarDefault() {
         `).join('')}
       </div>
       <div class="tip-card" style="margin-top:10px">
-        <strong style="color:var(--ink)">Keyboard</strong>: <span class="tip-key">Esc</span> clear · <span class="tip-key">+</span>/<span class="tip-key">−</span> zoom · <span class="tip-key">0</span> or <span class="tip-key">f</span> fit-to-view · drag the divider to resize this panel
+        Moving around, the menus, and the keyboard shortcuts are all on <button type="button" class="ap-recipe-jump" data-panel-jump="navigate">how to navigate →</button>
       </div>
     </div>
   `;
@@ -187,6 +187,136 @@ function renderSidebarDefault() {
       renderMap();
       renderSidebarDefault();     // refresh chip states
     });
+  });
+  // UX batch 2 (fix 4) — the keyboard card moved to the navigate page;
+  // the pointer to it is a panel-jump, so wire those here too.
+  wirePanelJumps(inner);
+}
+
+// =============================================================
+//   Sidebar: Start hub + How to navigate (UX batch 2, fixes 1 + 4)
+// =============================================================
+// The Start hub is the instructional home: the guided tour, the
+// how-to-read diagram, and the how-to-navigate page, as three large
+// actions. "Start here" in the header, the ▶ Start quick-bar button,
+// and the Help menu all land here or on its children.
+function renderSidebarStart() {
+  const inner = document.getElementById('sidebar-inner');
+  const m = (typeof DATA !== 'undefined' && DATA && DATA._meta && DATA._meta.counts) ? DATA._meta.counts : null;
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <div class="sb-page-title">Start here</div>
+      <div class="sb-page-sub">A map of where physics has organised itself into formal classifications${m ? ` — ${m.formal_classifications} of them, ${m.cells} cells, ${m.predictions} predictions` : ''}. Three ways in:</div>
+      <div class="start-actions">
+        <button type="button" class="start-action start-action-primary" id="start-tour-btn" title="A click-through walk over the live page — every control, spotlighted in place">
+          <span class="start-action-ico">▶</span>
+          <span class="start-action-text">
+            <span class="start-action-title">Take the tour</span>
+            <span class="start-action-desc">Two minutes, click-through. Each feature lights up on the page itself, in place.</span>
+          </span>
+        </button>
+        <button type="button" class="start-action" data-open-help title="Open the labeled tile diagram">
+          <span class="start-action-ico">▦</span>
+          <span class="start-action-text">
+            <span class="start-action-title">How to read</span>
+            <span class="start-action-desc">Every mark on a tile, labeled on a diagram of a real one — stripe, yield bar, cells, the flip chip.</span>
+          </span>
+        </button>
+        <button type="button" class="start-action" data-panel-jump="navigate" title="Moving around, the menus, and the keyboard shortcuts">
+          <span class="start-action-ico">⌖</span>
+          <span class="start-action-text">
+            <span class="start-action-title">How to navigate</span>
+            <span class="start-action-desc">Pan, zoom, drill into records, resize the panels — and the keyboard shortcuts.</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <h3>Then, when you're oriented</h3>
+      <div class="ap-jumps">
+        <button class="ap-jump" data-panel-jump="about">
+          <span class="jump-num">01</span>
+          <span class="jump-text">
+            <span class="jump-title">About the map</span>
+            <span class="jump-desc">What it is, who it serves, what it's for — and what it isn't.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-panel-jump="legend">
+          <span class="jump-num">02</span>
+          <span class="jump-text">
+            <span class="jump-title">The legend</span>
+            <span class="jump-desc">Every colour and mark, with the layer toggles.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+        <button class="ap-jump" data-panel-jump="builder">
+          <span class="jump-num">03</span>
+          <span class="jump-text">
+            <span class="jump-title">Build a cross-section</span>
+            <span class="jump-desc">The map's central move — it has its own tutorial inside.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  `;
+  wirePanelJumps(inner);
+  const tourBtn = document.getElementById('start-tour-btn');
+  if (tourBtn) tourBtn.addEventListener('click', () => {
+    if (typeof startTour === 'function') startTour('main');
+  });
+}
+
+// How to navigate — every way of moving around the explorer, in one
+// place, including the keyboard card that used to sit on the legend.
+function renderSidebarNavigate() {
+  const inner = document.getElementById('sidebar-inner');
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <div class="sb-page-title">How to navigate</div>
+      <div class="sb-page-sub">The map stays on the left; everything you click opens here on the right. These are all the ways of moving around.</div>
+      <div class="nav-how">
+        <div class="nav-how-row"><span class="nav-how-ico">✥</span><div class="nav-how-body">
+          <div class="nav-how-title">Move the map</div>
+          <div class="nav-how-text">Drag the background to pan. Scroll or pinch to zoom, anchored on your cursor. The − / + buttons zoom too; ⛶ fits the whole map to the page.</div>
+        </div></div>
+        <div class="nav-how-row"><span class="nav-how-ico">▦</span><div class="nav-how-body">
+          <div class="nav-how-title">Drill in, walk back</div>
+          <div class="nav-how-text">Click a tile → its full record opens here. Click a cell inside → one level deeper. The breadcrumb at the top of the record walks you back; × or <span class="tip-key">Esc</span> clears the selection. A plain click on the map background also clears any highlights.</div>
+        </div></div>
+        <div class="nav-how-row"><span class="nav-how-ico">▾</span><div class="nav-how-body">
+          <div class="nav-how-title">The menus</div>
+          <div class="nav-how-text"><strong>Browse</strong> catalogues everything; <strong>Analyse</strong> holds the comparison surfaces; <strong>View</strong> regroups the map's rows and columns; <strong>Tools</strong> has spotlights, overlays, and "copy link to this view" — the way to save your progress. Menus close when you click anywhere else.</div>
+        </div></div>
+        <div class="nav-how-row"><span class="nav-how-ico">⇄</span><div class="nav-how-body">
+          <div class="nav-how-title">Resize and hide this panel</div>
+          <div class="nav-how-text">Drag the divider between map and sidebar to resize — the width is remembered. The › tab on the divider hides the sidebar entirely; click ‹ to bring it back.</div>
+        </div></div>
+        <div class="nav-how-row"><span class="nav-how-ico">↶</span><div class="nav-how-body">
+          <div class="nav-how-title">Undo and reset</div>
+          <div class="nav-how-text">↶ undoes map changes step by step. ⟲ (or the quick-bar Reset above) returns everything to the default: default view, every layer off, fit to page.</div>
+        </div></div>
+        <div class="nav-how-row"><span class="nav-how-ico">⌨</span><div class="nav-how-body">
+          <div class="nav-how-title">Keyboard</div>
+          <div class="nav-how-text"><span class="tip-key">Esc</span> clear · <span class="tip-key">+</span>/<span class="tip-key">−</span> zoom · <span class="tip-key">0</span> or <span class="tip-key">f</span> fit-to-view.</div>
+        </div></div>
+      </div>
+      <div class="start-actions" style="margin-top:14px">
+        <button type="button" class="start-action" id="nav-tour-btn" title="See each of these in place on the page">
+          <span class="start-action-ico">▶</span>
+          <span class="start-action-text">
+            <span class="start-action-title">See it in place — take the tour</span>
+            <span class="start-action-desc">The same ground, walked click-by-click on the live page.</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  `;
+  wirePanelJumps(inner);
+  const tourBtn = document.getElementById('nav-tour-btn');
+  if (tourBtn) tourBtn.addEventListener('click', () => {
+    if (typeof startTour === 'function') startTour('main');
   });
 }
 
@@ -656,6 +786,8 @@ function switchSidebarPanel(panel) {
 function renderPanel() {
   // Honors state.activePanel; only used when no FC is selected
   switch (state.activePanel) {
+    case 'start':                  renderSidebarStart();        break; // UX batch 2 — instructional hub
+    case 'navigate':               renderSidebarNavigate();     break; // UX batch 2 — how to navigate
     case 'phenomena':              renderSidebarPhenomena();    break;
     case 'about':                  renderSidebarAbout();        break;
     case 'education':              renderSidebarEducation();    break;
@@ -771,19 +903,26 @@ function wireSidebarQuickBar() {
 // classification (the FC record header and each Browse-catalogue row).
 // One source for the label and one wiring path, so the surfaces can't
 // drift out of sync with each other or with the tile's actual state.
-function fcFlipLabel(fcId) {
+function fcFlipLabel(fcId, primary) {
   const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fcId) : [];
   const flipped = (typeof _flippedTiles !== 'undefined') && _flippedTiles.has(fcId);
+  if (primary) {
+    // UX batch 2 (fix 6) — users couldn't discover that tiles flip; the
+    // FC record's full-width primary action spells the whole move out.
+    return flipped ? '⟲ Flip the tile on the map back to its front'
+      : (frs.length ? `↻ Flip the tile on the map — ${frs.length} open question${frs.length === 1 ? '' : 's'} on the back`
+                    : '↻ Flip the tile on the map — open questions live on the back');
+  }
   return flipped ? '⟲ flip the tile back'
     : (frs.length ? `? flip the tile — ${frs.length} open question${frs.length === 1 ? '' : 's'}`
                   : '? flip the tile — open questions');
 }
-function fcFlipBtnHtml(fcId) {
+function fcFlipBtnHtml(fcId, primary) {
   const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fcId) : [];
   const title = frs.length
     ? 'Show this classification\'s open questions on the back of its map tile'
     : 'No open frontiers are recorded as bearing on this classification — the back of the tile says so';
-  return `<button type="button" class="dc-flip-btn" data-dc-flip="${esc(fcId)}" title="${esc(title)}">${fcFlipLabel(fcId)}</button>`;
+  return `<button type="button" class="dc-flip-btn${primary ? ' dc-flip-primary' : ''}" data-dc-flip="${esc(fcId)}" title="${esc(title)}">${fcFlipLabel(fcId, primary)}</button>`;
 }
 function wireFcFlipButtons(root) {
   root.querySelectorAll('.dc-flip-btn[data-dc-flip]').forEach(b => {
@@ -808,8 +947,8 @@ function wireFcFlipButtons(root) {
         if (typeof applyZoom === 'function') applyZoom();
       }
       // The FC-record path re-renders its own panel; everywhere else,
-      // refresh this button's label in place.
-      if (b.isConnected) { b.textContent = fcFlipLabel(id); }
+      // refresh this button's label in place (matching its variant).
+      if (b.isConnected) { b.textContent = fcFlipLabel(id, b.classList.contains('dc-flip-primary')); }
     });
   });
 }
@@ -915,7 +1054,6 @@ function renderSidebarFC(fc) {
     <div class="detail-card ${fc.category}">
       <div style="display:flex;align-items:center;gap:0;margin-bottom:4px">
         <span class="dc-symbol">${esc(fc.symbol)}</span>
-        ${fcFlipBtnHtml(fc.id)}
       </div>
       <div class="dc-title">${esc(fc.label)}</div>
       <div class="dc-fullname">${esc(fc.full_name)}</div>
@@ -931,6 +1069,7 @@ function renderSidebarFC(fc) {
         ${yieldBar}
         <div class="dc-yield-counts">${yieldCounts}</div>
       </div>
+      ${fcFlipBtnHtml(fc.id, true)}
     </div>
 
     <div class="sidebar-section">

@@ -1378,6 +1378,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <link rel="stylesheet" href="update-e0-mendeleev.css">
 <link rel="stylesheet" href="update-em1-builder.css">
 <link rel="stylesheet" href="update-crossgrid.css">
+<link rel="stylesheet" href="update-f-ux.css">
 </head>
 <body>
 <div class="shell">
@@ -1391,7 +1392,9 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <div class="help-wrap" id="help-wrap">
         <button class="btn-ghost" id="help-btn" aria-expanded="false">? Help <span class="caret">▾</span></button>
         <div class="help-menu" id="help-menu">
+          <button class="help-menu-item" id="btn-tour">▶ Take the tour</button>
           <button class="help-menu-item" id="btn-help">▦ How to read this map</button>
+          <button class="help-menu-item" id="btn-navigate">⌖ How to navigate</button>
           <button class="help-menu-item" id="btn-refresh" title="Re-fetch from the live MCP server">↻ Refresh data</button>
           <a class="help-menu-item" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
         </div>
@@ -1486,6 +1489,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <div class="sidebar-nav-bar" id="sidebar-nav-bar"></div>
       <div class="sidebar-quick-bar" id="sidebar-quick-bar">
         <button class="quick-bar-btn quick-home" id="quick-home-btn" title="Clear the sidebar back to the start">⌂ Home</button>
+        <button class="quick-bar-btn quick-start-btn" data-quick-panel="start" title="New here? The tour, how to read, and how to navigate">▶ Start</button>
         <button class="quick-bar-btn" data-quick-panel="legend" title="Open the legend">◈ Legend</button>
         <button class="quick-bar-btn" data-quick-panel="glossary" title="Open the glossary of map terms">§ Glossary</button>
         <button class="quick-bar-btn" id="quick-reset-map" title="Reset the map — layers back to defaults, every lit tile and line switched off, view refit to the whole map">⟲ Reset</button>
@@ -1831,6 +1835,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
 <script src="explorer-frontiers.js"></script>
 <script src="explorer-nav.js"></script>
 <script src="explorer-toolbar.js"></script>
+<script src="explorer-tour.js"></script>
 <script>init();</script>
 <script>
 /* ============== Feedback survey (self-contained; no module deps) ============== */

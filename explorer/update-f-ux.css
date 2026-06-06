@@ -1,0 +1,225 @@
+/* ===================================================================
+   Update F — UX pass batch 2 (user-feedback fixes 1, 4, 5, 6, 9, 10)
+   Loaded LAST: the type-scale rules below intentionally override the
+   sizes set in earlier sheets. One sheet for the whole batch so a
+   revert is a single file.
+
+   Contents:
+     1. Map type scale       — tiles were too small to read (fix 5)
+     2. Sidebar hierarchy    — page titles, bigger section heads (fix 9)
+     3. Start panel + quick-bar Start button (fix 1)
+     4. How-to-navigate page (fixes 1 + 4)
+     5. Guided tour overlay  (fixes 1 + 10)
+     6. Prominent flip button on the FC record (fix 6)
+     7. Builder: classification dropdown + tutorial button (fix 10)
+   =================================================================== */
+
+/* ---------- 1. Map type scale ----------
+   tile-name was 10.5px and the footer 9px — repeated user feedback says
+   too small. Tiles grow a step so the larger text still fits. Tile size
+   is pure CSS (the JS reads live rects), so nothing else moves. */
+.pt-tile { width: 124px; min-height: 136px; }
+.tile-symbol { font-size: 25px; }
+.tile-name { font-size: 12.5px; line-height: 1.25; }
+.tile-corner { font-size: 10.5px; min-height: 14px; }
+.tile-footer { font-size: 10.5px; }
+.fals-flag { font-size: 10px; }
+@media (max-width: 1100px) {
+  .pt-tile { width: 108px; min-height: 126px; }
+  .tile-symbol { font-size: 22px; }
+  .tile-name { font-size: 11.5px; }
+}
+
+/* ---------- 2. Sidebar visual hierarchy ----------
+   Section heads were 10.5px uppercase — effectively invisible. Every
+   panel I touch also gets a real page title (.sb-page-title); the
+   shared section/head classes are upscaled here so EVERY panel
+   benefits without rewriting each renderer. */
+.sb-page-title {
+  font-family: 'Spectral', serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--ink); letter-spacing: 0.01em;
+  margin: 0 0 4px; line-height: 1.25;
+}
+.sb-page-sub {
+  font-family: 'Crimson Pro', Georgia, serif; font-style: italic;
+  font-size: 12.5px; color: var(--ink-mute);
+  margin: 0 0 12px; line-height: 1.45;
+}
+.sidebar-section h3 {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--rule-soft);
+}
+.sidebar-section { padding-bottom: 16px; margin-bottom: 4px; }
+.sidebar-section .sec-sub { font-size: 12px; }
+.ap-section { font-size: 12.5px; }
+.bld-section-h { font-size: 12px; letter-spacing: 0.1em; }
+.dc-title { font-size: 19px; }
+.crumb-current { font-size: 12px; }
+
+/* ---------- 3. Start panel — the instructional hub (fix 1) ---------- */
+/* Quick-bar Start button: accent-coloured so the place where the
+   instructional tools live is unmissable in the sidebar. */
+.quick-bar-btn.quick-start-btn {
+  background: var(--accent); color: #fbf9f1;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.quick-bar-btn.quick-start-btn:hover { background: #761515; }
+.quick-bar-btn.quick-start-btn.active { background: #761515; color: #fbf9f1; }
+
+.start-actions { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 4px; }
+.start-action {
+  display: flex; align-items: center; gap: 12px;
+  text-align: left; width: 100%;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 12px 14px;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.start-action:hover { background: var(--paper-3); border-color: var(--ink-faint); }
+.start-action.start-action-primary {
+  background: var(--accent); border-color: var(--accent);
+}
+.start-action.start-action-primary:hover { background: #761515; }
+.start-action.start-action-primary .start-action-title,
+.start-action.start-action-primary .start-action-desc,
+.start-action.start-action-primary .start-action-ico { color: #fbf9f1; }
+.start-action-ico {
+  font-size: 19px; color: var(--accent); flex: 0 0 auto;
+  width: 26px; text-align: center;
+}
+.start-action-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.start-action-title {
+  font-family: 'Spectral', serif; font-size: 14.5px; font-weight: 600;
+  color: var(--ink);
+}
+.start-action-desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 12.5px; color: var(--ink-mute); line-height: 1.4;
+}
+
+/* ---------- 4. How-to-navigate page (fixes 1 + 4) ---------- */
+.nav-how { display: flex; flex-direction: column; gap: 10px; }
+.nav-how-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--paper-2); border: 1px solid var(--rule-soft);
+  border-radius: 3px; padding: 9px 11px;
+}
+.nav-how-ico {
+  flex: 0 0 26px; text-align: center;
+  font-size: 15px; color: var(--accent); line-height: 1.3;
+}
+.nav-how-body { min-width: 0; }
+.nav-how-title {
+  font-family: 'Spectral', serif; font-size: 13px; font-weight: 600;
+  color: var(--ink); margin-bottom: 2px;
+}
+.nav-how-text {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+}
+.nav-how-text .tip-key { font-size: 11px; }
+
+/* ---------- 5. Guided tour overlay (fixes 1 + 10) ----------
+   Spotlight pattern: one absolutely-positioned highlight box whose huge
+   box-shadow dims everything else; a caption card floats beside it.
+   Lives at the top of the stacking order — above the feedback tab (900)
+   and the modals (1000). */
+.tour-root { position: fixed; inset: 0; z-index: 1200; }
+.tour-highlight {
+  position: fixed;
+  border: 2px solid var(--accent);
+  border-radius: 5px;
+  box-shadow: 0 0 0 9999px rgba(26, 24, 20, 0.55);
+  transition: top 0.22s ease, left 0.22s ease, width 0.22s ease, height 0.22s ease;
+  pointer-events: none;
+}
+.tour-card {
+  position: fixed;
+  width: 300px; max-width: calc(100vw - 28px);
+  background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 5px; box-shadow: var(--shadow-hard);
+  padding: 13px 15px 11px;
+}
+.tour-card-step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 5px;
+}
+.tour-card-title {
+  font-family: 'Spectral', serif;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  margin-bottom: 5px; line-height: 1.3;
+}
+.tour-card-text {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 13.5px; color: var(--ink-soft); line-height: 1.5;
+  margin-bottom: 11px;
+}
+.tour-card-btns { display: flex; align-items: center; gap: 7px; }
+.tour-btn {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  border-radius: 3px; padding: 5px 11px; cursor: pointer;
+  border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink-soft);
+}
+.tour-btn:hover { background: var(--paper-3); color: var(--ink); }
+.tour-btn.tour-next {
+  background: var(--accent); border-color: var(--accent); color: #fbf9f1;
+  font-weight: 600;
+}
+.tour-btn.tour-next:hover { background: #761515; }
+.tour-btn.tour-skip { margin-left: auto; border: none; background: none; color: var(--ink-mute); }
+.tour-btn.tour-skip:hover { color: var(--ink); background: none; }
+.tour-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ---------- 6. Prominent flip on the FC record (fix 6) ----------
+   Users could not discover that tiles flip. The FC record now carries a
+   full-width primary action instead of the small chip beside the symbol. */
+.dc-flip-btn.dc-flip-primary {
+  display: block; width: 100%; margin: 10px 0 2px;
+  text-align: center;
+  background: var(--paper); border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-size: 12px; font-weight: 600;
+  padding: 8px 12px; border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+.dc-flip-btn.dc-flip-primary:hover { background: var(--accent); color: #fbf9f1; }
+
+/* ---------- 7. Builder: dropdown picker + tutorial (fix 10) ---------- */
+.bld-tour-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  background: var(--paper); border: 1.5px solid var(--accent); color: var(--accent);
+  border-radius: 4px; padding: 6px 12px; cursor: pointer;
+  margin: 0 0 12px;
+}
+.bld-tour-btn:hover { background: var(--accent); color: #fbf9f1; }
+
+.bld-picker-wrap { position: relative; }
+.bld-picker-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; text-align: left;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 8px 11px;
+  color: var(--ink-soft); cursor: pointer;
+}
+.bld-picker-toggle:hover { border-color: var(--ink-faint); color: var(--ink); }
+.bld-picker-toggle .caret { color: var(--ink-mute); }
+.bld-picker-toggle.open { border-color: var(--accent); color: var(--ink); }
+.bld-picker-menu {
+  display: none;
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  z-index: 40;
+  background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 4px; box-shadow: var(--shadow-hard);
+  max-height: 320px; overflow: auto;
+  padding: 8px;
+}
+.bld-picker-menu.open { display: block; }
+.bld-picker-menu .bld-search { width: 100%; margin-bottom: 8px; }

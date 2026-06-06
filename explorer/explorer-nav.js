@@ -77,6 +77,7 @@
       'browse-regime-content': 'Regime', 'browse-programs': 'Programs',
       discriminating: 'Compare programs', 'discriminating-pair': 'Program pair',
       ranks: 'Scales', 'ranks-kind': 'Scale group', 'discourse-edges': 'Shared edges',
+      start: 'Start', navigate: 'How to navigate',
     };
     return names[s.activePanel] || 'the map';
   }
@@ -206,9 +207,9 @@
     });
   }
 
-  // Start here — the first-visit entry point: opens About at "Who it
-  // serves", un-collapsing the sidebar if it's hidden, so a new reader
-  // lands on who the map is for and how to use it.
+  // Start here — the first-visit entry point: opens the Start hub
+  // (UX batch 2, fix 1) — take the tour / how to read / how to
+  // navigate — un-collapsing the sidebar if it's hidden.
   var startBtn = document.getElementById('btn-start-here');
   if (startBtn) {
     startBtn.addEventListener('click', function () {
@@ -219,11 +220,7 @@
         var st = document.getElementById('sidebar-toggle');
         if (st) { st.textContent = '›'; st.title = 'Hide sidebar'; }
       }
-      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('about');
-      setTimeout(function () {
-        var sec = document.getElementById('ap-how-to-read');   // Who it serves sits immediately below
-        if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 0);
+      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('start');
     });
   }
 
@@ -243,6 +240,17 @@
     });
     helpMenu.querySelectorAll('.help-menu-item').forEach(function (it) {
       it.addEventListener('click', function () { closeHelp(); });
+    });
+    // UX batch 2 (fix 1) — the two new menu items: the guided tour and
+    // the how-to-navigate page. (closeHelp above already fires for them
+    // via the generic .help-menu-item hook.)
+    var tourItem = document.getElementById('btn-tour');
+    if (tourItem) tourItem.addEventListener('click', function () {
+      if (typeof startTour === 'function') startTour('main');
+    });
+    var navItem = document.getElementById('btn-navigate');
+    if (navItem) navItem.addEventListener('click', function () {
+      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('navigate');
     });
     document.addEventListener('click', function (e) {
       if (helpMenu.classList.contains('open') && !helpWrap.contains(e.target)) closeHelp();

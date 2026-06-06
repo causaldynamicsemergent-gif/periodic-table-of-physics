@@ -419,10 +419,24 @@ function renderSidebarBuilder() {
     (bs.fcIds.length ? '<button class="bld-reset" type="button" id="bld-reset">clear</button>' : '') + '</div>';
 
   inner.innerHTML = '<div class="sidebar-card bld-card">' +
-    '<div class="dc-crumbs"><span class="crumb-current">Build a cross-section</span></div>' + intro +
+    '<div class="dc-crumbs"><span class="crumb-current">Build a cross-section</span></div>' +
+    '<button class="bld-tour-btn" id="bld-tour-btn" type="button" title="A click-through walkthrough of the builder, on a real worked example">\u25b6 tutorial \u2014 how to build</button>' +
+    intro +
     '<div class="bld-section"><div class="bld-section-h">classifications</div>' +
-    '<input class="bld-search" id="bld-picker-search" placeholder="filter classifications\u2026" value="' + esc(bs.pickerQuery || '') + '">' +
-    '<div class="bld-picker">' + picker + '</div></div>' +
+    // UX batch 2 (fix 10) — the picker is a dropdown now, not an
+    // always-open type-in list. The toggle states what's selected; the
+    // menu inside keeps the type-ahead filter and the sector-grouped
+    // chips. Picking a chip keeps the menu open (multi-add); clicking
+    // anywhere outside closes it.
+    '<div class="bld-picker-wrap" id="bld-picker-wrap">' +
+      '<button class="bld-picker-toggle' + (bs.pickerOpen ? ' open' : '') + '" id="bld-picker-toggle" type="button" title="Add or remove classifications">' +
+        (bs.fcIds.length ? bs.fcIds.length + ' selected \u2014 add or remove\u2026' : 'choose classifications\u2026') +
+        '<span class="caret">\u25be</span></button>' +
+      '<div class="bld-picker-menu' + (bs.pickerOpen ? ' open' : '') + '" id="bld-picker-menu">' +
+        '<input class="bld-search" id="bld-picker-search" placeholder="filter classifications\u2026" value="' + esc(bs.pickerQuery || '') + '">' +
+        '<div class="bld-picker">' + picker + '</div>' +
+      '</div>' +
+    '</div></div>' +
     '<div class="bld-section"><div class="bld-section-h">selected faces</div><div class="bld-selected-row">' + selected + '</div>' + axisHtml + '</div>' +
     nudge + recurHtml + latticeHtml + staleHtml + legend + actions + '</div>';
 
@@ -435,6 +449,38 @@ function renderSidebarBuilder() {
 
 function wireBuilderPanel() {
   var bs = builderState();
+  // UX batch 2 (fix 10) — dropdown toggle. Picking chips keeps it open
+  // (handled below: chip clicks re-render with pickerOpen unchanged);
+  // the document-level listener closes it on any click outside.
+  var pickToggle = document.getElementById('bld-picker-toggle');
+  if (pickToggle) pickToggle.addEventListener('click', function() {
+    bs.pickerOpen = !bs.pickerOpen;
+    renderSidebarBuilder();
+    if (bs.pickerOpen) {
+      var s = document.getElementById('bld-picker-search');
+      if (s) s.focus();
+    }
+  });
+  if (!window._bldPickerOutsideWired) {
+    window._bldPickerOutsideWired = true;
+    document.addEventListener('click', function(e) {
+      var b2 = builderState();
+      if (!b2.pickerOpen) return;
+      // A chip click re-renders the panel before this bubbles here, so
+      // the target may be detached — its ancestor chain survives, so
+      // closest() still answers "was this inside the picker?" correctly.
+      if (e.target && e.target.closest && e.target.closest('#bld-picker-wrap')) return;
+      b2.pickerOpen = false;
+      // Only re-render if the builder is still on screen — the click may
+      // itself have routed to another panel (e.g. a map tile opened its
+      // FC record); the closed state is remembered either way.
+      if (document.getElementById('bld-picker-wrap')) renderSidebarBuilder();
+    });
+  }
+  var tour = document.getElementById('bld-tour-btn');
+  if (tour) tour.addEventListener('click', function() {
+    if (typeof startTour === 'function') startTour('builder');
+  });
   var search = document.getElementById('bld-picker-search');
   if (search) search.addEventListener('input', function() {
     bs.pickerQuery = search.value; renderSidebarBuilder();
