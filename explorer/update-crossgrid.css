@@ -765,3 +765,14 @@ header.masthead { position: relative; z-index: 50; }
    click target now; at normal zoom the click simply bubbles to the tile
    and selects, exactly as before. */
 .tile-cells-mini { pointer-events: auto; }
+
+/* ---------- 20. Cross-grid header hugs its columns ---------- */
+/* .pt-table is a flex column, so the sticky header stretched to the
+   table's full width (flex default align-self: stretch) — its chrome
+   kept widening as you zoomed out while the computed columns stayed
+   put. Both header and rows now take exactly their content width. */
+.pt-cross-head,
+.pt-row.pt-cross-row {
+  width: max-content;
+  align-self: flex-start;
+}
