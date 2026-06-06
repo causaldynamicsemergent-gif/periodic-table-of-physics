@@ -1011,14 +1011,15 @@ function wireToolbar() {
     b.addEventListener('click', () => {
       const v = b.dataset.value;
       if (!state.overlayActive) state.overlayActive = new Set();
+      // Toggling a layer off no longer wipes its lit lines — the lit set
+      // survives, so switching a layer off and back on (or hopping between
+      // layers) keeps your lighting work. Stale lit ids from a hidden
+      // layer can't dim the visible one: dimming is computed relative to
+      // the lines on screen. Explicit clears: the panel's all-off, Esc, ⟲.
       if (v === 'none') {
-        state.overlayActive.forEach(layer => {
-          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(layer);
-        });
         state.overlayActive = new Set();
       } else if (state.overlayActive.has(v)) {
         state.overlayActive.delete(v);
-        if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(v);
       } else {
         state.overlayActive.add(v);
         if (typeof switchSidebarPanel === 'function') switchSidebarPanel('overlay-lines');

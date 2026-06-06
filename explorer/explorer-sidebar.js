@@ -160,8 +160,7 @@ function renderSidebarDefault() {
         const layer = v === 'overlay-phen' ? 'phen-phen' : 'cross-class';
         if (!state.overlayActive) state.overlayActive = new Set();
         if (state.overlayActive.has(layer)) {
-          state.overlayActive.delete(layer);
-          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(layer);
+          state.overlayActive.delete(layer);   // lit lines survive the toggle (dim is visible-relative)
         } else {
           state.overlayActive.add(layer);
         }

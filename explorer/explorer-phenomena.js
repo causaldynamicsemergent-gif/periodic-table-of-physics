@@ -304,11 +304,22 @@ function drawPhenPhenOverlay() {
   svg.onclick = function (ev) {
     const target = ev.target && ev.target.closest && ev.target.closest('[data-edge-id]');
     if (!target) return;
-    // UX pass — a line click is a pure toggle now: light it, click again to
-    // switch it off, and build up any series of lit lines you like. The full
-    // edge record opens from the ↗ button in the overlay-lines panel, so
-    // toggling never navigates the sidebar away.
-    toggleOverlayEdge(target.getAttribute('data-edge-id'));
+    // A line click is a toggle: light it, click again to switch it off,
+    // building up any series of lit lines. The click also drives the
+    // panel: the line's row switch flips, its dropdown opens when newly
+    // lit, and the row scrolls into view — the map and the sidebar always
+    // tell the same story. The full edge record opens from the row's ↗.
+    const id = target.getAttribute('data-edge-id');
+    const willLight = !(state.edgeSpotlight && state.edgeSpotlight.has(id));
+    toggleOverlayEdge(id);
+    if (willLight) _ovlExpanded.add(id);
+    if (state.activePanel !== 'overlay-lines') {
+      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('overlay-lines');
+    } else {
+      renderSidebarOverlayLines();
+    }
+    const row = document.querySelector(`#ovl-lines [data-ovl-edge="${CSS.escape(id)}"]`);
+    if (row && row.scrollIntoView) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
   // UX pass — hovering a line shows what it is before you commit a click.
   // Reuses the tile tooltip element and its positioning.
@@ -332,11 +343,19 @@ function drawPhenPhenOverlay() {
 function applyEdgeSpotlightClasses(svg) {
   if (!svg) return;
   const set = state.edgeSpotlight || new Set();
-  const any = set.size > 0;
-  svg.querySelectorAll('[data-edge-id]').forEach(function (g) {
-    const lit = any && set.has(g.getAttribute('data-edge-id'));
+  // Dim is relative to the lines on screen: lit ids belonging to a layer
+  // that's currently switched OFF must not dim the visible layer's lines.
+  // (This is what lets the lit set survive layer toggles — switching a
+  // layer off and back on no longer destroys your lighting work.)
+  const groups = svg.querySelectorAll('[data-edge-id]');
+  let anyVisibleLit = false;
+  groups.forEach(function (g) {
+    if (set.has(g.getAttribute('data-edge-id'))) anyVisibleLit = true;
+  });
+  groups.forEach(function (g) {
+    const lit = anyVisibleLit && set.has(g.getAttribute('data-edge-id'));
     g.classList.toggle('lit', lit);
-    g.classList.toggle('dim', any && !lit);
+    g.classList.toggle('dim', anyVisibleLit && !lit);
   });
 }
 
