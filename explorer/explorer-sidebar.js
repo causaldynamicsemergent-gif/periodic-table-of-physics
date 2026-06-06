@@ -233,7 +233,7 @@ function renderSidebarAbout() {
       </ul>
       <p class="ap-text" style="margin-top: 14px;"><a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">Worked example sessions →</a> — physicists' chats walking these patterns through the catalogue, edited and published.</p>
 
-      <div class="ap-section">Who it serves</div>
+      <div class="ap-section" id="ap-who-it-serves">Who it serves</div>
       <p class="ap-text">One capability — making the cross-domain structure of physics explicit — consulted in three modes. <strong>Graduate students</strong>: orientation — which mature neighboring programs touch your problem, and which load-bearing concepts to learn first. <strong>Researchers</strong>: scouting — tracing the bridges between distant areas to the unresolved link a connection turns on. <strong>Professors</strong>: synthesis and direction — the broad structural view for framing programs, teaching connective tissue, and steering students toward ripe problems. Two deeper guides:</p>
       <div class="ap-jumps">
         <button class="ap-jump" data-panel-jump="education">

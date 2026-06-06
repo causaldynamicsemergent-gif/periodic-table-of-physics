@@ -206,6 +206,27 @@
     });
   }
 
+  // Start here — the first-visit entry point: opens About at "Who it
+  // serves", un-collapsing the sidebar if it's hidden, so a new reader
+  // lands on who the map is for and how to use it.
+  var startBtn = document.getElementById('btn-start-here');
+  if (startBtn) {
+    startBtn.addEventListener('click', function () {
+      var grid = document.getElementById('body-grid');
+      if (grid && grid.classList.contains('sidebar-collapsed')) {
+        grid.classList.remove('sidebar-collapsed');
+        if (typeof state !== 'undefined') state.sidebarCollapsed = false;
+        var st = document.getElementById('sidebar-toggle');
+        if (st) { st.textContent = '›'; st.title = 'Hide sidebar'; }
+      }
+      if (typeof switchSidebarPanel === 'function') switchSidebarPanel('about');
+      setTimeout(function () {
+        var sec = document.getElementById('ap-who-it-serves');
+        if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
+    });
+  }
+
   // Help dropdown in the header — how-to-read, refresh, github in one
   // place. Closes on outside click and when any item inside is chosen.
   var helpBtn = document.getElementById('help-btn');
