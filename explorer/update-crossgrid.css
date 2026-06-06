@@ -1,0 +1,142 @@
+/* =============================================================
+   update-crossgrid.css
+   Two features, both presentation-only (zero schema change):
+
+   1. Cross-grid rows-by mode (Sector × Category). Rows stay sectors;
+      each row is split into the three category columns. Empty
+      intersections render as explicit gap cells — the Mendeleev-
+      flavored "no structural classification in this sector" statement.
+
+   2. Shared-axis lighting affordance: the axis name in an FC record
+      becomes a button; the ×N badge shows how many classifications
+      share the axis. The lighting itself reuses the tileSpotlight
+      layer (explorer-map.js lightSharedAxis), so it composes with
+      every other lighting layer under the union rule.
+   ============================================================= */
+
+/* ---------- 1. Cross-grid ---------- */
+
+/* Column header strip — one corner spacer over the row labels, then the
+   three category headers tinted with the same colors as the tile
+   left-edge stripes. */
+.pt-cross-head {
+  display: grid;
+  grid-template-columns: 160px repeat(3, 1fr);
+  gap: 14px;
+  padding: 2px 0 6px;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--paper-2, var(--paper));
+}
+.pt-cross-col {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 4px 8px 4px 10px;
+  border-bottom: 2px solid var(--rule);
+  color: var(--ink-soft);
+}
+.pt-cross-col.structural { border-bottom-color: var(--struct); color: var(--struct); }
+.pt-cross-col.hybrid     { border-bottom-color: var(--hybrid); color: var(--hybrid); }
+.pt-cross-col.phenomenon { border-bottom-color: var(--phen);   color: var(--phen);   }
+
+/* Cross rows override the base .pt-row two-column template with the
+   label + three category columns. Everything else (dashed row rules,
+   padding) is inherited from .pt-row. */
+.pt-row.pt-cross-row {
+  grid-template-columns: 160px repeat(3, 1fr);
+}
+
+/* A category cell inside a cross row: same tile-flow as .pt-row-tiles,
+   plus a soft dashed left rule so the column structure reads even in
+   rows where every cell is occupied. */
+.pt-cross-cell {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 4px 0 4px 10px;
+  border-left: 1px dashed var(--rule-soft);
+  min-height: 70px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+/* The payoff: an empty intersection. Quiet but unmistakable — a hatched
+   inset that says "nothing of this kind is recorded here", with the full
+   sentence in the hover title. Recorded data only; no claim beyond the
+   dataset's silence. */
+.pt-cross-gap {
+  border: 1px dashed var(--rule);
+  border-left: 1px dashed var(--rule-soft);
+  border-radius: 3px;
+  margin: 4px 6px 4px 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 7px,
+    var(--rule-soft) 7px,
+    var(--rule-soft) 8px
+  );
+  cursor: help;
+}
+.pt-cross-gap .gap-mark {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1;
+}
+.pt-cross-gap .gap-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 6px;
+}
+
+/* ---------- 2. Shared-axis lighting affordance ---------- */
+
+/* Button reset that preserves the existing .ax-name look (mono, 600,
+   11px from the base stylesheet), then adds the click affordance: a
+   dotted underline that solidifies on hover. */
+.dc-axis .ax-name-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  text-decoration: underline dotted var(--ink-mute);
+  text-underline-offset: 3px;
+}
+.dc-axis .ax-name-btn:hover,
+.dc-axis .ax-name-btn:focus-visible {
+  text-decoration-style: solid;
+  text-decoration-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+/* The ×N shared-count badge: how many classifications carry this axis.
+   Only rendered when N > 1 — it's the "this axis is a column of the old
+   map" signal (the ADE quintet shows ×5). */
+.dc-axis .ax-shared-ct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--paper-3, var(--paper-2, transparent));
+  border: 1px solid var(--rule-soft);
+  border-radius: 8px;
+  padding: 0 5px;
+  margin-left: 5px;
+  vertical-align: 1px;
+  text-decoration: none;
+  display: inline-block;
+}

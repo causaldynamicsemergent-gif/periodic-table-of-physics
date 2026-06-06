@@ -643,13 +643,22 @@ function renderSidebarFC(fc) {
     `<span class="yc"><span class="dot" style="background:${STATUS_COLOR[s]}"></span>${esc(STATUS_LABEL[s]||s)}: ${n}</span>`
   ).join('') || '<span class="yc" style="color:var(--ink-mute)">no predictions</span>';
 
-  // Axes
-  const axesHtml = (fc.classification_axes || []).map(ax => `
+  // Axes — each axis name is a shared-axis lighting trigger: clicking it
+  // lights every classification on the map carrying an axis of the same
+  // name (the ADE quintet all light up from any one record's cartan-type).
+  const axesHtml = (fc.classification_axes || []).map(ax => {
+    const sharedCt = (typeof sharedAxisMembers === 'function')
+      ? sharedAxisMembers(ax.name).length : 0;
+    const axTitle = sharedCt > 1
+      ? `Click to light all ${sharedCt} classifications carrying a “${ax.name}” axis on the map — click again to switch off`
+      : `Only this classification carries a “${ax.name}” axis — click to light it on the map`;
+    return `
     <div class="dc-axis">
-      <span class="ax-name">${esc(ax.name)}</span><span class="ax-kind">${esc(ax.kind)}</span>
+      <button type="button" class="ax-name ax-name-btn" data-axis-name="${esc(ax.name)}" title="${esc(axTitle)}">${esc(ax.name)}${sharedCt > 1 ? `<span class="ax-shared-ct">×${sharedCt}</span>` : ''}</button><span class="ax-kind">${esc(ax.kind)}</span>
       ${ax.values && ax.values.length ? `<div class="ax-vals">${ax.values.slice(0,12).map(v => `<span class="ax-val">${esc(String(v))}</span>`).join('')}${ax.values.length > 12 ? `<span class="ax-val" style="color:var(--ink-mute)">+${ax.values.length-12} more</span>`:''}</div>`:''}
     </div>
-  `).join('') || '<em style="color:var(--ink-mute);font-size:12px">No axes recorded.</em>';
+  `;
+  }).join('') || '<em style="color:var(--ink-mute);font-size:12px">No axes recorded.</em>';
 
   // Cells preview (first 12 sorted: falsified > preds > rest)
   const cellsSorted = [...fc.cells].sort((a,b) => {
@@ -780,6 +789,13 @@ function renderSidebarFC(fc) {
 
   // Wire interactions inside sidebar
   inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
+  // Shared-axis lighting — axis names light every classification carrying
+  // that axis (see lightSharedAxis in explorer-map.js).
+  inner.querySelectorAll('.ax-name-btn[data-axis-name]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof lightSharedAxis === 'function') lightSharedAxis(btn.dataset.axisName);
+    });
+  });
   inner.querySelectorAll('.dc-cell[data-cell]').forEach(el => {
     el.addEventListener('click', () => selectCell(fc.id, el.dataset.cell));
   });

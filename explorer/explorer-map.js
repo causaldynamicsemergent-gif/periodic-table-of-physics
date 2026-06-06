@@ -225,9 +225,10 @@ function renderMap() {
   const _pane = document.getElementById('map-pane');
   if (_pane) _pane.classList.remove('view-questions');
   if (typeof syncViewToggle === 'function') syncViewToggle();
-  // Group classifications
+  // Group classifications. The cross-grid mode rows by sector like the
+  // sector mode — its columns are handled in the row renderer below.
   let groupOf, groupOrder;
-  if (state.group === 'sector') {
+  if (state.group === 'sector' || state.group === 'cross') {
     groupOf = f => f.sector;
     groupOrder = SECTORS.slice();
   } else if (state.group === 'category') {
@@ -249,10 +250,15 @@ function renderMap() {
 
   // Intro + stats
   const m = DATA._meta.counts;
+  // Cross-grid mode gets one extra sentence pointing at the payoff: the
+  // empty intersections are recorded gaps, not layout artifacts.
+  const crossNote = state.group === 'cross'
+    ? ' Columns split each row by <em>category</em> — an empty intersection means no classification of that kind is recorded in that sector.'
+    : '';
   const intro = `
     <div class="pt-intro">
       <div class="blurb">
-        <strong>v${DATA._meta.dataset_version}.</strong> Each tile below is a <em>formal classification</em>. Rows are sectors of physics. <strong>Hover</strong> a tile for a preview, <strong>click</strong> for full detail in the sidebar.
+        <strong>v${DATA._meta.dataset_version}.</strong> Each tile below is a <em>formal classification</em>. Rows are sectors of physics.${crossNote} <strong>Hover</strong> a tile for a preview, <strong>click</strong> for full detail in the sidebar.
       </div>
       <div class="pt-stats">
         <div class="pt-stat"><span class="n">${m.formal_classifications}</span><span class="lbl">classifications</span></div>
@@ -264,8 +270,11 @@ function renderMap() {
     </div>
   `;
 
-  // Build rows
-  const rows = keys.map(k => {
+  // Build rows. The cross-grid mode renders rows split into three category
+  // columns; every other mode keeps the flat tile-flow rows.
+  const rows = (state.group === 'cross')
+    ? renderCrossRows(keys, groups)
+    : keys.map(k => {
     const arr = groups[k];
     const sub = state.group === 'sector'
       ? `${arr.length} class · ${arr.reduce((s,f)=>s+f.cell_count,0)} cells`
@@ -342,6 +351,49 @@ function renderMap() {
   // Overlay
   if (state.overlayActive && state.overlayActive.size) drawPhenPhenOverlay();   // UX pass — any active layer
   else document.getElementById('pt-overlay').classList.remove('show');
+}
+
+// =============================================================
+//   Cross-grid mode (rows-by: Sector × Category)
+//
+//   Rows by sector, three fixed columns by category. The payoff is the
+//   EMPTY intersections: "no structural classification in the
+//   Astrophysics sector" becomes a visible gap — a Mendeleev-flavored
+//   statement about where formalization is thin. Recorded data only:
+//   a gap cell asserts nothing beyond "nothing of this kind is in the
+//   dataset". Tiles render through the same renderTile as every other
+//   mode, so spotlights, phenomena rings, badges, and clicks all
+//   compose unchanged.
+// =============================================================
+function renderCrossRows(keys, groups) {
+  const head = `
+    <div class="pt-cross-head" aria-hidden="true">
+      <div class="pt-cross-corner"></div>
+      ${CAT_ORDER.map(c => `<div class="pt-cross-col ${esc(c)}">${esc(c)}</div>`).join('')}
+    </div>`;
+  const body = keys.map(k => {
+    const arr = groups[k];
+    const byCat = {};
+    CAT_ORDER.forEach(c => { byCat[c] = []; });
+    arr.forEach(f => { (byCat[f.category] || (byCat[f.category] = [])).push(f); });
+    const cells = CAT_ORDER.map(c => {
+      const members = byCat[c] || [];
+      if (!members.length) {
+        const gapTitle = `No ${c} classification recorded in the ${k} sector — an empty intersection in the recorded map.`;
+        return `<div class="pt-cross-cell pt-cross-gap" data-gap-cat="${esc(c)}" title="${esc(gapTitle)}">
+          <span class="gap-mark">—</span><span class="gap-text">no ${esc(c)} recorded</span>
+        </div>`;
+      }
+      return `<div class="pt-cross-cell">${members.map(renderTile).join('')}</div>`;
+    }).join('');
+    const sub = `${arr.length} class · ${arr.reduce((s, f) => s + f.cell_count, 0)} cells`;
+    return `
+      <div class="pt-row pt-cross-row" data-key="${esc(k)}">
+        <div class="pt-row-label">${esc(k)}<span class="row-meta">${sub}</span></div>
+        ${cells}
+      </div>`;
+  }).join('');
+  return head + body;
 }
 
 function renderTile(fc) {
@@ -570,6 +622,7 @@ var ROWSBY_OPTIONS = [
   { value: 'sector',   label: 'Sector',   desc: 'Group rows by physics subfield.' },
   { value: 'category', label: 'Category', desc: 'Structural / hybrid / phenomenon.' },
   { value: 'closure',  label: 'Closure',  desc: 'Complete · partial · conjectural.' },
+  { value: 'cross',    label: 'Sector × Category', desc: 'Cross-grid: rows by sector, columns by category. Empty intersections mark where no classification of that kind is recorded.' },
 ];
 
 // UX pass — unified highlight/dim model: the tile-level lit set.
@@ -592,6 +645,30 @@ function clearTileSpotlight() {
   if (state.tileSpotlight && state.tileSpotlight.size) {
     state.tileSpotlight = new Set();
     renderMap();
+  }
+}
+// Shared-axis lighting — click an axis name in any record and every
+// classification carrying an axis with that name lights up. Recovers the
+// old map's column intuition as an interaction instead of a position.
+// Pure read of classification_axes; zero schema change. Toggle semantics
+// mirror toggleRowSpotlight: if the whole set is already lit, clicking
+// switches it off; lighting accumulates with anything already lit.
+function sharedAxisMembers(name) {
+  return FCS.filter(f =>
+    (f.classification_axes || []).some(a => a && a.name === name)
+  ).map(f => f.id);
+}
+function lightSharedAxis(name) {
+  const members = sharedAxisMembers(name);
+  if (!members.length) return;
+  if (!state.tileSpotlight) state.tileSpotlight = new Set();
+  const allLit = members.every(id => state.tileSpotlight.has(id));
+  members.forEach(id => allLit ? state.tileSpotlight.delete(id) : state.tileSpotlight.add(id));
+  renderMap();
+  if (typeof showToast === 'function') {
+    showToast(allLit
+      ? `axis lighting switched off — ${name}`
+      : `lit every classification carrying the “${name}” axis — ${members.length} on the map`);
   }
 }
 // UX pass — the comprehensive clear behind the ✕ button: every lighting
@@ -944,7 +1021,7 @@ function zoomOut() {
 // =============================================================
 function rowGroupMembers(key) {
   let groupOf;
-  if (state.group === 'sector')        groupOf = f => f.sector;
+  if (state.group === 'sector' || state.group === 'cross') groupOf = f => f.sector;
   else if (state.group === 'category') groupOf = f => f.category;
   else                                 groupOf = f => f.closure_level;
   return FCS.filter(f => (groupOf(f) || 'Other') === key).map(f => f.id);
@@ -978,6 +1055,7 @@ function renderSidebarRowExplain() {
     sector: 'Rows currently group the classifications by <strong>sector</strong> — the domain of physics whose content each one organizes. A row is a domain partition, not an ordering claim: reading across a row says “these classifications organize the same territory,” nothing about rank or sequence.',
     category: 'Rows currently group the classifications by <strong>category</strong> — what kind of content each one organizes. Structural rows are pure mathematical scaffolding; phenomenon rows are empirical territory; hybrid rows are mathematical structure carrying direct empirical content. The same colors appear as the left-edge stripe on every tile.',
     closure: 'Rows currently group the classifications by <strong>closure level</strong> — how settled each classification\'s own organizing pattern is. Closure is a statement about the classification itself, not about the physics being finished.',
+    cross: 'Rows currently group the classifications by <strong>sector</strong>, and each row is split into three <strong>category</strong> columns — structural / hybrid / phenomenon. The cross-grid exists for its empty intersections: a gap cell says that no classification of that kind is recorded in this sector, a Mendeleev-flavored statement about where formalization is thin.',
   };
   const KEY_NOTES = {
     'structural': 'Pure mathematical scaffolding (e.g. ADE families, modular tensor categories).',
@@ -987,8 +1065,14 @@ function renderSidebarRowExplain() {
     'partial': '◐ Some axes are exhaustive; others remain open.',
     'conjectural': '□ Completeness is not established — the organizing pattern is a working conjecture.',
   };
-  const modeKey = state.group === 'sector' ? 'sector' : state.group === 'category' ? 'category' : 'closure';
+  const modeKey = ['sector', 'category', 'cross'].includes(state.group) ? state.group : 'closure';
   const keyNote = KEY_NOTES[sel.key] || '';
+  // The columns sentence has to stay honest per mode: in the cross-grid
+  // the columns DO carry meaning (they're the category split), everywhere
+  // else position along a row is packing, not physics.
+  const colsNote = state.group === 'cross'
+    ? 'In this layout the columns <strong>do</strong> carry meaning — each row is split by category, and an empty intersection is a recorded gap: no classification of that kind exists in this sector\'s recorded data. The <strong>Rows-by</strong> menu switches back to the flat cuts at any time.'
+    : 'Columns carry no meaning in this layout — position along a row is packing, not physics. The grouping itself is switchable: the <strong>Rows-by</strong> chips re-cut the rows by sector, category, or closure, and clicking any row label reopens this explanation for the new cut.';
 
   const pills = members.map(f => {
     const lit = state.tileSpotlight && state.tileSpotlight.has(f.id);
@@ -1004,7 +1088,7 @@ function renderSidebarRowExplain() {
       <h3>${esc(sel.key)} <span class="dx-section-ct">· ${members.length} classification${members.length === 1 ? '' : 's'}</span></h3>
       ${keyNote ? `<div class="sec-sub">${keyNote}</div>` : ''}
       <div class="rx-explain">${MODE_EXPLAIN[modeKey]}</div>
-      <div class="rx-explain rx-explain-cols">Columns carry no meaning in this layout — position along a row is packing, not physics. The grouping itself is switchable: the <strong>Rows-by</strong> chips re-cut the rows by sector, category, or closure, and clicking any row label reopens this explanation for the new cut.</div>
+      <div class="rx-explain rx-explain-cols">${colsNote}</div>
       <div class="rx-pills">${pills}</div>
       <button type="button" class="sbc-open-record" id="rx-row-toggle">${members.every(f => state.tileSpotlight && state.tileSpotlight.has(f.id)) ? 'switch the whole row off' : 'light the whole row'}</button>
     </div>
