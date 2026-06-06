@@ -1125,10 +1125,25 @@ function wireToolbar() {
     copyViewBtn.addEventListener('click', () => {
       if (typeof writeHash === 'function') writeHash();
       const url = location.href;
-      const done = () => { if (typeof showToast === 'function') showToast('link copied — open it to return to exactly this view'); };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(done, done);
-      } else done();
+      const done = () => { if (typeof showToast === 'function') showToast('link copied — it pastes as “Map of Physics” where formatting is supported'); };
+      const plainFallback = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, done);
+        } else done();
+      };
+      // Rich copy: an HTML flavor so the paste reads "Map of Physics" in
+      // docs, mail, and chat, plus a plain flavor so address bars and
+      // plain editors still get the raw URL.
+      if (navigator.clipboard && navigator.clipboard.write && typeof ClipboardItem !== 'undefined') {
+        try {
+          const html = `<a href="${url}">Map of Physics</a>`;
+          const item = new ClipboardItem({
+            'text/html':  new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([url],  { type: 'text/plain' }),
+          });
+          navigator.clipboard.write([item]).then(done, plainFallback);
+        } catch (e) { plainFallback(); }
+      } else plainFallback();
     });
   }
 
