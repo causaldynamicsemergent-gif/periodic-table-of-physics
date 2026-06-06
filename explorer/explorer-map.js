@@ -588,6 +588,30 @@ function clearTileSpotlight() {
     renderMap();
   }
 }
+// UX pass — the comprehensive clear behind the ✕ button: every lighting
+// layer off — lit tiles, lit overlay lines, AND the status spotlights
+// (confirmed / falsified / …), which dim tiles identically and were the
+// reason the button could appear to do nothing. Background clicks and Esc
+// keep the gentler clearMapSpotlights below, so a stray click never wipes
+// a deliberately-chosen status filter.
+function clearAllMapLighting() {
+  const hadTiles  = state.tileSpotlight  && state.tileSpotlight.size;
+  const hadEdges  = state.edgeSpotlight  && state.edgeSpotlight.size;
+  const hadStatus = state.spotlightActive && state.spotlightActive.size;
+  if (!hadTiles && !hadEdges && !hadStatus) return;
+  state.tileSpotlight   = new Set();
+  state.edgeSpotlight   = new Set();
+  state.spotlightActive = new Set();
+  if (typeof syncToolbarChips === 'function') syncToolbarChips();
+  if (typeof writeHash === 'function') writeHash();
+  renderMap();
+  if (typeof refreshOverlayLinesLit === 'function') refreshOverlayLinesLit();
+  if (state.activePanel === 'spotlight'     && typeof renderSidebarSpotlight === 'function')     renderSidebarSpotlight();
+  if (state.activePanel === 'row-explain'   && typeof renderSidebarRowExplain === 'function')    renderSidebarRowExplain();
+  if (state.activePanel === 'overlay-lines' && typeof renderSidebarOverlayLines === 'function')  renderSidebarOverlayLines();
+  if (typeof showToast === 'function') showToast('map cleared — every lit tile, line, and status spotlight switched off');
+}
+
 // UX pass — one clear for both lit layers (tiles and phen↔phen lines).
 function clearMapSpotlights() {
   const hadTiles = state.tileSpotlight && state.tileSpotlight.size;
@@ -905,7 +929,7 @@ function zoomOut() {
 // click on the map background).
 (function () {
   var b = document.getElementById('btn-clear-lit');
-  if (b) b.addEventListener('click', function () { clearMapSpotlights(); });
+  if (b) b.addEventListener('click', function () { clearAllMapLighting(); });
 })();
 
 
