@@ -770,6 +770,39 @@ function wireSidebarQuickBar() {
 // =============================================================
 //   Sidebar: FC detail
 // =============================================================
+// Tile-flip control, shared by every sidebar surface that shows a
+// classification (the FC record header and each Browse-catalogue row).
+// One source for the label and one wiring path, so the surfaces can't
+// drift out of sync with each other or with the tile's actual state.
+function fcFlipLabel(fcId) {
+  const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fcId) : [];
+  const flipped = (typeof _flippedTiles !== 'undefined') && _flippedTiles.has(fcId);
+  return flipped ? '⟲ flip the tile back'
+    : (frs.length ? `? flip the tile — ${frs.length} open question${frs.length === 1 ? '' : 's'}`
+                  : '? flip the tile — open questions');
+}
+function fcFlipBtnHtml(fcId) {
+  const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fcId) : [];
+  const title = frs.length
+    ? 'Show this classification\'s open questions on the back of its map tile'
+    : 'No open frontiers are recorded as bearing on this classification — the back of the tile says so';
+  return `<button type="button" class="dc-flip-btn" data-dc-flip="${esc(fcId)}" title="${esc(title)}">${fcFlipLabel(fcId)}</button>`;
+}
+function wireFcFlipButtons(root) {
+  root.querySelectorAll('.dc-flip-btn[data-dc-flip]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();   // inside catalogue rows, a plain click expands/lights — flipping must not
+      const id = b.dataset.dcFlip;
+      if (typeof toggleTileFlip === 'function') toggleTileFlip(id);
+      const tile = document.querySelector(`.pt-tile[data-fc="${CSS.escape(id)}"]`);
+      if (tile && tile.scrollIntoView) tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // The FC-record path re-renders its own panel; everywhere else,
+      // refresh this button's label in place.
+      if (b.isConnected) { b.textContent = fcFlipLabel(id); }
+    });
+  });
+}
+
 function renderSidebarFC(fc) {
   const inner = document.getElementById('sidebar-inner');
   const y = yieldSegments(fc);
@@ -871,13 +904,7 @@ function renderSidebarFC(fc) {
     <div class="detail-card ${fc.category}">
       <div style="display:flex;align-items:center;gap:0;margin-bottom:4px">
         <span class="dc-symbol">${esc(fc.symbol)}</span>
-        ${(() => {
-          const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fc.id) : [];
-          const flipped = (typeof _flippedTiles !== 'undefined') && _flippedTiles.has(fc.id);
-          const lbl = flipped ? '⟲ flip the tile back'
-            : (frs.length ? `? flip the tile — ${frs.length} open question${frs.length===1?'':'s'}` : '? flip the tile — open questions');
-          return `<button type="button" class="dc-flip-btn" data-dc-flip="${esc(fc.id)}" title="${frs.length ? 'Show this classification\'s open questions on the back of its map tile' : 'No open frontiers are recorded as bearing on this classification — the back of the tile says so'}">${lbl}</button>`;
-        })()}
+        ${fcFlipBtnHtml(fc.id)}
       </div>
       <div class="dc-title">${esc(fc.label)}</div>
       <div class="dc-fullname">${esc(fc.full_name)}</div>
@@ -933,14 +960,7 @@ function renderSidebarFC(fc) {
   inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
   // Shared-axis lighting — axis names light every classification carrying
   // that axis (see lightSharedAxis in explorer-map.js).
-  inner.querySelectorAll('.dc-flip-btn[data-dc-flip]').forEach(b => {
-    b.addEventListener('click', () => {
-      const id = b.dataset.dcFlip;
-      if (typeof toggleTileFlip === 'function') toggleTileFlip(id);
-      const tile = document.querySelector(`.pt-tile[data-fc="${CSS.escape(id)}"]`);
-      if (tile && tile.scrollIntoView) tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  });
+  wireFcFlipButtons(inner);
   inner.querySelectorAll('.ax-name-btn[data-axis-name]').forEach(btn => {
     btn.addEventListener('click', () => {
       if (typeof lightSharedAxis === 'function') lightSharedAxis(btn.dataset.axisName);
@@ -1527,7 +1547,10 @@ function renderSidebarBrowseClassifications(filter) {
             <div class="sbc-detail-inner">
               ${fc.description ? `<div class="sbc-detail-desc">${esc(fc.description)}</div>` : ''}
               <div class="sbc-detail-meta">${esc(fc.sector)} · ${fc.cell_count} cells · ${fc.prediction_count} predictions</div>
-              <button type="button" class="sbc-open-record" data-sbc-open="${esc(fc.id)}">open full record →</button>
+              <div class="sbc-detail-actions">
+                <button type="button" class="sbc-open-record" data-sbc-open="${esc(fc.id)}">open full record →</button>
+                ${fcFlipBtnHtml(fc.id)}
+              </div>
             </div>
           </div>`;
         }).join('')}
@@ -1568,6 +1591,7 @@ function renderSidebarBrowseClassifications(filter) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRow(); }
     });
   });
+  wireFcFlipButtons(inner);
   inner.querySelectorAll('[data-sbc-open]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();

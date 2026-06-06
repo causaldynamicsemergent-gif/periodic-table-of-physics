@@ -640,3 +640,13 @@ header.masthead { position: relative; z-index: 50; }
   white-space: nowrap;
 }
 .dc-flip-btn:hover { border-color: var(--accent, #b5482a); color: var(--accent, #b5482a); }
+
+/* ---------- 15. Flip control inside catalogue rows ---------- */
+.sbc-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+.sbc-detail-actions .dc-flip-btn { margin-left: 0; }
