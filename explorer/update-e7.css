@@ -293,20 +293,14 @@
    ------------------------------------------------------------- */
 .dc-pair-cols {
   display: grid;
-  grid-template-columns: 1fr;
+  /* UX fix — the old rule went two-column at viewport ≥ 920px regardless
+     of how narrow the user had dragged the sidebar, crushing both columns
+     into thin vertical strips (reported by a user on Compare programs).
+     auto-fit + minmax keys the layout on the panel's OWN width: columns
+     sit side-by-side only when each gets at least 240px, and stack into
+     a single readable column otherwise. No media query, no JS. */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 10px;
-}
-
-@media (min-width: 920px) {
-  /* Once the viewport is wide enough that a typical sidebar split
-     can hold the two-column layout, expand. Roughly: viewport ≥
-     920px ⇒ sidebar ≥ ~520px assuming a 400px+ map pane. The
-     splitter remembers its width in localStorage so user choices
-     persist; this break-point keeps the columns side-by-side at
-     the typical default width. */
-  .dc-pair-cols {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .dc-pair-col {

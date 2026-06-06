@@ -249,9 +249,20 @@ body.splitter-dragging * { cursor: col-resize !important; }
 /* ============== Map pane ============== */
 .map-pane {
   position: relative;
-  overflow: auto;
+  /* UX fix — was overflow: auto. Panning is transform-based, but the
+     transformed map still expanded the pane's scrollable area, so a
+     horizontal trackpad swipe scrolled the PANE itself: the sticky
+     topbar (sticky is vertical-only here) and the absolutely-anchored
+     sidebar tab rode left with it — the reported "tools went off
+     screen / tab disconnected from the splitter" glitch. hidden kills
+     that whole bug class; drag-pan + wheel zoom handle all map
+     navigation. */
+  overflow: hidden;
   background: var(--paper);
 }
+/* The questions view is a scrollable card surface, not a zoomable map —
+   it is the one mode that legitimately scrolls the pane. */
+.map-pane.view-questions { overflow: auto; }
 .map-zoom-wrap {
   /* This is the zoomable layer; everything in the map lives inside. */
   transform-origin: 0 0;
@@ -1097,7 +1108,11 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
 /* ---- Feedback: floating right-edge tab + survey modal ---- */
 .feedback-tab {
-  position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+  /* UX fix — was top: 50%, which sat exactly over the sidebar
+     collapse/expand tab (also right-edge, mid-height) whenever the
+     sidebar was hidden, burying it. Sits lower now so both stay
+     reachable. */
+  position: fixed; right: 0; top: 75%; transform: translateY(-50%);
   z-index: 900; cursor: pointer; border: none;
   background: var(--accent); color: #fbf9f1;
   font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;

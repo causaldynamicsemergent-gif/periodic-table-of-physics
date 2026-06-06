@@ -1071,35 +1071,59 @@ function wireToolbar() {
   wireRowsByDropdown();
 
   // View dropdown — the prominent View button in the map's control row.
-  // The dropdown is the view toolbox (grouping chips + map tools). It
-  // stays open while you work (clicking tiles to compare shouldn't slam
-  // it shut); the button toggles it. Closed on every load — no
-  // remembered state, per the always-start-at-default rule.
+  // The dropdown is the view toolbox (grouping chips + map tools).
+  // UX fix (user feedback) — these used to stay open until their button
+  // was clicked again; now they behave like every other menu: clicking
+  // anywhere outside closes them, and opening one closes the other.
+  // Clicks INSIDE an open toolbox still keep it open, so toggling two
+  // overlay chips in a row works without reopening. Closed on every
+  // load — no remembered state, per the always-start-at-default rule.
   const psBar = document.getElementById('pt-structure');
   const psCollapse = document.getElementById('ps-collapse');
+  const psTools = document.getElementById('ps-tools');
+  const psToolsBtn = document.getElementById('ps-tools-btn');
+
+  const setViewOpen = (open) => {
+    if (!psBar || !psCollapse) return;
+    psBar.classList.toggle('ps-open', open);
+    psCollapse.classList.toggle('active', open);
+    psCollapse.setAttribute('aria-expanded', open ? 'true' : 'false');
+    psCollapse.title = open ? 'Close the view toolbox' : 'Open the view toolbox';
+  };
+  const setToolsOpen = (open) => {
+    if (!psTools || !psToolsBtn) return;
+    psTools.classList.toggle('ps-open', open);
+    psToolsBtn.classList.toggle('active', open);
+    psToolsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    psToolsBtn.title = open ? 'Close the map tools' : 'Open the map tools';
+  };
+
   if (psBar && psCollapse) {
     psCollapse.addEventListener('click', () => {
       const open = !psBar.classList.contains('ps-open');
-      psBar.classList.toggle('ps-open', open);
-      psCollapse.classList.toggle('active', open);
-      psCollapse.setAttribute('aria-expanded', open ? 'true' : 'false');
-      psCollapse.title = open ? 'Close the view toolbox' : 'Open the view toolbox';
+      setViewOpen(open);
+      if (open) setToolsOpen(false);
     });
   }
 
-  // Tools dropdown — same open/close pattern as View; both stay open
-  // while you work and close only from their buttons.
-  const psTools = document.getElementById('ps-tools');
-  const psToolsBtn = document.getElementById('ps-tools-btn');
+  // Tools dropdown — same open/close pattern as View.
   if (psTools && psToolsBtn) {
     psToolsBtn.addEventListener('click', () => {
       const open = !psTools.classList.contains('ps-open');
-      psTools.classList.toggle('ps-open', open);
-      psToolsBtn.classList.toggle('active', open);
-      psToolsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      psToolsBtn.title = open ? 'Close the map tools' : 'Open the map tools';
+      setToolsOpen(open);
+      if (open) setViewOpen(false);
     });
   }
+
+  // Outside-click close for both toolboxes. Runs on bubble after the
+  // toggle handlers above, and the toggle buttons sit inside their own
+  // wrappers, so a click that just opened a menu never immediately
+  // closes it. Clicking the Browse/Analyse/Help buttons, a tile, or the
+  // map background all count as outside — the menus get out of the way.
+  document.addEventListener('click', (e) => {
+    if (psBar && psBar.classList.contains('ps-open') && !psBar.contains(e.target)) setViewOpen(false);
+    if (psTools && psTools.classList.contains('ps-open') && !psTools.contains(e.target)) setToolsOpen(false);
+  });
 
   // Toolbox: all-tiles toggle — light every tile at once / switch them
   // all off. With every tile lit, unlighting a few is inverse selection.

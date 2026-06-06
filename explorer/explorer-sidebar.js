@@ -792,7 +792,21 @@ function wireFcFlipButtons(root) {
       const id = b.dataset.dcFlip;
       if (typeof toggleTileFlip === 'function') toggleTileFlip(id);
       const tile = document.querySelector(`.pt-tile[data-fc="${CSS.escape(id)}"]`);
-      if (tile && tile.scrollIntoView) tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // UX fix — was tile.scrollIntoView, which scrolled the map PANE
+      // itself; the pane no longer scrolls in map mode (that scroll
+      // dragged the topbar and sidebar tab off-screen — the reported
+      // glitch). Centering now goes through the map's own pan: the
+      // translate is in screen pixels, so the screen-space delta between
+      // tile centre and pane centre maps 1:1 onto panX/panY.
+      const pane = document.getElementById('map-pane');
+      if (tile && pane && typeof state !== 'undefined') {
+        const tr = tile.getBoundingClientRect();
+        const pr = pane.getBoundingClientRect();
+        state.panX += (pr.left + pr.width / 2) - (tr.left + tr.width / 2);
+        state.panY += (pr.top + pr.height / 2) - (tr.top + tr.height / 2);
+        if (typeof clampPan === 'function') clampPan();
+        if (typeof applyZoom === 'function') applyZoom();
+      }
       // The FC-record path re-renders its own panel; everywhere else,
       // refresh this button's label in place.
       if (b.isConnected) { b.textContent = fcFlipLabel(id); }
