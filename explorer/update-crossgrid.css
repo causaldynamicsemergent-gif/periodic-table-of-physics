@@ -519,3 +519,11 @@
   overflow-x: auto;
 }
 .ta-diagram-wrap svg { display: block; width: 100%; max-width: 660px; height: auto; margin: 0 auto; }
+
+/* ---------- 11. Header above the toolbar ---------- */
+/* The help menu lives inside the masthead's stacking context, which sat
+   at z-index 30 under the toolbar's 40 — so the toolbar painted over the
+   open menu. The masthead now stacks above the toolbar (position set
+   explicitly so the z-index is guaranteed to apply). Toolbar dropdowns
+   open downward over the map, never upward, so nothing else changes. */
+header.masthead { position: relative; z-index: 50; }
