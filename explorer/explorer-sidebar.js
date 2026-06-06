@@ -426,6 +426,14 @@ function wirePanelJumps(root) {
 // =============================================================
 //   Sidebar: cell-content search results (Update A)
 // =============================================================
+// Search results are an accordion, not a link list: clicking a result
+// unfolds its full record inline (scrollable) and clicking again folds
+// it — the results list never disappears under you. The ↗ on each row
+// is the explicit "open the full page" action. Same pattern as the
+// overlay-lines and Browse panels. Expansion state survives re-renders.
+const _csrExpanded = new Set();        // fcId::cellId of unfolded results
+const _csrGroupCollapsed = new Set();  // fcIds whose match list is folded
+
 function renderSidebarSearch(query) {
   const inner = document.getElementById('sidebar-inner');
   const q = (query || '').trim().toLowerCase();
@@ -483,6 +491,7 @@ function renderSidebarSearch(query) {
 
   const groupsHtml = fcIds.map(fcId => {
     const { fc, cellMatches } = groups[fcId];
+    const folded = _csrGroupCollapsed.has(fc.id);
     const cellsHtml = cellMatches.slice(0, 10).map(c => {
       // Find a snippet around the query
       const content = String(c.content || '');
@@ -496,19 +505,35 @@ function renderSidebarSearch(query) {
       } else {
         snippet = trim(content, 90);
       }
-      return `<div class="csr-cell" data-fc="${esc(fc.id)}" data-cell="${esc(c.cell_id)}">
+      const key = fc.id + '::' + c.cell_id;
+      const exp = _csrExpanded.has(key);
+      const axes = Object.entries(c.axis_values || {});
+      const examples = (c.realized_examples || []).filter(Boolean);
+      return `<div class="csr-cell${exp ? ' sbc-open' : ''}" data-fc="${esc(fc.id)}" data-cell="${esc(c.cell_id)}" role="button" tabindex="0" aria-expanded="${exp}" title="Click to unfold this result here; ↗ opens the full record">
         <span class="csr-cell-id">${esc(c.cell_id)}</span>
         ${highlight(snippet, q)}
+        <span class="sbc-chev">${exp ? '▾' : '▸'}</span>
+        <button type="button" class="csr-open" data-csr-open data-fc="${esc(fc.id)}" data-cell="${esc(c.cell_id)}" title="Open this cell's full record">↗</button>
+      </div>
+      <div class="sbc-detail csr-detail" data-csr-detail="${esc(key)}"${exp ? '' : ' hidden'}>
+        <div class="sbc-detail-inner">
+          <div class="csr-detail-content">${highlight(String(c.content || ''), q)}</div>
+          ${axes.length ? `<div class="csr-detail-axes">${axes.map(([k, v]) => `<span class="csr-axis"><span class="csr-axis-k">${esc(k)}</span> ${esc(String(v))}</span>`).join('')}</div>` : ''}
+          ${examples.length ? `<div class="csr-detail-ex"><span class="csr-axis-k">realized examples</span> ${examples.map(esc).join(' · ')}</div>` : ''}
+          <button type="button" class="csr-detail-openfull" data-csr-open data-fc="${esc(fc.id)}" data-cell="${esc(c.cell_id)}">open the full record ↗</button>
+        </div>
       </div>`;
     }).join('');
-    const overflow = cellMatches.length > 10 ? `<div style="font-size:11px;color:var(--ink-mute);font-style:italic;padding:4px 8px">+${cellMatches.length - 10} more — open the tile for the full list.</div>` : '';
+    const overflow = cellMatches.length > 10 ? `<div style="font-size:11px;color:var(--ink-mute);font-style:italic;padding:4px 8px">+${cellMatches.length - 10} more — open the tile (↗) for the full list.</div>` : '';
     return `<div class="csr-group">
-      <div class="csr-group-head" data-fc-open="${esc(fc.id)}">
+      <div class="csr-group-head${folded ? '' : ' sbc-open'}" data-csr-group="${esc(fc.id)}" role="button" tabindex="0" aria-expanded="${!folded}" title="Click to fold/unfold this group's matches; ↗ opens the classification">
         <span class="group-sym">${esc(fc.symbol)}</span>
         <span>${esc(fc.label)}</span>
         <span class="group-ct">${cellMatches.length} match${cellMatches.length===1?'':'es'}</span>
+        <span class="sbc-chev">${folded ? '▸' : '▾'}</span>
+        <button type="button" class="csr-open" data-csr-fc-open="${esc(fc.id)}" title="Open this classification's full record">↗</button>
       </div>
-      ${cellsHtml || ''}${overflow}
+      ${folded ? '' : (cellsHtml || '') + overflow}
     </div>`;
   }).join('');
 
@@ -520,11 +545,47 @@ function renderSidebarSearch(query) {
     </div>
   `;
 
-  inner.querySelectorAll('[data-cell]').forEach(el => {
-    el.addEventListener('click', () => selectCell(el.dataset.fc, el.dataset.cell));
+  // Rows unfold in place; only ↗ navigates to the full record.
+  inner.querySelectorAll('.csr-cell[data-cell]').forEach(el => {
+    const key = el.dataset.fc + '::' + el.dataset.cell;
+    const onToggle = () => {
+      const detail = inner.querySelector(`[data-csr-detail="${CSS.escape(key)}"]`);
+      const nowOpen = !_csrExpanded.has(key);
+      if (nowOpen) _csrExpanded.add(key); else _csrExpanded.delete(key);
+      if (detail) detail.hidden = !nowOpen;
+      el.classList.toggle('sbc-open', nowOpen);
+      el.setAttribute('aria-expanded', String(nowOpen));
+      const chev = el.querySelector('.sbc-chev');
+      if (chev) chev.textContent = nowOpen ? '▾' : '▸';
+    };
+    el.addEventListener('click', onToggle);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
+    });
   });
-  inner.querySelectorAll('[data-fc-open]').forEach(el => {
-    el.addEventListener('click', () => selectFC(el.dataset.fcOpen));
+  inner.querySelectorAll('[data-csr-open]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      selectCell(btn.dataset.fc, btn.dataset.cell);
+    });
+  });
+  inner.querySelectorAll('.csr-group-head[data-csr-group]').forEach(el => {
+    const id = el.dataset.csrGroup;
+    const onToggle = () => {
+      if (_csrGroupCollapsed.has(id)) _csrGroupCollapsed.delete(id);
+      else _csrGroupCollapsed.add(id);
+      renderSidebarSearch(state.searchQuery);
+    };
+    el.addEventListener('click', onToggle);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
+    });
+  });
+  inner.querySelectorAll('[data-csr-fc-open]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      selectFC(btn.dataset.csrFcOpen);
+    });
   });
 }
 
