@@ -138,6 +138,7 @@
     state.selectedGlossaryTerm = null; state.selectedPair = null; state.selectedKind = null;
     state.predFilter = 'all';
     state.activePanel = 'about';
+    state.activeView = 'classifications';   // home = the start state, which is the classification map
     if (typeof writeHash === 'function') writeHash();
     renderActive();
     if (typeof renderMap === 'function') renderMap();

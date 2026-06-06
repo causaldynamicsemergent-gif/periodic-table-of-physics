@@ -1411,6 +1411,7 @@ function buildBrowseMenu(filter) {
   const menu = document.getElementById('browse-menu');
   const tabs = [
     { id: '__home',                 icon: '⌂', title: 'Home',            desc: 'Back to the start — full map, default panel.' },
+    { id: '__questions',            icon: '？', title: 'Open questions',   desc: 'The open frontiers as primary cards — what is unresolved, grouped by why.' },
     { id: 'browse-classifications', icon: '☰', title: 'Classifications', desc: 'All formal classifications, grouped by sector.' },
     { id: 'phenomena',              icon: '◉', title: 'Phenomena',       desc: 'Highlight where each physical thing lives across the map.' },
     { id: 'browse-architectures',   icon: '⌬', title: 'Architectures',   desc: 'Established and candidate-foundational programs.' },
@@ -1433,6 +1434,10 @@ function buildBrowseMenu(filter) {
     el.addEventListener('click', () => {
       if (el.dataset.tab === '__home') {
         if (typeof window.navHome === 'function') window.navHome();
+        return;
+      }
+      if (el.dataset.tab === '__questions') {
+        if (typeof setActiveView === 'function') setActiveView('questions');
         return;
       }
       switchSidebarPanel(el.dataset.tab);
