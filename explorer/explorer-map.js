@@ -486,6 +486,18 @@ function renderMap() {
   ptContent.querySelectorAll('.pt-tile').forEach(el => {
     el.addEventListener('click', (e) => {
       const id = el.dataset.fc;
+      // Zoomed in, the tile's marks explain themselves on click instead of
+      // selecting — poke any element to learn what it is.
+      if (state.zoom >= EXPLAIN_ZOOM && !el.classList.contains('flipped')) {
+        for (const [sel, title, body] of TILE_EXPLAINERS) {
+          const hit = e.target.closest && e.target.closest(sel);
+          if (hit && el.contains(hit)) {
+            e.stopPropagation();
+            showTileExplainer(hit, title, body);
+            return;
+          }
+        }
+      }
       // UX pass — with the cross-section builder open, map clicks build the
       // cross-section directly: toggle this classification in or out of it.
       // The builder's render then lights the selected set on the map.
@@ -514,10 +526,18 @@ function renderMap() {
   // lights the whole row and opens an explanation of what the current
   // grouping means (and what this row holds). Click again: row off.
   document.querySelectorAll('.pt-row-label').forEach(el => {
-    el.title = 'Click: light this whole row and explain how the rows are grouped';
+    el.title = 'Click: light this whole row (on top of anything already lit) and explain how the rows are grouped';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
     el.addEventListener('click', () => {
       const rowEl = el.closest('.pt-row');
       if (rowEl && rowEl.dataset.key) toggleRowSpotlight(rowEl.dataset.key);
+    });
+  });
+  // Cross-view column headers toggle their columns, same additive rules.
+  document.querySelectorAll('.pt-cross-col[data-col-key]').forEach(el => {
+    el.addEventListener('click', () => {
+      toggleColSpotlight(el.dataset.colDim, el.dataset.colKey);
     });
   });
 
@@ -566,9 +586,9 @@ function renderCrossRows(keys, groups, colDim, subDim) {
   // sector), so the grid template is inline per render.
   const tmpl = `grid-template-columns:160px repeat(${cols.length}, minmax(128px, 1fr))`;
   const head = `
-    <div class="pt-cross-head" style="${tmpl}" aria-hidden="true">
+    <div class="pt-cross-head" style="${tmpl}">
       <div class="pt-cross-corner"></div>
-      ${cols.map(c => `<div class="pt-cross-col${colDim === 'category' ? ' ' + esc(c) : ''}">${esc(c)}</div>`).join('')}
+      ${cols.map(c => `<div class="pt-cross-col${colDim === 'category' ? ' ' + esc(c) : ''}" role="button" tabindex="0" data-col-key="${esc(c)}" data-col-dim="${esc(colDim)}" title="Click: light every tile in the ${esc(c)} column — click again to switch the column off">${esc(c)}</div>`).join('')}
     </div>`;
   const sd = subDim ? GROUP_DIMS[subDim] : null;
   const CLOSURE_GLYPH = { 'complete-within-domain': '■', 'partial': '◐', 'conjectural': '□' };
@@ -1294,6 +1314,12 @@ function wireMapDragPan() {
     // overlay-line exclusion above was this same bug class once).
     if (t.closest('.map-topbar')) return;
     if (t.closest('button, a, [role="button"], input, select, textarea')) return;
+    // Row labels and cross-grid column headers are click targets, not
+    // canvas: pressing one must not fire the clear-everything gesture
+    // (the wipe-then-rerender destroyed the label before its click could
+    // fire — "I have to click twice" — and un-dimmed every tile —
+    // "clicking a second row turns everything on").
+    if (t.closest('.pt-row-label, .pt-cross-head')) return;
     dragging = true;
     moved = false;
     startX = e.clientX; startY = e.clientY;
@@ -1380,6 +1406,78 @@ function rowGroupMembers(key) {
   const rowDim = parseGroupDims()[0];
   const groupOf = (GROUP_DIMS[rowDim] || GROUP_DIMS.sector).of;
   return FCS.filter(f => (groupOf(f) || 'Other') === key).map(f => f.id);
+}
+
+// Column toggle in cross views — additive, mirroring the row toggle:
+// each column lights ON TOP of whatever is lit; clicking a fully-lit
+// column switches just that column off.
+// =============================================================
+//   Tile-element explainers — learn the map by poking it
+//
+//   Zoomed in past EXPLAIN_ZOOM, the marks on a tile become click
+//   targets: clicking the symbol, the counts, the ⚠ flag, the cell
+//   grid, the coverage chips, the yield bar, or the footer opens a
+//   small popup explaining exactly that mark, with a link to the full
+//   how-to-read guide. Below the threshold a tile click selects as
+//   always — zooming in is the gesture that says "show me the parts".
+// =============================================================
+var EXPLAIN_ZOOM = 1.35;
+var TILE_EXPLAINERS = [
+  ['.fals-flag',           '⚠ falsified flag',  'The count of falsified predictions held inside this classification. Falsifications are kept on the map deliberately — where a pattern broke is information.'],
+  ['.tile-xc-recurrence',  '⇄ recurrence',      'This classification\'s content recurs in another classification — the same structure filed under a different organizing scheme. The cross-classification edges carry the details.'],
+  ['.cell-ct',             'cells · predictions', 'The two extent numbers: how many cells (positions) the classification organizes, and how many predictions it carries.'],
+  ['.tile-chip-conjectured','gap chip',          'Positions the constructive pattern implies should be filled but that nothing fills yet — the Mendeleev-style empty-cell prediction.'],
+  ['.tile-chip-scale',     'scale chip',         'At least one cell or prediction here carries a documented quantitative bound or scale.'],
+  ['.tile-chip',           'coverage chip',      'Coverage signals: at least one cell here is targeted by a documented experimental program, or carries a quantitative scale.'],
+  ['.tile-cells-mini',     'cell grid',          'One square per cell. Filled = realized content; faint hatch = structurally forbidden; red hatch = a predicted gap (implied but unfilled).'],
+  ['.tile-yield-meta',     'footer',             'Total predictions, then the closure glyph: ■ the classification\'s organizing pattern is complete within its domain · ◐ partial · □ conjectural.'],
+  ['.tile-yield',          'yield bar',          'Predictions by status, proportionally: green confirmed · amber tension · gray not tested · red falsified · purple retro-explanatory.'],
+  ['.tile-symbol',         'symbol',             'The classification\'s 2–3 letter mark, derived from its name — the same mark used in records, edges, and search results.'],
+];
+function hideTileExplainer() {
+  const p = document.getElementById('tile-explain-pop');
+  if (p) p.remove();
+}
+function showTileExplainer(anchorEl, title, body) {
+  hideTileExplainer();
+  const pop = document.createElement('div');
+  pop.id = 'tile-explain-pop';
+  pop.innerHTML = `
+    <div class="tep-head">${title}<button type="button" class="tep-close" title="Close">×</button></div>
+    <div class="tep-body">${body}</div>
+    <button type="button" class="tep-guide">the full how-to-read guide →</button>
+  `;
+  document.body.appendChild(pop);
+  const r = anchorEl.getBoundingClientRect();
+  pop.style.left = Math.max(8, Math.min(window.innerWidth - 280, r.left)) + 'px';
+  pop.style.top = (r.bottom + 8) + 'px';
+  pop.querySelector('.tep-close').addEventListener('click', hideTileExplainer);
+  pop.querySelector('.tep-guide').addEventListener('click', () => {
+    hideTileExplainer();
+    const ov = document.getElementById('help-overlay');
+    if (ov) ov.classList.add('show');
+  });
+  setTimeout(() => {
+    document.addEventListener('click', function away(e) {
+      if (!pop.contains(e.target)) { hideTileExplainer(); document.removeEventListener('click', away); }
+    });
+  }, 0);
+}
+
+function toggleColSpotlight(colDim, value) {
+  const d = GROUP_DIMS[colDim];
+  if (!d) return;
+  const members = FCS.filter(f => (d.of(f) || 'Other') === value).map(f => f.id);
+  if (!members.length) return;
+  if (!state.tileSpotlight) state.tileSpotlight = new Set();
+  const allLit = members.every(id => state.tileSpotlight.has(id));
+  members.forEach(id => allLit ? state.tileSpotlight.delete(id) : state.tileSpotlight.add(id));
+  renderMap();
+  if (typeof showToast === 'function') {
+    showToast(allLit
+      ? `column switched off — ${value}`
+      : `lit the ${value} column — ${members.length} classification${members.length === 1 ? '' : 's'}`);
+  }
 }
 
 function toggleRowSpotlight(key) {

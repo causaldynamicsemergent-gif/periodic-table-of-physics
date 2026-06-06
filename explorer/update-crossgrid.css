@@ -650,3 +650,49 @@ header.masthead { position: relative; z-index: 50; }
   margin-top: 6px;
 }
 .sbc-detail-actions .dc-flip-btn { margin-left: 0; }
+
+/* ---------- 16. Column-header toggles + tile-element explainer popup ---------- */
+.pt-cross-col[data-col-key] { cursor: pointer; }
+.pt-cross-col[data-col-key]:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.pt-row-label { cursor: pointer; }
+
+#tile-explain-pop {
+  position: fixed;
+  z-index: 80;
+  width: 270px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, #b5482a);
+  border-radius: 3px;
+  box-shadow: var(--shadow-tile-hover, 0 6px 18px rgba(0,0,0,0.16));
+  padding: 9px 11px 10px;
+}
+#tile-explain-pop .tep-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+#tile-explain-pop .tep-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 14px; line-height: 1; color: var(--ink-mute); padding: 0 2px;
+}
+#tile-explain-pop .tep-body { font-size: 11.5px; line-height: 1.5; color: var(--ink-soft); }
+#tile-explain-pop .tep-guide {
+  margin-top: 8px;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+#tile-explain-pop .tep-guide:hover { border-color: var(--ink-mute); color: var(--ink); }
