@@ -286,6 +286,7 @@ function undoMapStep() {
 // layer off, fit to page. The reset itself lands in history, so even a
 // reset can be undone.
 function resetMapToDefault() {
+  if (typeof clearTileFlips === 'function') clearTileFlips();
   state.group           = 'sector';
   state.spotlightActive = new Set();
   state.tileSpotlight   = new Set();
@@ -463,6 +464,24 @@ function renderMap() {
   const ptContent = document.getElementById('pt-content');
   ptContent.innerHTML = `<div class="pt-table" id="pt-table">${rows}<svg class="pt-overlay-svg" id="pt-overlay"></svg></div>`;
 
+  // Wire flip controls — the ? chip flips, back rows open frontier
+  // records; all stop propagation so flipping/reading never selects.
+  ptContent.querySelectorAll('.tile-flip-btn[data-flip]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleTileFlip(b.dataset.flip);
+    });
+  });
+  ptContent.querySelectorAll('.tile-back').forEach(back => {
+    back.addEventListener('click', e => { e.stopPropagation(); });
+  });
+  ptContent.querySelectorAll('.tile-back-row[data-flip-frontier]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      if (typeof selectDiscourseNode === 'function') selectDiscourseNode(b.dataset.flipFrontier);
+    });
+  });
+
   // Wire tile interactions
   ptContent.querySelectorAll('.pt-tile').forEach(el => {
     el.addEventListener('click', (e) => {
@@ -599,6 +618,62 @@ function renderCrossRows(keys, groups, colDim, subDim) {
   }).join('');
   return head + body;
 }
+
+// =============================================================
+//   Tile flip — open questions on the back of the tile
+//
+//   Each tile flips to show the open frontiers its classification bears
+//   on (the recorded bears-on edges). Only 5 of 30 FCs currently carry
+//   such edges; an empty back states that absence explicitly — under
+//   this map's methodology, "no recorded frontier bears on this" is
+//   itself information, not a gap to paper over. Flips are a reading
+//   aid, not a layer: not in the URL, not in undo history, cleared by
+//   reset/Esc.
+// =============================================================
+var _flippedTiles = new Set();
+var _FRONTIERS_BY_FC = null;
+function frontiersForFC(fcId) {
+  if (!_FRONTIERS_BY_FC) {
+    _FRONTIERS_BY_FC = {};
+    // The transform files bears-on edges under discourse_edges_by_type and
+    // frontier nodes under discourse_by_id (raw nodes/edges aren't kept).
+    const edges = (DATA && DATA.discourse_edges_by_type && DATA.discourse_edges_by_type['bears-on']) || [];
+    const dnode = id => (DATA && DATA.discourse_by_id && DATA.discourse_by_id[id]) || null;
+    edges.forEach(e => {
+      const fc = (FC_BY_ID && FC_BY_ID[e.from]) ? e.from : (FC_BY_ID && FC_BY_ID[e.to]) ? e.to : null;
+      const frN = dnode(e.from) && dnode(e.from).type === 'open-frontier' ? dnode(e.from)
+                : dnode(e.to)   && dnode(e.to).type   === 'open-frontier' ? dnode(e.to) : null;
+      if (!fc || !frN) return;
+      if (!_FRONTIERS_BY_FC[fc]) _FRONTIERS_BY_FC[fc] = [];
+      if (!_FRONTIERS_BY_FC[fc].some(x => x.id === frN.id)) {
+        _FRONTIERS_BY_FC[fc].push({
+          id: frN.id,
+          label: frN.title || frN.name || frN.full_label || frN.label || frN.id,
+          nature: e.nature || '',
+          description: e.description || '',
+        });
+      }
+    });
+  }
+  return _FRONTIERS_BY_FC[fcId] || [];
+}
+function toggleTileFlip(fcId) {
+  if (_flippedTiles.has(fcId)) _flippedTiles.delete(fcId);
+  else _flippedTiles.add(fcId);
+  renderMap();
+  // One-shot flip animation on the freshly-rendered tile.
+  const el = document.querySelector(`.pt-tile[data-fc="${CSS.escape(fcId)}"]`);
+  if (el) {
+    el.classList.add('tile-flipping');
+    el.addEventListener('animationend', () => el.classList.remove('tile-flipping'), { once: true });
+  }
+  // The FC record's flip button mirrors the state — refresh if open.
+  if (state.selectedFC === fcId && !state.selectedCell && typeof renderSidebarFC === 'function'
+      && typeof FC_BY_ID !== 'undefined' && FC_BY_ID[fcId]) {
+    renderSidebarFC(FC_BY_ID[fcId]);   // takes the FC object, not the id
+  }
+}
+function clearTileFlips() { _flippedTiles.clear(); }
 
 function renderTile(fc) {
   const y = yieldSegments(fc);
@@ -740,8 +815,24 @@ function renderTile(fc) {
     ? ' <span class="tile-xc-recurrence" title="' + esc(recur.title) + '">⇄</span>'
     : '';
 
+  // Tile flip — the back face lists the open frontiers this FC bears on.
+  const tileFrontiers = (typeof frontiersForFC === 'function') ? frontiersForFC(fc.id) : [];
+  const isFlipped = _flippedTiles.has(fc.id);
+  const flipChip = `<button type="button" class="tile-flip-btn${tileFrontiers.length ? ' has-q' : ''}" data-flip="${esc(fc.id)}" title="${isFlipped ? 'Flip back to the classification' : (tileFrontiers.length ? `Flip — ${tileFrontiers.length} open question${tileFrontiers.length===1?'':'s'} bear${tileFrontiers.length===1?'s':''} on this` : 'Flip — no open frontiers recorded against this classification')}">${isFlipped ? '⟲' : (tileFrontiers.length ? '?' + tileFrontiers.length : '?')}</button>`;
+  let backHtml = '';
+  if (isFlipped) {
+    const rows = tileFrontiers.slice(0, 4).map(f =>
+      `<button type="button" class="tile-back-row" data-flip-frontier="${esc(f.id)}" title="${esc((f.nature ? f.nature.replace(/-/g, ' ') + ' — ' : '') + (f.description ? f.description.slice(0, 180) : 'open the frontier record'))}">${esc(f.label)}${f.nature ? `<span class="tbr-nature">${esc(f.nature.replace(/-/g, ' '))}</span>` : ''}</button>`
+    ).join('');
+    const more = tileFrontiers.length > 4 ? `<div class="tile-back-more">+${tileFrontiers.length - 4} more — open the frontier records via ? on the front</div>` : '';
+    backHtml = `<div class="tile-back">
+      <div class="tile-back-head">open questions</div>
+      ${tileFrontiers.length ? rows + more : '<div class="tile-back-empty">No open frontiers are recorded as bearing on this classification — that absence is itself recorded information.</div>'}
+    </div>`;
+  }
   return `
-    <div class="pt-tile ${fc.category}${dim?' dim':''}${spot?' spot':''}${selected?' selected':''}${phenOn?' phen-on':''}${phenOffWhileActive?' phen-off-and-active':''}${discourseHighlight?' discourse-highlight':''}" data-fc="${esc(fc.id)}" tabindex="0" aria-label="${esc(fc.label)}"${phenStyle?' style="'+phenStyle+'"':''}>
+    <div class="pt-tile ${fc.category}${dim?' dim':''}${spot?' spot':''}${selected?' selected':''}${phenOn?' phen-on':''}${phenOffWhileActive?' phen-off-and-active':''}${discourseHighlight?' discourse-highlight':''}${isFlipped?' flipped':''}" data-fc="${esc(fc.id)}" tabindex="0" aria-label="${esc(fc.label)}"${phenStyle?' style="'+phenStyle+'"':''}>
+      ${flipChip}${backHtml}
       ${badgeHtml}
       <div class="tile-corner">
         <span class="cell-ct">${fc.cell_count}c · ${fc.prediction_count}p${recurHtml}</span>
@@ -882,6 +973,7 @@ function lightSharedAxis(name) {
 // keep the gentler clearMapSpotlights below, so a stray click never wipes
 // a deliberately-chosen status filter.
 function clearAllMapLighting() {
+  if (typeof clearTileFlips === 'function') clearTileFlips();
   const hadTiles  = state.tileSpotlight  && state.tileSpotlight.size;
   const hadEdges  = state.edgeSpotlight  && state.edgeSpotlight.size;
   const hadStatus = state.spotlightActive && state.spotlightActive.size;

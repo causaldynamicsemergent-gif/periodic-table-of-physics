@@ -871,6 +871,13 @@ function renderSidebarFC(fc) {
     <div class="detail-card ${fc.category}">
       <div style="display:flex;align-items:center;gap:0;margin-bottom:4px">
         <span class="dc-symbol">${esc(fc.symbol)}</span>
+        ${(() => {
+          const frs = (typeof frontiersForFC === 'function') ? frontiersForFC(fc.id) : [];
+          const flipped = (typeof _flippedTiles !== 'undefined') && _flippedTiles.has(fc.id);
+          const lbl = flipped ? '⟲ flip the tile back'
+            : (frs.length ? `? flip the tile — ${frs.length} open question${frs.length===1?'':'s'}` : '? flip the tile — open questions');
+          return `<button type="button" class="dc-flip-btn" data-dc-flip="${esc(fc.id)}" title="${frs.length ? 'Show this classification\'s open questions on the back of its map tile' : 'No open frontiers are recorded as bearing on this classification — the back of the tile says so'}">${lbl}</button>`;
+        })()}
       </div>
       <div class="dc-title">${esc(fc.label)}</div>
       <div class="dc-fullname">${esc(fc.full_name)}</div>
@@ -926,6 +933,14 @@ function renderSidebarFC(fc) {
   inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
   // Shared-axis lighting — axis names light every classification carrying
   // that axis (see lightSharedAxis in explorer-map.js).
+  inner.querySelectorAll('.dc-flip-btn[data-dc-flip]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.dcFlip;
+      if (typeof toggleTileFlip === 'function') toggleTileFlip(id);
+      const tile = document.querySelector(`.pt-tile[data-fc="${CSS.escape(id)}"]`);
+      if (tile && tile.scrollIntoView) tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
   inner.querySelectorAll('.ax-name-btn[data-axis-name]').forEach(btn => {
     btn.addEventListener('click', () => {
       if (typeof lightSharedAxis === 'function') lightSharedAxis(btn.dataset.axisName);

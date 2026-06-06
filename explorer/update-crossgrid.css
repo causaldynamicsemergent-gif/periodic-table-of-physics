@@ -551,3 +551,92 @@ header.masthead { position: relative; z-index: 50; }
    covered by neither, leaving an orphaned Tools button on the questions
    view. One rule for the whole row replaces all of that.) */
 .map-pane.view-questions .map-topbar { display: none; }
+
+/* ---------- 14. Tile flip — open questions on the back ---------- */
+.tile-flip-btn {
+  position: absolute;
+  bottom: 26px;
+  right: 5px;
+  z-index: 3;
+  width: auto;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--ink-mute);
+  cursor: pointer;
+}
+.tile-flip-btn.has-q { color: var(--accent, #b5482a); border-color: var(--accent, #b5482a); font-weight: 700; }
+.tile-flip-btn:hover { background: var(--paper-3, #f0ede4); }
+
+/* Flipped: the back face covers the tile content; the chip becomes ⟲. */
+.pt-tile.flipped > :not(.tile-back):not(.tile-flip-btn) { visibility: hidden; }
+.tile-back {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--paper-2, var(--paper));
+  border-radius: 3px;
+  padding: 6px 7px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  cursor: default;
+}
+.tile-back-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  border-bottom: 1px dashed var(--rule);
+  padding-bottom: 2px;
+}
+.tile-back-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 2px 0 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tile-back-row:hover { color: var(--accent, #b5482a); }
+.tbr-nature { display: block; font-size: 7.5px; color: var(--ink-mute); font-weight: 400; }
+.tile-back-more, .tile-back-empty {
+  font-size: 8.5px;
+  line-height: 1.35;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+/* one-shot flip feel on toggle */
+@keyframes tile-flip-anim { 0% { transform: scaleX(1); } 50% { transform: scaleX(0.05); } 100% { transform: scaleX(1); } }
+.pt-tile.tile-flipping { animation: tile-flip-anim 0.28s ease; }
+
+.dc-flip-btn {
+  margin-left: auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dc-flip-btn:hover { border-color: var(--accent, #b5482a); color: var(--accent, #b5482a); }
