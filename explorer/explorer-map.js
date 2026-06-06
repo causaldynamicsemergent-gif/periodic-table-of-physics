@@ -1286,6 +1286,14 @@ function wireMapDragPan() {
     // fired the clear-everything gesture — the bug where toggling a second
     // line appeared to switch every line back on.
     if (t.closest('#pt-overlay')) return;
+    // The control row (zoom, View, Tools, their dropdowns) is chrome, not
+    // background: pressing the phen-phen chip must never count as the
+    // clear-everything background click. And generically: any interactive
+    // element anywhere in the pane is a control, not canvas — this guard
+    // is what keeps the skip-list from falling behind future chrome (the
+    // overlay-line exclusion above was this same bug class once).
+    if (t.closest('.map-topbar')) return;
+    if (t.closest('button, a, [role="button"], input, select, textarea')) return;
     dragging = true;
     moved = false;
     startX = e.clientX; startY = e.clientY;
