@@ -1054,6 +1054,17 @@ function wireBrowseList(root) {
         });
         _dxbApplied.set(id, applied);
         if (rel.size && typeof renderMap === 'function') renderMap();
+        // UX pass — say what just happened, in the small window over the
+        // map, so a sparse node never feels like a dead click.
+        if (typeof showToast === 'function') {
+          const node = DATA.discourse_by_id && DATA.discourse_by_id[id];
+          const lbl = (node && node.label) || id;
+          if (rel.size) {
+            showToast(`${lbl} — lit ${rel.size} classification${rel.size === 1 ? '' : 's'} on the map${rel.indirect ? ' (through its neighboring frontiers and architectures)' : ''}`);
+          } else {
+            showToast(`${lbl} reaches no classification on the grid — its recorded relations stay among frontiers and architectures`);
+          }
+        }
       } else {
         const applied = _dxbApplied.get(id) || [];
         _dxbApplied.delete(id);

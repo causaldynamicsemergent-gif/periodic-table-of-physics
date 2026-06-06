@@ -310,6 +310,16 @@ function renderMap() {
     el.addEventListener('mousemove',  e => moveTooltip(e));
     el.addEventListener('mouseleave', hideTooltip);
   });
+  // UX pass — row labels are clickable, like the old map's rows: one click
+  // lights the whole row and opens an explanation of what the current
+  // grouping means (and what this row holds). Click again: row off.
+  document.querySelectorAll('.pt-row-label').forEach(el => {
+    el.title = 'Click: light this whole row and explain how the rows are grouped';
+    el.addEventListener('click', () => {
+      const rowEl = el.closest('.pt-row');
+      if (rowEl && rowEl.dataset.key) toggleRowSpotlight(rowEl.dataset.key);
+    });
+  });
 
   // Update C — discourse-highlight ring badge clicks. stopPropagation
   // so the underlying tile's whole-element click (which opens the FC
@@ -897,3 +907,89 @@ function zoomOut() {
   var b = document.getElementById('btn-clear-lit');
   if (b) b.addEventListener('click', function () { clearMapSpotlights(); });
 })();
+
+
+// =============================================================
+//   UX pass — clickable rows: light the row + explain the grouping
+// =============================================================
+function rowGroupMembers(key) {
+  let groupOf;
+  if (state.group === 'sector')        groupOf = f => f.sector;
+  else if (state.group === 'category') groupOf = f => f.category;
+  else                                 groupOf = f => f.closure_level;
+  return FCS.filter(f => (groupOf(f) || 'Other') === key).map(f => f.id);
+}
+
+function toggleRowSpotlight(key) {
+  const members = rowGroupMembers(key);
+  if (!members.length) return;
+  if (!state.tileSpotlight) state.tileSpotlight = new Set();
+  const allLit = members.every(id => state.tileSpotlight.has(id));
+  members.forEach(id => allLit ? state.tileSpotlight.delete(id) : state.tileSpotlight.add(id));
+  state.selectedRowKey = { mode: state.group, key };
+  renderMap();
+  if (typeof switchSidebarPanel === 'function') switchSidebarPanel('row-explain');
+  if (typeof showToast === 'function') {
+    showToast(allLit
+      ? `row switched off — ${key}`
+      : `lit the ${key} row — ${members.length} classification${members.length === 1 ? '' : 's'}`);
+  }
+}
+
+// What the current grouping means, what this row holds, and the honest
+// answer about columns. Member pills toggle individual tiles.
+function renderSidebarRowExplain() {
+  const inner = document.getElementById('sidebar-inner');
+  const sel = state.selectedRowKey;
+  if (!inner || !sel) return;
+  const members = rowGroupMembers(sel.key).map(id => FC_BY_ID[id]).filter(Boolean);
+
+  const MODE_EXPLAIN = {
+    sector: 'Rows currently group the classifications by <strong>sector</strong> — the domain of physics whose content each one organizes. A row is a domain partition, not an ordering claim: reading across a row says “these classifications organize the same territory,” nothing about rank or sequence.',
+    category: 'Rows currently group the classifications by <strong>category</strong> — what kind of content each one organizes. Structural rows are pure mathematical scaffolding; phenomenon rows are empirical territory; hybrid rows are mathematical structure carrying direct empirical content. The same colors appear as the left-edge stripe on every tile.',
+    closure: 'Rows currently group the classifications by <strong>closure level</strong> — how settled each classification\'s own organizing pattern is. Closure is a statement about the classification itself, not about the physics being finished.',
+  };
+  const KEY_NOTES = {
+    'structural': 'Pure mathematical scaffolding (e.g. ADE families, modular tensor categories).',
+    'hybrid': 'Mathematical structure with empirical content (e.g. the Standard Model representation content).',
+    'phenomenon': 'Empirical territory (e.g. compact astrophysical objects, hadronic states, the neutrino sector).',
+    'complete-within-domain': '■ The classification\'s axes provably exhaust the space they organize, within its stated domain.',
+    'partial': '◐ Some axes are exhaustive; others remain open.',
+    'conjectural': '□ Completeness is not established — the organizing pattern is a working conjecture.',
+  };
+  const modeKey = state.group === 'sector' ? 'sector' : state.group === 'category' ? 'category' : 'closure';
+  const keyNote = KEY_NOTES[sel.key] || '';
+
+  const pills = members.map(f => {
+    const lit = state.tileSpotlight && state.tileSpotlight.has(f.id);
+    return `<button type="button" class="rx-pill${lit ? ' rx-lit' : ''}" data-rx-fc="${esc(f.id)}" title="${esc(f.label)} — click to light or unlight this tile">${esc(f.symbol)} ${esc(f.short_label || f.label)}</button>`;
+  }).join('');
+
+  inner.innerHTML = `
+    <div class="sidebar-section">
+      <div class="sidebar-breadcrumb">
+        <span class="crumb-here">Row — ${esc(sel.key)}</span>
+        <button class="crumb-close" title="Clear selection">×</button>
+      </div>
+      <h3>${esc(sel.key)} <span class="dx-section-ct">· ${members.length} classification${members.length === 1 ? '' : 's'}</span></h3>
+      ${keyNote ? `<div class="sec-sub">${keyNote}</div>` : ''}
+      <div class="rx-explain">${MODE_EXPLAIN[modeKey]}</div>
+      <div class="rx-explain rx-explain-cols">Columns carry no meaning in this layout — position along a row is packing, not physics. The grouping itself is switchable: the <strong>Rows-by</strong> chips re-cut the rows by sector, category, or closure, and clicking any row label reopens this explanation for the new cut.</div>
+      <div class="rx-pills">${pills}</div>
+      <button type="button" class="sbc-open-record" id="rx-row-toggle">${members.every(f => state.tileSpotlight && state.tileSpotlight.has(f.id)) ? 'switch the whole row off' : 'light the whole row'}</button>
+    </div>
+  `;
+
+  inner.querySelectorAll('[data-rx-fc]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof toggleTileSpotlight === 'function') toggleTileSpotlight(btn.dataset.rxFc);
+      renderSidebarRowExplain();
+    });
+  });
+  const rowBtn = inner.querySelector('#rx-row-toggle');
+  if (rowBtn) rowBtn.addEventListener('click', () => toggleRowSpotlight(sel.key));
+  const closeBtn = inner.querySelector('.crumb-close');
+  if (closeBtn) closeBtn.addEventListener('click', () => {
+    if (typeof clearSelection === 'function') clearSelection();
+  });
+}

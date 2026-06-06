@@ -532,6 +532,7 @@ function renderPanel() {
     case 'legend':                 renderSidebarDefault();      break;
     case 'spotlight':              renderSidebarSpotlight();    break;   // Update B
     case 'overlay-lines':          if (typeof renderSidebarOverlayLines === 'function') renderSidebarOverlayLines(); else renderSidebarAbout(); break; // UX pass — overlay layers panel
+    case 'row-explain':            if (typeof renderSidebarRowExplain === 'function') renderSidebarRowExplain(); else renderSidebarAbout(); break; // UX pass — clickable rows
     case 'glossary':               renderSidebarGlossary(state.glossaryFilter || ''); break; // Update C
     case 'discourse': {                                                  // Update B
       const n = DATA.discourse_by_id && DATA.discourse_by_id[state.selectedDiscourseNode];
