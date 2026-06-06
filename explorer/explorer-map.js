@@ -337,8 +337,9 @@ function renderMap() {
   // toolbar) respects the active view with no other changes.
   if (typeof state !== 'undefined' && state.activeView === 'questions'
       && typeof renderQuestionsView === 'function') {
-    const _sb = document.getElementById('pt-structure');
-    if (_sb) _sb.style.display = 'none';   // the bar describes the tile grid only
+    // The questions renderer puts .view-questions on the map pane, and
+    // CSS hides the whole control row (zoom + View + Tools) under it —
+    // one mechanism for the whole row, restored on the way back.
     renderQuestionsView();
     return;
   }

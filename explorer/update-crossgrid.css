@@ -542,3 +542,12 @@ header.masthead { position: relative; z-index: 50; }
   cursor: pointer;
 }
 .btn-start:hover { filter: brightness(1.08); }
+
+
+/* ---------- 13. Questions view hides the whole control row ---------- */
+/* The open-questions landing has no tile grid, so zoom, View, and Tools
+   all step aside together. (update-e0.css hid only .zoom-controls, and
+   the View bar was hidden separately in JS — Tools, added later, was
+   covered by neither, leaving an orphaned Tools button on the questions
+   view. One rule for the whole row replaces all of that.) */
+.map-pane.view-questions .map-topbar { display: none; }
