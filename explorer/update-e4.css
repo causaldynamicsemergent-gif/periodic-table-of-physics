@@ -37,7 +37,7 @@
    ------------------------------------------------------------- */
 .qs-prefix {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -70,7 +70,7 @@
 
 .qs-citation {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-soft);
   line-height: 1.55;
   padding: 1px 0 1px 10px;
@@ -89,7 +89,7 @@
 }
 
 .qs-citations-compact .qs-citation {
-  font-size: 10px;
+  font-size: 11.5px;
   line-height: 1.45;
 }
 
@@ -122,7 +122,7 @@
    surrounding font-size; nudge slightly down so the typography
    doesn't dominate the section. */
 .qs-callout-value .katex {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 
@@ -136,13 +136,13 @@
 .cell-qs-inline {
   margin-top: 8px;
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 13.5px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--ink);
 }
 
 .cell-qs-inline .katex {
-  font-size: 13px;
+  font-size: 14.5px;
 }
 
 
@@ -154,14 +154,14 @@
    ------------------------------------------------------------- */
 .dc-pred-qs {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.45;
   color: var(--ink);
   margin: 4px 0 2px;
 }
 
 .dc-pred-qs .katex {
-  font-size: 12px;
+  font-size: 13.5px;
 }
 
 
@@ -174,12 +174,12 @@
    ------------------------------------------------------------- */
 .dx-edge-qs {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.45;
   color: var(--ink);
   margin: 4px 0 2px;
 }
 
 .dx-edge-qs .katex {
-  font-size: 12px;
+  font-size: 13.5px;
 }

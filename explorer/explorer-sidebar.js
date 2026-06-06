@@ -85,10 +85,10 @@ function renderSidebarDefault() {
     <div class="sidebar-section">
       <h3>Closure level</h3>
       <div class="sec-sub">In the small symbol under the yield bar.</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--ink-soft)">
-        <span style="color:var(--ink);font-size:13px;margin-right:4px">■</span>complete-within-domain<br>
-        <span style="color:var(--ink);font-size:13px;margin-right:4px">◐</span>partial<br>
-        <span style="color:var(--ink);font-size:13px;margin-right:4px">□</span>conjectural
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:var(--ink-soft)">
+        <span style="color:var(--ink);font-size:14.5px;margin-right:4px">■</span>complete-within-domain<br>
+        <span style="color:var(--ink);font-size:14.5px;margin-right:4px">◐</span>partial<br>
+        <span style="color:var(--ink);font-size:14.5px;margin-right:4px">□</span>conjectural
       </div>
     </div>
 
@@ -334,7 +334,7 @@ function renderSidebarAbout() {
       </button>
       <h3>About the map</h3>
       <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way, Freed-Hopkins anomalies, and dozens more — assembled in one place for the first time. It sits upstream of discovery: it helps you decide where to point attention, not what you'll find.</p>
-      <p class="ap-text" style="color:var(--ink-mute);font-size:12px">${(typeof DATA !== 'undefined' && DATA && DATA._meta && DATA._meta.counts) ? (DATA._meta.counts.formal_classifications + ' classifications · ' + DATA._meta.counts.cells + ' cells · ' + DATA._meta.counts.predictions + ' predictions · ' + DATA._meta.counts.falsifications + ' falsifications') : ''}</p>
+      <p class="ap-text" style="color:var(--ink-mute);font-size:13.5px">${(typeof DATA !== 'undefined' && DATA && DATA._meta && DATA._meta.counts) ? (DATA._meta.counts.formal_classifications + ' classifications · ' + DATA._meta.counts.cells + ' cells · ' + DATA._meta.counts.predictions + ' predictions · ' + DATA._meta.counts.falsifications + ' falsifications') : ''}</p>
 
       <button class="ap-section ap-section-btn" id="ap-how-to-read" data-open-help type="button" title="Open the labeled tile diagram">How to read a tile <span class="ap-section-go">open the diagram →</span></button>
       <p class="ap-text">Left stripe = <strong>category</strong> (blue structural · amber hybrid · green phenomenon). Bottom bar = <strong>predictive yield</strong> (green confirmed · amber tension · gray untested · red falsified · purple retro). Corner: cell count, ⚠ if falsified predictions live inside. The <strong>?</strong> chip flips the tile to its open questions.</p>
@@ -665,7 +665,7 @@ function renderSidebarSearch(query) {
         </div>
       </div>`;
     }).join('');
-    const overflow = cellMatches.length > 10 ? `<div style="font-size:11px;color:var(--ink-mute);font-style:italic;padding:4px 8px">+${cellMatches.length - 10} more — open the tile (↗) for the full list.</div>` : '';
+    const overflow = cellMatches.length > 10 ? `<div style="font-size:12.5px;color:var(--ink-mute);font-style:italic;padding:4px 8px">+${cellMatches.length - 10} more — open the tile (↗) for the full list.</div>` : '';
     return `<div class="csr-group">
       <div class="csr-group-head${folded ? '' : ' sbc-open'}" data-csr-group="${esc(fc.id)}" role="button" tabindex="0" aria-expanded="${!folded}" title="Click to fold/unfold this group's matches; ↗ opens the classification">
         <span class="group-sym">${esc(fc.symbol)}</span>
@@ -976,7 +976,7 @@ function renderSidebarFC(fc) {
       ${ax.values && ax.values.length ? `<div class="ax-vals">${ax.values.slice(0,12).map(v => `<span class="ax-val">${esc(String(v))}</span>`).join('')}${ax.values.length > 12 ? `<span class="ax-val" style="color:var(--ink-mute)">+${ax.values.length-12} more</span>`:''}</div>`:''}
     </div>
   `;
-  }).join('') || '<em style="color:var(--ink-mute);font-size:12px">No axes recorded.</em>';
+  }).join('') || '<em style="color:var(--ink-mute);font-size:13.5px">No axes recorded.</em>';
 
   // Cells preview (first 12 sorted: falsified > preds > rest)
   const cellsSorted = [...fc.cells].sort((a,b) => {
@@ -1000,7 +1000,7 @@ function renderSidebarFC(fc) {
     </div>`;
   }).join('');
   const cellsMore = cellsSorted.length > 14
-    ? `<button class="btn-ghost" id="show-all-cells" style="margin-top:8px;font-size:10.5px">show all ${cellsSorted.length} cells</button>`
+    ? `<button class="btn-ghost" id="show-all-cells" style="margin-top:8px;font-size:12px">show all ${cellsSorted.length} cells</button>`
     : '';
 
   // Predictions with filter
@@ -1020,7 +1020,7 @@ function renderSidebarFC(fc) {
       ${p.prediction_citation ? `<div class="pred-meta">predicted: ${esc(p.prediction_citation)}</div>` : ''}
       ${p.confirmation_citation ? `<div class="pred-meta">resolved: ${esc(p.confirmation_citation)}</div>` : ''}
     </div>
-  `).join('') : '<em style="color:var(--ink-mute);font-size:12px">No predictions match this filter.</em>';
+  `).join('') : '<em style="color:var(--ink-mute);font-size:13.5px">No predictions match this filter.</em>';
 
   // Edges
   const edges = DATA.edges_by_fc[fc.id] || [];
@@ -1043,7 +1043,7 @@ function renderSidebarFC(fc) {
         ${e.description ? `<div class="edge-desc">${esc(e.description)}</div>` : ''}
       </div>
     `;
-  }).join('') : '<em style="color:var(--ink-mute);font-size:12px">No edges.</em>';
+  }).join('') : '<em style="color:var(--ink-mute);font-size:13.5px">No edges.</em>';
 
   inner.innerHTML = `
     <div class="sb-crumb">
@@ -1076,8 +1076,8 @@ function renderSidebarFC(fc) {
       <h3>Description</h3>
       ${!fc._has_detailed_header ? `<div class="synthesized-warning">⚠ Synthesized description — click <strong>↻ refresh</strong> in the header for the full record from the live server.</div>` : ''}
       <div class="dc-desc">${formatPara(fc.description)}</div>
-      ${fc.domain_of_applicability ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Domain</strong>${esc(fc.domain_of_applicability)}</div>` : ''}
-      ${fc.closure_description ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Closure</strong>${esc(fc.closure_description)}</div>` : ''}
+      ${fc.domain_of_applicability ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Domain</strong>${esc(fc.domain_of_applicability)}</div>` : ''}
+      ${fc.closure_description ? `<div class="dc-desc" style="margin-top:8px"><strong style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:2px">Closure</strong>${esc(fc.closure_description)}</div>` : ''}
     </div>
 
     <div class="sidebar-section">
@@ -1102,7 +1102,7 @@ function renderSidebarFC(fc) {
       <div class="dc-edges">${edgesHtml}</div>
     </div>
 
-    ${fc.citations && fc.citations.length ? `<div class="sidebar-section"><h3>Key citations</h3><div style="font-size:11.5px;line-height:1.6;color:var(--ink-soft);font-family:'JetBrains Mono',monospace">${fc.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
+    ${fc.citations && fc.citations.length ? `<div class="sidebar-section"><h3>Key citations</h3><div style="font-size:13px;line-height:1.6;color:var(--ink-soft);font-family:'JetBrains Mono',monospace">${fc.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
     ${fc.cross_cutting_concepts && fc.cross_cutting_concepts.length ? `<div class="sidebar-section"><h3>Cross-cutting concepts</h3><div style="display:flex;flex-wrap:wrap;gap:4px">${fc.cross_cutting_concepts.map(c => `<span class="ax-val">${esc(c)}</span>`).join('')}</div></div>` : ''}
   `;
 
@@ -1218,9 +1218,9 @@ function renderSidebarCell(fc, cell) {
       </div>
     </div>
 
-    ${(cell.description || cell.quantitative_scale) ? `<div class="sidebar-section"><h3>Description</h3>${cell.description ? `<div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">${esc(cell.description)}</div>` : ''}${(cell.quantitative_scale && typeof renderQS === 'function') ? `<div class="cell-qs-inline">${renderQS(cell.quantitative_scale, {})}${(typeof renderQSCitations === 'function') ? renderQSCitations(cell.quantitative_scale.citations, { compact: true }) : ''}</div>` : ''}</div>` : ''}
+    ${(cell.description || cell.quantitative_scale) ? `<div class="sidebar-section"><h3>Description</h3>${cell.description ? `<div style="font-size:14.5px;line-height:1.55;color:var(--ink-soft)">${esc(cell.description)}</div>` : ''}${(cell.quantitative_scale && typeof renderQS === 'function') ? `<div class="cell-qs-inline">${renderQS(cell.quantitative_scale, {})}${(typeof renderQSCitations === 'function') ? renderQSCitations(cell.quantitative_scale.citations, { compact: true }) : ''}</div>` : ''}</div>` : ''}
 
-    ${(cell.realized_examples && cell.realized_examples.length) ? `<div class="sidebar-section"><h3>Realized examples</h3><ul style="font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin:0;padding-left:18px">${cell.realized_examples.map(e => `<li style="margin-bottom:3px">${esc(e)}</li>`).join('')}</ul></div>` : ''}
+    ${(cell.realized_examples && cell.realized_examples.length) ? `<div class="sidebar-section"><h3>Realized examples</h3><ul style="font-size:14px;line-height:1.5;color:var(--ink-soft);margin:0;padding-left:18px">${cell.realized_examples.map(e => `<li style="margin-bottom:3px">${esc(e)}</li>`).join('')}</ul></div>` : ''}
 
     ${allPreds.length ? `<div class="sidebar-section"><h3>Predictions for this cell <span style="color:var(--ink-mute);font-weight:400">· ${allPreds.length}</span></h3><div class="dc-preds">${allPreds.map(p => `
       <div class="dc-pred ${p.status || ''}">
@@ -1233,7 +1233,7 @@ function renderSidebarCell(fc, cell) {
 
     ${(typeof renderTargetedByTarget === 'function') ? renderTargetedByTarget(cell.cell_id) : ''}
 
-    ${cell.citations && cell.citations.length ? `<div class="sidebar-section"><h3>Citations</h3><div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--ink-soft)">${cell.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
+    ${cell.citations && cell.citations.length ? `<div class="sidebar-section"><h3>Citations</h3><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;color:var(--ink-soft)">${cell.citations.map(c => `• ${esc(c)}`).join('<br>')}</div></div>` : ''}
   `;
 
   inner.querySelector('.crumb-close').addEventListener('click', clearSelection);
@@ -1515,13 +1515,18 @@ function wireSplitter() {
   if (!splitter || !grid) return;
 
   const MIN_PANEL = 240;
-  const MAX_PANEL = 700;
+  // UX batch 2 follow-up — the panel used to stop at a fixed 700px. It
+  // now slides out as far as the viewport allows (like Claude's centre
+  // divider), keeping only a small sliver of map alive so the way back
+  // is always visible.
+  const MIN_MAP = 220;
+  const maxPanel = () => Math.max(MIN_PANEL, window.innerWidth - MIN_MAP);
   const STORAGE_KEY = 'mop-panel-width';
 
   // Restore saved width
   try {
     const saved = parseInt(localStorage.getItem(STORAGE_KEY) || '', 10);
-    if (saved && saved >= MIN_PANEL && saved <= MAX_PANEL) {
+    if (saved && saved >= MIN_PANEL && saved <= maxPanel()) {
       grid.style.setProperty('--panel-width', saved + 'px');
     }
   } catch (e) {}
@@ -1545,10 +1550,7 @@ function wireSplitter() {
     const dx = startX - e.clientX;        // drag left = grow panel
     let w = startWidth + dx;
     if (w < MIN_PANEL) w = MIN_PANEL;
-    if (w > MAX_PANEL) w = MAX_PANEL;
-    // Also constrain to keep at least 320px of map visible
-    const maxByViewport = Math.max(MIN_PANEL, window.innerWidth - 320);
-    if (w > maxByViewport) w = maxByViewport;
+    if (w > maxPanel()) w = maxPanel();
     grid.style.setProperty('--panel-width', w + 'px');
   }
   function onMouseUp() {
@@ -1572,7 +1574,7 @@ function wireSplitter() {
     let w = parseInt(cur, 10) || 380;
     w += (e.key === 'ArrowLeft' ? 16 : -16);
     if (w < MIN_PANEL) w = MIN_PANEL;
-    if (w > MAX_PANEL) w = MAX_PANEL;
+    if (w > maxPanel()) w = maxPanel();
     grid.style.setProperty('--panel-width', w + 'px');
     try { localStorage.setItem(STORAGE_KEY, String(w)); } catch (e2) {}
     if (state.overlayActive && state.overlayActive.size) setTimeout(drawPhenPhenOverlay, 0);
@@ -1810,7 +1812,7 @@ async function init() {
   document.getElementById('sidebar-inner').innerHTML = `
     <div class="sidebar-section">
       <h3 class="muted">Loading dataset…</h3>
-      <div style="font-size:12.5px;color:var(--ink-mute);line-height:1.5">
+      <div style="font-size:14px;color:var(--ink-mute);line-height:1.5">
         Fetching <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">data/Map_v34_consolidated.json</code> from the repo. This may take a couple of seconds on first load.
       </div>
     </div>`;

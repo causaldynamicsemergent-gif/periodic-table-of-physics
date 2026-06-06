@@ -65,7 +65,7 @@
 .xc-edge-endpoint { display: inline-flex; }
 .xc-edge-arrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 16px; color: var(--ink-mute);
+  font-size: 17px; color: var(--ink-mute);
 }
 .xc-edge-meta {
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
@@ -73,7 +73,7 @@
 }
 .xc-targeted-by {
   margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
   color: var(--ink-mute);
 }
 .xc-targeted-by-lbl { text-transform: uppercase; letter-spacing: 0.06em; margin-right: 6px; }
@@ -85,13 +85,13 @@
 }
 .xc-cells-grp { margin-top: 4px; }
 .xc-cells-grp-head {
-  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px; font-family: 'JetBrains Mono', monospace;
   color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.06em;
   margin-bottom: 4px;
 }
 .xc-citation-list {
   list-style: none; padding: 0; margin: 0;
-  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
   color: var(--ink-soft); line-height: 1.55;
 }
 .xc-citation-list li {
@@ -124,7 +124,7 @@
   border: 1.5px solid var(--discourse-ring, #b8651a);
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 600;
   line-height: 1;
   color: var(--discourse-ring, #b8651a);
@@ -141,11 +141,11 @@
   outline-offset: 1px;
 }
 .dc-edge-badge-icon {
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: 1;
 }
 .dc-edge-badge-count {
-  font-size: 9px;
+  font-size: 10.5px;
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -176,7 +176,7 @@
 .de-card-endpoint { display: inline-flex; }
 .de-card-arrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 16px; color: var(--ink-mute);
+  font-size: 17px; color: var(--ink-mute);
 }
 /* Per-edge sub-card inside the section */
 .de-card-edge {
@@ -193,25 +193,25 @@
 }
 .de-card-edge-type {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--discourse-ring, #b8651a);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .de-card-edge-arrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 14.5px;
   color: var(--ink-mute);
 }
 .de-card-edge-desc {
-  font-size: 13px;
+  font-size: 14.5px;
   line-height: 1.5;
   color: var(--ink-soft);
   margin-bottom: 4px;
 }
 .de-card-edge-discharge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-soft);
   margin: 4px 0 6px;
 }
@@ -219,13 +219,13 @@
   margin: 6px 0;
 }
 .de-card-cells-head {
-  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px; font-family: 'JetBrains Mono', monospace;
   color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.06em;
   margin-bottom: 4px;
 }
 .de-card-citations {
   list-style: none; padding: 0; margin: 4px 0 0;
-  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
   color: var(--ink-soft); line-height: 1.55;
 }
 .de-card-citations li {
@@ -269,12 +269,12 @@
   margin-bottom: 6px;
 }
 .dc-resolves-arrow {
-  font-size: 16px; color: var(--ink-mute);
+  font-size: 17px; color: var(--ink-mute);
   margin-right: 2px;
 }
 .dc-resolves-sensitivity {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 14px; line-height: 1.55;
+  font-size: 15.5px; line-height: 1.55;
   color: var(--ink);
   margin: 4px 0 2px;
 }
@@ -288,7 +288,7 @@
 }
 .dc-resolves-citation {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-soft);
   line-height: 1.55;
   padding: 1px 0 1px 10px;
@@ -301,7 +301,7 @@
 }
 .dc-resolves-desc {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 13.5px; line-height: 1.55;
+  font-size: 15px; line-height: 1.55;
   color: var(--ink-soft);
   margin: 6px 0 4px;
 }
@@ -323,7 +323,7 @@
 }
 .dc-resolves-ppp-head {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-mute);
   text-transform: uppercase; letter-spacing: 0.06em;
   margin-bottom: 6px;
@@ -337,20 +337,20 @@
 }
 .dc-resolves-ppp-program {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink);
   font-weight: 500;
   margin-bottom: 3px;
 }
 .dc-resolves-ppp-value {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 13px;
+  font-size: 14.5px;
   color: var(--ink);
   margin: 2px 0;
 }
 .dc-resolves-ppp-desc {
   font-family: 'Crimson Pro', 'Spectral', Georgia, serif;
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink-soft);
   margin-top: 2px;
@@ -364,7 +364,7 @@
   color: var(--ink-soft);
   border: 1px solid var(--rule);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 2px;
   letter-spacing: 0.02em;
@@ -374,7 +374,7 @@
   color: var(--ink-mute);
   border: 1px dashed var(--ink-mute);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 2px;
   letter-spacing: 0.02em;

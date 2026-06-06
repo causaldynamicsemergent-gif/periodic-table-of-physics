@@ -23,13 +23,13 @@
 .glossary-term-row { display: flex; align-items: baseline; gap: 6px; }
 .glossary-term {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ink);
   letter-spacing: 0.01em;
 }
 .glossary-aliases {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-mute);
   font-style: italic;
   margin-top: 2px;
@@ -40,14 +40,14 @@
 .glossary-field:first-of-type { margin-top: 10px; }
 .glossary-field-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-mute);
   margin-bottom: 2px;
 }
 .glossary-field-body {
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--ink-soft);
 }
@@ -58,7 +58,7 @@
 .glossary-related-pill {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 12px;
   background: var(--paper);
   border: 1px solid var(--rule);
   border-radius: 2px;
@@ -110,7 +110,7 @@
   background: transparent;
   color: var(--accent);
   font: inherit;
-  font-size: 12px;
+  font-size: 13.5px;
   cursor: pointer;
   text-align: left;
   white-space: nowrap;

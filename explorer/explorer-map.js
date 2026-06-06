@@ -910,14 +910,14 @@ function showTileTooltip(e, fcId) {
       if (b.excluded)     parts.push(`${b.excluded} structurally excluded`);
       if (b.empty)        parts.push(`${b.empty} empty`);
       if (parts.length) {
-        cellBreakdownHtml = `<br><span style="color:var(--ink-faint);font-size:11px">cells: ${esc(parts.join(' · '))}</span>`;
+        cellBreakdownHtml = `<br><span style="color:var(--ink-faint);font-size:12.5px">cells: ${esc(parts.join(' · '))}</span>`;
       }
     }
   }
 
   const recurTT = fcEstablishedRecurrence(fc);
   const recurHtmlTT = recurTT.has
-    ? `<br><span style="color:var(--accent);font-size:11px">⇄ ${esc(recurTT.title)}</span>`
+    ? `<br><span style="color:var(--accent);font-size:12.5px">⇄ ${esc(recurTT.title)}</span>`
     : '';
 
   t.innerHTML = `

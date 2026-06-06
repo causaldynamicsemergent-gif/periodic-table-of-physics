@@ -549,9 +549,9 @@ function showEdgeTooltip(ev, id) {
   const short = desc.length > 220 ? desc.slice(0, 217) + '…' : desc;
   t.innerHTML = `
     <div style="font-weight:600;margin-bottom:2px">${esc(nm(e.from))} → ${esc(nm(e.to))}</div>
-    ${bits.length ? `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);margin-bottom:${short ? '4px' : '0'}">${esc(bits.join(' · '))}</div>` : ''}
-    ${short ? `<div style="font-size:11.5px;line-height:1.4;color:var(--ink-soft)">${esc(short)}</div>` : ''}
-    <div style="font-size:10px;color:var(--ink-faint);margin-top:4px">click to light · click again to switch off</div>
+    ${bits.length ? `<div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-mute);margin-bottom:${short ? '4px' : '0'}">${esc(bits.join(' · '))}</div>` : ''}
+    ${short ? `<div style="font-size:13px;line-height:1.4;color:var(--ink-soft)">${esc(short)}</div>` : ''}
+    <div style="font-size:11.5px;color:var(--ink-faint);margin-top:4px">click to light · click again to switch off</div>
   `;
   t.classList.add('visible');
   if (typeof moveTooltip === 'function') moveTooltip(ev);

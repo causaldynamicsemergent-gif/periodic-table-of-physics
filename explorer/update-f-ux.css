@@ -18,16 +18,16 @@
    tile-name was 10.5px and the footer 9px — repeated user feedback says
    too small. Tiles grow a step so the larger text still fits. Tile size
    is pure CSS (the JS reads live rects), so nothing else moves. */
-.pt-tile { width: 124px; min-height: 136px; }
+.pt-tile { width: 136px; min-height: 150px; }
 .tile-symbol { font-size: 25px; }
-.tile-name { font-size: 12.5px; line-height: 1.25; }
-.tile-corner { font-size: 10.5px; min-height: 14px; }
-.tile-footer { font-size: 10.5px; }
-.fals-flag { font-size: 10px; }
+.tile-name { font-size: 14px; line-height: 1.25; }
+.tile-corner { font-size: 12px; min-height: 14px; }
+.tile-footer { font-size: 12px; }
+.fals-flag { font-size: 11.5px; }
 @media (max-width: 1100px) {
-  .pt-tile { width: 108px; min-height: 126px; }
+  .pt-tile { width: 120px; min-height: 140px; }
   .tile-symbol { font-size: 22px; }
-  .tile-name { font-size: 11.5px; }
+  .tile-name { font-size: 13px; }
 }
 
 /* ---------- 2. Sidebar visual hierarchy ----------
@@ -37,28 +37,28 @@
    benefits without rewriting each renderer. */
 .sb-page-title {
   font-family: 'Spectral', serif;
-  font-size: 17px; font-weight: 600;
+  font-size: 19px; font-weight: 600;
   color: var(--ink); letter-spacing: 0.01em;
   margin: 0 0 4px; line-height: 1.25;
 }
 .sb-page-sub {
   font-family: 'Crimson Pro', Georgia, serif; font-style: italic;
-  font-size: 12.5px; color: var(--ink-mute);
+  font-size: 14px; color: var(--ink-mute);
   margin: 0 0 12px; line-height: 1.45;
 }
 .sidebar-section h3 {
-  font-size: 13px;
+  font-size: 14.5px;
   letter-spacing: 0.1em;
   margin: 0 0 8px;
   padding-bottom: 4px;
   border-bottom: 2px solid var(--rule-soft);
 }
 .sidebar-section { padding-bottom: 16px; margin-bottom: 4px; }
-.sidebar-section .sec-sub { font-size: 12px; }
-.ap-section { font-size: 12.5px; }
-.bld-section-h { font-size: 12px; letter-spacing: 0.1em; }
+.sidebar-section .sec-sub { font-size: 13.5px; }
+.ap-section { font-size: 14px; }
+.bld-section-h { font-size: 13.5px; letter-spacing: 0.1em; }
 .dc-title { font-size: 19px; }
-.crumb-current { font-size: 12px; }
+.crumb-current { font-size: 13.5px; }
 
 /* ---------- 3. Start panel — the instructional hub (fix 1) ---------- */
 /* Quick-bar Start button: accent-coloured so the place where the
@@ -94,12 +94,12 @@
 }
 .start-action-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .start-action-title {
-  font-family: 'Spectral', serif; font-size: 14.5px; font-weight: 600;
+  font-family: 'Spectral', serif; font-size: 16px; font-weight: 600;
   color: var(--ink);
 }
 .start-action-desc {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 12.5px; color: var(--ink-mute); line-height: 1.4;
+  font-size: 14px; color: var(--ink-mute); line-height: 1.4;
 }
 
 /* ---------- 4. How-to-navigate page (fixes 1 + 4) ---------- */
@@ -111,18 +111,18 @@
 }
 .nav-how-ico {
   flex: 0 0 26px; text-align: center;
-  font-size: 15px; color: var(--accent); line-height: 1.3;
+  font-size: 16px; color: var(--accent); line-height: 1.3;
 }
 .nav-how-body { min-width: 0; }
 .nav-how-title {
-  font-family: 'Spectral', serif; font-size: 13px; font-weight: 600;
+  font-family: 'Spectral', serif; font-size: 14.5px; font-weight: 600;
   color: var(--ink); margin-bottom: 2px;
 }
 .nav-how-text {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+  font-size: 14.5px; color: var(--ink-soft); line-height: 1.5;
 }
-.nav-how-text .tip-key { font-size: 11px; }
+.nav-how-text .tip-key { font-size: 12.5px; }
 
 /* ---------- 5. Guided tour overlay (fixes 1 + 10) ----------
    Spotlight pattern: one absolutely-positioned highlight box whose huge
@@ -147,22 +147,22 @@
 }
 .tour-card-step {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 5px;
 }
 .tour-card-title {
   font-family: 'Spectral', serif;
-  font-size: 15px; font-weight: 600; color: var(--ink);
+  font-size: 16px; font-weight: 600; color: var(--ink);
   margin-bottom: 5px; line-height: 1.3;
 }
 .tour-card-text {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 13.5px; color: var(--ink-soft); line-height: 1.5;
+  font-size: 15px; color: var(--ink-soft); line-height: 1.5;
   margin-bottom: 11px;
 }
 .tour-card-btns { display: flex; align-items: center; gap: 7px; }
 .tour-btn {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
   border-radius: 3px; padding: 5px 11px; cursor: pointer;
   border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink-soft);
 }
@@ -184,7 +184,7 @@
   text-align: center;
   background: var(--paper); border: 1.5px solid var(--accent);
   color: var(--accent);
-  font-size: 12px; font-weight: 600;
+  font-size: 13.5px; font-weight: 600;
   padding: 8px 12px; border-radius: 4px;
   letter-spacing: 0.02em;
 }
@@ -193,7 +193,7 @@
 /* ---------- 7. Builder: dropdown picker + tutorial (fix 10) ---------- */
 .bld-tour-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 600;
   background: var(--paper); border: 1.5px solid var(--accent); color: var(--accent);
   border-radius: 4px; padding: 6px 12px; cursor: pointer;
   margin: 0 0 12px;
@@ -204,7 +204,7 @@
 .bld-picker-toggle {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   width: 100%; text-align: left;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
   background: var(--paper); border: 1px solid var(--rule);
   border-radius: 4px; padding: 8px 11px;
   color: var(--ink-soft); cursor: pointer;
