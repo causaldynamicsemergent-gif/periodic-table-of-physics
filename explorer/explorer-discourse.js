@@ -920,7 +920,10 @@ const _dxbApplied = new Map();
 // the cells its resolves edges target. Architectures, frontiers, regimes
 // and totality approaches have no tile of their own — this is how they
 // reach the grid.
-function discourseRelatedFCs(nodeId) {
+// One hop only: the classifications this node touches directly — the FC
+// endpoints of its incident edges, plus (for programs) the classifications
+// holding the cells its resolves edges target.
+function _discourseDirectFCs(nodeId) {
   const out = new Set();
   const inc = (DATA.discourse_edges_by_node && DATA.discourse_edges_by_node[nodeId]) || [];
   inc.forEach(en => {
@@ -937,6 +940,35 @@ function discourseRelatedFCs(nodeId) {
       else if (typeof FC_BY_ID !== 'undefined' && FC_BY_ID[e.to]) out.add(e.to);
     }
   }
+  return out;
+}
+
+// UX pass — most regime content, every totality approach, and several
+// architectures touch no classification directly: their recorded relations
+// stay among frontiers and architectures, one step removed from the grid.
+// So when the direct set is empty, go one hop out — collect the node's
+// discourse neighbors (including, for programs, the frontiers and totality
+// approaches their resolves edges target) and light THOSE neighbors' direct
+// classifications. The returned Set carries .indirect = true in that case
+// so the detail block can say honestly how the map was reached.
+function discourseRelatedFCs(nodeId) {
+  const direct = _discourseDirectFCs(nodeId);
+  if (direct.size) { direct.indirect = false; return direct; }
+  const hops = new Set();
+  const inc = (DATA.discourse_edges_by_node && DATA.discourse_edges_by_node[nodeId]) || [];
+  inc.forEach(en => {
+    const o = en && en.neighbor;
+    if (o && !(typeof FC_BY_ID !== 'undefined' && FC_BY_ID[o])) hops.add(o);
+  });
+  if (DATA.resolves_by_id) {
+    for (const k in DATA.resolves_by_id) {
+      const e = DATA.resolves_by_id[k];
+      if (e && e.from === nodeId && e.to && !(DATA.cell_id_to_fc_id && DATA.cell_id_to_fc_id[e.to])) hops.add(e.to);
+    }
+  }
+  const out = new Set();
+  hops.forEach(h => _discourseDirectFCs(h).forEach(fc => out.add(fc)));
+  out.indirect = out.size > 0;
   return out;
 }
 
@@ -973,7 +1005,8 @@ function renderBrowseItem(n) {
 
   const exp = _dxbExpanded.has(n.id);
   const typeLbl = DISCOURSE_TYPE_LABELS[n.type] || n.type;
-  const relCt = discourseRelatedFCs(n.id).size;
+  const rel = discourseRelatedFCs(n.id);
+  const relCt = rel.size;
   return `
     <div class="dx-browse-item${exp ? ' sbc-open' : ''}" data-dxb-node="${esc(n.id)}" role="button" tabindex="0" aria-expanded="${exp}">
       <span class="dx-browse-icon">${esc(icon)}</span>
@@ -985,7 +1018,7 @@ function renderBrowseItem(n) {
     <div class="sbc-detail" data-dxb-detail="${esc(n.id)}"${exp ? '' : ' hidden'}>
       <div class="sbc-detail-inner">
         ${n.description ? `<div class="sbc-detail-desc">${esc(n.description)}</div>` : ''}
-        <div class="sbc-detail-meta">${esc(typeLbl)}${n.subtype ? ' · ' + esc(String(n.subtype).replace(/-/g, ' ')) : ''} · ${incidentCt} incident edge${incidentCt === 1 ? '' : 's'}${relCt ? ` · lights ${relCt} classification${relCt === 1 ? '' : 's'} on the map` : ''}</div>
+        <div class="sbc-detail-meta">${esc(typeLbl)}${n.subtype ? ' · ' + esc(String(n.subtype).replace(/-/g, ' ')) : ''} · ${incidentCt} incident edge${incidentCt === 1 ? '' : 's'}${relCt ? ` · lights ${relCt} classification${relCt === 1 ? '' : 's'} on the map${rel.indirect ? ' through its neighboring frontiers and architectures' : ''}` : ' · reaches no classification on the grid'}</div>
         <button type="button" class="sbc-open-record" data-dxb-open="${esc(n.id)}">open full record →</button>
       </div>
     </div>
