@@ -735,3 +735,26 @@ header.masthead { position: relative; z-index: 50; }
   align-items: center;
   cursor: pointer;
 }
+
+/* ---------- 18. Clickable How-to-read heading in About ---------- */
+.ap-section-btn {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 0 0 3px;
+  cursor: pointer;
+  text-align: left;
+}
+.ap-section-btn:hover .ap-section-go { color: var(--accent, #b5482a); }
+.ap-section-go {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  color: var(--ink-mute);
+  font-weight: 400;
+}

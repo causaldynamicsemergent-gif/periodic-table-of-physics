@@ -221,7 +221,7 @@
       }
       if (typeof switchSidebarPanel === 'function') switchSidebarPanel('about');
       setTimeout(function () {
-        var sec = document.getElementById('ap-who-it-serves');
+        var sec = document.getElementById('ap-how-to-read');   // Who it serves sits immediately below
         if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 0);
     });

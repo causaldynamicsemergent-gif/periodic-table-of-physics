@@ -1487,48 +1487,56 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <button class="close" id="help-close">×</button>
     <h2>How to read this map</h2>
     <div class="ta-diagram-wrap">
-      <svg class="tile-anatomy" viewBox="0 0 660 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anatomy of one tile, with every mark labeled">
+      <svg class="tile-anatomy" viewBox="0 0 660 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anatomy of one tile, with every mark labeled — drawn to match the real tiles">
         <style>
           .ta-lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: var(--ink-soft); }
           .ta-lbl tspan.k { fill: var(--ink); font-weight: 700; }
           .ta-line { stroke: var(--ink-mute); stroke-width: 1; fill: none; }
+          .ta-mono { font-family: 'JetBrains Mono', monospace; }
         </style>
-        <!-- the tile -->
-        <rect x="245" y="95" width="180" height="160" fill="var(--paper)" stroke="var(--rule)" rx="3"/>
-        <rect x="245" y="95" width="5" height="160" fill="var(--struct)" rx="1"/>
-        <text x="262" y="138" font-family="'JetBrains Mono',monospace" font-size="30" font-weight="700" fill="var(--struct)">SM</text>
-        <text x="370" y="115" font-family="'JetBrains Mono',monospace" font-size="11" fill="var(--ink-soft)">12 ⇄</text>
-        <text x="370" y="130" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--st-falsified)">⚠2</text>
-        <!-- mini cell grid: realized / forbidden (faint) / predicted gap (accent) -->
+        <!-- the tile (110×124 real, drawn at 1.6×) -->
+        <rect x="240" y="78" width="176" height="200" fill="var(--paper)" stroke="var(--rule)" rx="4"/>
+        <rect x="240" y="78" width="4" height="200" fill="var(--struct)"/>
+        <!-- corner row: counts left, ⚠ right (space-between, like the real .tile-corner) -->
+        <text class="ta-mono" x="254" y="98" font-size="12" fill="var(--ink-mute)">12c · 9p ⇄</text>
+        <text class="ta-mono" x="404" y="98" font-size="12" text-anchor="end" fill="var(--st-falsified)">⚠2</text>
+        <!-- symbol + name: centered serif, like the real tile -->
+        <text x="330" y="140" font-family="'Spectral', serif" font-size="34" font-weight="600" text-anchor="middle" fill="var(--struct)">SM</text>
+        <text x="330" y="160" font-family="'Crimson Pro', serif" font-size="13" text-anchor="middle" fill="var(--ink-soft)">rep content</text>
+        <!-- mini cell grid: 8px swatches at 1.6× = 13px, rounded; three states -->
         <g>
-          <rect x="262" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="277" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="292" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="307" y="158" width="11" height="11" fill="var(--ink-soft)"/>
-          <rect x="262" y="173" width="11" height="11" fill="var(--ink-soft)"/><rect x="277" y="173" width="11" height="11" fill="var(--paper-3, #eee)" stroke="var(--rule)"/><line x1="277" y1="184" x2="288" y2="173" class="ta-line"/><rect x="292" y="173" width="11" height="11" fill="var(--ink-soft)"/><rect x="307" y="173" width="11" height="11" fill="var(--ink-soft)"/>
-          <rect x="262" y="188" width="11" height="11" fill="none" stroke="var(--st-falsified)"/><line x1="262" y1="199" x2="273" y2="188" stroke="var(--st-falsified)" stroke-width="1"/><line x1="262" y1="188" x2="273" y2="199" stroke="var(--st-falsified)" stroke-width="1"/><rect x="277" y="188" width="11" height="11" fill="var(--ink-soft)"/><rect x="292" y="188" width="11" height="11" fill="var(--ink-soft)"/>
+          <rect x="277" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="294" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="311" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="328" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="345" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="362" y="174" width="13" height="13" rx="2" fill="var(--ink)"/>
+          <rect x="277" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="294" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="311" y="191" width="13" height="13" rx="2" fill="var(--paper-3, #eee)" stroke="var(--rule-soft, #ddd)"/><rect x="328" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="345" y="191" width="13" height="13" rx="2" fill="none" stroke="var(--st-falsified)" stroke-dasharray="2,2"/><rect x="362" y="191" width="13" height="13" rx="2" fill="var(--ink)"/>
         </g>
-        <!-- yield bar -->
-        <g>
-          <rect x="247" y="222" width="88" height="6" fill="var(--st-confirmed)"/>
-          <rect x="335" y="222" width="26" height="6" fill="var(--st-tension)"/>
-          <rect x="361" y="222" width="26" height="6" fill="var(--st-not)"/>
-          <rect x="387" y="222" width="18" height="6" fill="var(--st-falsified)"/>
-          <rect x="405" y="222" width="18" height="6" fill="var(--st-retro)"/>
-        </g>
-        <text x="262" y="246" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--ink-mute)">12 · 9 · ◐</text>
+        <!-- yield bar on its paper-3 track, then footer: preds left, closure right -->
+        <rect x="252" y="232" width="152" height="8" rx="1.5" fill="var(--paper-3, #eee)"/>
+        <rect x="252" y="232" width="76" height="8" fill="var(--st-confirmed)"/>
+        <rect x="328" y="232" width="24" height="8" fill="var(--st-tension)"/>
+        <rect x="352" y="232" width="22" height="8" fill="var(--st-not)"/>
+        <rect x="374" y="232" width="16" height="8" fill="var(--st-falsified)"/>
+        <rect x="390" y="232" width="14" height="8" fill="var(--st-retro)"/>
+        <text class="ta-mono" x="252" y="258" font-size="12" fill="var(--ink-mute)">9</text>
+        <text class="ta-mono" x="404" y="258" font-size="12" text-anchor="end" fill="var(--ink-mute)">◐</text>
+        <!-- the ? flip chip (red when open questions are recorded) -->
+        <rect x="372" y="206" width="32" height="17" rx="8" fill="var(--paper)" stroke="var(--accent, #b5482a)"/>
+        <text class="ta-mono" x="388" y="218" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent, #b5482a)">?6</text>
         <!-- labels + leader lines -->
         <text class="ta-lbl" x="8" y="100"><tspan class="k">category stripe</tspan><tspan x="8" dy="12">blue structural · amber hybrid</tspan><tspan x="8" dy="12">green phenomenon</tspan></text>
-        <path class="ta-line" d="M178 108 L247 130"/>
-        <text class="ta-lbl" x="120" y="40"><tspan class="k">symbol</tspan><tspan x="120" dy="12">the classification's 2–3 letter mark</tspan></text>
-        <path class="ta-line" d="M200 52 L275 112"/>
-        <text class="ta-lbl" x="430" y="30"><tspan class="k">cell count · ⇄ recurrence</tspan><tspan x="430" dy="12">⇄ = same content appears in</tspan><tspan x="430" dy="12">another classification</tspan></text>
-        <path class="ta-line" d="M455 64 L392 106"/>
-        <text class="ta-lbl" x="470" y="118"><tspan class="k">⚠ falsified inside</tspan><tspan x="470" dy="12">count of falsified</tspan><tspan x="470" dy="12">predictions held</tspan></text>
-        <path class="ta-line" d="M466 122 L392 126"/>
-        <text class="ta-lbl" x="455" y="170"><tspan class="k">cell grid</tspan><tspan x="455" dy="12">one square per cell —</tspan><tspan x="455" dy="12">filled = realized</tspan><tspan x="455" dy="12">faint hatch = forbidden</tspan><tspan x="455" dy="12">red hatch = predicted gap</tspan></text>
-        <path class="ta-line" d="M451 182 L322 182"/>
-        <text class="ta-lbl" x="8" y="290"><tspan class="k">yield bar</tspan><tspan x="8" dy="12">predictions by status: green confirmed · amber tension</tspan><tspan x="8" dy="12">gray not tested · red falsified · purple retro-explanatory</tspan></text>
-        <path class="ta-line" d="M120 276 L260 230"/>
-        <text class="ta-lbl" x="380" y="290"><tspan class="k">footer</tspan><tspan x="380" dy="12">cells · predictions · closure level</tspan><tspan x="380" dy="12">■ complete · ◐ partial · □ conjectural</tspan></text>
-        <path class="ta-line" d="M395 276 L312 246"/>
+        <path class="ta-line" d="M178 108 L242 130"/>
+        <text class="ta-lbl" x="100" y="38"><tspan class="k">symbol</tspan> + short name<tspan x="100" dy="12">the classification's 2–3 letter mark</tspan></text>
+        <path class="ta-line" d="M200 50 L318 122"/>
+        <text class="ta-lbl" x="430" y="30"><tspan class="k">corner counts</tspan><tspan x="430" dy="12">12 cells · 9 predictions</tspan><tspan x="430" dy="12">⇄ = content recurs elsewhere</tspan></text>
+        <path class="ta-line" d="M455 64 L330 92"/>
+        <text class="ta-lbl" x="470" y="100"><tspan class="k">⚠ falsified inside</tspan><tspan x="470" dy="12">count of falsified</tspan><tspan x="470" dy="12">predictions held</tspan></text>
+        <path class="ta-line" d="M466 104 L410 96"/>
+        <text class="ta-lbl" x="455" y="160"><tspan class="k">cell grid</tspan><tspan x="455" dy="12">one square per cell —</tspan><tspan x="455" dy="12">filled = realized</tspan><tspan x="455" dy="12">faint = forbidden</tspan><tspan x="455" dy="12">red dashed = predicted gap</tspan></text>
+        <path class="ta-line" d="M451 178 L380 184"/>
+        <text class="ta-lbl" x="455" y="248"><tspan class="k">? flip chip</tspan><tspan x="455" dy="12">flips the tile — open questions</tspan><tspan x="455" dy="12">on the back (red ?N = N recorded)</tspan></text>
+        <path class="ta-line" d="M451 244 L408 216"/>
+        <text class="ta-lbl" x="8" y="310"><tspan class="k">yield bar</tspan><tspan x="8" dy="12">predictions by status: green confirmed · amber tension</tspan><tspan x="8" dy="12">gray not tested · red falsified · purple retro-explanatory</tspan></text>
+        <path class="ta-line" d="M120 296 L268 242"/>
+        <text class="ta-lbl" x="380" y="310"><tspan class="k">footer</tspan><tspan x="380" dy="12">total predictions · closure level</tspan><tspan x="380" dy="12">■ complete · ◐ partial · □ conjectural</tspan></text>
+        <path class="ta-line" d="M395 296 L350 262"/>
       </svg>
     </div>
     <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a formal partition of physical or mathematical content along discrete axes. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
@@ -1679,6 +1687,12 @@ body.splitter-dragging * { cursor: col-resize !important; }
         </div>
       </div>
 
+      <div class="fb-section">the big picture</div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-big-picture">What's the single most useful thing this map could do for you — the #1 way you'd use it?</label>
+        <textarea id="fb-big-picture" name="big-picture" rows="3" placeholder="The one job you'd hire this map for."></textarea>
+      </div>
+
       <div class="fb-section">the features — what did you actually use?</div>
       <p class="fb-hint">For each: did you find and try it, and did it help in any way?</p>
       <div class="fb-feat-grid">
@@ -1793,6 +1807,16 @@ body.splitter-dragging * { cursor: col-resize !important; }
         <textarea id="fb-improvements" name="improvements" rows="3" placeholder="The one improvement that would make the biggest difference for you."></textarea>
       </div>
 
+      <div class="fb-q">
+        <label class="fb-q-label">Would you recommend the map to students or colleagues?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="recommend" value="enthusiastically"> Yes, enthusiastically</label>
+          <label><input type="radio" name="recommend" value="with-caveats"> Yes, with caveats</label>
+          <label><input type="radio" name="recommend" value="not-yet"> Not yet — needs work</label>
+          <label><input type="radio" name="recommend" value="probably-not"> Probably not</label>
+        </div>
+      </div>
+
       <div class="fb-section">bugs</div>
       <div class="fb-q">
         <label class="fb-q-label">Did you run into bugs or broken behavior?</label>
@@ -1822,16 +1846,8 @@ body.splitter-dragging * { cursor: col-resize !important; }
 
       <div class="fb-section">push back on the physics</div>
       <div class="fb-q">
-        <label class="fb-q-label" for="fb-placements">Specific placements</label>
-        <textarea id="fb-placements" name="placements" rows="3" placeholder="Disagree with any classification, cell, edge, or status? Which, how, and why?"></textarea>
-      </div>
-      <div class="fb-q">
-        <label class="fb-q-label" for="fb-taxonomy">Taxonomy</label>
-        <textarea id="fb-taxonomy" name="taxonomy" rows="3" placeholder="Would you draw any of the cuts differently — axes, sectors, edge kinds? Be specific."></textarea>
-      </div>
-      <div class="fb-q">
-        <label class="fb-q-label" for="fb-missing">Missing / unclear</label>
-        <textarea id="fb-missing" name="missing" rows="3" placeholder="What did you expect to find that the map doesn't have?"></textarea>
+        <label class="fb-q-label" for="fb-pushback">Anything you'd dispute or draw differently?</label>
+        <textarea id="fb-pushback" name="pushback" rows="4" placeholder="A placement, a cut (axes, sectors, edge kinds), a prediction status, something missing entirely — which, and why?"></textarea>
       </div>
 
       <button type="submit" class="fb-submit" id="feedback-submit">Send feedback</button>

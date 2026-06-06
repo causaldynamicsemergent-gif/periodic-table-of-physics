@@ -203,43 +203,30 @@ function renderSidebarAbout() {
         <div class="bld-cta-go">open the builder →</div>
       </button>
       <h3>About the map</h3>
-      <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way for topological phases, Freed-Hopkins anomalies, and dozens of others — assembled in one place for the first time. It sits upstream of discovery: it helps a physicist decide where to point attention, not what they will find.</p>
-      <p class="ap-text">Each classification lays its content along its own axes; build a cross-section across several and the recurring structure — and the structurally-missing entries where two mature areas meet through an unresolved link — surface as a consequence of the layout. The organization stays anchored to the literature, so the pattern-finding and the tests of candidate unification frameworks are yours to run; experimental coverage is tracked alongside.</p>
+      <p class="ap-lead">A map of where physics has organised itself into <em>formal classifications</em> — the Standard Model's particle table, the ten-fold way, Freed-Hopkins anomalies, and dozens more — assembled in one place for the first time. It sits upstream of discovery: it helps you decide where to point attention, not what you'll find.</p>
       <p class="ap-text" style="color:var(--ink-mute);font-size:12px">${(typeof DATA !== 'undefined' && DATA && DATA._meta && DATA._meta.counts) ? (DATA._meta.counts.formal_classifications + ' classifications · ' + DATA._meta.counts.cells + ' cells · ' + DATA._meta.counts.predictions + ' predictions · ' + DATA._meta.counts.falsifications + ' falsifications') : ''}</p>
 
-      <div class="ap-section">What it is</div>
-      <p class="ap-text">Each tile is a formal classification: a taxonomy of physical content that nature appears to respect, with its own internal axis structure, predictive yield, and citations to primary literature. Until now these have been scattered across separate subfields. This is the first artifact that assembles them.</p>
-
-      <div class="ap-section">How to read a tile</div>
-      <p class="ap-text">The left-edge stripe is the <strong>category</strong>: blue = structural (pure mathematical scaffolding), green = phenomenon (empirical territory), amber = hybrid. The bar at the bottom is the <strong>predictive yield</strong>: green confirmed, amber under tension, gray not yet tested, red falsified, purple retro-explanatory. The corner shows the cell count, with ⚠ if the tile contains falsified predictions.</p>
-
-      <div class="ap-section">What it's for</div>
-      <ul class="ap-list">
-        <li><strong>Cross-subfield navigation.</strong> Two classifications under different sectors may share machinery — the map makes those connections visible, including where two mature programs meet through a link that is still unresolved.</li>
-        <li><strong>Auditing predictive yield.</strong> See in one glance what physics has predicted, what got confirmed, what got falsified, and what's still being tested.</li>
-        <li><strong>Locating a problem.</strong> A working physicist can find the classifications that bear on their frontier and the cells inside each one that constrain it.</li>
-      </ul>
-
-      <div class="ap-section">Query recipes</div>
-      <p class="ap-text">Six patterns of question the catalogue is built to answer — each demonstrated in <a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/QUERY_RECIPES.md" target="_blank" rel="noopener">QUERY_RECIPES.md</a> with worked examples and citations. The jump-links below open the panel where the catalogue surfaces each pattern.</p>
-      <ul class="ap-list ap-recipes">
-        <li><strong>Which programs target this open question?</strong> Experimental coverage of a frontier, cell, or candidate-foundational program. <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
-        <li><strong>Where does the same entity classify in two frameworks?</strong> Cross-classification anchors between subfields. <button class="ap-recipe-jump" data-panel-jump="browse-classifications">browse classifications →</button></li>
-        <li><strong>If this open question resolves one way, what gets forced?</strong> Conditional structural consequences on open frontiers. <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
-        <li><strong>Which experiments adjudicate between competing predictions?</strong> Shared coverage between programs with side-by-side prediction lists. <button class="ap-recipe-jump" data-panel-jump="discriminating">compare programs →</button></li>
-        <li><strong>What characteristic scales does the catalogue record?</strong> Every numerical commitment ranked by physical dimension. <button class="ap-recipe-jump" data-panel-jump="ranks">scales →</button></li>
-        <li><strong>Which predictions has the catalogue recorded as falsified?</strong> The seventeen ruled-out predictions, by sector. <button class="ap-recipe-jump" data-spotlight="falsified">spotlight falsified →</button></li>
-      </ul>
-      <p class="ap-text" style="margin-top: 14px;"><a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">Worked example sessions →</a> — physicists' chats walking these patterns through the catalogue, edited and published.</p>
+      <button class="ap-section ap-section-btn" id="ap-how-to-read" data-open-help type="button" title="Open the labeled tile diagram">How to read a tile <span class="ap-section-go">open the diagram →</span></button>
+      <p class="ap-text">Left stripe = <strong>category</strong> (blue structural · amber hybrid · green phenomenon). Bottom bar = <strong>predictive yield</strong> (green confirmed · amber tension · gray untested · red falsified · purple retro). Corner: cell count, ⚠ if falsified predictions live inside. The <strong>?</strong> chip flips the tile to its open questions.</p>
+      <div class="ap-jumps">
+        <button class="ap-jump" data-open-help>
+          <span class="jump-num">▦</span>
+          <span class="jump-text">
+            <span class="jump-title">How to read a tile</span>
+            <span class="jump-desc">Every mark, labeled on a diagram of a real tile.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
+      </div>
 
       <div class="ap-section" id="ap-who-it-serves">Who it serves</div>
-      <p class="ap-text">One capability — making the cross-domain structure of physics explicit — consulted in three modes. <strong>Graduate students</strong>: orientation — which mature neighboring programs touch your problem, and which load-bearing concepts to learn first. <strong>Researchers</strong>: scouting — tracing the bridges between distant areas to the unresolved link a connection turns on. <strong>Professors</strong>: synthesis and direction — the broad structural view for framing programs, teaching connective tissue, and steering students toward ripe problems. Two deeper guides:</p>
+      <p class="ap-text">One capability — making the cross-domain structure of physics explicit — in three modes. <strong>Students</strong>: orientation. <strong>Researchers</strong>: scouting bridges between distant areas. <strong>Professors</strong>: synthesis, teaching, steering students toward ripe problems.</p>
       <div class="ap-jumps">
         <button class="ap-jump" data-panel-jump="education">
           <span class="jump-num">01</span>
           <span class="jump-text">
             <span class="jump-title">For education</span>
-            <span class="jump-desc">Students, teachers, newcomers — orientation: what physics knows and what it doesn't, on one screen.</span>
+            <span class="jump-desc">What physics knows and what it doesn't, on one screen.</span>
           </span>
           <span class="jump-arrow">→</span>
         </button>
@@ -247,22 +234,33 @@ function renderSidebarAbout() {
           <span class="jump-num">02</span>
           <span class="jump-text">
             <span class="jump-title">For research</span>
-            <span class="jump-desc">Researchers, professors, grad students — scouting and direction-setting across disciplines.</span>
-          </span>
-          <span class="jump-arrow">→</span>
-        </button>
-        <button class="ap-jump" data-open-help>
-          <span class="jump-num">▦</span>
-          <span class="jump-text">
-            <span class="jump-title">How to read a tile</span>
-            <span class="jump-desc">Every mark on a tile — stripe, symbol, cell grid, yield bar, closure — labeled on a diagram.</span>
+            <span class="jump-desc">Scouting and direction-setting across disciplines.</span>
           </span>
           <span class="jump-arrow">→</span>
         </button>
       </div>
 
+      <div class="ap-section">What it's for</div>
+      <ul class="ap-list">
+        <li><strong>Cross-subfield navigation</strong> — shared machinery between distant classifications, made visible.</li>
+        <li><strong>Auditing predictive yield</strong> — confirmed, contested, untested, falsified, in one glance.</li>
+        <li><strong>Locating a problem</strong> — the classifications and cells that bear on your frontier.</li>
+      </ul>
+
       <div class="ap-section">What it isn't</div>
-      <p class="ap-text">Not a textbook. Not a complete catalogue. Not predictive of which research programs will succeed. The discourse layer around the formal classifications — architectures, open frontiers, totality approaches, regime contents, experimental programs, and the relations between them — is recorded, and the predictive layer on top of it (conditional consequences, experimental coverage relations, characteristic scales) is in; coverage will continue to deepen. Every placement carries an explicit rationale a reader can audit and disagree with.</p>
+      <p class="ap-text">Not a textbook, not complete, not predictive of which programs will succeed. Every placement carries an explicit rationale you can audit — and disagree with.</p>
+
+      <div class="ap-section">Query recipes</div>
+      <p class="ap-text">Six question patterns the catalogue answers — worked examples in <a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/blob/main/methodology/QUERY_RECIPES.md" target="_blank" rel="noopener">QUERY_RECIPES.md</a>.</p>
+      <ul class="ap-list ap-recipes">
+        <li><strong>Which programs target this open question?</strong> <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
+        <li><strong>Where does the same entity classify in two frameworks?</strong> <button class="ap-recipe-jump" data-panel-jump="browse-classifications">browse classifications →</button></li>
+        <li><strong>If this question resolves one way, what gets forced?</strong> <button class="ap-recipe-jump" data-panel-jump="browse-frontiers">browse frontiers →</button></li>
+        <li><strong>Which experiments adjudicate between competing predictions?</strong> <button class="ap-recipe-jump" data-panel-jump="discriminating">compare programs →</button></li>
+        <li><strong>What characteristic scales are recorded?</strong> <button class="ap-recipe-jump" data-panel-jump="ranks">scales →</button></li>
+        <li><strong>Which predictions are recorded as falsified?</strong> <button class="ap-recipe-jump" data-spotlight="falsified">spotlight falsified →</button></li>
+      </ul>
+      <p class="ap-text" style="margin-top: 14px;"><a class="ap-recipes-doclink" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics/tree/main/methodology" target="_blank" rel="noopener">Worked example sessions →</a></p>
     </div>
   `;
   wirePanelJumps(inner);
