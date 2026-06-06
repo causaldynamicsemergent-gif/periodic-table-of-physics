@@ -252,6 +252,14 @@ function renderSidebarAbout() {
           </span>
           <span class="jump-arrow">→</span>
         </button>
+        <button class="ap-jump" data-open-help>
+          <span class="jump-num">▦</span>
+          <span class="jump-text">
+            <span class="jump-title">How to read a tile</span>
+            <span class="jump-desc">Every mark on a tile — stripe, symbol, cell grid, yield bar, closure — labeled on a diagram.</span>
+          </span>
+          <span class="jump-arrow">→</span>
+        </button>
       </div>
 
       <div class="ap-section">What it isn't</div>
@@ -379,6 +387,12 @@ function renderSidebarResearch() {
 function wirePanelJumps(root) {
   root.querySelectorAll('[data-panel-jump]').forEach(el => {
     el.addEventListener('click', () => switchSidebarPanel(el.dataset.panelJump));
+  });
+  root.querySelectorAll('[data-open-help]').forEach(el => {
+    el.addEventListener('click', () => {
+      const ov = document.getElementById('help-overlay');
+      if (ov) ov.classList.add('show');
+    });
   });
   root.querySelectorAll('[data-fc-jump]').forEach(el => {
     el.addEventListener('click', () => selectFC(el.dataset.fcJump));

@@ -206,6 +206,28 @@
     });
   }
 
+  // Help dropdown in the header — how-to-read, refresh, github in one
+  // place. Closes on outside click and when any item inside is chosen.
+  var helpBtn = document.getElementById('help-btn');
+  var helpMenu = document.getElementById('help-menu');
+  var helpWrap = document.getElementById('help-wrap');
+  if (helpBtn && helpMenu && helpWrap) {
+    var closeHelp = function () { helpMenu.classList.remove('open'); helpBtn.classList.remove('active'); helpBtn.setAttribute('aria-expanded', 'false'); };
+    helpBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = !helpMenu.classList.contains('open');
+      helpMenu.classList.toggle('open', open);
+      helpBtn.classList.toggle('active', open);
+      helpBtn.setAttribute('aria-expanded', String(open));
+    });
+    helpMenu.querySelectorAll('.help-menu-item').forEach(function (it) {
+      it.addEventListener('click', function () { closeHelp(); });
+    });
+    document.addEventListener('click', function (e) {
+      if (helpMenu.classList.contains('open') && !helpWrap.contains(e.target)) closeHelp();
+    });
+  }
+
   // Exposed so Browse's Home tab (explorer-sidebar.js) can call it.
   window.navHome = navHome;
 

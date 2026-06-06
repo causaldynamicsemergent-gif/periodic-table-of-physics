@@ -478,3 +478,44 @@
   cursor: pointer;
 }
 .csr-detail-openfull:hover { border-color: var(--ink-mute); color: var(--ink); }
+
+/* ---------- 10. Help dropdown + tile-anatomy diagram ---------- */
+.help-wrap { position: relative; }
+.help-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 220px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  box-shadow: var(--shadow-tile-hover, 0 4px 14px rgba(0,0,0,0.12));
+  z-index: 60;
+  padding: 4px;
+}
+.help-menu.open { display: flex; flex-direction: column; }
+.help-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.help-menu-item:hover { background: var(--paper-3, #f0ede4); color: var(--ink); }
+
+.ta-diagram-wrap {
+  margin: 4px 0 14px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  background: var(--paper-2, transparent);
+  overflow-x: auto;
+}
+.ta-diagram-wrap svg { display: block; width: 100%; max-width: 660px; height: auto; margin: 0 auto; }

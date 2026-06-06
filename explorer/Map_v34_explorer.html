@@ -1369,9 +1369,14 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <h1><svg class="site-logo" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><rect x="1.5" y="1.5" width="8" height="8" rx="1.2"/><rect class="lg-accent" x="14.5" y="4.5" width="8" height="8" rx="1.2"/><rect x="6.5" y="14.5" width="8" height="8" rx="1.2"/><path class="lg-edge" d="M9.5 6 L14.5 8 M7 9.5 L9.5 14.5 M16.5 12.5 L13.5 15.5"/></svg>Map of Physics<span class="v" id="header-version">v34</span></h1>
     </div>
     <div class="header-actions">
-      <button class="btn-ghost" id="btn-help">? how to read</button>
-      <button class="btn-ghost" id="btn-refresh" title="Re-fetch from the live MCP server">↻ refresh</button>
-      <a class="btn-ghost" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
+      <div class="help-wrap" id="help-wrap">
+        <button class="btn-ghost" id="help-btn" aria-expanded="false">? Help <span class="caret">▾</span></button>
+        <div class="help-menu" id="help-menu">
+          <button class="help-menu-item" id="btn-help">▦ How to read this map</button>
+          <button class="help-menu-item" id="btn-refresh" title="Re-fetch from the live MCP server">↻ Refresh data</button>
+          <a class="help-menu-item" href="https://github.com/causaldynamicsemergent-gif/periodic-table-of-physics" target="_blank" rel="noopener">github ↗</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1480,6 +1485,51 @@ body.splitter-dragging * { cursor: col-resize !important; }
   <div class="help-modal">
     <button class="close" id="help-close">×</button>
     <h2>How to read this map</h2>
+    <div class="ta-diagram-wrap">
+      <svg class="tile-anatomy" viewBox="0 0 660 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anatomy of one tile, with every mark labeled">
+        <style>
+          .ta-lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: var(--ink-soft); }
+          .ta-lbl tspan.k { fill: var(--ink); font-weight: 700; }
+          .ta-line { stroke: var(--ink-mute); stroke-width: 1; fill: none; }
+        </style>
+        <!-- the tile -->
+        <rect x="245" y="95" width="180" height="160" fill="var(--paper)" stroke="var(--rule)" rx="3"/>
+        <rect x="245" y="95" width="5" height="160" fill="var(--struct)" rx="1"/>
+        <text x="262" y="138" font-family="'JetBrains Mono',monospace" font-size="30" font-weight="700" fill="var(--struct)">SM</text>
+        <text x="370" y="115" font-family="'JetBrains Mono',monospace" font-size="11" fill="var(--ink-soft)">12 ⇄</text>
+        <text x="370" y="130" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--st-falsified)">⚠2</text>
+        <!-- mini cell grid: realized / forbidden (faint) / predicted gap (accent) -->
+        <g>
+          <rect x="262" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="277" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="292" y="158" width="11" height="11" fill="var(--ink-soft)"/><rect x="307" y="158" width="11" height="11" fill="var(--ink-soft)"/>
+          <rect x="262" y="173" width="11" height="11" fill="var(--ink-soft)"/><rect x="277" y="173" width="11" height="11" fill="var(--paper-3, #eee)" stroke="var(--rule)"/><line x1="277" y1="184" x2="288" y2="173" class="ta-line"/><rect x="292" y="173" width="11" height="11" fill="var(--ink-soft)"/><rect x="307" y="173" width="11" height="11" fill="var(--ink-soft)"/>
+          <rect x="262" y="188" width="11" height="11" fill="none" stroke="var(--st-falsified)"/><line x1="262" y1="199" x2="273" y2="188" stroke="var(--st-falsified)" stroke-width="1"/><line x1="262" y1="188" x2="273" y2="199" stroke="var(--st-falsified)" stroke-width="1"/><rect x="277" y="188" width="11" height="11" fill="var(--ink-soft)"/><rect x="292" y="188" width="11" height="11" fill="var(--ink-soft)"/>
+        </g>
+        <!-- yield bar -->
+        <g>
+          <rect x="247" y="222" width="88" height="6" fill="var(--st-confirmed)"/>
+          <rect x="335" y="222" width="26" height="6" fill="var(--st-tension)"/>
+          <rect x="361" y="222" width="26" height="6" fill="var(--st-not)"/>
+          <rect x="387" y="222" width="18" height="6" fill="var(--st-falsified)"/>
+          <rect x="405" y="222" width="18" height="6" fill="var(--st-retro)"/>
+        </g>
+        <text x="262" y="246" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--ink-mute)">12 · 9 · ◐</text>
+        <!-- labels + leader lines -->
+        <text class="ta-lbl" x="8" y="100"><tspan class="k">category stripe</tspan><tspan x="8" dy="12">blue structural · amber hybrid</tspan><tspan x="8" dy="12">green phenomenon</tspan></text>
+        <path class="ta-line" d="M178 108 L247 130"/>
+        <text class="ta-lbl" x="120" y="40"><tspan class="k">symbol</tspan><tspan x="120" dy="12">the classification's 2–3 letter mark</tspan></text>
+        <path class="ta-line" d="M200 52 L275 112"/>
+        <text class="ta-lbl" x="430" y="30"><tspan class="k">cell count · ⇄ recurrence</tspan><tspan x="430" dy="12">⇄ = same content appears in</tspan><tspan x="430" dy="12">another classification</tspan></text>
+        <path class="ta-line" d="M455 64 L392 106"/>
+        <text class="ta-lbl" x="470" y="118"><tspan class="k">⚠ falsified inside</tspan><tspan x="470" dy="12">count of falsified</tspan><tspan x="470" dy="12">predictions held</tspan></text>
+        <path class="ta-line" d="M466 122 L392 126"/>
+        <text class="ta-lbl" x="455" y="170"><tspan class="k">cell grid</tspan><tspan x="455" dy="12">one square per cell —</tspan><tspan x="455" dy="12">filled = realized</tspan><tspan x="455" dy="12">faint hatch = forbidden</tspan><tspan x="455" dy="12">red hatch = predicted gap</tspan></text>
+        <path class="ta-line" d="M451 182 L322 182"/>
+        <text class="ta-lbl" x="8" y="290"><tspan class="k">yield bar</tspan><tspan x="8" dy="12">predictions by status: green confirmed · amber tension</tspan><tspan x="8" dy="12">gray not tested · red falsified · purple retro-explanatory</tspan></text>
+        <path class="ta-line" d="M120 276 L260 230"/>
+        <text class="ta-lbl" x="380" y="290"><tspan class="k">footer</tspan><tspan x="380" dy="12">cells · predictions · closure level</tspan><tspan x="380" dy="12">■ complete · ◐ partial · □ conjectural</tspan></text>
+        <path class="ta-line" d="M395 276 L312 246"/>
+      </svg>
+    </div>
     <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a formal partition of physical or mathematical content along discrete axes. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
 
     <h3>Tile anatomy</h3>
