@@ -109,6 +109,8 @@ function renderSidebarDefault() {
         <button class="tb-chip" data-quick="falsified" style="text-align:left;padding:5px 9px">tiles with falsified predictions →</button>
         <button class="tb-chip" data-quick="overlay-phen" style="text-align:left;padding:5px 9px">show phen↔phen edges (CAO is hub) →</button>
         <button class="tb-chip" data-quick="confirmed" style="text-align:left;padding:5px 9px">tiles with confirmed predictions →</button>
+        <button class="tb-chip" data-quick="ade-axis" style="text-align:left;padding:5px 9px" title="Shared-axis lighting: axis names inside any record are clickable and light every classification carrying that axis. This one lights the five ADE classifications from their shared cartan-type axis.">shared axes: light the ADE quintet →</button>
+        <button class="tb-chip" data-quick="cross-grid" style="text-align:left;padding:5px 9px" title="Rows by sector, columns by category. The empty intersections mark sectors with no classification of that kind recorded — where formalization is thin.">sector × category grid (the gaps) →</button>
       </div>
       <div class="tip-card" style="margin-top:10px">
         <strong style="color:var(--ink)">Keyboard</strong>: <span class="tip-key">Esc</span> clear · <span class="tip-key">+</span>/<span class="tip-key">−</span> zoom · <span class="tip-key">0</span> or <span class="tip-key">f</span> fit-to-view · drag the divider to resize this panel
@@ -123,6 +125,19 @@ function renderSidebarDefault() {
       else if (v === 'overlay-phen') {
         if (!state.overlayActive) state.overlayActive = new Set();
         state.overlayActive.add('phen-phen');
+      }
+      else if (v === 'ade-axis') {
+        // Shared-axis lighting demo — same call the axis buttons inside a
+        // record make. lightSharedAxis renders + toasts; skip the generic
+        // re-render below.
+        if (typeof lightSharedAxis === 'function') lightSharedAxis('cartan-type');
+        syncToolbarChips();
+        writeHash();
+        return;
+      }
+      else if (v === 'cross-grid') {
+        state.group = 'cross';
+        if (typeof showToast === 'function') showToast('cross-grid: rows by sector, columns by category — the hatched cells are recorded gaps');
       }
       syncToolbarChips();
       writeHash();
