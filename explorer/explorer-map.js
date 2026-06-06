@@ -225,6 +225,82 @@ function fcEstablishedRecurrence(fc) {
 //     'cross:<a>-<b>-<c>'                     — + in-cell sub-grouping c
 //   Selection ORDER is meaning: 1st = rows, 2nd = columns, 3rd = cell.
 // =============================================================
+// =============================================================
+//   Map history (undo) + comprehensive reset
+//
+//   Every map-layer mutation in the app flows through renderMap, so the
+//   history snapshots there: after each render of the tile grid, the
+//   current layer state (grouping, status spotlights, lit tiles, lit
+//   lines, overlays, phenomena) is serialized and pushed if it changed.
+//   Undo pops back one state and re-renders — no call site anywhere has
+//   to know history exists.
+// =============================================================
+var MAP_HISTORY = [];
+var MAP_HISTORY_SKIP = false;
+function snapshotMapState() {
+  const arr = s => s ? Array.from(s).sort() : [];
+  return JSON.stringify({
+    g: state.group,
+    s: arr(state.spotlightActive),
+    t: arr(state.tileSpotlight),
+    e: arr(state.edgeSpotlight),
+    o: arr(state.overlayActive),
+    p: arr(state.phenomenaActive),
+  });
+}
+function recordMapHistory() {
+  if (MAP_HISTORY_SKIP) return;
+  const snap = snapshotMapState();
+  if (MAP_HISTORY[MAP_HISTORY.length - 1] !== snap) {
+    MAP_HISTORY.push(snap);
+    if (MAP_HISTORY.length > 60) MAP_HISTORY.shift();
+  }
+  syncUndoButton();
+}
+function syncUndoButton() {
+  const b = document.getElementById('map-undo');
+  if (b) b.disabled = MAP_HISTORY.length < 2;
+}
+function undoMapStep() {
+  if (MAP_HISTORY.length < 2) return;
+  MAP_HISTORY.pop();
+  const prev = JSON.parse(MAP_HISTORY[MAP_HISTORY.length - 1]);
+  state.group           = prev.g;
+  state.spotlightActive = new Set(prev.s);
+  state.tileSpotlight   = new Set(prev.t);
+  state.edgeSpotlight   = new Set(prev.e);
+  state.overlayActive   = new Set(prev.o);
+  state.phenomenaActive = new Set(prev.p);
+  MAP_HISTORY_SKIP = true;
+  try {
+    if (typeof syncToolbarChips === 'function') syncToolbarChips();
+    if (typeof writeHash === 'function') writeHash();
+    renderMap();
+    if (typeof refreshOverlayLinesLit === 'function') refreshOverlayLinesLit();
+  } finally { MAP_HISTORY_SKIP = false; }
+  syncUndoButton();
+  if (typeof showToast === 'function') showToast('undone — one map step back');
+}
+
+// The ⟲ reset: the whole map back to its default — sector rows, every
+// layer off, fit to page. The reset itself lands in history, so even a
+// reset can be undone.
+function resetMapToDefault() {
+  state.group           = 'sector';
+  state.spotlightActive = new Set();
+  state.tileSpotlight   = new Set();
+  state.edgeSpotlight   = new Set();
+  state.overlayActive   = new Set();
+  if (state.phenomenaActive) state.phenomenaActive = new Set();
+  if (typeof syncToolbarChips === 'function') syncToolbarChips();
+  if (typeof writeHash === 'function') writeHash();
+  renderMap();
+  if (typeof refreshOverlayLinesLit === 'function') refreshOverlayLinesLit();
+  if (typeof zoomFitToView === 'function') zoomFitToView();
+  if (state.activePanel === 'spotlight' && typeof renderSidebarSpotlight === 'function') renderSidebarSpotlight();
+  if (typeof showToast === 'function') showToast('map reset — default view, every layer off');
+}
+
 var GROUP_DIMS = {
   sector:   { of: f => f.sector,        order: () => SECTORS.slice() },
   category: { of: f => f.category,      order: () => CAT_ORDER.slice() },
@@ -446,6 +522,9 @@ function renderMap() {
   // Overlay
   if (state.overlayActive && state.overlayActive.size) drawPhenPhenOverlay();   // UX pass — any active layer
   else document.getElementById('pt-overlay').classList.remove('show');
+
+  // Map history — snapshot the layer state this render reflects.
+  recordMapHistory();
 }
 
 // =============================================================
@@ -863,24 +942,51 @@ function wireToolbar() {
   // Rows-by button + dropdown menu
   wireRowsByDropdown();
 
-  // View-bar collapse — the bar is the map's view toolbox now (the
-  // toolbar's View menu is gone); one click folds it to a slim pill
-  // showing only the current view. Persisted like the splitter width.
+  // View dropdown — the prominent View button in the map's control row.
+  // The dropdown is the view toolbox (grouping chips + map tools). It
+  // stays open while you work (clicking tiles to compare shouldn't slam
+  // it shut); the button toggles it. Closed on every load — no
+  // remembered state, per the always-start-at-default rule.
   const psBar = document.getElementById('pt-structure');
   const psCollapse = document.getElementById('ps-collapse');
   if (psBar && psCollapse) {
-    const applyCollapsed = (c) => {
-      psBar.classList.toggle('ps-collapsed', c);
-      psCollapse.textContent = c ? '▸' : '▾';
-      psCollapse.title = c ? 'Expand the view toolbox' : 'Collapse the view toolbox';
-    };
-    let psc = false;
-    try { psc = localStorage.getItem('mop-viewbar-collapsed') === '1'; } catch (e) {}
-    applyCollapsed(psc);
     psCollapse.addEventListener('click', () => {
-      const c = !psBar.classList.contains('ps-collapsed');
-      try { localStorage.setItem('mop-viewbar-collapsed', c ? '1' : '0'); } catch (e) {}
-      applyCollapsed(c);
+      const open = !psBar.classList.contains('ps-open');
+      psBar.classList.toggle('ps-open', open);
+      psCollapse.classList.toggle('active', open);
+      psCollapse.setAttribute('aria-expanded', open ? 'true' : 'false');
+      psCollapse.title = open ? 'Close the view toolbox' : 'Open the view toolbox';
+    });
+  }
+
+  // Toolbox: all-tiles toggle — light every tile at once / switch them
+  // all off. With every tile lit, unlighting a few is inverse selection.
+  const allTilesBtn = document.getElementById('btn-all-tiles');
+  if (allTilesBtn) {
+    allTilesBtn.addEventListener('click', () => {
+      const all = FCS.map(f => f.id);
+      if (!state.tileSpotlight) state.tileSpotlight = new Set();
+      const allLit = all.every(id => state.tileSpotlight.has(id));
+      state.tileSpotlight = allLit ? new Set() : new Set(all);
+      if (typeof writeHash === 'function') writeHash();
+      renderMap();
+      if (typeof showToast === 'function') {
+        showToast(allLit ? 'all tiles switched off' : `all ${all.length} tiles lit — click any tile to switch it off`);
+      }
+    });
+  }
+
+  // Toolbox: copy a link to this exact view — saving progress is an
+  // explicit copied URL, never invisible remembered state.
+  const copyViewBtn = document.getElementById('btn-copy-view');
+  if (copyViewBtn) {
+    copyViewBtn.addEventListener('click', () => {
+      if (typeof writeHash === 'function') writeHash();
+      const url = location.href;
+      const done = () => { if (typeof showToast === 'function') showToast('link copied — open it to return to exactly this view'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, done);
+      } else done();
     });
   }
 
@@ -901,21 +1007,9 @@ function wireToolbar() {
     });
   });
 
-  // Reset-layers link
-  document.getElementById('btn-reset-layers').addEventListener('click', () => {
-    state.group = 'sector';
-    state.spotlightActive = new Set();    // Update B — empty set, not 'all'
-    state.tileSpotlight   = new Set();    // UX pass — clear the highlight/dim layer too
-    state.edgeSpotlight   = new Set();    // UX pass — and the lit phen↔phen lines
-    state.overlayActive = new Set();
-    syncToolbarChips();
-    writeHash();
-    renderMap();
-    // If the sidebar is showing the spotlight panel, re-render it so toggles reset
-    if (state.activePanel === 'spotlight' && typeof renderSidebarSpotlight === 'function') {
-      renderSidebarSpotlight();
-    }
-  });
+  // Reset link in the toolbox — same comprehensive reset as the ⟲ button.
+  const resetLayersBtn = document.getElementById('btn-reset-layers');
+  if (resetLayersBtn) resetLayersBtn.addEventListener('click', resetMapToDefault);
 
   // E0 lead — wire the open-questions / classifications view toggle.
   if (typeof wireViewToggle === 'function') wireViewToggle();

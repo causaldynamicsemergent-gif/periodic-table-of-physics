@@ -968,7 +968,7 @@ var state = {
   selectedDiscourseNode: null,  // Update B — selected architecture/frontier/totality/regime-content/program
   selectedEdgeId: null,         // Update C — selected cross-classification edge (clickable on-map edges)
   selectedDiscourseEdgesPair: null, // Update C — discourse-highlight ring badge: { nodeId, fcId } or null
-  activeView: 'questions',       // E0 lead — top-level view: 'questions' (open-frontier landing, default) | 'classifications' (FC tile grid)
+  activeView: 'classifications', // every visit starts on the classification map (the questions view is reachable, not remembered); an explicit ?view= in a saved link still wins
   group: 'sector',              // sector | category | closure
   spotlightActive: new Set(),   // Update B — multi-select prediction statuses (empty = no spotlight)
   // UX pass — overlay layers are independent toggles; the set holds any of
@@ -1110,11 +1110,8 @@ function showToast(msg, kind) {
 function parseHash() {
   const h = location.hash.replace(/^#\/?/, '');
   if (!h) {
-    // E0 lead — no hash: fall back to the user's last-used view, else default.
-    try {
-      const stored = localStorage.getItem('mop-active-view');
-      if (stored === 'classifications' || stored === 'questions') state.activeView = stored;
-    } catch (e) {}
+    // No hash: the default view, every time. Saved progress is explicit —
+    // a copied link with its hash — never an invisible remembered state.
     return;
   }
   const [path, qs] = h.split('?');
@@ -1188,7 +1185,10 @@ function parseHash() {
   } else if (parts[0] === 'fc' || parts[0] === 'edge') {
     state.activeView = 'classifications';
   } else {
-    state.activeView = 'questions';
+    // Bare and non-selection paths imply the default view — the
+    // classification map. The questions view is reachable via its
+    // explicit ?view=questions, never implied.
+    state.activeView = 'classifications';
   }
 }
 function writeHash() {
@@ -1239,7 +1239,7 @@ function writeHash() {
   // E0 lead — preserve the active view across reloads, but only when it
   // diverges from what the path already implies (keeps clean URLs in the
   // common case: bare/discourse ⇒ questions, fc/edge ⇒ classifications).
-  const pathImpliedView = (state.selectedFC || state.selectedEdgeId) ? 'classifications' : 'questions';
+  const pathImpliedView = 'classifications';
   if (state.activeView !== pathImpliedView) qs.push('view=' + encodeURIComponent(state.activeView));
   if (qs.length) h += '?' + qs.join('&');
   if (location.hash !== h) {

@@ -1604,7 +1604,18 @@ async function init() {
 
   document.getElementById('zoom-in').addEventListener('click', zoomIn);
   document.getElementById('zoom-out').addEventListener('click', zoomOut);
-  document.getElementById('zoom-reset').addEventListener('click', zoomFitToView);
+  // ⛶ fits the map to the page; ⟲ is the comprehensive reset (default
+  // view, every layer off, fit to page); ↶ steps the map state backwards.
+  const zoomFitBtn = document.getElementById('zoom-fit');
+  if (zoomFitBtn) zoomFitBtn.addEventListener('click', zoomFitToView);
+  document.getElementById('zoom-reset').addEventListener('click', () => {
+    if (typeof resetMapToDefault === 'function') resetMapToDefault();
+    else zoomFitToView();
+  });
+  const undoBtn = document.getElementById('map-undo');
+  if (undoBtn) undoBtn.addEventListener('click', () => {
+    if (typeof undoMapStep === 'function') undoMapStep();
+  });
 
   document.getElementById('sidebar-toggle').addEventListener('click', () => {
     const grid = document.getElementById('body-grid');
