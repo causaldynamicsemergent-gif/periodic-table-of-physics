@@ -1583,30 +1583,244 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <p hidden><label>Leave blank: <input name="bot-field"></label></p>
 
       <h2 id="fb-title">Review the Map of Physics</h2>
-      <p class="fb-lede">Who you are, then three places to push back. Your answers go straight to the maintainer — thank you for taking a look.</p>
+      <p class="fb-lede">Who you are, whether the map earns its keep for someone like you, and where to push back. Your answers go straight to the maintainer — thank you for taking a look.</p>
 
+      <div class="fb-section">about you</div>
       <div class="fb-q">
         <label class="fb-q-label" for="fb-name">Name *</label>
         <input type="text" id="fb-name" name="name" required autocomplete="name">
       </div>
       <div class="fb-q">
-        <label class="fb-q-label" for="fb-affiliation">Affiliation *</label>
-        <input type="text" id="fb-affiliation" name="affiliation" required autocomplete="organization">
+        <label class="fb-q-label" for="fb-affiliation">Affiliation</label>
+        <input type="text" id="fb-affiliation" name="affiliation" autocomplete="organization" placeholder="university, lab, company — or leave blank if independent">
       </div>
       <div class="fb-q">
-        <label class="fb-q-label" for="fb-subfield">Primary subfield *</label>
-        <input type="text" id="fb-subfield" name="subfield" required placeholder="e.g. condensed matter, hep-th, astrophysics…">
+        <label class="fb-q-label" for="fb-subfield">Primary subfield / area of interest *</label>
+        <input type="text" id="fb-subfield" name="subfield" required placeholder="e.g. condensed matter, hep-th, astrophysics, science education…">
       </div>
       <div class="fb-q">
-        <label class="fb-q-label">Role</label>
-        <div class="fb-opts">
-          <label><input type="radio" name="role" value="grad-student"> Graduate student</label>
-          <label><input type="radio" name="role" value="researcher"> Active researcher</label>
-          <label><input type="radio" name="role" value="professor"> Professor / faculty</label>
-          <label><input type="radio" name="role" value="other"> Other</label>
+        <label class="fb-q-label">Which is closest to you? *</label>
+        <div class="fb-opts" id="fb-role-opts">
+          <label><input type="radio" name="role" value="student" required> Student (undergrad / grad)</label>
+          <label><input type="radio" name="role" value="researcher"> Researcher (academic / lab)</label>
+          <label><input type="radio" name="role" value="independent"> Independent researcher</label>
+          <label><input type="radio" name="role" value="educator"> Professor / educator (teaching)</label>
+          <label><input type="radio" name="role" value="other"> Curious reader / other</label>
         </div>
       </div>
 
+      <!-- Role-dependent blocks: exactly one shows, driven by the radios
+           above (wired in explorer-nav.js). All fields exist statically so
+           Netlify detects them; hidden blocks submit empty values. -->
+      <div class="fb-role-block" data-fb-role="student" hidden>
+        <div class="fb-q">
+          <label class="fb-q-label">As a student — is the map useful to you?</label>
+          <div class="fb-opts">
+            <label><input type="radio" name="student-useful" value="clearly"> Yes, clearly</label>
+            <label><input type="radio" name="student-useful" value="somewhat"> Somewhat</label>
+            <label><input type="radio" name="student-useful" value="not-really"> Not really</label>
+            <label><input type="radio" name="student-useful" value="cant-tell"> Can't tell yet</label>
+          </div>
+        </div>
+        <div class="fb-q">
+          <label class="fb-q-label" for="fb-student-notes">In what way (or why not)?</label>
+          <textarea id="fb-student-notes" name="student-notes" rows="3" placeholder="Seeing how courses/subfields connect? Choosing a research direction? Studying for exams? What would make it more useful for a student?"></textarea>
+        </div>
+      </div>
+      <div class="fb-role-block" data-fb-role="researcher" hidden>
+        <div class="fb-q">
+          <label class="fb-q-label">For your research — is the map useful?</label>
+          <div class="fb-opts">
+            <label><input type="radio" name="researcher-useful" value="clearly"> Yes, clearly</label>
+            <label><input type="radio" name="researcher-useful" value="somewhat"> Somewhat</label>
+            <label><input type="radio" name="researcher-useful" value="not-really"> Not really</label>
+            <label><input type="radio" name="researcher-useful" value="cant-tell"> Can't tell yet</label>
+          </div>
+        </div>
+        <div class="fb-q">
+          <label class="fb-q-label" for="fb-researcher-notes">In what way (or why not)?</label>
+          <textarea id="fb-researcher-notes" name="researcher-notes" rows="3" placeholder="Scouting adjacent fields? Cross-classification structure? Prediction / falsification status? Would you share it with your group or cite it?"></textarea>
+        </div>
+      </div>
+      <div class="fb-role-block" data-fb-role="independent" hidden>
+        <div class="fb-q">
+          <label class="fb-q-label">Working independently — is the map useful?</label>
+          <div class="fb-opts">
+            <label><input type="radio" name="independent-useful" value="clearly"> Yes, clearly</label>
+            <label><input type="radio" name="independent-useful" value="somewhat"> Somewhat</label>
+            <label><input type="radio" name="independent-useful" value="not-really"> Not really</label>
+            <label><input type="radio" name="independent-useful" value="cant-tell"> Can't tell yet</label>
+          </div>
+        </div>
+        <div class="fb-q">
+          <label class="fb-q-label" for="fb-independent-notes">In what way (or why not)?</label>
+          <textarea id="fb-independent-notes" name="independent-notes" rows="3" placeholder="Does it help you orient in the literature without institutional access? What's missing for someone working outside an institution?"></textarea>
+        </div>
+      </div>
+      <div class="fb-role-block" data-fb-role="educator" hidden>
+        <div class="fb-q">
+          <label class="fb-q-label">For teaching — is the map useful?</label>
+          <div class="fb-opts">
+            <label><input type="radio" name="educator-useful" value="clearly"> Yes, clearly</label>
+            <label><input type="radio" name="educator-useful" value="somewhat"> Somewhat</label>
+            <label><input type="radio" name="educator-useful" value="not-really"> Not really</label>
+            <label><input type="radio" name="educator-useful" value="cant-tell"> Can't tell yet</label>
+          </div>
+        </div>
+        <div class="fb-q">
+          <label class="fb-q-label" for="fb-educator-notes">In what way (or why not)?</label>
+          <textarea id="fb-educator-notes" name="educator-notes" rows="3" placeholder="Would you use it in a course or lecture? At what level? What would make it classroom-ready?"></textarea>
+        </div>
+      </div>
+      <div class="fb-role-block" data-fb-role="other" hidden>
+        <div class="fb-q">
+          <label class="fb-q-label" for="fb-other-notes">Did the map make sense to you?</label>
+          <textarea id="fb-other-notes" name="other-notes" rows="3" placeholder="Could you follow what the tiles, rows, and colors mean? What pulled you in — and where did you stop?"></textarea>
+        </div>
+      </div>
+
+      <div class="fb-section">the features — what did you actually use?</div>
+      <p class="fb-hint">For each: did you find and try it, and did it help in any way?</p>
+      <div class="fb-feat-grid">
+                <div class="fb-feat-row">
+          <span class="fb-feat-name">Grouping views — sector rows · cross-grid · 3-D</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-grouping" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-grouping" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-grouping" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-grouping" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Lighting tiles / rows / columns (click to light, rest dims)</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-lighting" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-lighting" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-lighting" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-lighting" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Prediction-status spotlight (confirmed / falsified …)</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-spotlight" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-spotlight" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-spotlight" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-spotlight" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Overlay lines (phen↔phen · cross-class) + lighting lines</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-overlays" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-overlays" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-overlays" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-overlays" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Tile flip — open questions on the back</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-flip" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-flip" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-flip" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-flip" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Search across all 484 cells</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-search" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-search" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-search" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-search" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Browse catalogues (classifications, phenomena, glossary…)</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-browse" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-browse" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-browse" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-browse" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Cross-section builder</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-builder" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-builder" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-builder" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-builder" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Zoomed-in tile explainers + how-to-read guide</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-explainers" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-explainers" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-explainers" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-explainers" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+        <div class="fb-feat-row">
+          <span class="fb-feat-name">Connect to AI (MCP server)</span>
+          <span class="fb-feat-opts">
+            <label><input type="radio" name="feat-ai" value="didnt-find"> didn't find it</label>
+            <label><input type="radio" name="feat-ai" value="didnt-try"> saw it, didn't try</label>
+            <label><input type="radio" name="feat-ai" value="not-helpful"> tried — not helpful</label>
+            <label><input type="radio" name="feat-ai" value="helpful"> tried — helpful</label>
+          </span>
+        </div>
+      </div>
+
+      <div class="fb-section">how it feels to use</div>
+      <div class="fb-q">
+        <label class="fb-q-label">How quickly did the map make sense? *</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="ease" value="immediately" required> Immediately</label>
+          <label><input type="radio" name="ease" value="after-guide"> After the how-to-read guide</label>
+          <label><input type="radio" name="ease" value="took-effort"> Took real effort</label>
+          <label><input type="radio" name="ease" value="still-confusing"> Still confusing</label>
+        </div>
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-stuck">Where did you get stuck or confused?</label>
+        <textarea id="fb-stuck" name="stuck" rows="3" placeholder="The first thing that made you stop and squint — a control, a word, a layout. Be blunt."></textarea>
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-improvements">What would you change or add first?</label>
+        <textarea id="fb-improvements" name="improvements" rows="3" placeholder="The one improvement that would make the biggest difference for you."></textarea>
+      </div>
+
+      <div class="fb-section">bugs</div>
+      <div class="fb-q">
+        <label class="fb-q-label">Did you run into bugs or broken behavior?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="bugs" value="no"> No</label>
+          <label><input type="radio" name="bugs" value="yes"> Yes</label>
+        </div>
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-bug-details">If yes — what happened, and where?</label>
+        <textarea id="fb-bug-details" name="bug-details" rows="3" placeholder="What you clicked, what you expected, what happened instead. Browser/device helps."></textarea>
+      </div>
+
+      <div class="fb-section">the AI option</div>
+      <div class="fb-q">
+        <label class="fb-q-label">Did you try "Connect to AI" (the live MCP server)?</label>
+        <div class="fb-opts">
+          <label><input type="radio" name="ai-tried" value="didnt-notice"> Didn't notice it</label>
+          <label><input type="radio" name="ai-tried" value="noticed-skipped"> Noticed it, didn't try</label>
+          <label><input type="radio" name="ai-tried" value="tried"> Tried it</label>
+        </div>
+      </div>
+      <div class="fb-q">
+        <label class="fb-q-label" for="fb-ai-usage">If you tried it — how did you use it?</label>
+        <textarea id="fb-ai-usage" name="ai-usage" rows="3" placeholder="What did you connect it to, what did you ask, and did the answers hold up against the map?"></textarea>
+      </div>
+
+      <div class="fb-section">push back on the physics</div>
       <div class="fb-q">
         <label class="fb-q-label" for="fb-placements">Specific placements</label>
         <textarea id="fb-placements" name="placements" rows="3" placeholder="Disagree with any classification, cell, edge, or status? Which, how, and why?"></textarea>
@@ -1617,7 +1831,7 @@ body.splitter-dragging * { cursor: col-resize !important; }
       </div>
       <div class="fb-q">
         <label class="fb-q-label" for="fb-missing">Missing / unclear</label>
-        <textarea id="fb-missing" name="missing" rows="3" placeholder="What did you expect to find that the map doesn't have? Where did you trip on first read?"></textarea>
+        <textarea id="fb-missing" name="missing" rows="3" placeholder="What did you expect to find that the map doesn't have?"></textarea>
       </div>
 
       <button type="submit" class="fb-submit" id="feedback-submit">Send feedback</button>

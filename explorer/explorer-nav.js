@@ -249,6 +249,23 @@
     });
   }
 
+  // Feedback form — the role radios drive which audience block shows.
+  // All blocks exist statically (Netlify field detection); exactly one is
+  // visible at a time, and hidden blocks simply submit empty values.
+  var roleOpts = document.getElementById('fb-role-opts');
+  if (roleOpts) {
+    var showRoleBlock = function () {
+      var sel = roleOpts.querySelector('input[name="role"]:checked');
+      document.querySelectorAll('.fb-role-block').forEach(function (blk) {
+        blk.hidden = !sel || blk.getAttribute('data-fb-role') !== sel.value;
+      });
+    };
+    roleOpts.querySelectorAll('input[name="role"]').forEach(function (r) {
+      r.addEventListener('change', showRoleBlock);
+    });
+    showRoleBlock();
+  }
+
   // Exposed so Browse's Home tab (explorer-sidebar.js) can call it.
   window.navHome = navHome;
 
