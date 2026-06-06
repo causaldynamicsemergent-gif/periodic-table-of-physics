@@ -120,6 +120,9 @@ function renderSidebarDefault() {
         { key: 'overlay-phen', on: !!(state.overlayActive && state.overlayActive.has('phen-phen')),
           label: '↔ phenomenon arrows',
           desc:  'draws arrows on the map between related phenomena (compact astro objects is the hub)' },
+        { key: 'overlay-cross', on: !!(state.overlayActive && state.overlayActive.has('cross-class')),
+          label: '⇢ cross-classification arrows',
+          desc:  'draws the derives-from / specializes / … edges between classifications on the map' },
         { key: 'ade-axis',     on: adeOn,
           label: '✦ ADE quintet (shared axes)',
           desc:  'lights the five ADE tiles via their shared cartan-type axis — axis names inside any record do the same on click' },
@@ -152,14 +155,15 @@ function renderSidebarDefault() {
         if (state.spotlightActive.has(v)) state.spotlightActive.delete(v);
         else state.spotlightActive.add(v);
       }
-      else if (v === 'overlay-phen') {
-        // Toggle the phen↔phen arrow overlay on/off.
+      else if (v === 'overlay-phen' || v === 'overlay-cross') {
+        // Toggle an arrow overlay on/off.
+        const layer = v === 'overlay-phen' ? 'phen-phen' : 'cross-class';
         if (!state.overlayActive) state.overlayActive = new Set();
-        if (state.overlayActive.has('phen-phen')) {
-          state.overlayActive.delete('phen-phen');
-          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit('phen-phen');
+        if (state.overlayActive.has(layer)) {
+          state.overlayActive.delete(layer);
+          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(layer);
         } else {
-          state.overlayActive.add('phen-phen');
+          state.overlayActive.add(layer);
         }
       }
       else if (v === 'ade-axis') {
@@ -1346,6 +1350,7 @@ function buildBrowseMenu(filter) {
   const menu = document.getElementById('browse-menu');
   const tabs = [
     { id: 'browse-classifications', icon: '☰', title: 'Classifications', desc: 'All formal classifications, grouped by sector.' },
+    { id: 'phenomena',              icon: '◉', title: 'Phenomena',       desc: 'Highlight where each physical thing lives across the map.' },
     { id: 'browse-architectures',   icon: '⌬', title: 'Architectures',   desc: 'Established and candidate-foundational programs.' },
     { id: 'browse-frontiers',       icon: '✕', title: 'Frontiers',       desc: 'Open frontiers, grouped by structural reason.' },
     { id: 'browse-totalities',      icon: '◇', title: 'Totalities',      desc: 'Whole-system organizing principles.' },

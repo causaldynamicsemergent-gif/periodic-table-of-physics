@@ -1403,23 +1403,6 @@ body.splitter-dragging * { cursor: col-resize !important; }
       <div class="browse-menu" id="analyse-menu"></div>
     </div>
 
-    <div class="browse-wrap phenomena-wrap" id="phenomena-wrap">
-      <button class="browse-btn" id="phenomena-btn">Phenomena <span class="caret">▾</span></button>
-      <div class="browse-menu phenomena-menu" id="phenomena-menu">
-        <div class="view-section">
-          <button class="toolbar-button view-fullrow" id="phenomena-panel-btn" type="button" title="Highlight where each physical thing lives across the map">Physical phenomena <span class="tb-btn-caret">▸</span></button>
-        </div>
-        <div class="view-section">
-          <div class="view-section-head">Overlay</div>
-          <div class="view-chips">
-            <button class="tb-chip active" data-filter="overlay" data-value="none" type="button">none</button>
-            <button class="tb-chip" data-filter="overlay" data-value="phen-phen" type="button" title="draw arrows between phenomenon classifications">phen↔phen</button>
-            <button class="tb-chip" data-filter="overlay" data-value="cross-class" type="button" title="draw the cross-classification edges (derives-from, specializes, …) between classifications — with tiles lit, only edges touching them are drawn">cross-class</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="tb-divider" aria-hidden="true"></div>
     <a class="ai-connect-btn" id="ai-connect-btn" href="./ask-the-map.html" title="Use the map as a tool inside an AI chat — guided setup">✦ Connect to AI</a>
   </div>
@@ -1452,11 +1435,19 @@ body.splitter-dragging * { cursor: col-resize !important; }
               <span class="ps-switch" id="ps-switch-slot"></span>
             </div>
             <div class="ps-toolbox" id="ps-toolbox">
-              <span class="ps-toolbox-lbl">map tools:</span>
-              <button class="toolbar-button view-fullrow" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▸</span></button>
-              <button class="tb-chip" id="btn-all-tiles" type="button" title="Light every tile at once (click again to switch them all off) — handy for then unlighting just a few">all tiles on/off</button>
-              <button class="tb-chip" id="btn-copy-view" type="button" title="Copy a link to exactly this view — the way to save your progress">copy link to this view</button>
-              <button class="tb-reset" id="btn-reset-layers" type="button" title="Reset the map — default view, every layer off, fit to page">reset to default</button>
+              <div class="ps-toolbox-row">
+                <span class="ps-toolbox-lbl">map tools:</span>
+                <button class="toolbar-button view-fullrow" id="spotlight-btn" type="button" title="Highlight tiles by prediction status">Spotlight <span class="tb-btn-count" style="display:none"></span> <span class="tb-btn-caret">▸</span></button>
+                <button class="tb-chip" id="btn-all-tiles" type="button" title="Light every tile at once (click again to switch them all off) — handy for then unlighting just a few">all tiles on/off</button>
+                <button class="tb-chip" id="btn-copy-view" type="button" title="Copy a link to exactly this view — the way to save your progress">copy link to this view</button>
+                <button class="tb-reset" id="btn-reset-layers" type="button" title="Reset the map — default view, every layer off, fit to page">reset to default</button>
+              </div>
+              <div class="ps-toolbox-row">
+                <span class="ps-toolbox-lbl">overlays:</span>
+                <button class="tb-chip active" data-filter="overlay" data-value="none" type="button">none</button>
+                <button class="tb-chip" data-filter="overlay" data-value="phen-phen" type="button" title="draw arrows between phenomenon classifications">phen↔phen</button>
+                <button class="tb-chip" data-filter="overlay" data-value="cross-class" type="button" title="draw the cross-classification edges (derives-from, specializes, …) between classifications — with tiles lit, only edges touching them are drawn">cross-class</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1501,13 +1492,13 @@ body.splitter-dragging * { cursor: col-resize !important; }
     <p><strong>Hover</strong> a tile for a tooltip preview. <strong>Click</strong> a tile to open its details in the right sidebar — description, classification axes, cells, predictions (with a status filter), cross-classification edges, citations. Clicking also lights the tile and dims the rest; click further tiles to light several at once, and click a lit tile to switch it off — so exactly the part of the map you want to focus on stays lit. <kbd class="tip-key">Esc</kbd>, the sidebar's ×, ⌂ Home, or a plain click on the map background restores the full map. With the cross-section builder open, clicking tiles adds them to (or removes them from) the cross-section, and the selected classifications light up the same way. The map stays visible the whole time. Inside the sidebar, you can click any cell to see its full record (axis values, examples, predictions tied to that cell, citations). A breadcrumb at the top of the sidebar lets you walk back up.</p>
 
     <h3>Physical phenomena</h3>
-    <p>Open <strong>Phenomena ▾</strong> in the toolbar and choose <strong>Physical phenomena</strong>. Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> or <strong>cross-class</strong> toggle in the same menu draws arrows on the map showing the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub.</p>
+    <p>Open <strong>Browse ▾</strong> and choose <strong>Phenomena</strong> (or use the sidebar quick-bar). Each toggle highlights the classifications that contain that thing, in its category's colour. A tile glows with one ring per matching category — so a tile hit by both Particles and Cosmological will show both rings. Phenomena that map to the <em>same exact set</em> of classifications have been combined; the merging itself is information. <strong>all on</strong> / <strong>all off</strong> reset. The <strong>phen↔phen</strong> and <strong>cross-class</strong> overlay toggles — in the View toolbox and in the legend's layer toggles — draw arrows on the map (phen↔phen shows the 7 phenomenon-to-phenomenon relationships, with compact-astrophysical-objects as the visual hub).</p>
 
     <h3>Finding a specific thing</h3>
     <p>The search box at the top of the toolbar searches all 484 cells. Type <em>black holes</em>, <em>gluons</em>, <em>AdS/CFT</em>, <em>topological insulator</em>, or anything else. Results are grouped by classification with cell snippets; clicking a result opens that exact cell. For the terms used to describe how the map itself is organised (<em>open frontier</em>, <em>discharge status</em>, <em>candidate-foundational</em>, …) open the <strong>Glossary</strong> via the sidebar quick-bar or Browse menu.</p>
 
     <h3>Layers + filters</h3>
-    <p>The <strong>view bar above the map</strong> reorganises it. Its three <strong>group by</strong> chips stack: one on = flat rows (sector / category / closure), two on = a cross-grid (1st = rows, 2nd = columns — e.g. sector × category), all three on = the 3-D view (sector rows · category columns · closure inside each cell). The <strong>View</strong> button's dropdown also holds the map tools: Spotlight, an all-tiles on/off switch, copy-link (to save a view), and reset. In any cross-grid an <em>empty intersection</em> renders as a hatched gap cell — a recorded fact that no classification exists at that intersection in the data, a Mendeleev-flavored statement about where formalization is thin. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. The phen↔phen overlay now lives in the <strong>Phenomena ▾</strong> menu (see above).</p>
+    <p>The <strong>view bar above the map</strong> reorganises it. Its three <strong>group by</strong> chips stack: one on = flat rows (sector / category / closure), two on = a cross-grid (1st = rows, 2nd = columns — e.g. sector × category), all three on = the 3-D view (sector rows · category columns · closure inside each cell). The <strong>View</strong> button's dropdown also holds the map tools: Spotlight, an all-tiles on/off switch, copy-link (to save a view), and reset. In any cross-grid an <em>empty intersection</em> renders as a hatched gap cell — a recorded fact that no classification exists at that intersection in the data, a Mendeleev-flavored statement about where formalization is thin. <strong>Spotlight</strong> dims tiles whose predictions don't match a status. The overlay toggles live in the same toolbox (and in the legend).</p>
 
     <h3>Shared axes</h3>
     <p>Inside any classification's sidebar record, the <strong>axis names are clickable</strong>. Click one and every classification on the map carrying an axis of the same name lights up; the <strong>×N</strong> badge next to the name tells you how many before you click. Click the axis again (from any carrier's record) to switch the lighting off. This recovers the old map's column intuition as an interaction instead of a position — the canonical demo is <em>cartan-type</em> on any of the five ADE classifications, which lights the whole quintet. The legend's quick-spotlight list has a one-click version.</p>
