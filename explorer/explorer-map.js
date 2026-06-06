@@ -219,6 +219,8 @@ function renderMap() {
   // toolbar) respects the active view with no other changes.
   if (typeof state !== 'undefined' && state.activeView === 'questions'
       && typeof renderQuestionsView === 'function') {
+    const _sb = document.getElementById('pt-structure');
+    if (_sb) _sb.style.display = 'none';   // the bar describes the tile grid only
     renderQuestionsView();
     return;
   }
@@ -248,27 +250,46 @@ function renderMap() {
     Object.keys(groups).filter(k => !groupOrder.includes(k))
   );
 
-  // Intro + stats
-  const m = DATA._meta.counts;
-  // Cross-grid mode gets one extra sentence pointing at the payoff: the
-  // empty intersections are recorded gaps, not layout artifacts.
-  const crossNote = state.group === 'cross'
-    ? ' Columns split each row by <em>category</em> — an empty intersection means no classification of that kind is recorded in that sector.'
-    : '';
-  const intro = `
-    <div class="pt-intro">
-      <div class="blurb">
-        <strong>v${DATA._meta.dataset_version}.</strong> Each tile below is a <em>formal classification</em>. Rows are sectors of physics.${crossNote} <strong>Hover</strong> a tile for a preview, <strong>click</strong> for full detail in the sidebar.
-      </div>
-      <div class="pt-stats">
-        <div class="pt-stat"><span class="n">${m.formal_classifications}</span><span class="lbl">classifications</span></div>
-        <div class="pt-stat"><span class="n">${m.cells}</span><span class="lbl">cells</span></div>
-        <div class="pt-stat"><span class="n">${m.predictions}</span><span class="lbl">predictions</span></div>
-        <div class="pt-stat"><span class="n">${m.cross_classification_edges}</span><span class="lbl">edges</span></div>
-        <div class="pt-stat"><span class="n" style="color:var(--st-falsified)">${m.falsifications}</span><span class="lbl">falsified</span></div>
-      </div>
-    </div>
+  // The structure bar — an always-visible plain-language statement of what
+  // rows (and, in cross mode, columns) mean RIGHT NOW, with the rows-by
+  // switch inline so changing the cut never requires opening a menu. It
+  // lives in the map pane OUTSIDE the zoomable layer, so it stays readable
+  // at any zoom and sticks to the top when the pane scrolls. (This replaces
+  // an older pt-intro block that was being built but never inserted — the
+  // map previously displayed no statement of its own layout at all.)
+  const STRUCTURE_TEXT = {
+    sector:   'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>sector</strong> — the domain of physics each classification organizes. Order <em>within</em> a row carries no meaning.',
+    category: 'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>category</strong> — <strong>structural</strong> (pure math scaffolding), <strong>hybrid</strong> (math with empirical content), <strong>phenomenon</strong> (empirical territory). Order <em>within</em> a row carries no meaning.',
+    closure:  'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>closure level</strong> — how settled each classification\'s own organizing pattern is (■ complete · ◐ partial · □ conjectural). Order <em>within</em> a row carries no meaning.',
+    cross:    'Each tile is one <em>formal classification</em>. <strong>Rows = sector · columns = category.</strong> A hatched cell is a recorded gap: no classification of that kind exists in that sector\'s data.',
+  };
+  const structureText = STRUCTURE_TEXT[state.group] || STRUCTURE_TEXT.sector;
+  const psChips = ROWSBY_OPTIONS.map(o =>
+    `<button type="button" class="ps-chip${state.group === o.value ? ' active' : ''}" data-ps-group="${esc(o.value)}" title="${esc(o.desc)}">${esc(o.label.toLowerCase())}</button>`
+  ).join('');
+  let structEl = document.getElementById('pt-structure');
+  if (!structEl) {
+    structEl = document.createElement('div');
+    structEl.id = 'pt-structure';
+    structEl.className = 'pt-structure';
+    const pane = document.getElementById('map-pane');
+    const wrap = document.getElementById('map-zoom-wrap');
+    if (pane && wrap) pane.insertBefore(structEl, wrap);
+  }
+  structEl.style.display = '';
+  structEl.innerHTML = `
+    <span class="ps-reads">${structureText}</span>
+    <span class="ps-switch"><span class="ps-switch-lbl">rows by:</span>${psChips}</span>
   `;
+  structEl.querySelectorAll('.ps-chip[data-ps-group]').forEach(b => {
+    b.addEventListener('click', () => {
+      if (state.group === b.dataset.psGroup) return;
+      state.group = b.dataset.psGroup;
+      if (typeof syncToolbarChips === 'function') syncToolbarChips();
+      if (typeof writeHash === 'function') writeHash();
+      renderMap();
+    });
+  });
 
   // Build rows. The cross-grid mode renders rows split into three category
   // columns; every other mode keeps the flat tile-flow rows.

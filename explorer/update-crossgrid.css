@@ -140,3 +140,77 @@
   text-decoration: none;
   display: inline-block;
 }
+
+/* ---------- 3. Structure bar + legend layer toggles ---------- */
+
+/* The always-visible statement of what rows/columns mean right now,
+   with the rows-by switch inline. Lives between the blurb and the
+   stats strip, re-rendered with the map so the text and active chip
+   always match the current grouping. */
+.pt-structure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: baseline;
+  /* Sits in the map pane below the absolute zoom-controls strip (~44px),
+     outside the zoomable layer, and sticks while the pane scrolls. */
+  margin: 52px 14px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--ink-mute);
+  border-radius: 3px;
+  background: var(--paper);
+  position: sticky;
+  top: 8px;
+  z-index: 25;
+  box-shadow: var(--shadow-tile, 0 1px 2px rgba(0,0,0,0.06));
+}
+/* The zoom wrap's big top padding existed to clear the zoom controls;
+   with the bar now occupying that band, trim it. */
+.pt-structure + .map-zoom-wrap { padding-top: 14px; }
+.ps-reads {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  flex: 1 1 320px;
+}
+.ps-reads strong { color: var(--ink); }
+.ps-switch {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ps-switch-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+  margin-right: 2px;
+}
+.ps-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.ps-chip:hover { border-color: var(--ink-mute); color: var(--ink); }
+.ps-chip.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  cursor: default;
+}
+
+/* One-line description under each legend layer toggle. */
+.qs-desc {
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  line-height: 1.45;
+  margin: 0 0 7px 2px;
+}

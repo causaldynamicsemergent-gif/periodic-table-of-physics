@@ -103,45 +103,86 @@ function renderSidebarDefault() {
       `).join('')}
     </div>
 
+    ${(() => {
+      // Layer toggles — each is a real on/off switch with its state visible
+      // (a dark chip = on) and a one-line description of what it changes on
+      // the map, so there is never a mystery about which button did what.
+      const adeOn = (typeof sharedAxisMembers === 'function' && state.tileSpotlight)
+        ? (() => { const ms = sharedAxisMembers('cartan-type'); return ms.length > 0 && ms.every(id => state.tileSpotlight.has(id)); })()
+        : false;
+      const items = [
+        { key: 'falsified',    on: state.spotlightActive.has('falsified'),
+          label: '⚠ falsified predictions',
+          desc:  'lights every tile holding a falsified prediction and dims the rest' },
+        { key: 'confirmed',    on: state.spotlightActive.has('confirmed'),
+          label: '✓ confirmed predictions',
+          desc:  'lights every tile holding a confirmed prediction and dims the rest' },
+        { key: 'overlay-phen', on: !!(state.overlayActive && state.overlayActive.has('phen-phen')),
+          label: '↔ phenomenon arrows',
+          desc:  'draws arrows on the map between related phenomena (compact astro objects is the hub)' },
+        { key: 'ade-axis',     on: adeOn,
+          label: '✦ ADE quintet (shared axes)',
+          desc:  'lights the five ADE tiles via their shared cartan-type axis — axis names inside any record do the same on click' },
+        { key: 'cross-grid',   on: state.group === 'cross',
+          label: '⊞ sector × category grid',
+          desc:  'reshapes the map: rows = sector, columns = category; hatched cells are recorded gaps' },
+      ];
+      return `
     <div class="sidebar-section">
-      <h3>Quick spotlights</h3>
-      <div style="display:flex;flex-direction:column;gap:5px">
-        <button class="tb-chip" data-quick="falsified" style="text-align:left;padding:5px 9px">tiles with falsified predictions →</button>
-        <button class="tb-chip" data-quick="overlay-phen" style="text-align:left;padding:5px 9px">show phen↔phen edges (CAO is hub) →</button>
-        <button class="tb-chip" data-quick="confirmed" style="text-align:left;padding:5px 9px">tiles with confirmed predictions →</button>
-        <button class="tb-chip" data-quick="ade-axis" style="text-align:left;padding:5px 9px" title="Shared-axis lighting: axis names inside any record are clickable and light every classification carrying that axis. This one lights the five ADE classifications from their shared cartan-type axis.">shared axes: light the ADE quintet →</button>
-        <button class="tb-chip" data-quick="cross-grid" style="text-align:left;padding:5px 9px" title="Rows by sector, columns by category. The empty intersections mark sectors with no classification of that kind recorded — where formalization is thin.">sector × category grid (the gaps) →</button>
+      <h3>Layer toggles</h3>
+      <div class="sec-sub">Click to switch a layer on, click again to switch it off. A dark chip is currently <strong>on</strong>.</div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        ${items.map(it => `
+          <button class="tb-chip qs-chip${it.on ? ' active' : ''}" data-quick="${it.key}" style="text-align:left;padding:5px 9px">${esc(it.label)}${it.on ? ' · on' : ''}</button>
+          <div class="qs-desc">${esc(it.desc)}</div>
+        `).join('')}
       </div>
       <div class="tip-card" style="margin-top:10px">
         <strong style="color:var(--ink)">Keyboard</strong>: <span class="tip-key">Esc</span> clear · <span class="tip-key">+</span>/<span class="tip-key">−</span> zoom · <span class="tip-key">0</span> or <span class="tip-key">f</span> fit-to-view · drag the divider to resize this panel
       </div>
     </div>
   `;
+    })()}
+  `;
   inner.querySelectorAll('[data-quick]').forEach(b => {
     b.addEventListener('click', () => {
       const v = b.dataset.quick;
-      if (v === 'falsified')      { state.spotlightActive.add('falsified'); }
-      else if (v === 'confirmed') { state.spotlightActive.add('confirmed'); }
+      if (v === 'falsified' || v === 'confirmed') {
+        // Toggle the status spotlight on/off.
+        if (state.spotlightActive.has(v)) state.spotlightActive.delete(v);
+        else state.spotlightActive.add(v);
+      }
       else if (v === 'overlay-phen') {
+        // Toggle the phen↔phen arrow overlay on/off.
         if (!state.overlayActive) state.overlayActive = new Set();
-        state.overlayActive.add('phen-phen');
+        if (state.overlayActive.has('phen-phen')) {
+          state.overlayActive.delete('phen-phen');
+          if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit('phen-phen');
+        } else {
+          state.overlayActive.add('phen-phen');
+        }
       }
       else if (v === 'ade-axis') {
-        // Shared-axis lighting demo — same call the axis buttons inside a
-        // record make. lightSharedAxis renders + toasts; skip the generic
-        // re-render below.
+        // lightSharedAxis is itself a toggle (and renders + toasts).
         if (typeof lightSharedAxis === 'function') lightSharedAxis('cartan-type');
         syncToolbarChips();
         writeHash();
+        renderSidebarDefault();   // refresh chip states
         return;
       }
       else if (v === 'cross-grid') {
-        state.group = 'cross';
-        if (typeof showToast === 'function') showToast('cross-grid: rows by sector, columns by category — the hatched cells are recorded gaps');
+        const turningOn = state.group !== 'cross';
+        state.group = turningOn ? 'cross' : 'sector';
+        if (typeof showToast === 'function') {
+          showToast(turningOn
+            ? 'cross-grid on: rows = sector, columns = category — the hatched cells are recorded gaps'
+            : 'cross-grid off — back to plain sector rows');
+        }
       }
       syncToolbarChips();
       writeHash();
       renderMap();
+      renderSidebarDefault();     // refresh chip states
     });
   });
 }
