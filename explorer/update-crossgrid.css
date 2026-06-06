@@ -214,3 +214,52 @@
   line-height: 1.45;
   margin: 0 0 7px 2px;
 }
+
+/* ---------- 4. Ordered dimension toggles + in-cell sub-groups ---------- */
+
+/* Role tag inside an active dimension chip: rows / cols / cell, by the
+   order the dimension was switched on. */
+.ps-chip .ps-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(251, 249, 241, 0.22);
+  border-radius: 2px;
+  padding: 1px 4px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+.ps-chip.active { cursor: pointer; }   /* active chips stay clickable (to remove) */
+.ps-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Third-dimension sub-groups inside a cross cell: small labeled clusters
+   laid side by side, wrapping. */
+.pt-cross-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 12px 6px 0;
+}
+.pt-cross-sub-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+  border-bottom: 1px dashed var(--rule-soft);
+  padding-bottom: 1px;
+  align-self: flex-start;
+}
+.pt-cross-sub-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

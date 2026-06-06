@@ -212,6 +212,40 @@ function fcEstablishedRecurrence(fc) {
 // =============================================================
 //   Periodic table render (Level 1; persistent)
 // =============================================================
+// =============================================================
+//   Grouping dimensions (rows / columns / in-cell)
+//
+//   The map has exactly three discrete dimensions recorded per
+//   classification: sector, category, closure. Any one of them can be
+//   the rows; any second becomes columns (a cross-grid); the third
+//   sub-groups tiles inside each cell. state.group encodes the stack:
+//     'sector' | 'category' | 'closure'      — one dimension, flat rows
+//     'cross'                                 — alias: sector × category
+//     'cross:<a>-<b>'                         — rows a, columns b
+//     'cross:<a>-<b>-<c>'                     — + in-cell sub-grouping c
+//   Selection ORDER is meaning: 1st = rows, 2nd = columns, 3rd = cell.
+// =============================================================
+var GROUP_DIMS = {
+  sector:   { of: f => f.sector,        order: () => SECTORS.slice() },
+  category: { of: f => f.category,      order: () => CAT_ORDER.slice() },
+  closure:  { of: f => f.closure_level, order: () => CLOSURE_ORDER.slice() },
+};
+function parseGroupDims() {
+  const g = (typeof state !== 'undefined' && state.group) ? String(state.group) : 'sector';
+  if (g === 'cross') return ['sector', 'category'];
+  if (g.indexOf('cross:') === 0) {
+    const dims = g.slice(6).split('-').filter(d => GROUP_DIMS[d]);
+    if (dims.length >= 2) return dims.slice(0, 3);
+  }
+  return GROUP_DIMS[g] ? [g] : ['sector'];
+}
+function serializeGroupDims(dims) {
+  if (!dims || !dims.length) return 'sector';
+  if (dims.length === 1) return dims[0];
+  if (dims.length === 2 && dims[0] === 'sector' && dims[1] === 'category') return 'cross';
+  return 'cross:' + dims.join('-');
+}
+
 function renderMap() {
   // E0 lead — parallel top-level views. When the open-questions view is
   // active, hand off to its renderer. Routing through the single existing
@@ -227,19 +261,12 @@ function renderMap() {
   const _pane = document.getElementById('map-pane');
   if (_pane) _pane.classList.remove('view-questions');
   if (typeof syncViewToggle === 'function') syncViewToggle();
-  // Group classifications. The cross-grid mode rows by sector like the
-  // sector mode — its columns are handled in the row renderer below.
-  let groupOf, groupOrder;
-  if (state.group === 'sector' || state.group === 'cross') {
-    groupOf = f => f.sector;
-    groupOrder = SECTORS.slice();
-  } else if (state.group === 'category') {
-    groupOf = f => f.category;
-    groupOrder = CAT_ORDER.slice();
-  } else {
-    groupOf = f => f.closure_level;
-    groupOrder = CLOSURE_ORDER.slice();
-  }
+  // Group classifications by the FIRST selected dimension; further
+  // dimensions (columns, in-cell) are handled in the cross renderer.
+  const dims = parseGroupDims();
+  const rowDimDef = GROUP_DIMS[dims[0]] || GROUP_DIMS.sector;
+  const groupOf = rowDimDef.of;
+  const groupOrder = rowDimDef.order();
   const groups = {};
   for (const fc of FCS) {
     const k = groupOf(fc) || 'Other';
@@ -251,22 +278,34 @@ function renderMap() {
   );
 
   // The structure bar — an always-visible plain-language statement of what
-  // rows (and, in cross mode, columns) mean RIGHT NOW, with the rows-by
-  // switch inline so changing the cut never requires opening a menu. It
-  // lives in the map pane OUTSIDE the zoomable layer, so it stays readable
-  // at any zoom and sticks to the top when the pane scrolls. (This replaces
-  // an older pt-intro block that was being built but never inserted — the
-  // map previously displayed no statement of its own layout at all.)
-  const STRUCTURE_TEXT = {
-    sector:   'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>sector</strong> — the domain of physics each classification organizes. Order <em>within</em> a row carries no meaning.',
-    category: 'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>category</strong> — <strong>structural</strong> (pure math scaffolding), <strong>hybrid</strong> (math with empirical content), <strong>phenomenon</strong> (empirical territory). Order <em>within</em> a row carries no meaning.',
-    closure:  'Each tile is one <em>formal classification</em>. Rows group tiles by <strong>closure level</strong> — how settled each classification\'s own organizing pattern is (■ complete · ◐ partial · □ conjectural). Order <em>within</em> a row carries no meaning.',
-    cross:    'Each tile is one <em>formal classification</em>. <strong>Rows = sector · columns = category.</strong> A hatched cell is a recorded gap: no classification of that kind exists in that sector\'s data.',
+  // rows (columns, in-cell grouping) mean RIGHT NOW. The three dimension
+  // chips are ordered toggles: the 1st you switch on becomes the rows, a
+  // 2nd becomes the columns (cross-grid), a 3rd sub-groups tiles inside
+  // each cell. Clicking an active chip removes that dimension (roles shift
+  // up); the last one can't be removed. The bar lives in the map pane
+  // OUTSIDE the zoomable layer, so it stays readable at any zoom and
+  // sticks to the top when the pane scrolls.
+  const DIM_GLOSS = {
+    sector:   'Rows group tiles by <strong>sector</strong> — the domain of physics each classification organizes.',
+    category: 'Rows group tiles by <strong>category</strong> — <strong>structural</strong> (pure math scaffolding), <strong>hybrid</strong> (math with empirical content), <strong>phenomenon</strong> (empirical territory).',
+    closure:  'Rows group tiles by <strong>closure level</strong> — how settled each classification\'s own organizing pattern is (■ complete · ◐ partial · □ conjectural).',
   };
-  const structureText = STRUCTURE_TEXT[state.group] || STRUCTURE_TEXT.sector;
-  const psChips = ROWSBY_OPTIONS.map(o =>
-    `<button type="button" class="ps-chip${state.group === o.value ? ' active' : ''}" data-ps-group="${esc(o.value)}" title="${esc(o.desc)}">${esc(o.label.toLowerCase())}</button>`
-  ).join('');
+  let structureText = 'Each tile is one <em>formal classification</em>. ';
+  if (dims.length === 1) {
+    structureText += DIM_GLOSS[dims[0]] + ' Order <em>within</em> a row carries no meaning.';
+  } else {
+    structureText += `<strong>Rows = ${esc(dims[0])} · columns = ${esc(dims[1])}.</strong> A hatched cell is a recorded gap: no classification is recorded at that intersection.`;
+    if (dims[2]) structureText += ` Within each cell, tiles are sub-grouped by <strong>${esc(dims[2])}</strong>.`;
+  }
+  const PS_ROLES = ['rows', 'cols', 'cell'];
+  const psChips = ['sector', 'category', 'closure'].map(d => {
+    const idx = dims.indexOf(d);
+    const on = idx >= 0;
+    const title = on
+      ? (dims.length === 1 ? 'The map needs at least one grouping — switch another on first' : 'Click to remove this grouping (the others shift up)')
+      : 'Click to add this grouping: 1st on = rows, 2nd = columns, 3rd = in-cell';
+    return `<button type="button" class="ps-chip${on ? ' active' : ''}" data-ps-dim="${esc(d)}" title="${esc(title)}">${esc(d)}${on ? `<span class="ps-role">${PS_ROLES[idx]}</span>` : ''}</button>`;
+  }).join('');
   let structEl = document.getElementById('pt-structure');
   if (!structEl) {
     structEl = document.createElement('div');
@@ -279,12 +318,20 @@ function renderMap() {
   structEl.style.display = '';
   structEl.innerHTML = `
     <span class="ps-reads">${structureText}</span>
-    <span class="ps-switch"><span class="ps-switch-lbl">rows by:</span>${psChips}</span>
+    <span class="ps-switch"><span class="ps-switch-lbl">group by:</span>${psChips}<span class="ps-hint">1st = rows · 2nd = columns · 3rd = in-cell</span></span>
   `;
-  structEl.querySelectorAll('.ps-chip[data-ps-group]').forEach(b => {
+  structEl.querySelectorAll('.ps-chip[data-ps-dim]').forEach(b => {
     b.addEventListener('click', () => {
-      if (state.group === b.dataset.psGroup) return;
-      state.group = b.dataset.psGroup;
+      const d = b.dataset.psDim;
+      const cur = parseGroupDims();
+      const idx = cur.indexOf(d);
+      if (idx >= 0) {
+        if (cur.length === 1) return;          // can't remove the last grouping
+        cur.splice(idx, 1);
+      } else {
+        cur.push(d);
+      }
+      state.group = serializeGroupDims(cur);
       if (typeof syncToolbarChips === 'function') syncToolbarChips();
       if (typeof writeHash === 'function') writeHash();
       renderMap();
@@ -293,11 +340,11 @@ function renderMap() {
 
   // Build rows. The cross-grid mode renders rows split into three category
   // columns; every other mode keeps the flat tile-flow rows.
-  const rows = (state.group === 'cross')
-    ? renderCrossRows(keys, groups)
+  const rows = (dims.length >= 2)
+    ? renderCrossRows(keys, groups, dims[1], dims[2] || null)
     : keys.map(k => {
     const arr = groups[k];
-    const sub = state.group === 'sector'
+    const sub = dims[0] === 'sector'
       ? `${arr.length} class · ${arr.reduce((s,f)=>s+f.cell_count,0)} cells`
       : `${arr.length} class`;
     const tiles = arr.map(renderTile).join('');
@@ -386,30 +433,57 @@ function renderMap() {
 //   mode, so spotlights, phenomena rings, badges, and clicks all
 //   compose unchanged.
 // =============================================================
-function renderCrossRows(keys, groups) {
+function renderCrossRows(keys, groups, colDim, subDim) {
+  const cd = GROUP_DIMS[colDim] || GROUP_DIMS.category;
+  const cols = cd.order();
+  // Column count varies by dimension (3 for category/closure, 13 for
+  // sector), so the grid template is inline per render.
+  const tmpl = `grid-template-columns:160px repeat(${cols.length}, minmax(128px, 1fr))`;
   const head = `
-    <div class="pt-cross-head" aria-hidden="true">
+    <div class="pt-cross-head" style="${tmpl}" aria-hidden="true">
       <div class="pt-cross-corner"></div>
-      ${CAT_ORDER.map(c => `<div class="pt-cross-col ${esc(c)}">${esc(c)}</div>`).join('')}
+      ${cols.map(c => `<div class="pt-cross-col${colDim === 'category' ? ' ' + esc(c) : ''}">${esc(c)}</div>`).join('')}
     </div>`;
+  const sd = subDim ? GROUP_DIMS[subDim] : null;
   const body = keys.map(k => {
     const arr = groups[k];
-    const byCat = {};
-    CAT_ORDER.forEach(c => { byCat[c] = []; });
-    arr.forEach(f => { (byCat[f.category] || (byCat[f.category] = [])).push(f); });
-    const cells = CAT_ORDER.map(c => {
-      const members = byCat[c] || [];
+    const byCol = {};
+    cols.forEach(c => { byCol[c] = []; });
+    arr.forEach(f => {
+      const v = cd.of(f) || 'Other';
+      (byCol[v] || (byCol[v] = [])).push(f);
+    });
+    const cells = cols.map(c => {
+      const members = byCol[c] || [];
       if (!members.length) {
-        const gapTitle = `No ${c} classification recorded in the ${k} sector — an empty intersection in the recorded map.`;
+        const gapTitle = colDim === 'category'
+          ? `No ${c} classification recorded under ${k} — an empty intersection in the recorded map.`
+          : `No classification recorded at ${k} × ${c} — an empty intersection in the recorded map.`;
+        const gapText = colDim === 'category' ? `no ${c} recorded` : 'none recorded';
         return `<div class="pt-cross-cell pt-cross-gap" data-gap-cat="${esc(c)}" title="${esc(gapTitle)}">
-          <span class="gap-mark">—</span><span class="gap-text">no ${esc(c)} recorded</span>
+          <span class="gap-mark">—</span><span class="gap-text">${esc(gapText)}</span>
         </div>`;
       }
-      return `<div class="pt-cross-cell">${members.map(renderTile).join('')}</div>`;
+      let inner;
+      if (sd) {
+        // Third dimension: sub-group tiles inside the cell, each cluster
+        // under a small label, in the dimension's canonical order.
+        const known = new Set(sd.order());
+        inner = sd.order().map(sv => {
+          const subset = members.filter(f => (sd.of(f) || 'Other') === sv);
+          if (!subset.length) return '';
+          return `<div class="pt-cross-sub"><span class="pt-cross-sub-lbl">${esc(sv)}</span><div class="pt-cross-sub-tiles">${subset.map(renderTile).join('')}</div></div>`;
+        }).join('');
+        const rest = members.filter(f => !known.has(sd.of(f)));
+        if (rest.length) inner += `<div class="pt-cross-sub"><span class="pt-cross-sub-lbl">other</span><div class="pt-cross-sub-tiles">${rest.map(renderTile).join('')}</div></div>`;
+      } else {
+        inner = members.map(renderTile).join('');
+      }
+      return `<div class="pt-cross-cell">${inner}</div>`;
     }).join('');
     const sub = `${arr.length} class · ${arr.reduce((s, f) => s + f.cell_count, 0)} cells`;
     return `
-      <div class="pt-row pt-cross-row" data-key="${esc(k)}">
+      <div class="pt-row pt-cross-row" style="${tmpl}" data-key="${esc(k)}">
         <div class="pt-row-label">${esc(k)}<span class="row-meta">${sub}</span></div>
         ${cells}
       </div>`;
@@ -834,7 +908,9 @@ function syncToolbarChips() {
   // Rows-by button label reflects current group; menu items reflect active
   const rowsByBtn = document.getElementById('rowsby-btn');
   if (rowsByBtn) {
-    const lbl = (ROWSBY_OPTIONS.find(o => o.value === state.group) || ROWSBY_OPTIONS[0]).label.toLowerCase();
+    const _d = (typeof parseGroupDims === 'function') ? parseGroupDims() : ['sector'];
+    const lbl = _d.length > 1 ? _d.join(' × ')
+      : (ROWSBY_OPTIONS.find(o => o.value === state.group) || ROWSBY_OPTIONS[0]).label.toLowerCase();
     const lbox = rowsByBtn.querySelector('.tb-btn-label');
     if (lbox) lbox.textContent = lbl;
   }
@@ -1041,10 +1117,8 @@ function zoomOut() {
 //   UX pass — clickable rows: light the row + explain the grouping
 // =============================================================
 function rowGroupMembers(key) {
-  let groupOf;
-  if (state.group === 'sector' || state.group === 'cross') groupOf = f => f.sector;
-  else if (state.group === 'category') groupOf = f => f.category;
-  else                                 groupOf = f => f.closure_level;
+  const rowDim = parseGroupDims()[0];
+  const groupOf = (GROUP_DIMS[rowDim] || GROUP_DIMS.sector).of;
   return FCS.filter(f => (groupOf(f) || 'Other') === key).map(f => f.id);
 }
 
@@ -1086,14 +1160,19 @@ function renderSidebarRowExplain() {
     'partial': '◐ Some axes are exhaustive; others remain open.',
     'conjectural': '□ Completeness is not established — the organizing pattern is a working conjecture.',
   };
-  const modeKey = ['sector', 'category', 'cross'].includes(state.group) ? state.group : 'closure';
+  const rxDims = parseGroupDims();
+  const isCross = rxDims.length >= 2;
+  const modeKey = isCross ? 'cross' : (MODE_EXPLAIN[rxDims[0]] ? rxDims[0] : 'closure');
+  if (isCross) {
+    MODE_EXPLAIN.cross = `Rows currently group the classifications by <strong>${esc(rxDims[0])}</strong>, and each row is split into <strong>${esc(rxDims[1])}</strong> columns${rxDims[2] ? `, with tiles inside each cell sub-grouped by <strong>${esc(rxDims[2])}</strong>` : ''}. The cross-grid exists for its empty intersections: a gap cell says that no classification is recorded at that intersection — a Mendeleev-flavored statement about where formalization is thin.`;
+  }
   const keyNote = KEY_NOTES[sel.key] || '';
-  // The columns sentence has to stay honest per mode: in the cross-grid
-  // the columns DO carry meaning (they're the category split), everywhere
+  // The columns sentence has to stay honest per mode: in a cross-grid the
+  // columns DO carry meaning (they're the second grouping), everywhere
   // else position along a row is packing, not physics.
-  const colsNote = state.group === 'cross'
-    ? 'In this layout the columns <strong>do</strong> carry meaning — each row is split by category, and an empty intersection is a recorded gap: no classification of that kind exists in this sector\'s recorded data. The <strong>Rows-by</strong> menu switches back to the flat cuts at any time.'
-    : 'Columns carry no meaning in this layout — position along a row is packing, not physics. The grouping itself is switchable: the <strong>Rows-by</strong> chips re-cut the rows by sector, category, or closure, and clicking any row label reopens this explanation for the new cut.';
+  const colsNote = isCross
+    ? `In this layout the columns <strong>do</strong> carry meaning — each row is split by ${esc(rxDims[1])}, and an empty intersection is a recorded gap: no classification recorded at that intersection. The chips in the bar above the map stack or remove groupings at any time.`
+    : 'Columns carry no meaning in this layout — position along a row is packing, not physics. The grouping itself is switchable: the chips in the bar above the map re-cut the rows by sector, category, or closure, and clicking any row label reopens this explanation for the new cut.';
 
   const pills = members.map(f => {
     const lit = state.tileSpotlight && state.tileSpotlight.has(f.id);
