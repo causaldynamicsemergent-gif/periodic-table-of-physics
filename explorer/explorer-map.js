@@ -230,12 +230,20 @@ var GROUP_DIMS = {
   category: { of: f => f.category,      order: () => CAT_ORDER.slice() },
   closure:  { of: f => f.closure_level, order: () => CLOSURE_ORDER.slice() },
 };
+// With all three dimensions active there is exactly ONE usable assignment:
+// sector must be the rows (13 values — as columns it would be unusably
+// wide, in-cell it would be near-invisible), and category takes the
+// colored column headers, leaving closure in-cell. Canonicalizing the
+// triple also means "all three pressed" always produces the same 3-D
+// view, regardless of the order the chips were pressed in.
+var CANONICAL_TRIPLE = ['sector', 'category', 'closure'];
 function parseGroupDims() {
   const g = (typeof state !== 'undefined' && state.group) ? String(state.group) : 'sector';
   if (g === 'cross') return ['sector', 'category'];
   if (g.indexOf('cross:') === 0) {
     const dims = g.slice(6).split('-').filter(d => GROUP_DIMS[d]);
-    if (dims.length >= 2) return dims.slice(0, 3);
+    if (dims.length >= 3) return CANONICAL_TRIPLE.slice();
+    if (dims.length === 2) return dims;
   }
   return GROUP_DIMS[g] ? [g] : ['sector'];
 }
@@ -303,24 +311,35 @@ function renderMap() {
     const on = idx >= 0;
     const title = on
       ? (dims.length === 1 ? 'The map needs at least one grouping — switch another on first' : 'Click to remove this grouping (the others shift up)')
-      : 'Click to add this grouping: 1st on = rows, 2nd = columns, 3rd = in-cell';
+      : 'Click to add this grouping: 1st on = rows, 2nd = columns; all three on = the 3-D view (sector rows, category columns, closure in cells)';
     return `<button type="button" class="ps-chip${on ? ' active' : ''}" data-ps-dim="${esc(d)}" title="${esc(title)}">${esc(d)}${on ? `<span class="ps-role">${PS_ROLES[idx]}</span>` : ''}</button>`;
   }).join('');
   let structEl = document.getElementById('pt-structure');
   if (!structEl) {
+    // Fallback skeleton (the canonical one ships in the HTML, complete
+    // with the toolbox): slots only, so the fill below works either way.
     structEl = document.createElement('div');
     structEl.id = 'pt-structure';
     structEl.className = 'pt-structure';
+    structEl.innerHTML = '<button class="ps-collapse" id="ps-collapse" type="button">▾</button>'
+      + '<div class="ps-body" id="ps-body"><div class="ps-main">'
+      + '<span class="ps-reads" id="ps-reads-slot"></span>'
+      + '<span class="ps-switch" id="ps-switch-slot"></span>'
+      + '</div></div><span class="ps-summary" id="ps-summary"></span>';
     const pane = document.getElementById('map-pane');
     const wrap = document.getElementById('map-zoom-wrap');
     if (pane && wrap) pane.insertBefore(structEl, wrap);
   }
   structEl.style.display = '';
-  structEl.innerHTML = `
-    <span class="ps-reads">${structureText}</span>
-    <span class="ps-switch"><span class="ps-switch-lbl">group by:</span>${psChips}<span class="ps-hint">1st = rows · 2nd = columns · 3rd = in-cell</span></span>
-  `;
-  structEl.querySelectorAll('.ps-chip[data-ps-dim]').forEach(b => {
+  const readsSlot  = document.getElementById('ps-reads-slot');
+  const switchSlot = document.getElementById('ps-switch-slot');
+  const summaryEl  = document.getElementById('ps-summary');
+  if (readsSlot)  readsSlot.innerHTML = structureText;
+  if (switchSlot) switchSlot.innerHTML = `<span class="ps-switch-lbl">group by:</span>${psChips}<span class="ps-hint">1st = rows · 2nd = columns · all three = 3-D view</span>`;
+  // Compact summary shown when the bar is collapsed — the current view in
+  // three words, so collapsing never hides WHAT the map is showing.
+  if (summaryEl) summaryEl.textContent = 'view: ' + (dims.length === 3 ? '3-D (sector × category × closure)' : dims.join(' × '));
+  (switchSlot || structEl).querySelectorAll('.ps-chip[data-ps-dim]').forEach(b => {
     b.addEventListener('click', () => {
       const d = b.dataset.psDim;
       const cur = parseGroupDims();
@@ -331,10 +350,18 @@ function renderMap() {
       } else {
         cur.push(d);
       }
-      state.group = serializeGroupDims(cur);
+      const next = cur.length === 3 ? CANONICAL_TRIPLE.slice() : cur;
+      state.group = serializeGroupDims(next);
       if (typeof syncToolbarChips === 'function') syncToolbarChips();
       if (typeof writeHash === 'function') writeHash();
       renderMap();
+      // Announce what the map now shows — a grouping change should never
+      // be ambiguous about whether (or how) it took effect.
+      if (typeof showToast === 'function') {
+        if (next.length === 1)      showToast(`rows grouped by ${next[0]}`);
+        else if (next.length === 2) showToast(`cross-grid — rows = ${next[0]} · columns = ${next[1]}`);
+        else showToast('3-D view — rows = sector · columns = category · tiles inside each cell grouped by closure');
+      }
     });
   });
 
@@ -445,6 +472,8 @@ function renderCrossRows(keys, groups, colDim, subDim) {
       ${cols.map(c => `<div class="pt-cross-col${colDim === 'category' ? ' ' + esc(c) : ''}">${esc(c)}</div>`).join('')}
     </div>`;
   const sd = subDim ? GROUP_DIMS[subDim] : null;
+  const CLOSURE_GLYPH = { 'complete-within-domain': '■', 'partial': '◐', 'conjectural': '□' };
+  const subLbl = v => (subDim === 'closure' && CLOSURE_GLYPH[v]) ? `${CLOSURE_GLYPH[v]} ${v}` : v;
   const body = keys.map(k => {
     const arr = groups[k];
     const byCol = {};
@@ -472,7 +501,7 @@ function renderCrossRows(keys, groups, colDim, subDim) {
         inner = sd.order().map(sv => {
           const subset = members.filter(f => (sd.of(f) || 'Other') === sv);
           if (!subset.length) return '';
-          return `<div class="pt-cross-sub"><span class="pt-cross-sub-lbl">${esc(sv)}</span><div class="pt-cross-sub-tiles">${subset.map(renderTile).join('')}</div></div>`;
+          return `<div class="pt-cross-sub"><span class="pt-cross-sub-lbl">${esc(subLbl(sv))}</span><div class="pt-cross-sub-tiles">${subset.map(renderTile).join('')}</div></div>`;
         }).join('');
         const rest = members.filter(f => !known.has(sd.of(f)));
         if (rest.length) inner += `<div class="pt-cross-sub"><span class="pt-cross-sub-lbl">other</span><div class="pt-cross-sub-tiles">${rest.map(renderTile).join('')}</div></div>`;
@@ -833,6 +862,27 @@ function wireToolbar() {
 
   // Rows-by button + dropdown menu
   wireRowsByDropdown();
+
+  // View-bar collapse — the bar is the map's view toolbox now (the
+  // toolbar's View menu is gone); one click folds it to a slim pill
+  // showing only the current view. Persisted like the splitter width.
+  const psBar = document.getElementById('pt-structure');
+  const psCollapse = document.getElementById('ps-collapse');
+  if (psBar && psCollapse) {
+    const applyCollapsed = (c) => {
+      psBar.classList.toggle('ps-collapsed', c);
+      psCollapse.textContent = c ? '▸' : '▾';
+      psCollapse.title = c ? 'Expand the view toolbox' : 'Collapse the view toolbox';
+    };
+    let psc = false;
+    try { psc = localStorage.getItem('mop-viewbar-collapsed') === '1'; } catch (e) {}
+    applyCollapsed(psc);
+    psCollapse.addEventListener('click', () => {
+      const c = !psBar.classList.contains('ps-collapsed');
+      try { localStorage.setItem('mop-viewbar-collapsed', c ? '1' : '0'); } catch (e) {}
+      applyCollapsed(c);
+    });
+  }
 
   // Spotlight button: opens the sidebar panel rather than mutating state directly
   const spotBtn = document.getElementById('spotlight-btn');

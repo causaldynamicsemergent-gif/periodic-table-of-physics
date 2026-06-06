@@ -246,15 +246,17 @@
   flex-direction: column;
   gap: 3px;
   margin: 0 12px 6px 0;
+  border-left: 2px solid var(--rule);
+  padding-left: 7px;
 }
 .pt-cross-sub-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8.5px;
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--ink-mute);
-  border-bottom: 1px dashed var(--rule-soft);
+  color: var(--ink-soft);
+  border-bottom: 1px dashed var(--rule);
   padding-bottom: 1px;
   align-self: flex-start;
 }
@@ -263,3 +265,64 @@
   flex-wrap: wrap;
   gap: 6px;
 }
+
+/* ---------- 5. View bar as the map's toolbox (View menu retired) ---------- */
+
+/* The bar is now: collapse toggle | body (main row + toolbox) | summary.
+   The earlier flex-wrap baseline styles move down to .ps-main. */
+.pt-structure { align-items: flex-start; }
+.ps-collapse {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  width: 22px; height: 22px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.ps-collapse:hover { border-color: var(--ink-mute); color: var(--ink); }
+.ps-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.ps-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: baseline;
+}
+.ps-toolbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px dashed var(--rule-soft);
+  padding-top: 7px;
+}
+.ps-toolbox-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+}
+.ps-toolbox .view-fullrow { width: auto; }   /* was full-width inside the menu */
+
+/* Collapsed: a slim pill — toggle + a three-word summary of the current
+   view, so collapsing reclaims space without hiding what the map shows. */
+.ps-summary {
+  display: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  align-self: center;
+}
+.pt-structure.ps-collapsed .ps-body { display: none; }
+.pt-structure.ps-collapsed .ps-summary { display: inline; }
+.pt-structure.ps-collapsed { padding: 5px 10px; width: fit-content; }
