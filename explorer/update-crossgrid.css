@@ -758,3 +758,10 @@ header.masthead { position: relative; z-index: 50; }
   color: var(--ink-mute);
   font-weight: 400;
 }
+
+/* ---------- 19. The mini cell grid is clickable (explainers) ---------- */
+/* update-c-typography.css set pointer-events:none so swatches never
+   intercepted tile clicks. With the zoomed-in explainers, the grid IS a
+   click target now; at normal zoom the click simply bubbles to the tile
+   and selects, exactly as before. */
+.tile-cells-mini { pointer-events: auto; }

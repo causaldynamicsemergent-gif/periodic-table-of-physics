@@ -582,9 +582,23 @@ function renderMap() {
 function renderCrossRows(keys, groups, colDim, subDim) {
   const cd = GROUP_DIMS[colDim] || GROUP_DIMS.category;
   const cols = cd.order();
-  // Column count varies by dimension (3 for category/closure, 13 for
-  // sector), so the grid template is inline per render.
-  const tmpl = `grid-template-columns:160px repeat(${cols.length}, minmax(128px, 1fr))`;
+  // Columns size to their CONTENT, not to the viewport: each column is as
+  // wide as its fullest cell needs (tiles are ~110px + gap), capped at
+  // four tiles across (cells wrap beyond that), floored at 128px. All
+  // rows and the header share the one computed template, so columns stay
+  // aligned without 1fr stretching them across empty space.
+  const colMax = {};
+  cols.forEach(c => { colMax[c] = 0; });
+  keys.forEach(k => {
+    const counts = {};
+    (groups[k] || []).forEach(f => {
+      const v = cd.of(f) || 'Other';
+      counts[v] = (counts[v] || 0) + 1;
+    });
+    cols.forEach(c => { if ((counts[c] || 0) > colMax[c]) colMax[c] = counts[c]; });
+  });
+  const colWidths = cols.map(c => Math.max(128, Math.min(colMax[c], 4) * 118 + 22) + 'px');
+  const tmpl = `grid-template-columns:160px ${colWidths.join(' ')}`;
   const head = `
     <div class="pt-cross-head" style="${tmpl}">
       <div class="pt-cross-corner"></div>
@@ -855,7 +869,7 @@ function renderTile(fc) {
       ${flipChip}${backHtml}
       ${badgeHtml}
       <div class="tile-corner">
-        <span class="cell-ct">${fc.cell_count}c · ${fc.prediction_count}p${recurHtml}</span>
+        <span class="cell-ct">${fc.cell_count}c${recurHtml}</span>
         ${fals ? `<span class="fals-flag" title="${fals} falsified">⚠${fals}</span>` : '<span></span>'}
       </div>
       <div class="tile-symbol">${esc(fc.symbol)}</div>
@@ -1425,7 +1439,7 @@ var EXPLAIN_ZOOM = 1.35;
 var TILE_EXPLAINERS = [
   ['.fals-flag',           '⚠ falsified flag',  'The count of falsified predictions held inside this classification. Falsifications are kept on the map deliberately — where a pattern broke is information.'],
   ['.tile-xc-recurrence',  '⇄ recurrence',      'This classification\'s content recurs in another classification — the same structure filed under a different organizing scheme. The cross-classification edges carry the details.'],
-  ['.cell-ct',             'cells · predictions', 'The two extent numbers: how many cells (positions) the classification organizes, and how many predictions it carries.'],
+  ['.cell-ct',             'cell count',          'How many cells (positions) this classification organizes. The prediction count lives in the footer, next to the yield bar it annotates.'],
   ['.tile-chip-conjectured','gap chip',          'Positions the constructive pattern implies should be filled but that nothing fills yet — the Mendeleev-style empty-cell prediction.'],
   ['.tile-chip-scale',     'scale chip',         'At least one cell or prediction here carries a documented quantitative bound or scale.'],
   ['.tile-chip',           'coverage chip',      'Coverage signals: at least one cell here is targeted by a documented experimental program, or carries a quantitative scale.'],
