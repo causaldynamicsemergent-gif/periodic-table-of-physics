@@ -959,6 +959,20 @@ function wireToolbar() {
     });
   }
 
+  // Tools dropdown — same open/close pattern as View; both stay open
+  // while you work and close only from their buttons.
+  const psTools = document.getElementById('ps-tools');
+  const psToolsBtn = document.getElementById('ps-tools-btn');
+  if (psTools && psToolsBtn) {
+    psToolsBtn.addEventListener('click', () => {
+      const open = !psTools.classList.contains('ps-open');
+      psTools.classList.toggle('ps-open', open);
+      psToolsBtn.classList.toggle('active', open);
+      psToolsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      psToolsBtn.title = open ? 'Close the map tools' : 'Open the map tools';
+    });
+  }
+
   // Toolbox: all-tiles toggle — light every tile at once / switch them
   // all off. With every tile lit, unlighting a few is inverse selection.
   const allTilesBtn = document.getElementById('btn-all-tiles');

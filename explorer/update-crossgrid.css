@@ -412,3 +412,14 @@
   gap: 8px;
   align-items: center;
 }
+
+/* ---------- 8. Tools dropdown + overlay-panel layer actions ---------- */
+.ps-tools .ps-body { min-width: 380px; }
+.ovl-layer-actions {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 10px;
+  vertical-align: 1px;
+}
+.ovl-layer-actions .phen-action-btn:disabled { opacity: 0.4; cursor: default; }
+.masthead h1:hover .site-logo { opacity: 0.75; }

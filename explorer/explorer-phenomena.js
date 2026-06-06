@@ -436,9 +436,15 @@ function renderSidebarOverlayLines() {
             </div>
           </div>`;
       }).join('');
+      const litCount = edges.reduce((n, e) => n + (e && e.id && litSet.has(e.id) ? 1 : 0), 0);
       return `
         <div class="ovl-layer">
-          <div class="ovl-layer-head">${esc(L.title)} <span class="dx-section-ct">· ${edges.length}</span></div>
+          <div class="ovl-layer-head">${esc(L.title)} <span class="dx-section-ct">· ${edges.length}</span>
+            <span class="ovl-layer-actions">
+              <button type="button" class="phen-action-btn" data-ovl-all-on="${esc(L.key)}"${litCount === edges.length ? ' disabled' : ''}>all ${edges.length} lines on</button>
+              <button type="button" class="phen-action-btn" data-ovl-all-off="${esc(L.key)}"${litCount === 0 ? ' disabled' : ''}>all off</button>
+            </span>
+          </div>
           <div class="ovl-layer-blurb">${L.blurb}</div>
           ${rows}
         </div>`;
@@ -476,6 +482,29 @@ function renderSidebarOverlayLines() {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       if (typeof selectCrossClassEdge === 'function') selectCrossClassEdge(btn.dataset.ovlOpen);
+    });
+  });
+  // Per-layer all on / all off — light every line of the layer at once,
+  // or clear them all, without 8 (or 103) individual clicks.
+  inner.querySelectorAll('[data-ovl-all-on]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const layer = btn.dataset.ovlAllOn;
+      if (!state.edgeSpotlight) state.edgeSpotlight = new Set();
+      overlayLayerEdges(layer).forEach(ed => { if (ed && ed.id) state.edgeSpotlight.add(ed.id); });
+      if (typeof refreshOverlayLinesLit === 'function') refreshOverlayLinesLit();
+      renderSidebarOverlayLines();
+      if (typeof showToast === 'function') showToast('every line in the layer is lit — click any to switch it off');
+    });
+  });
+  inner.querySelectorAll('[data-ovl-all-off]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const layer = btn.dataset.ovlAllOff;
+      if (typeof clearOverlayLayerLit === 'function') clearOverlayLayerLit(layer);
+      if (typeof refreshOverlayLinesLit === 'function') refreshOverlayLinesLit();
+      renderSidebarOverlayLines();
+      if (typeof showToast === 'function') showToast('layer lines switched off');
     });
   });
 }

@@ -191,6 +191,23 @@
   var qHome = document.getElementById('quick-home-btn');
   if (qHome) qHome.addEventListener('click', navHome);
 
+  // The masthead title is a home link — the most universal convention on
+  // the web; nobody should have to hunt for the way back to the start.
+  var mastTitle = document.querySelector('.masthead h1');
+  if (mastTitle) {
+    mastTitle.style.cursor = 'pointer';
+    mastTitle.title = 'Back to the start — full map, default panel';
+    mastTitle.setAttribute('role', 'button');
+    mastTitle.setAttribute('tabindex', '0');
+    mastTitle.addEventListener('click', navHome);
+    mastTitle.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navHome(); }
+    });
+  }
+
+  // Exposed so Browse's Home tab (explorer-sidebar.js) can call it.
+  window.navHome = navHome;
+
   // Paint the bar once after the first render settles.
   if (document.readyState === 'loading') {
     window.addEventListener('DOMContentLoaded', function () { setTimeout(updateBar, 0); });

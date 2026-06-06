@@ -1349,6 +1349,7 @@ var browseMode = 'tabs'; // 'tabs' only — classifications-mode removed in Upda
 function buildBrowseMenu(filter) {
   const menu = document.getElementById('browse-menu');
   const tabs = [
+    { id: '__home',                 icon: '⌂', title: 'Home',            desc: 'Back to the start — full map, default panel.' },
     { id: 'browse-classifications', icon: '☰', title: 'Classifications', desc: 'All formal classifications, grouped by sector.' },
     { id: 'phenomena',              icon: '◉', title: 'Phenomena',       desc: 'Highlight where each physical thing lives across the map.' },
     { id: 'browse-architectures',   icon: '⌬', title: 'Architectures',   desc: 'Established and candidate-foundational programs.' },
@@ -1369,6 +1370,10 @@ function buildBrowseMenu(filter) {
   }).join('');
   menu.querySelectorAll('[data-tab]').forEach(el => {
     el.addEventListener('click', () => {
+      if (el.dataset.tab === '__home') {
+        if (typeof window.navHome === 'function') window.navHome();
+        return;
+      }
       switchSidebarPanel(el.dataset.tab);
     });
   });
