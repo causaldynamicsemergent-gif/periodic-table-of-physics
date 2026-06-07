@@ -947,9 +947,9 @@ function renderFatalError(msg, detail) {
   document.getElementById('sidebar-inner').innerHTML = `
     <div class="sidebar-section">
       <h3 style="color:var(--st-falsified)">Could not load dataset</h3>
-      <div style="font-size:14.5px;line-height:1.55;color:var(--ink-soft)">${esc(msg)}</div>
-      ${detail ? `<pre style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-mute);background:var(--paper-2);padding:8px 10px;border-radius:2px;margin-top:8px;white-space:pre-wrap">${esc(String(detail))}</pre>` : ''}
-      <div style="margin-top:10px;font-size:13.5px;color:var(--ink-mute)">
+      <div style="font-size:15.5px;line-height:1.55;color:var(--ink-soft)">${esc(msg)}</div>
+      ${detail ? `<pre style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-mute);background:var(--paper-2);padding:8px 10px;border-radius:2px;margin-top:8px;white-space:pre-wrap">${esc(String(detail))}</pre>` : ''}
+      <div style="margin-top:10px;font-size:14.5px;color:var(--ink-mute)">
         The map’s dataset didn’t load. Check your connection and reload — the explorer reads its data live from the project repository. If you’re running this page from your own machine, place <code style="font-family:'JetBrains Mono',monospace;background:var(--paper-3);padding:1px 4px">data/Map_v34_consolidated.json</code> beside it.
       </div>
       <button class="btn-ghost" style="margin-top:10px" onclick="location.reload()">↻ retry</button>

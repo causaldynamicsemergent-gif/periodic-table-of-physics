@@ -52,7 +52,7 @@
   align-items: center;
   gap: 4px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.02em;
   padding: 3px 8px 3px 7px;
   border-radius: 2px;
@@ -103,7 +103,7 @@
   gap: 10px;
   align-items: start;
   padding: 5px 0;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.45;
 }
 
@@ -116,7 +116,7 @@
 .dc-pair-cat-legend-blurb {
   color: var(--ink-soft);
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14.5px;
+  font-size: 15.5px;
   line-height: 1.5;
 }
 
@@ -155,7 +155,7 @@
 
 .dc-pair-catrow-pair {
   font-family: 'Spectral', serif;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--ink);
 }
@@ -164,18 +164,18 @@
   color: var(--ink-mute);
   margin: 0 4px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
+  font-size: 14.5px;
 }
 
 .dc-pair-catrow-ct {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mute);
   white-space: nowrap;
 }
 
 .dc-pair-catrow-summary {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--ink-soft);
   font-family: 'Crimson Pro', Georgia, serif;
   line-height: 1.45;
@@ -199,7 +199,7 @@
 }
 
 .dc-pair-head-prog {
-  font-size: 14px !important;
+  font-size: 15px !important;
 }
 
 .dc-pair-head-sym {
@@ -218,14 +218,14 @@
 
 .dc-pair-head-progmeta {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mute);
   letter-spacing: 0.02em;
 }
 
 .dc-pair-head-sum {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14.5px;
+  font-size: 15.5px;
   color: var(--ink-soft);
   line-height: 1.5;
 }
@@ -260,7 +260,7 @@
 }
 
 .dc-pair-target-pill {
-  font-size: 14px !important;
+  font-size: 15px !important;
   padding: 4px 10px !important;
 }
 
@@ -268,7 +268,7 @@
   color: var(--ink-mute);
   font-weight: 400;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .dc-pair-target-pill-wrap {
@@ -279,7 +279,7 @@
 
 .dc-pair-target-blurb {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14.5px;
+  font-size: 15.5px;
   color: var(--ink-soft);
   line-height: 1.5;
   margin-top: 2px;
@@ -318,7 +318,7 @@
   color: var(--ink-mute);
   font-family: 'Crimson Pro', Georgia, serif;
   font-style: italic;
-  font-size: 14px;
+  font-size: 15px;
   padding: 14px 11px;
   background: var(--paper-3);
   border: 1px dashed var(--rule);
@@ -334,7 +334,7 @@
 .dc-pair-col-arrow {
   color: var(--ink-mute);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 14.5px;
+  font-size: 15.5px;
 }
 
 .dc-pair-col-pills {
@@ -344,14 +344,14 @@
 }
 
 .dc-pair-col-sensitivity {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--ink);
 }
 
 .dc-pair-col-citations {
   margin-top: 2px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   color: var(--ink-mute);
 }
@@ -367,7 +367,7 @@
 
 .dc-pair-col-desc {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.55;
   color: var(--ink);
 }
@@ -392,7 +392,7 @@
 
 .dc-pair-shared-ppp-head {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
@@ -412,19 +412,19 @@
 .dc-pair-shared-ppp-program {
   font-family: 'Spectral', serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   margin-bottom: 3px;
 }
 
 .dc-pair-shared-ppp-value {
-  font-size: 14.5px;
+  font-size: 15.5px;
   margin-bottom: 3px;
 }
 
 .dc-pair-shared-ppp-desc {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--ink-soft);
 }
@@ -435,7 +435,7 @@
   border-top: 1px solid rgba(139,26,26,0.12);
   font-family: 'Crimson Pro', Georgia, serif;
   font-style: italic;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-mute);
   line-height: 1.5;
 }
@@ -447,7 +447,7 @@
 .dc-pair-empty {
   font-family: 'Crimson Pro', Georgia, serif;
   font-style: italic;
-  font-size: 14.5px;
+  font-size: 15.5px;
   color: var(--ink-mute);
   padding: 12px;
   background: var(--paper-2);
@@ -458,7 +458,7 @@
 .dc-pair-back {
   margin-top: 12px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   padding: 5px 10px;
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -511,24 +511,24 @@
 .dc-pair-xlink-sym {
   font-family: 'JetBrains Mono', monospace;
   color: var(--ink-mute);
-  font-size: 13.5px;
+  font-size: 14.5px;
 }
 
 .dc-pair-xlink-other {
   font-family: 'Spectral', serif;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   flex: 1;
 }
 
 .dc-pair-xlink-ct {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mute);
 }
 
 .dc-pair-xlink-summary {
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-soft);
   font-family: 'Crimson Pro', Georgia, serif;
   line-height: 1.45;

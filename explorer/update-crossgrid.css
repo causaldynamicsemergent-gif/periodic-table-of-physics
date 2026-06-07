@@ -31,7 +31,7 @@
 }
 .pt-cross-col {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; font-weight: 600;
+  font-size: 13px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.08em;
   padding: 4px 8px 4px 10px;
   border-bottom: 2px solid var(--rule);
@@ -86,13 +86,13 @@
 }
 .pt-cross-gap .gap-mark {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 15.5px;
+  font-size: 16.5px;
   color: var(--ink-mute);
   line-height: 1;
 }
 .pt-cross-gap .gap-text {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.05em;
   color: var(--ink-mute);
   text-transform: uppercase;
@@ -128,7 +128,7 @@
    map" signal (the ADE quintet shows ×5). */
 .dc-axis .ax-shared-ct {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--ink-soft);
   background: var(--paper-3, var(--paper-2, transparent));
@@ -169,7 +169,7 @@
    with the bar now occupying that band, trim it. */
 .pt-structure + .map-zoom-wrap { padding-top: 14px; }
 .ps-reads {
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-soft);
   line-height: 1.5;
   flex: 1 1 320px;
@@ -183,7 +183,7 @@
 }
 .ps-switch-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-mute);
@@ -191,7 +191,7 @@
 }
 .ps-chip {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   padding: 3px 8px;
   border: 1px solid var(--rule);
   border-radius: 3px;
@@ -209,7 +209,7 @@
 
 /* One-line description under each legend layer toggle. */
 .qs-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-mute);
   line-height: 1.45;
   margin: 0 0 7px 2px;
@@ -221,7 +221,7 @@
    order the dimension was switched on. */
 .ps-chip .ps-role {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   background: rgba(251, 249, 241, 0.22);
@@ -233,7 +233,7 @@
 .ps-chip.active { cursor: pointer; }   /* active chips stay clickable (to remove) */
 .ps-hint {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   color: var(--ink-faint);
   margin-left: 8px;
   white-space: nowrap;
@@ -251,7 +251,7 @@
 }
 .pt-cross-sub-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -277,7 +277,7 @@
   border-radius: 3px;
   width: 22px; height: 22px;
   padding: 0;
-  font-size: 12.5px;
+  font-size: 13.5px;
   line-height: 1;
   color: var(--ink-soft);
   cursor: pointer;
@@ -307,7 +307,7 @@
 }
 .ps-toolbox-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-mute);
@@ -319,7 +319,7 @@
 .ps-summary {
   display: none;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
   align-self: center;
 }
@@ -366,7 +366,7 @@
   height: 34px;
   padding: 0 14px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   background: var(--ink);
@@ -376,7 +376,7 @@
   box-shadow: var(--shadow-tile, 0 1px 2px rgba(0,0,0,0.08));
 }
 .ps-collapse:hover { background: var(--ink-soft); border-color: var(--ink-soft); color: var(--paper); }
-.ps-collapse .caret { font-size: 10.5px; margin-left: 4px; }
+.ps-collapse .caret { font-size: 11.5px; margin-left: 4px; }
 .ps-collapse.active .caret { display: inline-block; transform: rotate(180deg); }
 
 /* Summary: always visible beside the button — the current view in a few
@@ -430,7 +430,7 @@
    growing without bound. Navigation happens ONLY via ↗. */
 .csr-cell { position: relative; padding-right: 52px; cursor: pointer; }
 .csr-cell .sbc-chev,
-.csr-group-head .sbc-chev { margin-left: 6px; color: var(--ink-mute); font-size: 11.5px; }
+.csr-group-head .sbc-chev { margin-left: 6px; color: var(--ink-mute); font-size: 12.5px; }
 .csr-open {
   position: absolute;
   right: 6px;
@@ -440,7 +440,7 @@
   border: 1px solid var(--rule);
   border-radius: 3px;
   width: 22px; height: 20px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   line-height: 1;
   color: var(--ink-soft);
   cursor: pointer;
@@ -454,18 +454,18 @@
   overflow-y: auto;
   padding: 8px 10px;
 }
-.csr-detail-content { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.csr-detail-content { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
 .csr-detail-axes { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
-.csr-axis { font-size: 12px; color: var(--ink-soft); }
+.csr-axis { font-size: 13px; color: var(--ink-soft); }
 .csr-axis-k {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-mute);
   margin-right: 3px;
 }
-.csr-detail-ex { margin-top: 6px; font-size: 12.5px; color: var(--ink-soft); }
+.csr-detail-ex { margin-top: 6px; font-size: 13.5px; color: var(--ink-soft); }
 .csr-detail-openfull {
   margin-top: 9px;
   background: none;
@@ -473,7 +473,7 @@
   border-radius: 3px;
   padding: 3px 9px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   cursor: pointer;
 }
@@ -503,7 +503,7 @@
   border: none;
   padding: 8px 10px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: var(--ink-soft);
   cursor: pointer;
   text-decoration: none;
@@ -531,7 +531,7 @@ header.masthead { position: relative; z-index: 50; }
 /* ---------- 12. Start here ---------- */
 .btn-start {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 5px 12px;
@@ -566,7 +566,7 @@ header.masthead { position: relative; z-index: 50; }
   border: 1px solid var(--rule);
   border-radius: 8px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   line-height: 1;
   color: var(--ink-mute);
   cursor: pointer;
@@ -591,7 +591,7 @@ header.masthead { position: relative; z-index: 50; }
 }
 .tile-back-head {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -608,7 +608,7 @@ header.masthead { position: relative; z-index: 50; }
   border-bottom: 1px solid var(--rule-soft);
   padding: 2px 0 3px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink);
   cursor: pointer;
   white-space: nowrap;
@@ -616,9 +616,9 @@ header.masthead { position: relative; z-index: 50; }
   text-overflow: ellipsis;
 }
 .tile-back-row:hover { color: var(--accent, #b5482a); }
-.tbr-nature { display: block; font-size: 9px; color: var(--ink-mute); font-weight: 400; }
+.tbr-nature { display: block; font-size: 10px; color: var(--ink-mute); font-weight: 400; }
 .tile-back-more, .tile-back-empty {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.35;
   color: var(--ink-mute);
   font-style: italic;
@@ -634,7 +634,7 @@ header.masthead { position: relative; z-index: 50; }
   border-radius: 3px;
   padding: 3px 9px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   cursor: pointer;
   white-space: nowrap;
@@ -672,7 +672,7 @@ header.masthead { position: relative; z-index: 50; }
   align-items: center;
   justify-content: space-between;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -681,9 +681,9 @@ header.masthead { position: relative; z-index: 50; }
 }
 #tile-explain-pop .tep-close {
   background: none; border: none; cursor: pointer;
-  font-size: 15.5px; line-height: 1; color: var(--ink-mute); padding: 0 2px;
+  font-size: 16.5px; line-height: 1; color: var(--ink-mute); padding: 0 2px;
 }
-#tile-explain-pop .tep-body { font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+#tile-explain-pop .tep-body { font-size: 14px; line-height: 1.5; color: var(--ink-soft); }
 #tile-explain-pop .tep-guide {
   margin-top: 8px;
   background: none;
@@ -691,7 +691,7 @@ header.masthead { position: relative; z-index: 50; }
   border-radius: 3px;
   padding: 3px 8px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-soft);
   cursor: pointer;
 }
@@ -700,7 +700,7 @@ header.masthead { position: relative; z-index: 50; }
 /* ---------- 17. Feedback form: sections, role blocks, feature grid ---------- */
 .fb-section {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -709,7 +709,7 @@ header.masthead { position: relative; z-index: 50; }
   padding-bottom: 3px;
   margin: 18px 0 10px;
 }
-.fb-hint { font-size: 12.5px; color: var(--ink-mute); margin: -4px 0 8px; }
+.fb-hint { font-size: 13.5px; color: var(--ink-mute); margin: -4px 0 8px; }
 .fb-role-block {
   border-left: 3px solid var(--rule);
   padding-left: 12px;
@@ -724,11 +724,11 @@ header.masthead { position: relative; z-index: 50; }
   border-bottom: 1px dashed var(--rule-soft);
   padding-bottom: 7px;
 }
-.fb-feat-name { font-size: 13.5px; color: var(--ink); flex: 1 1 100%; }
+.fb-feat-name { font-size: 14.5px; color: var(--ink); flex: 1 1 100%; }
 .fb-feat-opts { display: flex; flex-wrap: wrap; gap: 3px 12px; }
 .fb-feat-opts label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   display: inline-flex;
   gap: 4px;
@@ -752,7 +752,7 @@ header.masthead { position: relative; z-index: 50; }
 .ap-section-btn:hover .ap-section-go { color: var(--accent, #b5482a); }
 .ap-section-go {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
+  font-size: 11.5px;
   text-transform: none;
   letter-spacing: 0.03em;
   color: var(--ink-mute);
@@ -784,7 +784,7 @@ header.masthead { position: relative; z-index: 50; }
   gap: 5px 16px;
 }
 .fb-feat-checks label {
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-soft);
   display: inline-flex;
   gap: 7px;

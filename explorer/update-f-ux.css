@@ -18,16 +18,16 @@
    tile-name was 10.5px and the footer 9px — repeated user feedback says
    too small. Tiles grow a step so the larger text still fits. Tile size
    is pure CSS (the JS reads live rects), so nothing else moves. */
-.pt-tile { width: 136px; min-height: 150px; }
+.pt-tile { width: 144px; min-height: 158px; }
 .tile-symbol { font-size: 25px; }
-.tile-name { font-size: 14px; line-height: 1.25; }
-.tile-corner { font-size: 12px; min-height: 14px; }
-.tile-footer { font-size: 12px; }
-.fals-flag { font-size: 11.5px; }
+.tile-name { font-size: 15px; line-height: 1.25; }
+.tile-corner { font-size: 13px; min-height: 14px; }
+.tile-footer { font-size: 13px; }
+.fals-flag { font-size: 12.5px; }
 @media (max-width: 1100px) {
-  .pt-tile { width: 120px; min-height: 140px; }
+  .pt-tile { width: 128px; min-height: 148px; }
   .tile-symbol { font-size: 22px; }
-  .tile-name { font-size: 13px; }
+  .tile-name { font-size: 14px; }
 }
 
 /* ---------- 2. Sidebar visual hierarchy ----------
@@ -37,28 +37,28 @@
    benefits without rewriting each renderer. */
 .sb-page-title {
   font-family: 'Spectral', serif;
-  font-size: 19px; font-weight: 600;
+  font-size: 21px; font-weight: 600;
   color: var(--ink); letter-spacing: 0.01em;
   margin: 0 0 4px; line-height: 1.25;
 }
 .sb-page-sub {
   font-family: 'Crimson Pro', Georgia, serif; font-style: italic;
-  font-size: 14px; color: var(--ink-mute);
+  font-size: 15px; color: var(--ink-mute);
   margin: 0 0 12px; line-height: 1.45;
 }
 .sidebar-section h3 {
-  font-size: 14.5px;
+  font-size: 15.5px;
   letter-spacing: 0.1em;
   margin: 0 0 8px;
   padding-bottom: 4px;
   border-bottom: 2px solid var(--rule-soft);
 }
 .sidebar-section { padding-bottom: 16px; margin-bottom: 4px; }
-.sidebar-section .sec-sub { font-size: 13.5px; }
-.ap-section { font-size: 14px; }
-.bld-section-h { font-size: 13.5px; letter-spacing: 0.1em; }
+.sidebar-section .sec-sub { font-size: 14.5px; }
+.ap-section { font-size: 15px; }
+.bld-section-h { font-size: 14.5px; letter-spacing: 0.1em; }
 .dc-title { font-size: 19px; }
-.crumb-current { font-size: 13.5px; }
+.crumb-current { font-size: 14.5px; }
 
 /* ---------- 3. Start panel — the instructional hub (fix 1) ---------- */
 /* Quick-bar Start button: accent-coloured so the place where the
@@ -94,12 +94,12 @@
 }
 .start-action-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .start-action-title {
-  font-family: 'Spectral', serif; font-size: 16px; font-weight: 600;
+  font-family: 'Spectral', serif; font-size: 17px; font-weight: 600;
   color: var(--ink);
 }
 .start-action-desc {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14px; color: var(--ink-mute); line-height: 1.4;
+  font-size: 15px; color: var(--ink-mute); line-height: 1.4;
 }
 
 /* ---------- 4. How-to-navigate page (fixes 1 + 4) ---------- */
@@ -111,18 +111,18 @@
 }
 .nav-how-ico {
   flex: 0 0 26px; text-align: center;
-  font-size: 16px; color: var(--accent); line-height: 1.3;
+  font-size: 17px; color: var(--accent); line-height: 1.3;
 }
 .nav-how-body { min-width: 0; }
 .nav-how-title {
-  font-family: 'Spectral', serif; font-size: 14.5px; font-weight: 600;
+  font-family: 'Spectral', serif; font-size: 15.5px; font-weight: 600;
   color: var(--ink); margin-bottom: 2px;
 }
 .nav-how-text {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 14.5px; color: var(--ink-soft); line-height: 1.5;
+  font-size: 15.5px; color: var(--ink-soft); line-height: 1.5;
 }
-.nav-how-text .tip-key { font-size: 12.5px; }
+.nav-how-text .tip-key { font-size: 13.5px; }
 
 /* ---------- 5. Guided tour overlay (fixes 1 + 10) ----------
    Spotlight pattern: one absolutely-positioned highlight box whose huge
@@ -147,22 +147,22 @@
 }
 .tour-card-step {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 5px;
 }
 .tour-card-title {
   font-family: 'Spectral', serif;
-  font-size: 16px; font-weight: 600; color: var(--ink);
+  font-size: 17px; font-weight: 600; color: var(--ink);
   margin-bottom: 5px; line-height: 1.3;
 }
 .tour-card-text {
   font-family: 'Crimson Pro', Georgia, serif;
-  font-size: 15px; color: var(--ink-soft); line-height: 1.5;
+  font-size: 16px; color: var(--ink-soft); line-height: 1.5;
   margin-bottom: 11px;
 }
 .tour-card-btns { display: flex; align-items: center; gap: 7px; }
 .tour-btn {
-  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
   border-radius: 3px; padding: 5px 11px; cursor: pointer;
   border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink-soft);
 }
@@ -184,7 +184,7 @@
   text-align: center;
   background: var(--paper); border: 1.5px solid var(--accent);
   color: var(--accent);
-  font-size: 13.5px; font-weight: 600;
+  font-size: 14.5px; font-weight: 600;
   padding: 8px 12px; border-radius: 4px;
   letter-spacing: 0.02em;
 }
@@ -193,7 +193,7 @@
 /* ---------- 7. Builder: dropdown picker + tutorial (fix 10) ---------- */
 .bld-tour-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace; font-size: 13.5px; font-weight: 600;
   background: var(--paper); border: 1.5px solid var(--accent); color: var(--accent);
   border-radius: 4px; padding: 6px 12px; cursor: pointer;
   margin: 0 0 12px;
@@ -204,7 +204,7 @@
 .bld-picker-toggle {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   width: 100%; text-align: left;
-  font-family: 'JetBrains Mono', monospace; font-size: 13.5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 14.5px;
   background: var(--paper); border: 1px solid var(--rule);
   border-radius: 4px; padding: 8px 11px;
   color: var(--ink-soft); cursor: pointer;
@@ -223,3 +223,44 @@
 }
 .bld-picker-menu.open { display: block; }
 .bld-picker-menu .bld-search { width: 100%; margin-bottom: 8px; }
+
+/* ---------- 8. Round 2 user feedback ----------
+   (a) Legend and Glossary read at a premium size — these are the two
+       reference surfaces users sit on longest, called out as still
+       too small after the global pass.
+   (b) The sidebar nav-bar's "you are here" label was 13px gray —
+       effectively invisible. It is now the loudest line on the panel,
+       so wherever you've navigated to is never in doubt. */
+
+/* (a) Legend */
+.sb-legend-row .label { font-size: 16px; }
+.sb-legend-row .lab-desc { font-size: 15px; line-height: 1.45; }
+.sidebar-section .qs-desc { font-size: 14.5px; line-height: 1.45; }
+.sidebar-section .qs-chip { font-size: 14px; }
+.sidebar-section .tip-card { font-size: 14.5px; }
+
+/* (a) Glossary */
+.glossary-term { font-size: 17px; }
+.glossary-aliases { font-size: 14px; }
+.glossary-field-label { font-size: 12.5px; }
+.glossary-field-body { font-size: 16px; line-height: 1.6; }
+.glossary-related-pill { font-size: 13.5px; }
+
+/* (b) "You are here" nav-bar */
+.sidebar-nav-bar {
+  padding: 10px 12px;
+  gap: 10px;
+  background: var(--paper-3);
+  border-bottom: 2px solid var(--rule);
+}
+.sidebar-nav-bar .nav-here {
+  font-family: 'Spectral', serif;
+  font-size: 18px; font-weight: 600;
+  color: var(--ink);
+}
+.sidebar-nav-bar .nav-here::before {
+  content: '◈ ';
+  color: var(--accent);
+  font-size: 13px;
+  vertical-align: 2px;
+}
