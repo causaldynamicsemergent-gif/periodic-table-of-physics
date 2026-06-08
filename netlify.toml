@@ -1,0 +1,23 @@
+# Netlify configuration for the Periodic Table of Physics.
+#
+# The site is fully static — no build step. Publishing the repo root
+# means both /explorer/ (the app) and /data/ (the canonical JSON the
+# explorer fetches via its ../data/ fallback) ship as-is, and the
+# feedback form's POST to "/" resolves against the root index.html.
+#
+# Forms: the feedback survey in explorer/Map_v34_explorer.html is static
+# HTML with a `data-netlify="true"` attribute, so Netlify's build-time
+# parser registers it automatically once form detection is enabled in
+# the Netlify UI (Forms → Enable form detection) and the site is
+# redeployed. No build plugin is required for a plain static site.
+
+[build]
+  publish = "."
+  command = ""
+
+# Long-cache the data file but let HTML revalidate, so explorer updates
+# (which are just new HTML/JS) show up immediately on redeploy.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
