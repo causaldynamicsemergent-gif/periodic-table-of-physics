@@ -38,6 +38,14 @@ function renderSidebarDefault() {
       <div class="sb-page-sub">
         How to read every tile on the map. Each tile is a <em>formal classification</em> with five visual signals: category stripe, symbol, cell count, predictive-yield bar, closure mark.
       </div>
+      <div class="start-actions" style="margin-top:10px">
+        <button type="button" class="start-action" data-open-help title="Open the labeled tile diagram">
+          <span class="start-action-ico">▦</span>
+          <span class="start-action-text">
+            <span class="start-action-title">How to read a tile</span>
+          </span>
+        </button>
+      </div>
     </div>
 
     <div class="sidebar-section">
@@ -218,8 +226,7 @@ function renderSidebarStart() {
         <button type="button" class="start-action" data-open-help title="Open the labeled tile diagram">
           <span class="start-action-ico">▦</span>
           <span class="start-action-text">
-            <span class="start-action-title">How to read</span>
-            <span class="start-action-desc">Every mark on a tile, labeled on a diagram of a real one — stripe, yield bar, cells, the flip chip.</span>
+            <span class="start-action-title">How to read a tile</span>
           </span>
         </button>
         <button type="button" class="start-action" data-panel-jump="navigate" title="Moving around, the menus, and the keyboard shortcuts">

@@ -1525,10 +1525,11 @@ body.splitter-dragging * { cursor: col-resize !important; }
         <!-- symbol + name: centered serif, like the real tile -->
         <text x="330" y="140" font-family="'Spectral', serif" font-size="34" font-weight="600" text-anchor="middle" fill="var(--struct)">SM</text>
         <text x="330" y="160" font-family="'Crimson Pro', serif" font-size="13" text-anchor="middle" fill="var(--ink-soft)">rep content</text>
-        <!-- mini cell grid: 8px swatches at 1.6× = 13px, rounded; three states -->
+        <!-- mini cell grid: 13px swatches, coloured by real cell state —
+             a faithful sample (status colours + realized + empty). -->
         <g>
-          <rect x="277" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="294" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="311" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="328" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="345" y="174" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="362" y="174" width="13" height="13" rx="2" fill="var(--ink)"/>
-          <rect x="277" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="294" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="311" y="191" width="13" height="13" rx="2" fill="var(--paper-3, #eee)" stroke="var(--rule-soft, #ddd)"/><rect x="328" y="191" width="13" height="13" rx="2" fill="var(--ink)"/><rect x="345" y="191" width="13" height="13" rx="2" fill="none" stroke="var(--st-falsified)" stroke-dasharray="2,2"/><rect x="362" y="191" width="13" height="13" rx="2" fill="var(--ink)"/>
+          <rect x="277" y="174" width="13" height="13" rx="2" fill="var(--st-confirmed)"/><rect x="294" y="174" width="13" height="13" rx="2" fill="var(--st-confirmed)"/><rect x="311" y="174" width="13" height="13" rx="2" fill="var(--st-tension)"/><rect x="328" y="174" width="13" height="13" rx="2" fill="var(--st-not-tested)"/><rect x="345" y="174" width="13" height="13" rx="2" fill="var(--st-retro)"/><rect x="362" y="174" width="13" height="13" rx="2" fill="var(--ink-faint)" stroke="var(--ink-mute)"/>
+          <rect x="277" y="191" width="13" height="13" rx="2" fill="var(--st-confirmed)"/><rect x="294" y="191" width="13" height="13" rx="2" fill="var(--ink-faint)" stroke="var(--ink-mute)"/><rect x="311" y="191" width="13" height="13" rx="2" fill="var(--st-falsified)"/><rect x="328" y="191" width="13" height="13" rx="2" fill="var(--paper-3)" stroke="var(--rule-soft)"/><rect x="345" y="191" width="13" height="13" rx="2" fill="var(--ink-faint)" stroke="var(--ink-mute)"/><rect x="362" y="191" width="13" height="13" rx="2" fill="var(--ink-faint)" stroke="var(--ink-mute)"/>
         </g>
         <!-- yield bar on its paper-3 track, then footer: preds left, closure right -->
         <rect x="252" y="232" width="152" height="8" rx="1.5" fill="var(--paper-3, #eee)"/>
@@ -1551,17 +1552,33 @@ body.splitter-dragging * { cursor: col-resize !important; }
         <path class="ta-line" d="M455 64 L330 92"/>
         <text class="ta-lbl" x="470" y="100"><tspan class="k">⚠ falsified inside</tspan><tspan x="470" dy="12">count of falsified</tspan><tspan x="470" dy="12">predictions held</tspan></text>
         <path class="ta-line" d="M466 104 L410 96"/>
-        <text class="ta-lbl" x="455" y="160"><tspan class="k">cell grid</tspan><tspan x="455" dy="12">one square per cell —</tspan><tspan x="455" dy="12">filled = realized</tspan><tspan x="455" dy="12">faint = forbidden</tspan><tspan x="455" dy="12">red dashed = predicted gap</tspan></text>
-        <path class="ta-line" d="M451 178 L380 184"/>
+        <text class="ta-lbl" x="455" y="166"><tspan class="k">cell grid</tspan><tspan x="455" dy="12">one square per cell,</tspan><tspan x="455" dy="12">coloured by its state</tspan><tspan x="455" dy="12">(full key below)</tspan></text>
+        <path class="ta-line" d="M451 180 L380 184"/>
         <text class="ta-lbl" x="455" y="248"><tspan class="k">? flip chip</tspan><tspan x="455" dy="12">flips the tile — open questions</tspan><tspan x="455" dy="12">on the back (red ?N = N recorded)</tspan></text>
         <path class="ta-line" d="M451 244 L408 216"/>
         <text class="ta-lbl" x="8" y="310"><tspan class="k">yield bar</tspan><tspan x="8" dy="12">predictions by status: green confirmed · amber tension</tspan><tspan x="8" dy="12">gray not tested · red falsified · purple retro-explanatory</tspan></text>
         <path class="ta-line" d="M120 296 L268 242"/>
-        <text class="ta-lbl" x="380" y="310"><tspan class="k">footer</tspan><tspan x="380" dy="12">total predictions · closure level</tspan><tspan x="380" dy="12">■ complete · ◐ partial · □ conjectural</tspan></text>
-        <path class="ta-line" d="M395 296 L350 262"/>
+        <text class="ta-lbl" x="448" y="298"><tspan class="k">footer</tspan><tspan x="448" dy="12">predictions count (left)</tspan><tspan x="448" dy="12">closure mark (right):</tspan><tspan x="448" dy="12">■ full · ◐ partial · □ open</tspan></text>
+        <path class="ta-line" d="M444 300 L407 258"/>
       </svg>
     </div>
-    <p><strong>What you're looking at.</strong> Each tile is a <em>formal classification</em> — a formal partition of physical or mathematical content along discrete axes. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
+
+    <div class="ta-cellkey">
+      <div class="ta-cellkey-head">What the cell colours mean</div>
+      <div class="ta-cellkey-grid">
+        <span class="ta-cellkey-item"><span class="tile-swatch has-confirmed"></span> carries a <strong>confirmed</strong> prediction</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch has-tension"></span> a prediction in <strong>tension</strong> with data</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch has-not-tested"></span> a prediction <strong>not yet tested</strong></span>
+        <span class="ta-cellkey-item"><span class="tile-swatch has-retro"></span> <strong>retro-explanatory</strong> only</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch has-falsified"></span> contains a <strong>falsified</strong> prediction</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch has-realized-only"></span> <strong>realized</strong> content, no live prediction</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch empty"></span> cell exists, <strong>nothing authored</strong> yet</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch excluded"></span> <strong>structurally forbidden</strong> — ruled out</span>
+        <span class="ta-cellkey-item"><span class="tile-swatch conjectured"></span> <strong>predicted gap</strong> — implied, unfilled <em>(none in the map yet)</em></span>
+      </div>
+      <p class="ta-cellkey-note">The five status colours — confirmed, tension, not-tested, falsified, retro — are the same here as on the yield bar; a cell takes the colour of the strongest-signal prediction it holds. The last three states are structural: realized-but-quiet, authored-but-empty, and the forbidden / predicted-gap pair that is the map's Mendeleev move.</p>
+    </div>
+ — a formal partition of physical or mathematical content along discrete axes. Rows are sectors of physics; tiles within a row are the classifications in that sector.</p>
 
     <h3>Tile anatomy</h3>
     <p>The big 2–3 letter mark is the classification's <strong>symbol</strong> (SM, GUT, 10W for ten-fold way, MGr for modified gravity, …). The left-edge stripe is the <strong>category colour</strong>: blue = structural, green = phenomenon, amber = hybrid. Top-right shows <strong>cell count</strong>; if there are falsified predictions inside, you'll see a red ⚠. The thin bar at the bottom is the <strong>predictive yield</strong>: green = confirmed, amber = tension, gray = not yet tested, red = falsified, purple = retro-explanatory.</p>
